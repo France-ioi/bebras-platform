@@ -1,4 +1,5 @@
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
+!function () {
 
 var contestID;
 var contestFolder;
@@ -733,7 +734,7 @@ var TimeManager = {
 
 // Main page
 
-function selectMainTab(tabName) {
+window.selectMainTab = function(tabName) {
    var tabNames = ["school", "home", "continue"];
    for(var iTab = 0; iTab < tabNames.length; iTab++) {
       if (tabNames[iTab] === tabName) {
@@ -746,7 +747,7 @@ function selectMainTab(tabName) {
    }
 }
 
-function confirmPublicGroup() {
+window.confirmPublicGroup = function() {
    $("#warningPublicGroups").hide();
    $("#publicGroups").show();
 }
@@ -932,7 +933,7 @@ function loadContestData(contestID, contestFolder, groupPassword, teamID)
  *
  * @param {string} content
  */
-function setNbImagesLoaded(content) {
+window.setNbImagesLoaded = function(content) {
    $("#nbImagesLoaded").html(content);
 }
 
@@ -941,12 +942,12 @@ function setNbImagesLoaded(content) {
 /*
  * Called when starting a contest by providing a group code on the main page.
 */
-function checkGroup() {
+window.checkGroup = function() {
    var groupCode = $("#groupCode").val();
    return checkGroupFromCode("CheckGroup", groupCode, false, false);
 }
 
-function recoverGroup() {
+window.recoverGroup = function() {
    var curStep = 'CheckGroup';
    var groupCode = $("#groupCode").val();
    var groupPass = $('#recoverGroupPass').val();
@@ -973,7 +974,7 @@ function recoverGroup() {
  * The password can either be a group password (leading to another page)
  * or directly a team password (to re-login directly)
 */
-function checkPasswordInterrupted() {
+window.checkPasswordInterrupted = function() {
    var password = $("#interruptedPassword").val();
    return checkGroupFromCode("Interrupted", password, true, false)
 }
@@ -1005,7 +1006,7 @@ function fillListTeams(teams) {
  * groupCode: a group code, or a team password
  * isPublic: is this a public group ?
 */
-function checkGroupFromCode(curStep, groupCode, getTeams, isPublic) {
+window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic) {
    Utils.disableButton("button" + curStep);
    $('#recoverGroup').hide();
    $("#" + curStep + "Result").html('');
@@ -1064,7 +1065,7 @@ function checkGroupFromCode(curStep, groupCode, getTeams, isPublic) {
  * Validates student's information form
  * then creates team
 */
-function validateLoginForm() {
+window.validateLoginForm = function() {
    var contestants = {};
    for (var iContestant = 1; iContestant <= nbContestants; iContestant++) {
       var contestant = {
@@ -1110,7 +1111,7 @@ function createTeam(contestants) {
  * Called when students acknowledge their new team password
  * hides password and loads contest
 */
-function confirmTeamPassword() {
+window.confirmTeamPassword = function() {
    if (!Utils.disableButton("buttonConfirmTeamPassword")) { // Do not re-enable
       return;
    }
@@ -1123,7 +1124,7 @@ function confirmTeamPassword() {
  * and the teacher enters the group password (to continue after an interruption)
  * Tries to load the corresponding contest.
 */
-function relogin() {
+window.relogin = function() {
    teamID = parseInt($("#selectTeam").val());
    var groupPassword = $("#groupPassword").val();
    if (teamID === 0) {
@@ -1138,7 +1139,7 @@ function relogin() {
  * Called when students validate the form that asks them if they participate
  * alone or in a team of two students.
 */
-function setNbContestants(nb) {
+window.setNbContestants = function(nb) {
    nbContestants = nb;
    if (nbContestants === 2) {
       $("#contestant2").show();
@@ -1270,7 +1271,7 @@ function init() {
 /*
  * Called when a student clicks on the button to stop before the timer ends
 */
-function tryCloseContest() {
+window.tryCloseContest = function() {
    var remainingTime = TimeManager.getRemainingTime();
    var nbMinutes = Math.floor(remainingTime / 60);
    if (nbMinutes > 1) {
@@ -1541,7 +1542,7 @@ function fillNextQuestionID(sortedQuestionsIDs) {
    questionsData[prevQuestionID].nextQuestionID = "0";
 }
 
-function selectQuestion(questionID, clicked, noLoad) {
+window.selectQuestion = function(questionID, clicked, noLoad) {
    $("body").scrollTop(0);
    try {
       if (document.getSelection) {
@@ -1970,4 +1971,7 @@ Loader.prototype.shuffleArray= function (values) {
    }
    return values;
 };
-$(init);
+
+  $(init);
+
+}();
