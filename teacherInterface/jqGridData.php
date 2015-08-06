@@ -6,7 +6,7 @@ ini_set('display_errors', '1');
 
 require_once("../shared/common.php");
 require_once("commonAdmin.php");
-require_once("../modelsManager/csvExport.php");
+require_once("../commonFramework/modelsManager/csvExport.php");
 require_once("../schoolsMap/googleMap.inc.php");
 require_once("domains.php");
 //require_once("../modelsManager/modelsManager-DynamoDB.php");

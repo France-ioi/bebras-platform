@@ -7,8 +7,8 @@ session_name('coordinateur2');
 session_start();
 
 include_once("../shared/models.php");
-include_once("../modelsManager/modelsManager.php");
-require_once("../modelsManager/csvExport.php");
+include_once("../commonFramework/modelsManager/modelsManager.php");
+require_once("../commonFramework/modelsManager/csvExport.php");
 
 function generateSalt() {
    return  md5(uniqid(rand(), true));

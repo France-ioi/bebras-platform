@@ -14,9 +14,14 @@
     "tests"
   ],
   "dependencies": {
-    "jquery": "~2.1.4",
+    "requirejs": "~2",
+    "almond": "~0.3",
+    "jquery": "~1.9",
+    "jquery-ui": "~1.11",
     "pem-platform": "France-ioi/pem-platform",
     "i18next": "~1.10.2",
-    "jquery-ui": "~1.11.4"
+    "jqgrid": "~5.0.0",
+    "jQuery-ajaxTransport-XDomainRequest": "~1.0",
+    "json3": "~3.3"
   }
 }

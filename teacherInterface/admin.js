@@ -1,5 +1,8 @@
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 
+// TODO: avoid using undefined as a value, use null instead.
+// TODO: avoid x === undefined, use typeof x === 'undefined' instead.
+
 var loggedUser = undefined;
 var contests = undefined;
 var questions = undefined;
@@ -728,10 +731,6 @@ function refreshGrid(model) {
      $("#grid_" + model).trigger('reloadGrid');
 }
 
-$(function(){ 
-   isLogged();
-}); 
-
 function isLogged() {
    return $.post("login.php", {isLogged: 1},
       function(data) {
@@ -743,7 +742,7 @@ function isLogged() {
             initModels(false);
          }
       }, "json"
-   );   
+   );
 }
 
 function loadUser(user) {
@@ -1081,7 +1080,7 @@ function loadSchools() {
    });
 }
 
-var objectHasProperties = function(object) {
+function objectHasProperties(object) {
    for (var iProperty in object) {
       return true;
    }
@@ -2094,15 +2093,6 @@ function newUser() {
    newForm("user_create", t("user_registration"), message);
 }
 
-$(function() {
-   initErrorHandler();
-   if ($.jgrid !== undefined) {
-      $.jgrid.defaults = $.extend($.jgrid.defaults, { autoencode: true });
-   }
-   $('input[type=button]', this).attr('disabled', false);
-});
-
-
 /* API for certificates generation : in the future, should be a real class... */
 Number.prototype.pad = function(size){
       if(typeof(size) !== "number"){size = 2;}
@@ -2186,6 +2176,35 @@ function certiGenCancel(schoolID) {
    }, "json");
 }
 
-var printAlgoreaCodes = function() {
+function printAlgoreaCodes() {
    window.open('awardsPrint.php', "printAlgoreaCodes", 'width=700,height=600');
+}
+
+function init() {
+   initErrorHandler();
+   i18n.init({
+      lng: config.language,
+      fallbackLng: [config.language],
+      getAsync: true,
+      resGetPath: config.i18nResourcePath,
+      ns: {
+         namespaces: ['translation', 'country' + config.countryCode],
+         defaultNs: 'translation'
+      },
+      useDataAttrOptions: true
+   }, function () {
+      $("#login_link_to_home").attr('data-i18n-options',
+         '{"contestPresentationURL": "' + config.contestPresentationURL + '"}');
+      $("title").i18n();
+      $("body").i18n();
+   });
+   isLogged();
+   window.domains = [];
+   $.getJSON('regions/' + config.countryCode + '/domains.json', function(data) {
+      window.domains = data.domains;
+   });
+   if (typeof $.jgrid !== 'undefined') {
+      $.jgrid.defaults = $.extend($.jgrid.defaults, { autoencode: true });
+   }
+   $('input[type=button]', this).attr('disabled', false);
 }

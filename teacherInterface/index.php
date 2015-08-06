@@ -1,36 +1,14 @@
-<!DOCTYPE html>
+<?php
+  include('./config.php');
+  header('Content-type: text/html');
+?><!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title data-i18n="page_title"></title>
- 
-<link rel="stylesheet" href="jquery-ui-1.8.20.custom.css" />
-<link rel="stylesheet" href="jqGrid/css/ui.jqgrid.css" />
-<link rel="stylesheet" href="admin.css" />
-<script src="jqGrid/js/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src='config.php'></script>
-<script src="i18next-1.7.5.min.js"></script> 
-<script src="jqGrid/js/jquery.jqGrid.min.js"></script>
-<script src="jquery-ui-1.8.20.custom.min.js"></script>
-<script src="integrationAPI.01/task-pr.js?v={{rand}}"></script>
-<script>
-   var namespaces = {
-      namespaces: ['translation', 'country' + config.countryCode],
-      defaultNs: 'translation'
-   }
-   var regions = [];
-   i18n.init({lng: config.defaultLanguage, fallbackLng: [config.defaultLanguage], getAsync: false, resGetPath: "i18n/__lng__/__ns__.json", ns: namespaces, useDataAttrOptions: true}, function(t) {
-      document.write('<script src="regions/' + config.countryCode + '/regions.js">\x3C/script>');
-      document.write('<script src="admin.js?v={{rand}}">\x3C/script>');
-      document.write('<script src="jqGrid/js/i18n/grid.locale-' + config.defaultLanguage + '.js">\x3C/script>');
-   });
-</script>
-<script>
-var domains = [];
-$.getJSON('regions/' + config.countryCode + '/domains.json', function(data) {
-   domains = data.domains;
-});
-</script>
+<?php stylesheet_tag('/bower_components/jquery-ui/themes/base/jquery-ui.min.css'); ?>
+<?php stylesheet_tag('/bower_components/jqgrid/css/ui.jqgrid.css'); ?>
+<?php stylesheet_tag('/admin.css'); ?>
 </head>
 <body>
 <form autocomplete="off">
@@ -253,11 +231,35 @@ $.getJSON('regions/' + config.countryCode + '/domains.json', function(data) {
          <button type="button" data-i18n="cancel" onclick="endSearchSchool()"/>
       </p>
    </div>
-   </form>
-   <script>
-      $("#login_link_to_home").attr('data-i18n-options', '{"contestPresentationURL": "' + config.contestPresentationURL + '"}');
-      $("body").i18n();
-      $("title").i18n();
-   </script>
+</form>
+<?php
+   global $config;
+   $language = $config->defaultLanguage;
+   $countryCode = $config->teacherInterface->countryCode;
+   // JSON3 shim for IE6-9 compatibility.
+   script_tag('/bower_components/json3/lib/json3.min.js');
+   // jquery 1.9 is required for IE6+ compatibility.
+   script_tag('/bower_components/jquery/dist/jquery.min.js');
+   // Ajax CORS support for IE9 and lower.
+   script_tag('/bower_components/jQuery-ajaxTransport-XDomainRequest/jquery.xdomainrequest.min.js');
+   script_tag('/bower_components/jquery-ui/jquery-ui.min.js');
+   script_tag('/bower_components/i18next/i18next.min.js');
+   script_tag('/bower_components/pem-platform/task-pr.js');
+   script_tag('/bower_components/jqgrid/js/minified/jquery.jqGrid.min.js');
+   script_tag('/bower_components/jqgrid/js/minified/i18n/grid.locale-' . $language . '.js');
+   script_tag('/regions/' . $countryCode . '/regions.js');
+   script_tag('/admin.js?t=1');
+?>
+<script>
+   window.config = <?= json_encode([
+      'defaultLanguage' => $language,
+      'countryCode' => $countryCode,
+      'infoEmail' => $config->email->sInfoAddress,
+      'forceOfficialEmailDomain' => $config->teacherInterface->forceOfficialEmailDomain,
+      'contestPresentationURL' => $config->contestPresentationURL,
+      'i18nResourcePath' => static_asset('/i18n/__lng__/__ns__.json')
+   ]) ?>;
+   init();
+</script>
 </body>
 </html>
