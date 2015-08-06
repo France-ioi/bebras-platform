@@ -1,13 +1,19 @@
 <?php
+require('../config.php');
 
-require_once __DIR__.'/../config.php';
+function escape_js($str) {
+	return str_replace('"', '\\"', $str);
+}
 
-header('Content-type: text/javascript');
+function static_asset($path) {
+	global $config;
+	return $config->contestInterface->baseUrl . $path;
+}
 
-$configArray = array(
-   'defaultLanguage' => $config->defaultLanguage,
-   'sAssetsStaticPath' => $config->teacherInterface->sAssetsStaticPath,
-   'sAbsoluteStaticPath' => $config->teacherInterface->sAbsoluteStaticPath
-);
+function script_tag($path) {
+	echo "<script type=\"text/javascript\" src=\"" . static_asset($path) . "\"></script>\n";
+}
 
-echo 'var config = '.json_encode($configArray).';';
+function stylesheet_tag($path) {
+	echo "<link rel=\"stylesheet\" href=\"" . static_asset($path) . "\" />\n";
+}

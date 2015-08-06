@@ -15,12 +15,17 @@
     "tests"
   ],
   "dependencies": {
-    "i18next": "~1.10.2",
-    "pem-platform": "France-IOI/pem-platform",
-    "jquery": "~2.1.4",
-    "json3": "~3.3.2",
+    "requirejs": "~2",
+    "almond": "~0.3",
+    "base64": "~0.3",
+    "jquery": "~1.9",
+    "jquery-ui": "~1.11",
     "jquery-ui-touch-punch": "*",
-    "jquery-ui": "~1.11.4",
-    "jQuery-ajaxTransport-XDomainRequest": "~1.0.4"
+    "jquery-postmessage": "git@github.com:miketaylr/jquery-postmessage.git",
+    "i18next": "~1.10",
+    "jQuery-ajaxTransport-XDomainRequest": "~1.0",
+    "json3": "~3.3",
+    "pem-platform": "France-IOI/pem-platform",
+    "utf8": "~2.1"
   }
 }

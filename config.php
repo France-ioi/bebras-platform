@@ -34,12 +34,13 @@ $config->aws->secret = '';
 $config->aws->region = '';
 $config->aws->bucketName = '';
 
-// URL at which the beaver-platform repository is installed, no trailing slash.
-$config->baseUrl = 'http://127.0.0.1';
-
 $config->teacherInterface = (object) array();
 $config->teacherInterface->sHotlineNumber = '';
 $config->teacherInterface->sCoordinatorFolder = 'http://coordinateur.castor-informatique.fr/';
+// URL at which the contestInterface subdirectory is served, no trailing slash.
+$config->contestInterface = (object) array();
+$config->contestInterface->baseUrl = 'http://127.0.0.1/contestInterface';
+
 $config->teacherInterface->sAssetsStaticPath = 'http://castor.pem.dev/contestInterface/';
 $config->teacherInterface->sAbsoluteStaticPath = 'http://coordinateur.castor-informatique.fr/';
 $config->teacherInterface->genericPasswordMd5 = '';
@@ -48,6 +49,7 @@ $config->teacherInterface->generationMode = 'local';
 $config->teacherInterface->sAbsoluteStaticPathOldIE = 'http://coordinateur.castor-informatique.fr/';
 $config->teacherInterface->sContestGenerationPath = '/../contestInterface/contests/';
 $config->teacherInterface->forceOfficialEmailDomain = false;
+$config->teacherInterface->baseUrl = 'http://127.0.0.1/teacherInterface';
 
 $config->certificates = (object) array();
 $config->certificates->webServiceUrl = 'http://castor-informatique.fr.localhost/certificates/';

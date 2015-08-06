@@ -1,5 +1,5 @@
 <?php
-  include('../common.php');
+  include('./config.php');
   header('Content-type: text/html');
 ?><!DOCTYPE html>
 <html>
@@ -7,7 +7,7 @@
 <meta charset='utf-8'>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title data-i18n="general_page_title"></title>
-<?php stylesheet_tag('/contestInterface/style.css'); ?>
+<?php stylesheet_tag('/style.css'); ?>
 </head><body>
 <form autocomplete="off">
 <div id="divHeader">
@@ -206,33 +206,27 @@
   // jquery 1.9 is required for IE6+ compatibility.
   script_tag('/bower_components/jquery/jquery.min.js');
   // Ajax CORS support for IE9 and lower.
-  echo('<!--[if lte IE 9]>');
-  script_tag('/bower_components/jquery.xdomainrequest/jquery.xdomainrequest.min.js');
-  echo('<![endif]-->');
+  script_tag('/bower_components/jQuery-ajaxTransport-XDomainRequest/jquery.xdomainrequest.min.js');
   script_tag('/bower_components/jquery-ui/jquery-ui.min.js');
+  script_tag('/bower_components/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js');
   script_tag('/bower_components/jquery-postmessage/jquery.ba-postmessage.min.js');
   script_tag('/bower_components/i18next/i18next.min.js');
   script_tag('/bower_components/utf8/utf8.js');
   script_tag('/bower_components/base64/base64.min.js');
-  script_tag('/contestInterface/jquery.ui.touch-punch.min.js');
-  script_tag('/contestInterface/integrationAPI/task-pr.js?v={{rand}}'); # XXX cache-busting
-  script_tag('/contestInterface/common.js?v={{rand}}');
+  script_tag('/bower_components/pem-platform/task-pr.js');
+  script_tag('/common.js');
   global $config;
 ?>
 <script>
-  var config = <?= json_encode([
-     'defaultLanguage' => $config->defaultLanguage,
-     'sAssetsStaticPath' => static_asset('/contestInterface'),
-     'sAbsoluteStaticPath' => $config->teacherInterface->sAbsoluteStaticPath
-  ]) ?>;
-  var contestsRoot = <?= json_encode(static_asset('/contestInterface/contests/')) ?>;
+  window.contestsRoot = <?= json_encode(static_asset('/contests')) ?>;
   i18n.init(<?= json_encode([
     'lng' => $config->defaultLanguage,
     'fallbackLng' => [$config->defaultLanguage],
-    'getAsync' => false,
-    'resGetPath' => static_asset('/contestInterface/i18n/__lng__/__ns__.json')
-  ]) ?>);
-  $("title").i18n();
-  $("body").i18n();
+    'getAsync' => true,
+    'resGetPath' => static_asset('/i18n/__lng__/__ns__.json')
+  ]) ?>, function () {
+    $("title").i18n();
+    $("body").i18n();
+  });
 </script>
 </body></html>
