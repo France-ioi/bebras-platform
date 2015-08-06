@@ -31,7 +31,7 @@ var t = i18n.t;
  * Old IE versions does not implement the Array.indexOf function
  * Setting it in Array.prototype.indexOf makes IE crash
  * So the graders are using this inArray function
- * 
+ *
  * @param {array} arr
  * @param {type} value
  * @returns {int}
@@ -41,13 +41,13 @@ function inArray(arr, value) {
         if (arr[i] == value) {
             return i;
         }
-    }    
+    }
     return -1;
 }
 
 /**
  * The platform object as defined in the Bebras API specifications
- * 
+ *
  * @type type
  */
 var platform = {
@@ -72,7 +72,7 @@ var platform = {
          } else if (res.options && key in res.options) {
             return res.options[key];
          }
-         return (typeof defaultValue !== 'undefined') ? defaultValue : null; 
+         return (typeof defaultValue !== 'undefined') ? defaultValue : null;
       }
       return res;
    },
@@ -81,7 +81,7 @@ var platform = {
          alert(t("contest_closed_answers_readonly"));
          return;
       }
-     
+
       // Store the answer
       questionIframe.task.getAnswer(function(answer) {
          if (mode == "cancel") {
@@ -112,7 +112,7 @@ var platform = {
          } else {
             submitAnswer(questionIframe.questionKey, answer, null);
             answers[questionIframe.questionKey] = answer;
-            platform.continueValidate(mode);            
+            platform.continueValidate(mode);
          }
       });
    },
@@ -172,10 +172,10 @@ var questionIframe = {
    questionKey: null,
    task: null,
    gradersLoaded: false,
-   
+
    /**
     * Load a javascript file inside the iframe
-    * 
+    *
     * @param string filename
     * @param {function} callback
     */
@@ -184,7 +184,7 @@ var questionIframe = {
       script.src = filename;
       if (script.addEventListener) {
          script.addEventListener('load', callback, false);
-      } 
+      }
       else if (script.readyState) {
          script.onreadystatechange = function () {
             if (script.readyState === 'complete' || script.readyState === 'loaded') {
@@ -192,13 +192,13 @@ var questionIframe = {
             }
          }
       }
-      
+
       this.tbody.appendChild(script);
    },
-   
+
    /**
     * Load a css file inside the iframe
-    * 
+    *
     * @param string filename
     */
    addCssFile: function(filename) {
@@ -208,10 +208,10 @@ var questionIframe = {
       css.href = filename;
       this.doc.getElementsByTagName('head')[0].appendChild(css);
    },
-   
+
    /**
     * Add some css inside the iframe
-    * 
+    *
     * @param {string} content Css content
     */
    addCssContent: function(content) {
@@ -227,10 +227,10 @@ var questionIframe = {
       // We can put it in #jsContent as it makes no difference
       this.doc.getElementById('jsContent').appendChild(style);
    },
-   
+
    /**
     * Add some javascript inside the iframe
-    * 
+    *
     * @param {string} content Javascript content
     */
    addJsContent: function(content) {
@@ -243,14 +243,14 @@ var questionIframe = {
       }
       this.doc.getElementById('jsContent').appendChild(script);
    },
-   
+
    /**
     * Remove the JS added by the addJsContent method
     */
    removeJsContent: function() {
       this.body.find('#jsContent').empty();
    },
-   
+
    /**
     * Inject Javascript code in iframe
     */
@@ -265,60 +265,60 @@ var questionIframe = {
          alert("No eval!");
       }
    },
-   
+
    /**
     * Evaluate something in the iframe context
-    * 
+    *
     * @param {string} expr
     * @returns result
     */
    evaluate: function(expr) {
       return this.iframe.contentWindow.eval(expr);
    },
-   
+
    /**
     * Initialize the question iframe, must be run before anything else.
     * Acts somewhat like a constructor
-    * 
+    *
     * @param {function} callback when everything is loaded
     */
    initialize: function(callback) {
       // The iframe is removed then recreated. It is the only way to add a Doctype in it
       $('#question-iframe').remove();
-      
+
       var iframe = document.createElement('iframe');
       iframe.setAttribute('id', 'question-iframe');
       iframe.setAttribute('scrolling', 'no');
       iframe.setAttribute('src', 'about:blank');
-      
+
       var content = '<!DOCTYPE html>'
        + '<html><head><meta http-equiv="X-UA-Compatible" content="IE=edge"></head>'
        + '<body></body></html>';
       var ctnr = document.getElementById('question-iframe-container');
       ctnr.appendChild(iframe);
-      
+
       iframe.contentWindow.document.open('text/html', 'replace');
       iframe.contentWindow.document.write(content);
       if ($.browser.mozilla)
          iframe.contentWindow.document.close();
-      
+
       this.iframe = $('#question-iframe')[0];
       this.doc = $('#question-iframe')[0].contentWindow.document;
       this.body = $('body', this.doc);
       this.tbody = this.doc.getElementsByTagName('body')[0];
-      
+
       this.setHeight(0);
       this.body.css('width', '822px');
       this.body.css('margin', '0');
       this.body.css('padding', '0');
-      
+
       // users shouldn't reload iframes
       this.inject('window.onbeforeunload = function() {return "Désolé, il est impossible de recharger l\'iframe. Si un problème est survenu, sélectionnez une autre question et revenez sur celle-ci.";};');
-      
+
       // Inject localized strings
       this.inject('var t = function(item) {return item;}; function setTranslate(translateFun) { t = translateFun; }');
       this.iframe.contentWindow.setTranslate(t);
-      
+
       // Inject ImagesLoader
       this.inject('var ImagesLoader = { \n\
     newUrlImages: {}, \n\
@@ -413,18 +413,18 @@ var questionIframe = {
         }); \n\
     } \n\
 };');
-      
+
       // No more global css file
       //this.addCssFile(contestsRoot + contestFolder + '/contest_' + contestID + '.css');
-      
+
       // Call image preloading
       this.addJsFile(contestsRoot + contestFolder + '/contest_' + contestID + '.js', callback);
-      
+
       this.body.append('<div id="jsContent"></div><div id="container" style="border: 1px solid #000000; padding: 10px 20px 10px 20px;"><div class="question" style="font-size: 20px; font-weight: bold;">Le contenu du concours est en train d\'être téléchargé, merci de patienter le temps nécessaire.</div></div>');
-      
+
       this.initialized = true;
    },
-   
+
    /**
     * Run the task, should be called only by the loadQuestion function
     */
@@ -443,19 +443,19 @@ var questionIframe = {
             });
          });
       });
-      
+
       // Iframe height "hack" TODO: why two timers?
-      setTimeout(function() { 
+      setTimeout(function() {
          questionIframe.task.getHeight(function(height) {
             platform.updateHeight(height);
          });
       }, 500);
-      setTimeout(function() { 
+      setTimeout(function() {
          questionIframe.task.getHeight(function(height) {
             platform.updateHeight(height);
          });
       }, 1000);
-      
+
       // TODO : test without timeout : should not be needed.
       setTimeout(function() {
          var nextStep = function() {
@@ -469,7 +469,7 @@ var questionIframe = {
                   hasDisplayedContestStats = true;
                }
             }, 200);
-            
+
             if (callback != undefined) {
                callback();
             }
@@ -486,10 +486,10 @@ var questionIframe = {
          }
       }, 50);
    },
-   
+
    /**
     * Load the question, should be call only by the load function
-    * 
+    *
     * @param string questionKey
     */
    loadQuestion: function(taskViews, questionKey, callback) {
@@ -500,17 +500,17 @@ var questionIframe = {
          questionContent = 'Il s\'est produit une anomalie lors du téléchargement du contenu du concours. Veuillez tenter de recharger la page avec Ctrl+R ou Ctrl+F5. Si cela ne fonctionne pas, essayez éventuellement avec un autre navigateur. En cas d\'échec répété, merci de contacter la hotline, pour que nous puissions rechercher la cause de ce problème.';
       }
       this.body.find('#container').append('<div id="question-'+questionKey+'" class="question">'+questionContent+'</div>');
-      
+
       // Remove task-specific previous added JS, then add the new one
       this.removeJsContent();
-      
+
       // Load js modules
       var that = this;
       $('.js-module-'+questionKey).each(function() {
          var jsModuleId = 'js-module-'+$(this).attr('data-content');
          that.addJsContent($('#'+jsModuleId).attr('data-content'));
       });
-      
+
       // Load specific js
       this.addJsContent($('#javascript-' + questionKey).attr('data-content'));
       if ('solution' in taskViews) {
@@ -519,7 +519,7 @@ var questionIframe = {
       if ('grader' in taskViews) {
          this.addJsContent($('#javascript-grader-' + questionKey).attr('data-content'));
       }
-      
+
       // Load css modules
       var that = this;
       $('.css-module-'+questionKey).each(function() {
@@ -531,14 +531,14 @@ var questionIframe = {
          questionIframe.run(taskViews, callback);
          loadSolutionChoices(questionKey);
       }, 100);
-      
+
       this.loaded = true;
       this.questionKey = questionKey;
    },
-   
+
    /**
     * Load the question when ready
-    * 
+    *
     * @param {string} questionKey
     */
    load: function(taskViews, questionKey, callback) {
@@ -559,7 +559,7 @@ var questionIframe = {
          this.loadQuestion(taskViews, questionKey, callback);
       }
    },
-   
+
    setHeight: function(height) {
        height = Math.max($(window).height() - 79, height + 25);
        $('#question-iframe').css('height', height + 'px');
@@ -714,7 +714,7 @@ var TimeManager = {
          TimeManager.endTimeCallback();
       }
    },
-   
+
    setEndTime: function(endTime) {
       this.endTime = endTime;
    },
@@ -809,7 +809,7 @@ function setupContest(data) {
    window.onbeforeunload = function() {
       return t("warning_confirm_close_contest");
    }
-   
+
    // Map question key to question id array
    for (var questionID in questionsData) {
       questionsKeyToID[questionsData[questionID].key] = questionID;
@@ -819,9 +819,9 @@ function setupContest(data) {
    var questionData = questionsData[sortedQuestionIDs[0]];
    // We don't want to start the process of selecting a question, if the grading is going to start !
    var noLoad = (data.endTime != null);
-   
+
    selectQuestion(sortedQuestionIDs[0], false, noLoad);
-   
+
    // Reloads previous answers to every question
    answers = {};
    for (var questionID in data.answers) {
@@ -844,7 +844,7 @@ function setupContest(data) {
          closeContest("<b>" + t("time_is_up") + "</b>");
       }
    );
-   
+
    //questionIframe.iframe.contentWindow.ImagesLoader.refreshImages();
 }
 
@@ -884,7 +884,7 @@ function loadContestData(contestID, contestFolder, groupPassword, teamID)
          }
          showQuestionIframe();
          $("#divImagesLoading").hide();
-         
+
          $.post("data.php", {SID: SID, action: "loadContestData", groupPassword: groupPassword, teamID: teamID},
          function(data) {
             if (!data.success) {
@@ -893,7 +893,7 @@ function loadContestData(contestID, contestFolder, groupPassword, teamID)
                return;
             }
             $("#divCheckGroup").hide();
-            
+
             function oldLoader() {
                $.get(contestsRoot + contestFolder + "/contest_" + contestID + ".html", function(content) {
                   $('#divQuestionsContent').html(content);
@@ -919,7 +919,7 @@ function loadContestData(contestID, contestFolder, groupPassword, teamID)
 
          }, "json");
       });
-      
+
       questionIframe.iframe.contentWindow.ImagesLoader.preload(contestFolder);
    });
 }
@@ -927,7 +927,7 @@ function loadContestData(contestID, contestFolder, groupPassword, teamID)
 /**
  * Update the number of preloaded images
  * Called by the task
- * 
+ *
  * @param {string} content
  */
 function setNbImagesLoaded(content) {
@@ -1360,7 +1360,7 @@ function finalCloseContest(message) {
          hideQuestionIframe();
          $("#divImagesLoading").show();
          $("#divHeader").show();
-         
+
          showScoresHat();
       }
    });
@@ -1434,9 +1434,9 @@ function gradeQuestion(i) {
       sendScores();
       return;
    }
-   
+
    var curQuestion = questionsToGrade[i];
-   
+
    questionIframe.load({'task': true, 'grader': true}, curQuestion.questionKey, function() {
       var score = null;
       questionIframe.iframe.contentWindow.grader.gradeTask(curQuestion.answer, null, function(newScore, message) {
@@ -1574,7 +1574,7 @@ function selectQuestion(questionID, clicked, noLoad) {
       }
       $("#questionTitle").html(questionName);
       currentQuestionKey = questionKey;
-      
+
       if (!questionIframe.initialized) {
          questionIframe.initialize();
       }
@@ -1756,7 +1756,7 @@ function loadSolutionsHat() {
             $.get(data.solutionsUrl, function(content) {
                $('#divSolutionsContent').html(content)
                loadSolutions(data);
-            });     
+            });
          }
       }
    }, 'json');
@@ -1769,12 +1769,12 @@ function loadSolutions(data) {
       var questionData = questionsData[questionID];
       $("#question-" + questionData.key).append("<hr>" + $("#solution-" + questionData.key).html());
    }
-   
+
    $("#divQuestions").hide();
    hideQuestionIframe();
    $("#divImagesLoading").show();
    $("#divHeader").show();
-   
+
    // The callback will be used by the task
    if (questionIframe.iframe.contentWindow.preloadSolImages != undefined) {
      questionIframe.iframe.contentWindow.preloadSolImages();
@@ -1798,9 +1798,9 @@ function loadSolutions(data) {
             }
             alert(t("check_score_detail"));
          })
-         
+
      });
-     
+
      questionIframe.iframe.contentWindow.ImagesLoader.preload(contestFolder);
    }, 50);
 }
@@ -1826,7 +1826,7 @@ function htmlspecialchars_decode(string, quote_style) {
    var optTemp = 0;
    var i = 0;
    var noquotes = false;
-   
+
    if (typeof quote_style === 'undefined') {
      quote_style = 2;
    }
@@ -1864,7 +1864,7 @@ function htmlspecialchars_decode(string, quote_style) {
    }
    // Put this in last place to avoid escape being double-decoded
    string = string.replace(/&amp;/g, '&');
-   
+
    return string;
 }
 
@@ -1922,7 +1922,7 @@ Loader.prototype.load_next = function(item) {
             var delta = new Date().getTime() - self.start_time;
             self.n_loaded += 1;
             // speed of last download in b/ms, or kb/s (data.length is approximately in bytes)
-            var last_speed = data.length * 8 / delta; 
+            var last_speed = data.length * 8 / delta;
             // factor so that delay is around 4s at 10kb/s, 0.4s at 100kb/s
             // multiplying by 1+rand() so that users in the same room don't wait the same time, causing bottlenecks
             var k = 30000 * (1 + Math.random());
