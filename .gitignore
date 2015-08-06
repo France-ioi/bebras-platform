@@ -1,3 +1,5 @@
-vendor/
-contestInterface/bower_components/
-teacherInterface/bower_components/
+/vendor/
+/contestInterface/bower_components/
+/contestInterface/contests/
+/teacherInterface/bower_components/
+/teacherInterface/beaver_tasks/
