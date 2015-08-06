@@ -1,0 +1,182 @@
+<table style="width:100%">
+  <tr>
+    <td style="width:40%">
+      <img src="http://castor-informatique.fr/img/castor_small.png"><br/>
+      http://castor-informatique.fr<br/>
+      email: info@castor-informatique.fr
+    </td>
+    <td style="width:60%">
+      <div style="float:right">
+         À l'attention de <?= $userFirstName ?> <?= $userLastName ?><br/>
+         Coordinateur du concours Castor<br/>
+         <?= $schoolName; ?><br/>
+         <?= $schoolAddress ?><br/>
+         <?= $schoolZipcode ?> <?= $schoolCity ?><br/>
+         <?= $schoolCountry ?><br/>
+      </div>
+    </td>
+  </tr>
+</table>
+
+<br/>
+<br/>
+<p>
+Chère Collègue Coordinatrice du Castor, Cher Collègue Coordinateur du Castor,
+</p>
+
+<p>
+Un grand bravo à vos élèves ! Ils se sont classés parmi les premiers de leur catégorie, sur ce concours. C'est remarquable, quand on sait qu'il y avait plus de 228 000 élèves participants dans plus de 1500 établissements français, pour cette quatrième année.
+</p>
+
+<p>
+Un grand merci aussi à vous et vos collègues pour votre participation active à l'organisation du concours dans votre établissement. Vous avez contribué au succès du Castor, donc à faire découvrir l'informatique et les sciences du numérique à un très grand nombre d'élèves.
+</p>
+
+<p>
+L'aventure n'est pas terminée :
+</p>
+<ul>
+<li>
+l'expérience du Castor peut se prolonger pour vos élèves, en classe ou à la maison, en rejouant les exercices et en consultant les corrections et les commentaires disponibles sur le site du concours :<br/>
+		http://castor-informatique.fr 
+</li>
+<li>
+et surtout l'aventure Castor reprendra en novembre 2015, pour la cinquième édition du concours.
+</li>
+</ul>
+<p>
+Par ailleurs, un certain nombre de vos élèves est qualifié pour l'étape suivante : le premier tour du concours Algoréa. Rendez-vous sur votre interface coordinateur pour en voir la liste, et organiser leur participation.
+</p>
+<p>
+Vous trouverez dans le présent envoi les petits trophées gagnés par vos élèves au concours 2014. Pour chaque élève listé :
+</p>
+
+<ul>
+<li>une clé USB à l'effigie de la mascotte et avec des contenus numériques ludiques et utiles,</li>
+<li>une revue.</li>
+</ul>
+
+<p>
+<b>La liste des élèves récompensés est donnée au dos de ce document.</b>
+</p>
+<p>
+<b>Veuillez accuser réception de ce colis en vous rendant sur votre interface coordinateur (http://coordinateur.castor-informatique.fr)</b>
+</p>
+Bien Cordialement,<br/>
+L'équipe du Castor.
+</p>
+
+<br/>
+<table style="width:100%">
+  <tr>
+    <td style="">
+      Organisateurs du Castor
+    </td>
+    <td style="">
+      Partenaires du Castor
+    </td>
+  </tr>
+  <tr>
+    <td>
+       <img style="height:50px" src="http://castor-informatique.fr/img/logo_ensc_bleu.png">
+       <img style="height:55px" src="http://castor-informatique.fr/img/logo_franceioi.jpg">
+       <img style="height:50px" src="http://castor-informatique.fr/img/logo_inria.png">
+    </td>
+    <td>
+      <table><tr>
+         <td><img style="height:40px" src="http://castor-informatique.fr/img/logo_cnrs.gif"></td>
+         <td><img style="height:40px" src="http://castor-informatique.fr/img/logo_sif.png"></td>
+         <td><img style="height:40px" src="http://castor-informatique.fr/img/logo_pascaline.jpg"></td>
+      </tr><tr>
+         <td><img style="height:40px" src="http://castor-informatique.fr/img/logo_epi.png"></td>
+         <td><img style="height:40px" src="http://castor-informatique.fr/img/logo_systematic.jpg"></td>
+         <td><img style="height:40px" src="http://castor-informatique.fr/img/logo_tour123.png"></td>
+      </tr></table>
+    </td>
+  </tr>
+</table>
+
+<p class="breakhere"></p>
+
+<p style="text-align:center;font-size:26px">
+<b>Attribution des lots</b>
+</p>
+
+<table><tr>
+   <td style="width:250px;vertical-align:top">
+      <p style="font-size:20px">
+      <b>Établissement</b> :
+      </p>
+   </td>
+   <td>
+      <p style="font-size:18px">
+            <b style="font-size:1.2em"><?= $schoolName ?></b><br/>
+            <?= $schoolAddress ?><br/>
+            <?= $schoolZipcode ?> <?= $schoolCity ?><br/>
+            <?= $schoolCountry ?><br/>
+      </p>
+   </td>
+</tr></table>
+<br/>
+<table><tr>
+   <td style="width:250px;vertical-align:top">
+      <p style="font-size:20px">
+      <b>Contenu de ce colis :</b>
+      </p>
+   </td>
+   <td>
+      <p style="font-size:18px">
+        Clés USB : <b style="font-size:1.5em"><?= $nbInGroup ?></b><br/>
+        Revues : <b style="font-size:1.5em"><?= $nbInGroup ?></b>
+      </p>
+   </td>
+</tr></table>
+<br/>
+<table><tr>
+   <td style="width:250px;vertical-align:top">
+      <p style="font-size:20px">
+      <b>Coordinateur(s) :</b>
+      </p>
+   </td>
+   <td>
+      <p style="font-size:18px">
+      <?php foreach ($users as $user): ?>
+        <?= $user->firstName ?> <?= $user->lastName ?><br/>
+      <?php endforeach ?>
+      </p>
+   </td>
+</tr></table>
+<br/>
+
+<p>
+Chacun des élèves listés ci-dessous reçoit une clé USB et une revue.
+</p>
+<?php if($nbGroups > 1): ?>
+<p>
+Vous recevrez <?= $nbGroups-1 ?> autre(s) courrier(s) avec le reste des lots pour un total de <?= $nbTotal ?> élèves récompensés.
+</p>
+<?php endif ?>
+
+
+<table style="width:100%">
+  <tr>
+    <td style="width:40%"><b>Nom de l'élève :</b></td>
+    <td style="width:30%"><b>Catégorie :</b></td>
+    <td style="width:15%"><b>Classement :</b></td>
+    <td style="width:15%"><b>Score :</b></td>
+  </tr>  
+  <?php foreach($contestants as $contestant): ?>
+  <tr>
+    <td><?= $contestant->lastName?> <?= $contestant->firstName?></td>
+    <td><?= $contestant->category?></td>
+    <td><?= $contestant->rank ?></td>
+    <td><?= $contestant->score ?></td>
+  </tr> 
+  <?php endforeach ?>
+</table>
+
+<p>
+Notez également que des diplômes pour l'ensemble des candidats ayant participé peuvent être imprimés depuis votre interface coordinateur.
+</p>
+
+<p class="breakhere"></p>

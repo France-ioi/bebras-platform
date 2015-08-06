@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset='utf-8'>
+      <style>
+         @media print{@page {size: landscape}}
+         body {
+            font-family: arial;
+            color: #4A5785;
+         }
+         .bordered {
+             border-spacing:0;
+             border-collapse:collapse;
+         }
+         .bordered td {
+            border: solid black 1px;
+            padding: 2px;
+         }
+      </style>
+   </head>
+   <body>
+      <center style="font-size:2em">Attention : les classements nationaux et par établissement ne sont affichés sur un diplôme que lorsque qu'ils sont dans la première moitié.</center>
+      {groups}
+   </body>
+</html>

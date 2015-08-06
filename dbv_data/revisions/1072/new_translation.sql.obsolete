@@ -1,0 +1,1 @@
+INSERT INTO `translations` (`ID`, `languageID`, `category`, `key`, `translation`, `iVersion`) VALUES (NULL, '1', 'admin', 'print_awards', 'Imprimer les récompenses', ''), (NULL, '2', 'admin', 'print_awards', 'Print awards', '');

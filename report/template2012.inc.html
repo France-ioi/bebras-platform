@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Concours Castor Informatique Français</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+  <style type="text/css">
+    #global {
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+        width: 700px;
+    }
+  </style>
+<link rel="stylesheet" href="http://coordinateur.castor-informatique.fr/jquery-ui-1.8.20.custom.css" />
+<script src='http://concours1.castor-informatique.fr/jquery-1.7.1.min.js'></script>
+<script src="http://concours1.castor-informatique.fr/ext/highcharts/js/highcharts.js" type="text/javascript"></script>
+<script src="http://coordinateur.castor-informatique.fr/jquery-ui-1.8.20.custom.min.js"></script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-24298685-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<script type="text/javascript">
+function displayCharts(src, dst)
+{
+   var chart;
+   var options = {
+      chart: {
+         renderTo: dst,
+         type: 'line'
+      },
+      title: {
+         text: null,
+      },
+      xAxis:{
+         title: {
+            text: 'Rang',
+            //align:"high"
+         },
+         labels: {
+            formatter: function() {
+               return this.value;
+            }
+         }
+      },
+      yAxis: {
+         title: {
+            text: 'Score',
+            //rotation: 0,
+            //align:"high",
+            //offset:0
+         },
+         tickInterval:20,
+         //startOnTick:false,
+         //endOnTick:false
+      },
+      plotOptions: {
+         spline: {
+            marker: {
+              radius: 40,
+              lineColor: '#666666',
+              lineWidth: 1
+            }
+         }
+      },
+      tooltip: {
+         formatter: function() {
+            var s = "";
+            if (this.x == 1)
+               s += "1er";
+            else
+               s += this.x +'ème';
+            s += ' : '+ this.y + ' points';
+            return s;
+         }
+      },
+      legend: {
+         enabled:false,   
+      },
+      credits: {
+         enabled:false,
+      },
+      series: [{
+         name: 'Curve',
+         marker: {
+            radius: 0,
+            lineWidth: 2,
+            lineColor:"#4572A7"
+         }
+      }]
+   };
+   
+    
+   var scores = [];
+   var ranks = [];
+   var scoreMin = 0, scoreMax = 0;
+   $("#"+src).find("tr:not(:first)").each(function(){
+      var score = parseInt($(this).find("td:first").text());
+      var rank = parseInt($(this).find("td:last").text());
+      scores.push([rank, score]);
+      ranks.push(rank);
+      scoreMin = Math.min(scoreMin, score);
+      scoreMax = Math.max(scoreMax, score);
+   });
+   options.yAxis.min = scoreMin;
+   options.yAxis.max = scoreMax;
+   options.series[0].data = scores;
+   chart = new Highcharts.Chart(options);   
+}
+
+
+$(function () {
+   $("div[id^=ranks]").each(function(){
+      var id = $(this).attr('id').replace('ranks-', '');
+      displayCharts("ranks-"+id, "graph-"+id); 
+   });
+
+   $("#results").tabs();
+   $("#results").show();
+});
+</script> 
+
+</head>
+
+<body>
+<a name="top" id="top"></a>
+
+<div id="header">
+  <h1>Castor Informatique</h1>
+  <h2>Résultats 2012</h2>
+</div>
+		
+<div id="content">
+
+<div id="sidebar">
+<div class="submenu">
+<h1>Menu</h1>
+  <a href="index.html">Accueil</a>
+  <a href="epreuve2012.html">Epreuve 2012</a>
+  <a href="epreuve2011.html">Epreuve 2011</a>
+  <a href="epreuve2010.html">Epreuve 2010</a>
+  <a href="faq.html">FAQ</a>
+  <a href="contacts.html">Qui sommes nous ?</a>
+</div>
+</div>
+
+<div id="mainbar">
+
+<h1>L'édition 2012 est terminée</h1>
+<p>
+La deuxième édition du concours Castor Informatique Français a été un grand succès :
+</p>
+<ul>
+<li>L'épreuve 2012 s'est déroulée du lundi 12 Novembre (5h du matin, heure française)  au vendredi 16 Novembre (minuit). </li>
+<li>{NB_STUDENTS} élèves ont participé, dont {PERCENT_GIRLS}% de filles.</li>
+<li>{NB_SCHOOLS} établissements ont pris part au concours.</li>
+</ul>
+
+<p>
+Vous pouvez visualiser sur <a href="map2012.html" target="_blank">une carte</a> les établissements participants. Il vous faudra pour cela un navigateur récent.
+</p>
+
+<h1>Les lots 2012</h1>
+<p>
+Des clés USB à l'effigie du Castor seront distribuées aux meilleurs. Le détail de l'attribution des lots n'est pas encore fixé. Merci de patienter.
+</p>
+<p>
+Des diplômes pour chacun des participants sont désormais disponibles depuis l'interface coordinateur.
+</p>
+
+<h1>Rejouer l'épreuve 2012</h1>
+<p>
+L'épreuve peut être rejouée librement sur le <a href="http://concours.castor-informatique.fr">site du concours</a>. Une fois l'épreuve terminée, une correction détaillée est affichée pour chaque question.
+</p>
+
+
+<h1>Le classement 2012</h1>
+<p>
+Chaque élève peut voir son score détaillé en se connectant sur <a href="http://concours.castor-informatique.fr">la plate-forme du concours</a> et en utilisant le code qui lui avait été fourni au début de l'épreuve. Les coordinateurs peuvent y consulter et télécharger l'ensemble des scores de leur établissement sur l'interface coordinateur.
+</p>
+<p>
+Les graphes et tableaux ci-dessous vous permettent de déterminer votre classement à partir de votre score. Si par exemple vous avez participé dans la catégorie 6ème/5ème, et que vous avez obtenu 167 points, vous pouvez voir dans le tableau que vous êtes classé(e) 382<sup>e</sup> parmi tous les élèves de votre catégorie.
+</p>
+<p>
+Notez qu'il y a souvent des ex-aequo. Par exemple 96 élèves sont ex-aequo à la première place dans la catégorie 6ème/5ème avec un score de 182 points.
+</p>
+
+
+{RESULTS}
+
+</div>
+</div>
+</div>
+</body>
+</html>

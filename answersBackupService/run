@@ -1,0 +1,57 @@
+#!/usr/bin/env ruby
+# encoding: UTF-8
+
+require 'bundler/setup'
+Bundler.require(:default)
+
+require 'set'
+require 'oj'
+require 'multi_json'
+require 'yaml'
+require 'uri'
+require 'cgi'
+require 'fileutils'
+require 'base64'
+require 'optparse'
+require 'unicorn'
+require 'sinatra'
+
+# Extend the load path.
+$LOAD_PATH.unshift(File.join(__dir__, 'lib'))
+
+require 'castor'
+require 'castor_app'
+Castor.init
+
+case cmd = ARGV.shift
+when 'c'
+	require 'irb'
+	IRB.start
+when 'r'
+	load ARGV.shift
+else
+	CastorApp.class_eval do
+		set :run, false
+		set :root, Castor.root_dir
+		set :protection, except: :http_origin
+		set :logging, Castor[:logging]
+		enable :dump_errors
+		disable :raise_errors
+		disable :show_exceptions
+		disable :reload_templates
+	end
+	builder = Rack::Builder.new do
+		use Rack::Protection::HttpOrigin, origin_whitelist: []
+		run CastorApp
+	end
+	options = {
+		listeners: Castor[:listeners],
+		worker_processes: Castor[:worker_processes],
+		timeout: Castor[:timeout]
+	}
+	Castor.write_pidfile
+	Unicorn::HttpServer.new(builder, options).start.join
+end
+
+Process.exit 0
+

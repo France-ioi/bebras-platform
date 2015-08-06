@@ -1,0 +1,21 @@
+SetOutputFilter DEFLATE
+
+# Netscape 4.x has some problems...
+BrowserMatch "^Mozilla/4" gzip-only-text/html
+
+# Netscape 4.06-4.08 have some more problems
+BrowserMatch "^Mozilla/4\.0[678]" no-gzip
+
+# Due to bugs in IE 4, disable compression entirely...
+BrowserMatch "^Mozilla/[45].0 \(compatible; MSIE [456]" no-gzip
+
+# IE 6 SP2 (SV1) works fine so enable everything
+BrowserMatch "^Mozilla/[45].0 \(compatible; MSIE 6.0; Windows NT 5.1; SV1" !no-gzip !gzip-only-text/html
+
+# Don't compress images or PDFs
+SetEnvIfNoCase Request_URI "\.(?:gif|jpe?g|png|pdf)$" no-gzip dont-vary
+
+# Make sure proxies don't deliver the wrong content
+<IfModule mod_headers.c>
+Header append Vary "User-Agent" env=!dont-vary
+</IfModule>

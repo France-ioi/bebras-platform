@@ -1,0 +1,4 @@
+30 12 * * * nice -n 19 $HOME/bin/backup.sh castor_major
+ 0 19 * * * nice -n 19 $HOME/bin/backup.sh castor_major
+ 0  7 * * * nice -n 19 $HOME/bin/backup.sh castor_major
+ 0  1 * * * nice -n 19 $HOME/bin/backup.sh castor_major castor_team_question castor_all

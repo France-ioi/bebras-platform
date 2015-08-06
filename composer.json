@@ -1,0 +1,15 @@
+{
+   "repositories": [{
+      "type": "vcs",
+      "url": "http://github.com/France-ioi/pem-task-compiler"
+   }],
+   "config": {
+      "vendor-dir": "vendor"
+   },
+   "require": {
+      "guzzlehttp/guzzle": "*",
+      "aws/aws-sdk-php": "*",
+      "France-IOI/pem-task-compiler": "*@dev",
+      "doctrine/cache": "1.3.*"
+   }
+}

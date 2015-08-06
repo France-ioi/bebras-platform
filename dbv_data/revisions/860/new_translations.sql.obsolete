@@ -1,0 +1,17 @@
+INSERT INTO `translations` (languageID, category, `key`, translation) VALUES
+(1, 'admin', 'spread_castor_title', 'Faites connaître le Castor<br> autour de vous !'),
+(1, 'admin', 'spread_castor_message', 'Recommander le Castor de ma part à ...'),
+(1, 'admin', 'spread_castor_validate', 'Envoyer'),
+(1, 'admin', 'spread_castor_email', 'email :'),
+(1, 'admin_js', 'spread_castor_invalid_email', 'Cette adresse email n\'est pas valide.'),
+(1, 'admin_js', 'spread_castor_already_known_email', 'Ce email correspond à un enseignant qui est déjà coordinateur ou bien qui a déjà reçu une recommandation.'),
+(1, 'admin_js', 'spread_castor_exceeded_max_email', 'Vous avez atteint le nombre maximum de recommandations que le site peut envoyer pour vous. Pour continuer, merci d\'envoyer vous-même les e-mails de recommandation.'),
+(1, 'admin_js', 'spread_castor_successful_email', 'Le message de recommandation a bien été envoyé. Merci pour votre aide !'),
+(2, 'admin', 'spread_castor_title', 'Let people around you know about Beaver !'),
+(2, 'admin', 'spread_castor_message', 'Recommend the Beaver on behalf of me to ...'),
+(2, 'admin', 'spread_castor_validate', 'Send'),
+(2, 'admin', 'spread_castor_email', 'email:'),
+(2, 'admin_js', 'spread_castor_invalid_email', 'This email address is invalid.'),
+(2, 'admin_js', 'spread_castor_already_known_email', 'This email corresponds to a teacher who is already a coordinator or has already received a recommendaation.'),
+(2, 'admin_js', 'spread_castor_exceeded_max_email', 'You have reached the maximum number of recommendations the site can send for you. To continue, please send the recommendation emails yourself.'),
+(2, 'admin_js', 'spread_castor_successful_email', 'The recommendation message has been sent. Thank you for your help!')

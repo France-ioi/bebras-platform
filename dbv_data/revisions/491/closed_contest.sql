@@ -1,0 +1,2 @@
+ALTER TABLE  `contest` CHANGE  `status`  `status` ENUM(  'FutureContest',  'RunningContest',  'PastContest',  'Other',  'Hidden',  'Closed' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT  'Hidden';
+ALTER TABLE  `history_contest` CHANGE  `status`  `status` ENUM(  'FutureContest',  'RunningContest',  'PastContest',  'Other',  'Hidden',  'Closed' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT  'Hidden';

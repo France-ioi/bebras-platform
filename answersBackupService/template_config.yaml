@@ -1,0 +1,6 @@
+---
+worker_processes: 4
+listeners:
+- "/tmp/castor.socket"
+timeout: 600
+logging: false

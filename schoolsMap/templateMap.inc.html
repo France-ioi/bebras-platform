@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Carte des établissements partipants en 2012</title>
+<link href="../style.css" rel="stylesheet" type="text/css" />
+  <style type="text/css">
+    #global {
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+        width: 700px;
+    }
+    #Map1 {margin-left:auto;margin-right:auto;}
+  </style>
+<script src='../ext/jquery-1.7.1.min.js'></script>
+<script type="text/javascript" src="../ext/pi-google-maps-api/res/js/tooltip.js"></script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-24298685-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</head>
+
+<body>
+
+<div style="text-align:center; margin:5px; font-size: x-large">
+Collèges et lycées ayant participé au Castor {YEAR}
+</div>
+
+{MAP}
+
+<div id="global">
+   <div id="map">
+   </div>
+</div>
+<div id="tooltip" style="position:absolute;visibility:hidden;background-color:#FFEEC7; border:1px solid black;padding:0.2em;font-size:0.8em;"></div>
+
+<div style="text-align:center; font-size:small; margin-top: 3px">
+Remarque: cette carte est donnée à titre indicatif et est susceptible de contenir quelques erreurs.
+</div>
+
+</body>
+</html>

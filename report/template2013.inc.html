@@ -1,0 +1,104 @@
+<script type="text/javascript">
+function displayCharts(src, dst)
+{
+   var chart;
+   var options = {
+      chart: {
+         renderTo: dst,
+         type: 'line'
+      },
+      title: {
+         text: null,
+      },
+      xAxis:{
+         title: {
+            text: 'Rang',
+            //align:"high"
+         },
+         labels: {
+            formatter: function() {
+               return this.value;
+            }
+         }
+      },
+      yAxis: {
+         title: {
+            text: 'Score',
+            //rotation: 0,
+            //align:"high",
+            //offset:0
+         },
+         tickInterval:20,
+         //startOnTick:false,
+         //endOnTick:false
+      },
+      plotOptions: {
+         spline: {
+            marker: {
+              radius: 40,
+              lineColor: '#666666',
+              lineWidth: 1
+            }
+         }
+      },
+      tooltip: {
+         formatter: function() {
+            var s = "";
+            if (this.x == 1)
+               s += "1er";
+            else
+               s += this.x +'ème';
+            s += ' : '+ this.y + ' points';
+            return s;
+         }
+      },
+      legend: {
+         enabled:false,   
+      },
+      credits: {
+         enabled:false,
+      },
+      series: [{
+         name: 'Curve',
+         marker: {
+            radius: 0,
+            lineWidth: 2,
+            lineColor:"#4572A7"
+         }
+      }]
+   };
+   
+    
+   var scores = [];
+   var ranks = [];
+   var scoreMin = 0, scoreMax = 0;
+   $("#"+src).find("tr:not(:first)").each(function(){
+      var score = parseInt($(this).find("td:first").text());
+      var rank = parseInt($(this).find("td:last").text());
+      scores.push([rank, score]);
+      ranks.push(rank);
+      scoreMin = Math.min(scoreMin, score);
+      scoreMax = Math.max(scoreMax, score);
+   });
+   options.yAxis.min = scoreMin;
+   options.yAxis.max = scoreMax;
+   options.series[0].data = scores;
+   chart = new Highcharts.Chart(options);   
+}
+
+
+$(function () {
+   $("div[id^=ranks]").each(function(){
+      var id = $(this).attr('id').replace('ranks-', '');
+      displayCharts("ranks-"+id, "graph-"+id); 
+   });
+
+   $("#results").tabs();
+   $("#results").show();
+});
+</script> 
+
+<!--<li>{NB_STUDENTS} élèves ont participé, dont {PERCENT_GIRLS}% de filles.</li>
+<li>{NB_SCHOOLS} établissements ont pris part au concours.</li>
+-->
+{RESULTS}

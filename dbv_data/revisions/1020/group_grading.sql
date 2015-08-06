@@ -1,0 +1,4 @@
+INSERT INTO `translations` (`ID`, `languageID`, `category`, `key`, `translation`, `iVersion`) VALUES (NULL, '1', 'admin', 'group_grade', 'Évaluer le groupe sélectionné', ''), (NULL, '2', 'admin', 'group_grade', 'Evaluate selected group', '');
+
+INSERT INTO `translations` (`ID`, `languageID`, `category`, `key`, `translation`, `iVersion`) VALUES (NULL, '1', 'admin_js', 'confirm_group_operation', 'Êtes-vous certain de vouloir faire cette opération maintenant ? (Ne pas faire en plein concours)', ''), (NULL, '2', 'admin_js', 'confirm_group_operation', 'Are you sure you want to do this now? (Do not do this while the contest is running!)', '');
+INSERT INTO `translations` (`ID`, `languageID`, `category`, `key`, `translation`, `iVersion`) VALUES (NULL, '1', 'admin_js', 'select_group', 'Vous devez sélectionner un groupe', ''), (NULL, '2', 'admin_js', 'select_group', 'You need to select a group', '');

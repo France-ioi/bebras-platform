@@ -1,0 +1,30 @@
+
+=====================================================
+CODE FOR CACHE SYSTEM
+
+$arg_cacheReuse = isset($_REQUEST['reuse_cache']);
+$cacheReuse = $arg_cacheReuse;
+$arg_cacheReuse,    $checked_reuse_cache = ($arg_cacheReuse) ? "checked" : "";
+      <!--<input type="checkbox" id="reuse_cache" name="reuse_cache" $checked_reuse_cache>
+      <label for="reuse_cache">use cached results</label>-->
+$onlyOne = (count($contestIDs) == 1 || count($groupIDs) == 1);
+if (! $onlyOne) {
+   $cacheReuse = false;
+}
+
+if ($cacheReuse) {
+   if (! file_exists($cacheFile)) {
+      $message = "failed to reuse cache; cache file missing.";
+   } else {
+      $cache = unserialize(file_get_contents($cacheFile));
+      if ($cache[0] != $cacheParams) {
+         $message = "failed to reuse cache; incompatible arguments.";
+      } else {
+         $data = $cache[1];
+      }  
+   }
+}
+
+if (! $cacheReuse && $onlyOne && $data !== FALSE) {
+   file_put_contents($cacheFile, serialize(array($cacheParams, $data)));
+}

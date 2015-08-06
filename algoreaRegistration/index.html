@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+   <meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <title>Enregistrement concours Algoréa</title> 
+   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+   <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+   <script type="text/javascript">window.jQuery || document.write('<script src="ext/jquery-1.7.1.min.js">\x3C/script>\x3Clink rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">')</script>
+   <script src="register_algorea.js"></script>
+</head>
+<body style="width:600px;margin-left:auto;margin-right:auto;margin-top:100px;">
+   <h1>Enregistrement Algoréa 2015</h1>
+   <p>
+   Cette page est destinée aux élèves qui se sont qualifés au premier tour en se classant parmi les 10% meilleurs du <a href="http://castor-informatique.fr">Concours Castor Informatique</a>. Si ce n'est pas votre cas, vous pouvez vous qualifier en résolvant 12 exercices au moins sur le site <a href="http://www.france-ioi.org">france-ioi.org</a>.
+   </p>
+   <div id="codeFormDiv">
+      <p>Veuillez entrer votre code personnel Algoréa fourni par votre enseignant :</p>
+      <form id="codeForm">
+         algorea-<input type="text" name="code" id="code">
+         <input type="button" onClick="validateCodeForm();" value="valider">
+      </form>
+   </div>
+   <div id="loadingDiv" style="display:none;">
+      <p>Chargement...</p>
+   </div>
+   <div id="infosFormDiv" style="display:none;">
+      <p id="infosFormMessage">Veuillez entrer vos informations personnelles, qui nous permettront de vous recontacter un peu avant le concours :</p>
+      <form id="infosForm">
+         <table>
+         <tr><td>Prénom</td><td><input type="text" name="firstName" id="firstName"></td></tr>
+         <tr><td>Nom</td><td><input type="text" name="lastName" id="lastName"></td></tr>
+         <tr><td>Adresse email</td><td><input type="text" name="email" id="email"></td></tr>
+         <tr><td>Retapez votre adresse email</td><td><input type="text" name="emailVerif" id="emailVerif"></td></tr>
+         <tr><td>Votre identifiant sur france-ioi.org (vide si aucun)</td><td><input type="text" name="algoreaAccount" id="algoreaAccount"></td></tr>
+         </table>
+         <input type="button" onClick="validateInfosForm();" value="valider">
+      </form>
+   </div>
+   <div id="errorDiv">
+      <p id="errorMessage" style="color:red;"></p>
+   </div>
+
+</body>
+</html>
