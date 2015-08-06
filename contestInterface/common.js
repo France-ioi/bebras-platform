@@ -418,10 +418,10 @@ var questionIframe = {
 };');
 
       // No more global css file
-      //this.addCssFile(contestsRoot + contestFolder + '/contest_' + contestID + '.css');
+      //this.addCssFile(contestsRoot + '/' + contestFolder + '/contest_' + contestID + '.css');
 
       // Call image preloading
-      this.addJsFile(contestsRoot + contestFolder + '/contest_' + contestID + '.js', callback);
+      this.addJsFile(contestsRoot + '/' + contestFolder + '/contest_' + contestID + '.js', callback);
 
       this.body.append('<div id="jsContent"></div><div id="container" style="border: 1px solid #000000; padding: 10px 20px 10px 20px;"><div class="question" style="font-size: 20px; font-weight: bold;">Le contenu du concours est en train d\'être téléchargé, merci de patienter le temps nécessaire.</div></div>');
 
@@ -898,7 +898,7 @@ function loadContestData(contestID, contestFolder, groupPassword, teamID)
             $("#divCheckGroup").hide();
 
             function oldLoader() {
-               $.get(contestsRoot + contestFolder + "/contest_" + contestID + ".html", function(content) {
+               $.get(contestsRoot + '/' + contestFolder + "/contest_" + contestID + ".html", function(content) {
                   $('#divQuestionsContent').html(content);
                   setupContest(data);
                });
@@ -908,7 +908,7 @@ function loadContestData(contestID, contestFolder, groupPassword, teamID)
                var log_fn = function(text) {
                   $('#questionList').html("<span style='font-size:2em;padding-left:10px'>" + text + "</span>");
                };
-               var loader = new Loader(contestsRoot + contestFolder + '/', log_fn);
+               var loader = new Loader(contestsRoot + '/' + contestFolder + '/', log_fn);
                loader.run().done(function(content) {
                   $('#divQuestionsContent').html(content);
                   setupContest(data);
