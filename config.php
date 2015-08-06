@@ -3,6 +3,7 @@
 // Do not modify this file, but override the configuration
 // in a config_local.php file based on config_local_template.php
 
+global $config;
 $config = (object) array();
 $config->db = (object) array();
 $config->db->use = 'mysql';
