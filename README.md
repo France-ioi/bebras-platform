@@ -26,9 +26,9 @@ through the link "Register!". For the first user, you need to
 validate it manually through the database. A record should have been
 created in the "user" table, and you need to set the fields
 "validated" and "isAdmin" to 1. You can then log in on the
-/teacherInterface/index_en.html page
+`/teacherInterface/index_en.html` page.
 
-*Generating contests:$ contests need to be "generated", which means compiling all of the
+*Generating contests:* contests need to be "generated", which means compiling all of the
 questions into a single html file, a css file, a js file and a php
 file. You do that as an admin in the "Contest" tab by selecting a
 contest in the first grid, and clicking on "Regenerate selected contest".
@@ -39,7 +39,7 @@ you have to check that the folder has been created.
 
 Once contests have been generated, you can try them as a contestant :
 go to contestInterface/index_en.html in the root folder. It should look exactly the same
-as http://concours.castor-informatique.fr, and you can click on any
+as [http://concours.castor-informatique.fr](http://concours.castor-informatique.fr), and you can click on any
 contest that has been generated.
 
 Note that if it were a production server, you would want to put an
@@ -62,4 +62,8 @@ Other than that, everything works the same way as public contests.
 
 # TODO
 
-Configure task directory (now it's certainly hardcoded as beaver_tasks).
+- prepare gulp files for contestInterface and teacherInterface to compile all needed dependencies into one big uglified js (see [this example](https://github.com/France-ioi/fioi-editor/blob/master/gulpfile.js)) and document it into the installation
+- tests!
+- make task directory configurable (now it's certainly hardcoded as beaver_tasks)
+- tracking/ has unmet external dependencies (should probably link to external CDNs)
+- schoolsMap may have unmet external dependencies
