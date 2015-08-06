@@ -1343,7 +1343,6 @@ function finalCloseContest(message) {
       if (contestStatus === "RunningContest") {
          $("#divClosedPleaseWait").hide();
          $("#divClosedMessage").html(message);
-         var encodedAnswers = "";
          var listAnswers = [];
          for(var questionID in answersToSend) {
             var answerObj = answersToSend[questionID];
@@ -1816,7 +1815,6 @@ var Tracker = {
       if (Tracker.disabled) {
          return;
       }
-      //console.log("track " + JSON.stringify(data));
       if (($("#trackingFrame").length > 0)) {
          $.postMessage(
             JSON.stringify(data),
