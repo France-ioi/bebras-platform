@@ -34,6 +34,9 @@ $config->aws->secret = '';
 $config->aws->region = '';
 $config->aws->bucketName = '';
 
+// URL at which the beaver-platform repository is installed, no trailing slash.
+$config->baseUrl = 'http://127.0.0.1';
+
 $config->teacherInterface = (object) array();
 $config->teacherInterface->sHotlineNumber = '';
 $config->teacherInterface->sCoordinatorFolder = 'http://coordinateur.castor-informatique.fr/';
