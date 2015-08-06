@@ -19,7 +19,7 @@
       </tr></table>
 </div>
 <div id="divCheckGroup" class="dialog">
-   <p data-i18n=general_instructions">
+   <p data-i18n="general_instructions">
    </p>
    <p>
    <b data-i18n="general_choice"></b>
