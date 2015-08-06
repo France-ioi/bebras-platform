@@ -1,25 +1,11 @@
-<!DOCTYPE html>
+<?php
+  include('../common.php');
+  header('Content-type: text/html');
+?><!DOCTYPE html>
 <html>
 <head>
 <meta charset='utf-8'>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<script type="text/javascript" src='config.php'></script>
-<script>
-var contestsRoot = config.sAbsoluteStaticPath + 'contests/';
-document.write('<script src="' + config.sAssetsStaticPath + '/jquery-combined.min.js">\x3C/script>');
-document.write('<script src="' + config.sAssetsStaticPath + '/i18next-1.7.5.min.js">\x3C/script>');
-document.write('<script src="' + config.sAssetsStaticPath + '/integrationAPI/task-pr.js?v={{rand}}">\x3C/script>');
-</script>
-<!--[if lte IE 9]>
-<script>
-document.write('<script src="' + config.sAssetsStaticPath + '/jquery.xdomainrequest.min.js">\x3C/script>');
-</script>
-<![endif]-->
-<script>
-   i18n.init({lng: config.defaultLanguage, fallbackLng: [config.defaultLanguage], getAsync: false, resGetPath: config.sAssetsStaticPath + "/i18n/__lng__/__ns__.json"}, function(t) {
-      document.write('<script src="' + config.sAssetsStaticPath + '/common.js?v={{rand}}">\x3C/script>');
-   });
-</script>
 <style>
 * {
   -moz-user-select: -moz-none;
@@ -497,8 +483,39 @@ a {
 </div>
 </form>
 <!--<iframe id="trackingFrame" src="http://eval02.france-ioi.org/castor_tracking/index.html" style="display:none"></iframe>-->
+<?php
+  // JSON3 shim for IE6-9 compatibility.
+  script_tag('/bower_components/json3/lib/json3.min.js');
+  // jquery 1.9 is required for IE6+ compatibility.
+  script_tag('/bower_components/jquery/jquery.min.js');
+  // Ajax CORS support for IE9 and lower.
+  echo('<!--[if lte IE 9]>');
+  script_tag('/bower_components/jquery.xdomainrequest/jquery.xdomainrequest.min.js');
+  echo('<![endif]-->');
+  script_tag('/bower_components/jquery-ui/jquery-ui.min.js');
+  script_tag('/bower_components/jquery-postmessage/jquery.ba-postmessage.min.js');
+  script_tag('/bower_components/i18next/i18next.min.js');
+  script_tag('/bower_components/utf8/utf8.js');
+  script_tag('/bower_components/base64/base64.min.js');
+  script_tag('/contestInterface/jquery.ui.touch-punch.min.js');
+  script_tag('/contestInterface/integrationAPI/task-pr.js?v={{rand}}'); # XXX cache-busting
+  script_tag('/contestInterface/common.js?v={{rand}}');
+  global $config;
+?>
 <script>
-   $("body").i18n();
-   $("title").i18n();
+  var config = <?= json_encode([
+     'defaultLanguage' => $config->defaultLanguage,
+     'sAssetsStaticPath' => static_asset('/contestInterface'),
+     'sAbsoluteStaticPath' => $config->teacherInterface->sAbsoluteStaticPath
+  ]) ?>;
+  var contestsRoot = <?= json_encode(static_asset('/contestInterface/contests/')) ?>;
+  i18n.init(<?= json_encode([
+    'lng' => $config->defaultLanguage,
+    'fallbackLng' => [$config->defaultLanguage],
+    'getAsync' => false,
+    'resGetPath' => static_asset('/contestInterface/i18n/__lng__/__ns__.json')
+  ]) ?>);
+  $("title").i18n();
+  $("body").i18n();
 </script>
 </body></html>

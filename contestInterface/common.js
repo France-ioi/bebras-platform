@@ -1349,12 +1349,10 @@ function finalCloseContest(message) {
             var answerObj = answersToSend[questionID];
             listAnswers.push([questionID, answerObj.answer]);
          }
-         if (typeof JSON == "object") {
-            var encodedAnswers = $.base64.encode(JSON.stringify({pwd: teamPassword, ans: listAnswers}));
-            if (listAnswers.length != 0) {
-               $("#encodedAnswers").html(encodedAnswers);
-               $("#divClosedEncodedAnswers").show();
-            }
+         if (listAnswers.length != 0) {
+            var encodedAnswers = base64_encode(JSON.stringify({pwd: teamPassword, ans: listAnswers}));
+            $("#encodedAnswers").html(encodedAnswers);
+            $("#divClosedEncodedAnswers").show();
          }
          $("#remindTeamPassword").html(teamPassword);
          $("#divClosedRemindPassword").show();
@@ -1678,8 +1676,12 @@ function initErrorHandler() {
    });
 }
 
-function base64url_encode(val) {
-	return $.base64.encode(val).replace('+', '-').replace('/', '_');
+function base64_encode(str) {
+   return btoa(utf8.encode(str));
+}
+
+function base64url_encode(str) {
+	return base64_encode(str).replace('+', '-').replace('/', '_');
 }
 
 function addAnswerPing(questionID, answer) {
@@ -1815,10 +1817,10 @@ var Tracker = {
          return;
       }
       //console.log("track " + JSON.stringify(data));
-      if (($("#trackingFrame").length > 0) && (typeof JSON == "object")) {
+      if (($("#trackingFrame").length > 0)) {
          $.postMessage(
             JSON.stringify(data),
-            "http://eval02.france-ioi.org/castor_tracking/index.html", 
+            "http://eval02.france-ioi.org/castor_tracking/index.html",
             $("#trackingFrame")[0].contentWindow
          );
       }
