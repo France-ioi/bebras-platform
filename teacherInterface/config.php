@@ -7,7 +7,7 @@ function escape_js($str) {
 
 function static_asset($path) {
 	global $config;
-	return $config->contestInterface->baseUrl . $path;
+	return $config->teacherInterface->baseUrl . $path;
 }
 
 function script_tag($path) {
