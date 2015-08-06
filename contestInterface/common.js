@@ -19,7 +19,9 @@ var answersToSend = {};
 var answers = {};
 var defaultAnswers = {};
 var currentQuestionKey = "";
-var SID = null;
+// SID is initialized to the empty string so that its encoding in an AJAX query
+// is predictable (rather than being either '' or 'null').
+var SID = '';
 var hasAnsweredQuestion = false;
 var hasDisplayedContestStats = false;
 var delaySendingAttempts = 60000;

@@ -18,7 +18,7 @@ mb_internal_encoding("UTF-8");
 
 function initSession() {
    session_name('contest2');
-   if (isset($_POST["SID"]) && ($_POST["SID"] != "null")) {
+   if (isset($_POST["SID"]) && $_POST["SID"] != "") {
       session_id($_POST["SID"]);
    }
    session_start();
