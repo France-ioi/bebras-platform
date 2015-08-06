@@ -7,3 +7,6 @@
 [submodule "commonFramework"]
 	path = commonFramework
 	url = https://github.com/France-ioi/commonFramework.git
+[submodule "ext/pi-google-maps-api"]
+	path = ext/pi-google-maps-api
+	url = https://github.com/pivaldi/pi-google-maps-api.git
