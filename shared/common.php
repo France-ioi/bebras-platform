@@ -78,7 +78,3 @@ function genAccessCode($db) {
       error_log("Error, code ".$code." is already used");
    }
 }
-
-
-
-?>
