@@ -301,7 +301,7 @@ var questionIframe = {
 
       iframe.contentWindow.document.open('text/html', 'replace');
       iframe.contentWindow.document.write(content);
-      if ($.browser.mozilla)
+      if (typeof iframe.contentWindow.document.close === 'function')
          iframe.contentWindow.document.close();
 
       this.iframe = $('#question-iframe')[0];
