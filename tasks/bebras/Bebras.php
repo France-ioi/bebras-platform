@@ -252,7 +252,7 @@ class Bebras
       if ($absolutePath) {
          return $absolutePath;
       }
-      $config = json_decode(file_get_contents(__DIR__.'/../../config.json'));
+      global $config;
       if ($config->teacherInterface->sAbsoluteStaticPath) {
          $absolutePath = $config->teacherInterface->sAbsoluteStaticPath;
          return $absolutePath;
