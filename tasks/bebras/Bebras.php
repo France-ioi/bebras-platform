@@ -238,7 +238,7 @@ class Bebras
    }
    
    public static function moveQuestionImagesSrc($text, $questionKey, $contestFolder) {
-      $absolutePath = (self::getAbsoluteStaticPath()).'contests/'.$contestFolder.'/'.$questionKey;
+      $absolutePath = (self::getAbsoluteStaticPath()).'/contests/'.$contestFolder.'/'.$questionKey;
       return PEMTaskCompiler::moveQuestionImagesSrc($absolutePath, $text);
    }
    
@@ -260,21 +260,21 @@ class Bebras
       $currentDomain = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
       if ($_SERVER['SERVER_PORT'] != '80') {
              $currentDomain .= $_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'];
-      } 
+      }
       else {
           $currentDomain .= $_SERVER['SERVER_NAME'];
       }
       $absolutePath = $currentDomain.'/';
       $phpSelf = $_SERVER['PHP_SELF'];
       $rootIndexEnd = strpos($phpSelf, '/teacherInterface/');
-      $absolutePath = $absolutePath.substr($phpSelf, 1, $rootIndexEnd)."contestInterface/";
+      $absolutePath = $absolutePath.substr($phpSelf, 1, $rootIndexEnd)."contestInterface";
 
       return $absolutePath;
    }
       
    public static function addAbsoluteStaticPath($images, $contestFolder) {
       $absolutePath = self::getAbsoluteStaticPath();
-      return PEMTaskCompiler::addAbsoluteStaticPath($absolutePath."contests/".$contestFolder, $images);
+      return PEMTaskCompiler::addAbsoluteStaticPath($absolutePath."/contests/".$contestFolder, $images);
    }
    
    public function removeHtmlComments($str)
