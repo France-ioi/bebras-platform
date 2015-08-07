@@ -34,9 +34,9 @@ $config->aws->secret = '';
 $config->aws->region = '';
 $config->aws->bucketName = '';
 
-// URL at which the contestInterface subdirectory is served, no trailing slash.
 $config->contestInterface = (object) array();
-$config->contestInterface->baseUrl = 'http://127.0.0.1/contestInterface';
+// Point contestInterface->baseUrl to an URL serving the contestInterface directory.
+$config->contestInterface->baseUrl = 'http://concours.castor-informatique.fr';
 
 $config->teacherInterface = (object) array();
 $config->teacherInterface->sHotlineNumber = '';
@@ -49,7 +49,8 @@ $config->teacherInterface->generationMode = 'local';
 $config->teacherInterface->sAbsoluteStaticPathOldIE = 'http://coordinateur.castor-informatique.fr/';
 $config->teacherInterface->sContestGenerationPath = '/../contestInterface/contests/';
 $config->teacherInterface->forceOfficialEmailDomain = false;
-$config->teacherInterface->baseUrl = 'http://127.0.0.1/teacherInterface';
+// Point teacherInterface->baseUrl to an URL serving the teacherInterface directory.
+$config->teacherInterface->baseUrl = 'http://coordinateur.castor-informatique.fr';
 
 $config->certificates = (object) array();
 $config->certificates->webServiceUrl = 'http://castor-informatique.fr.localhost/certificates/';
