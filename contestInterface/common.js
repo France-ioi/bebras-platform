@@ -432,51 +432,52 @@ var questionIframe = {
     * Run the task, should be called only by the loadQuestion function
     */
    run: function(taskViews, callback) {
-      questionIframe.task = TaskProxyManager.getTaskProxy('question-iframe', true);
-      TaskProxyManager.setPlatform(questionIframe.task, platform);
-      questionIframe.task.load(taskViews, function() {
-         questionIframe.task.showViews(taskViews, function() {
-            if (typeof defaultAnswers[questionIframe.questionKey] == 'undefined') {
-               questionIframe.task.getAnswer(function(strAnswer) {
-                  defaultAnswers[questionIframe.questionKey] = strAnswer;
-               });
-            }
-            questionIframe.task.getHeight(function(height) {
-               platform.updateHeight(height);
-            });
-         });
-      });
+      TaskProxyManager.getTaskProxy('question-iframe', withTask, true);
+      function withTask (task) {
+        questionIframe.task = task;
+        TaskProxyManager.setPlatform(task, platform);
+        task.load(taskViews, function() {
+           task.showViews(taskViews, function() {
+              if (typeof defaultAnswers[questionIframe.questionKey] == 'undefined') {
+                 task.getAnswer(function(strAnswer) {
+                    defaultAnswers[questionIframe.questionKey] = strAnswer;
+                 });
+              }
+              task.getHeight(function(height) {
+                 platform.updateHeight(height);
+              });
+           });
+        });
+        // Iframe height "hack" TODO: why two timers?
+        setTimeout(function() {
+           task.getHeight(function(height) {
+              platform.updateHeight(height);
+           });
+        }, 500);
+        setTimeout(function() {
+           task.getHeight(function(height) {
+              platform.updateHeight(height);
+           });
+        }, 1000);
 
-      // Iframe height "hack" TODO: why two timers?
-      setTimeout(function() {
-         questionIframe.task.getHeight(function(height) {
-            platform.updateHeight(height);
-         });
-      }, 500);
-      setTimeout(function() {
-         questionIframe.task.getHeight(function(height) {
-            platform.updateHeight(height);
-         });
-      }, 1000);
+        // TODO : test without timeout : should not be needed.
+        setTimeout(function() {
+           var nextStep = function() {
+              setTimeout(function() {
+                 if (!hasDisplayedContestStats) {
+                    if (fullFeedback) {
+                       alert("C'est parti ! Notez votre score en haut à gauche qui se met à jour au fur et à mesure de vos réponses !");
+                    } else {
+                       alert(t("contest_starts_now"));
+                    }
+                    hasDisplayedContestStats = true;
+                 }
+              }, 200);
 
-      // TODO : test without timeout : should not be needed.
-      setTimeout(function() {
-         var nextStep = function() {
-            setTimeout(function() {
-               if (!hasDisplayedContestStats) {
-                  if (fullFeedback) {
-                     alert("C'est parti ! Notez votre score en haut à gauche qui se met à jour au fur et à mesure de vos réponses !");
-                  } else {
-                     alert(t("contest_starts_now"));
-                  }
-                  hasDisplayedContestStats = true;
-               }
-            }, 200);
-
-            if (callback != undefined) {
-               callback();
-            }
-         }
+              if (callback != undefined) {
+                 callback();
+              }
+           }
 
            // Load the session's answer, if any
            if (answers[questionIframe.questionKey]) {
@@ -488,6 +489,7 @@ var questionIframe = {
               nextStep();
            }
         }, 50);
+      }
    },
 
    /**
