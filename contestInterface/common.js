@@ -478,16 +478,16 @@ var questionIframe = {
             }
          }
 
-         // Load the session's answer, if any
-         if (answers[questionIframe.questionKey]) {
-            var answer = answers[questionIframe.questionKey];
-            questionIframe.task.reloadAnswer(answer, function() {
-               nextStep();
-            });
-         } else {
-            nextStep();
-         }
-      }, 50);
+           // Load the session's answer, if any
+           if (answers[questionIframe.questionKey]) {
+              var answer = answers[questionIframe.questionKey];
+              task.reloadAnswer(answer, function() {
+                 nextStep();
+              });
+           } else {
+              nextStep();
+           }
+        }, 50);
    },
 
    /**
