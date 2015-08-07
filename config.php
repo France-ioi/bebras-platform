@@ -34,13 +34,13 @@ $config->aws->secret = '';
 $config->aws->region = '';
 $config->aws->bucketName = '';
 
-$config->teacherInterface = (object) array();
-$config->teacherInterface->sHotlineNumber = '';
-$config->teacherInterface->sCoordinatorFolder = 'http://coordinateur.castor-informatique.fr/';
 // URL at which the contestInterface subdirectory is served, no trailing slash.
 $config->contestInterface = (object) array();
 $config->contestInterface->baseUrl = 'http://127.0.0.1/contestInterface';
 
+$config->teacherInterface = (object) array();
+$config->teacherInterface->sHotlineNumber = '';
+$config->teacherInterface->sCoordinatorFolder = 'http://coordinateur.castor-informatique.fr/';
 $config->teacherInterface->sAssetsStaticPath = 'http://castor.pem.dev/contestInterface/';
 $config->teacherInterface->sAbsoluteStaticPath = 'http://coordinateur.castor-informatique.fr/';
 $config->teacherInterface->genericPasswordMd5 = '';
