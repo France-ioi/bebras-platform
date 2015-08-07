@@ -288,16 +288,16 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
       $bebrasJsDstFile = $contestFolder.'/'.$curKey.'/bebras.js';
       contestPutContents($bebrasJsDstFile, $bebrasJsContent);
       
-      $curImages = $task->copyImages(Task::TASK, $contestFolder.'/'.$curKey, 'contestCopyFile');
+      $curImages = $task->copyImages(PEMTaskCompiler::TASK, $contestFolder.'/'.$curKey, 'contestCopyFile');
       $images = array_merge($images, Bebras::addAbsoluteStaticPath($curImages, $contestFolder.'/'.$curKey));
-      $curImagesSols = $task->copyImages(Task::SOLUTION, $contestFolder.'/'.$curKey, 'contestCopyFileSols');
+      $curImagesSols = $task->copyImages(PEMTaskCompiler::SOLUTION, $contestFolder.'/'.$curKey, 'contestCopyFileSols');
       $imagesSols = array_merge($imagesSols, Bebras::addAbsoluteStaticPath($curImagesSols, $contestFolder.'/'.$curKey));
 
       // Convert JS and CSS image path
-      $questionJs = $task->getJavascript(Task::TASK | Task::SAT | Task::DISPLAY | Task::PROXY);
-      $solutionJs = $task->getJavascript(Task::SOLUTION);
-      $questionCss = $task->getCss(Task::TASK | Task::SAT | Task::DISPLAY | Task::PROXY);
-      $solutionCss = $task->getCss(Task::SOLUTION);
+      $questionJs = $task->getJavascript(PEMTaskCompiler::TASK | PEMTaskCompiler::SAT | PEMTaskCompiler::DISPLAY | PEMTaskCompiler::PROXY);
+      $solutionJs = $task->getJavascript(PEMTaskCompiler::SOLUTION);
+      $questionCss = $task->getCss(PEMTaskCompiler::TASK | PEMTaskCompiler::SAT | PEMTaskCompiler::DISPLAY | PEMTaskCompiler::PROXY);
+      $solutionCss = $task->getCss(PEMTaskCompiler::SOLUTION);
 
       // Javascript & css modules
       $modules = $task->getModules();
@@ -324,8 +324,8 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
       $cssSolutions .= Bebras::moveQuestionImagesSrc($solutionCss, $curKey, $contestFolder);
       
       // Content
-      $questionBody = $task->getContent(Task::TASK);
-      $questionSolution = $task->getContent(Task::SOLUTION);
+      $questionBody = $task->getContent(PEMTaskCompiler::TASK);
+      $questionSolution = $task->getContent(PEMTaskCompiler::SOLUTION);
       
       // Remove absolute images
       $questionBody = preg_replace('#http\://.*\.(png|jpg|gif|jpeg)#isU', '', $questionBody);

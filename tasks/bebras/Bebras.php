@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__.'/../../ext/task_compiler/Task.php';
+require_once __DIR__.'/../../vendor/France-ioi/pem-task-compiler/PEMTaskCompiler.php';
 
 class Bebras
 {
@@ -110,7 +110,7 @@ class Bebras
       }
       
       // Add task's images in the JSON
-      $images = Task::findUsedFiles($inlineJs.$contentBody.$inlineCss, array('png', 'jpg', 'gif', 'PNG', 'JPG', 'GIF'));
+      $images = PEMTaskCompiler::findUsedFiles($inlineJs.$contentBody.$inlineCss, array('png', 'jpg', 'gif', 'PNG', 'JPG', 'GIF'));
       foreach ($images as $curImage) {
          $bebras['task'][] = array(
             'type' => 'image',
@@ -119,7 +119,7 @@ class Bebras
       }
       
       // Add solution's images in the JSON
-      $imagesSolution = Task::findUsedFiles($contentSolution, array('png', 'jpg', 'gif', 'PNG', 'JPG', 'GIF'));
+      $imagesSolution = PEMTaskCompiler::findUsedFiles($contentSolution, array('png', 'jpg', 'gif', 'PNG', 'JPG', 'GIF'));
       foreach ($imagesSolution as $curImageSolution) {
          $bebras['solution'][] = array(
             'type' => 'image',
@@ -166,7 +166,7 @@ class Bebras
     */
    public function generateTaskFile()
    {
-      $task = new Task($this->taskDirectory.'/bebras.json', $this->taskDirectory);
+      $task = new PEMTaskCompiler($this->taskDirectory.'/bebras.json', $this->taskDirectory);
       //$bebrasJson = file_get_contents($this->taskDirectory.'/bebras.json');
        
       $content = '<!doctype html>
@@ -174,12 +174,12 @@ class Bebras
    <head>
       <meta charset="utf-8">
       <title>'.$task->getTitle().'</title>
-'.$task->getStaticResourcesImportHtml(Task::MODULES | Task::CONTENT | Task::SOLUTION | Task::GRADER).'
+'.$task->getStaticResourcesImportHtml(PEMTaskCompiler::INCLUDE_MODULES | PEMTaskCompiler::TASK | PEMTaskCompiler::SOLUTION | PEMTaskCompiler::GRADER).'
       <script class="remove" type="text/javascript">var json = '.$task->getBebrasJsonForQuestion().';</script>
    </head>
    <body>
-      <task>'."\r\n".$task->getContent(Task::CONTENT)."\n".self::getOtherImagesHtml($task->getContent(Task::CONTENT))."\r\n".'</task>
-      <solution>'."\r\n".$task->getContent(Task::SOLUTION)."\r\n".'</solution>
+      <task>'."\r\n".$task->getContent(PEMTaskCompiler::TASK)."\n".self::getOtherImagesHtml($task->getContent(PEMTaskCompiler::Task))."\r\n".'</task>
+      <solution>'."\r\n".$task->getContent(PEMTaskCompiler::SOLUTION)."\r\n".'</solution>
    </body>
 </html>';
       
@@ -225,7 +225,7 @@ class Bebras
    {
       $htmlContent = '';
       
-      $images = Task::findUsedFiles($html, array('png', 'jpg', 'gif', 'PNG', 'JPG', 'GIF'), true);
+      $images = PEMTaskCompiler::findUsedFiles($html, array('png', 'jpg', 'gif', 'PNG', 'JPG', 'GIF'), true);
       foreach ($images as $curImage) {
          if ($curImage[0] == '/') {
             $curImage = substr($curImage, 1);
@@ -239,7 +239,7 @@ class Bebras
    
    public static function moveQuestionImagesSrc($text, $questionKey, $contestFolder) {
       $absolutePath = (self::getAbsoluteStaticPath()).'contests/'.$contestFolder.'/'.$questionKey;
-      return Task::moveQuestionImagesSrc($absolutePath, $text);
+      return PEMTaskCompiler::moveQuestionImagesSrc($absolutePath, $text);
    }
    
    /**
@@ -274,7 +274,7 @@ class Bebras
       
    public static function addAbsoluteStaticPath($images, $contestFolder) {
       $absolutePath = self::getAbsoluteStaticPath();
-      return Task::addAbsoluteStaticPath($absolutePath."contests/".$contestFolder, $images);
+      return PEMTaskCompiler::addAbsoluteStaticPath($absolutePath."contests/".$contestFolder, $images);
    }
    
    public function removeHtmlComments($str)
