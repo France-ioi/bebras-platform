@@ -66,3 +66,9 @@ if (is_readable(__DIR__.'/config_local.php')) {
 }
 
 date_default_timezone_set($config->timezone);
+
+// for dbv...
+$config->db->host = $config->db->mysql->host;
+$config->db->database = $config->db->mysql->database;
+$config->db->password = $config->db->mysql->password;
+$config->db->user = $config->db->mysql->user;
