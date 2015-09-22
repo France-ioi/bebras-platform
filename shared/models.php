@@ -121,6 +121,7 @@ $tablesModels = array (
       "hasHistory" => false
    ),
    "team_question" => array(
+      "primaryKey" => false,
       "fields" => array(
          "teamID" => array("type" => "int"),
          "questionID" => array("type" => "int"),
@@ -164,22 +165,6 @@ $tablesModels = array (
                 "type" => "string",
                 "access" => array("write" => array("admin"), "read" => array("admin"))),
         )
-   ),
-   "translations" => array(
-       "fields" => array(
-           "languageID" => array(
-               "type" => "int",
-               "access" => array("write" => array("admin"), "read" => array("admin"))),
-           "category" => array(
-               "type" => "string",
-               "access" => array("write" => array("admin"), "read" => array("admin"))),
-           "key" => array(
-               "type" => "string",
-               "access" => array("write" => array("admin"), "read" => array("admin"))),
-           "translation" => array(
-               "type" => "string",
-               "access" => array("write" => array("admin"), "read" => array("admin"))),
-       )
    ),
     "user_user" => array(
         "fields" => array(
