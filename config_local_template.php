@@ -33,6 +33,7 @@ $config->teacherInterface->countryCode = 'FR';
 $config->teacherInterface->generationMode = 'local';
 $config->teacherInterface->sAbsoluteStaticPathOldIE = 'http://127.0.0.1/beaver_platform/teacherInterface/';
 $config->teacherInterface->sContestGenerationPath = '/../contestInterface/contests/';
+$config->teacherInterface->baseUrl = 'http://coordinateur.castor-informatique.fr';
 
 $config->contestInterface->baseUrl = 'http://concours.castor-informatique.fr';
 

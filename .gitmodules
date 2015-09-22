@@ -10,3 +10,6 @@
 [submodule "ext/pi-google-maps-api"]
 	path = ext/pi-google-maps-api
 	url = https://github.com/pivaldi/pi-google-maps-api.git
+[submodule "teacherInterface/bebras-tasks"]
+	path = teacherInterface/bebras-tasks
+	url = https://github.com/France-ioi/bebras-tasks.git
