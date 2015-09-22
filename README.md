@@ -13,6 +13,8 @@ Get composer dependencies:
 
     composer install
 
+Run `php commonFramework/modelsManager/triggers.php`.
+
 Get Bower dependencies: run `bower install` in both `contestInterface` and `teacherInterface`.
 
 For translation and country-specific features, please refer to the [documentation](teacherInterface/i18n/README.md).
