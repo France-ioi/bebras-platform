@@ -4,8 +4,7 @@ This repository contains everythin you need to run the *Bebras* Task Platform, h
 
 ## Installation
 
-Copy config_local_template.php into a file named config_local.php, and change the connexion parameters so that it connects
-to your database.
+Copy `config_local_template.php` into `config_local.php`, and set the parameters for urls and database.
 
 Visit `dbv/index.php`.
 
@@ -16,6 +15,8 @@ Get composer dependencies:
 Run `php commonFramework/modelsManager/triggers.php`.
 
 Get Bower dependencies: run `bower install` in both `contestInterface` and `teacherInterface`.
+
+If you want to test the platform, import `sampleDatabase/database_content.sql`.
 
 For translation and country-specific features, please refer to the [documentation](teacherInterface/i18n/README.md).
 
@@ -28,7 +29,7 @@ through the link "Register!". For the first user, you need to
 validate it manually through the database. A record should have been
 created in the "user" table, and you need to set the fields
 "validated" and "isAdmin" to 1. You can then log in on the
-`/teacherInterface/index_en.html` page.
+`/teacherInterface/index.php` page.
 
 *Generating contests:* contests need to be "generated", which means compiling all of the
 questions into a single html file, a css file, a js file and a php

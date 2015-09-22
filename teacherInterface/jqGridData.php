@@ -347,6 +347,7 @@ function updateRecord($db, $modelName, $record, $roles) {
 }
 
 function insertRecord($db, $modelName, $record, $roles) {
+   global $config;
    $request = createRequest($modelName);
    $request["records"][] = array("values" => array());
    if (!checkRequest($db, $request, $record, "insert", $roles)) {
@@ -362,7 +363,7 @@ function insertRecord($db, $modelName, $record, $roles) {
       $stmt = $db->prepare($querySchoolUser);
       $stmt->execute(array("insertID" => $insertID, "userID" => $record["userID"]));
    }
-   if ($modelName === "user") {
+   if ($modelName === "user" && $config->email->bSendMailForReal) {
       sendValidationEmails($record);
    }
    echo json_encode(array("success" => true, "recordID" => $insertID));

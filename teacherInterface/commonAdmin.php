@@ -9,6 +9,7 @@ session_start();
 include_once("../shared/models.php");
 include_once("../commonFramework/modelsManager/modelsManager.php");
 require_once("../commonFramework/modelsManager/csvExport.php");
+require_once("../vendor/autoload.php");
 
 function generateSalt() {
    return  md5(uniqid(rand(), true));
@@ -21,7 +22,6 @@ function computePasswordMD5($sPassword, $sSalt) {
 function sendMail($sTo, $sTitle, $sBody, $sFrom, $sBCC = NULL)
 {
    global $config;
-   require_once('../ext/PHPMailer/class.phpmailer.php');
 
    $mail             = new PHPMailer();
    // SMTP configuration : through gmail 

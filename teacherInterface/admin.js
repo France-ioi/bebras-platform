@@ -633,7 +633,7 @@ var questionID;
 function loadListQuestions() {
    loadGrid("question", "key", 20, [20, 50, 200], function(id) {
       questionID = id;
-      var url = "beaver_tasks/" + questions[id].folder + "/" + questions[id].key + "/";
+      var url = "beaver-tasks/" + questions[id].folder + "/" + questions[id].key + "/";
       $("#preview_question").attr("src", url);
    }, true);
 }
@@ -1147,7 +1147,7 @@ function grade(curContestID, curGroupID, questionKeys, curIndex)
    // Retrieve the bebras/grader of the current question
    $.post('grader.php', { contestID: curContestID, groupID: curGroupID, questionKey: questionKeys[curIndex] },function(data) {
       if (data.status === 'success') {
-         var url = "beaver_tasks/" + data.contestYear + "/" + questionKeys[curIndex] + "/";
+         var url = "beaver-tasks/" + data.contestYear + "/" + questionKeys[curIndex] + "/";
          $("#preview_question").attr("src", url);
          
          // Retrieve bebras
@@ -1484,7 +1484,7 @@ function genQuestion() {
    button.attr("disabled", true);
    
    tasks = new Array(); // Reinit
-   var url = "beaver_tasks/" + questions[questionID].folder + "/" + questions[questionID].key + "/";
+   var url = "beaver-tasks/" + questions[questionID].folder + "/" + questions[questionID].key + "/";
    $("#preview_question").attr("src", url);
    
    // Retrieve bebras
@@ -1524,7 +1524,7 @@ function genTasks(questionsUrl, curIndex)
       return;
    }
    
-   var url = "beaver_tasks/" + questionsUrl[curIndex];
+   var url = "beaver-tasks/" + questionsUrl[curIndex];
    $("#preview_question").attr("src", url);
    generating = true;
    $('#preview_question').load(function() {
@@ -2183,8 +2183,8 @@ function printAlgoreaCodes() {
 function init() {
    initErrorHandler();
    i18n.init({
-      lng: config.language,
-      fallbackLng: [config.language],
+      lng: config.defaultLanguage,
+      fallbackLng: [config.defaultLanguage],
       getAsync: true,
       resGetPath: config.i18nResourcePath,
       ns: {

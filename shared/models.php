@@ -133,6 +133,7 @@ $tablesModels = array (
       "hasHistory" => false
    ),
    "user" => array(
+      "autoincrementID" => false,
       "fields" => array(
          "firstName" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user"))),
          "lastName" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user"))),
