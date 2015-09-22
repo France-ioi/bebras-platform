@@ -2,8 +2,8 @@
    font-family: Arial;
 }
 
-.ui-jqgrid {font-size:1em}
-.ui-jqgrid tr.jqgrow td {font-size:1em}
+.ui-jqgrid {font-size:10pt}
+.ui-jqgrid tr.jqgrow td {font-size:10pt}
 
 .headerH1 {
 	font-family:"Century Gothic", "Trebuchet MS", "Arial Narrow", Arial, sans-serif;
@@ -53,6 +53,7 @@
 
 .ui-jqgrid .ui-jqgrid-htable th div {
    height: 43px;
+   font-size: 11pt;
 }
 
 .usedGroup {
