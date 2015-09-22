@@ -19,12 +19,11 @@
       </tr></table>
 </div>
 <div id="divCheckGroup" class="dialog">
-   <p data-i18n="general_instructions">
+   <p data-i18n="[html]general_instructions">
    </p>
    <p>
    <b data-i18n="general_choice"></b>
    </p>
-   <!-- <p><span style="font-size:24px;">Bienvenue sur la plateforme du concours Castor<br /> Session 2012</span></p> -->
    <button type="button" id="button-school" class="tabButton selected" onclick="selectMainTab('school');return false;" data-i18n="[html]general_start_contest"></button>
    <button type="button" id="button-home" class="tabButton" onclick="selectMainTab('home');return false;" data-i18n="[html]general_public_contests"></button>
    <button type="button" id="button-continue" class="tabButton" onclick="selectMainTab('continue');return false;" data-i18n="[html]general_view_results"></button>

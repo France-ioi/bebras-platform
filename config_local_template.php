@@ -34,6 +34,8 @@ $config->teacherInterface->generationMode = 'local';
 $config->teacherInterface->sAbsoluteStaticPathOldIE = 'http://127.0.0.1/beaver_platform/teacherInterface/';
 $config->teacherInterface->sContestGenerationPath = '/../contestInterface/contests/';
 
+$config->contestInterface->baseUrl = 'http://concours.castor-informatique.fr';
+
 $config->certificates->webServiceUrl = 'http://castor-informatique.fr.localhost/certificates/';
 
 $config->timezone = 'Europe/Paris';
