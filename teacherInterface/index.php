@@ -105,7 +105,7 @@
             </table>
             <button type="button" id="buttonRefreshUsers" style="display:none" data-i18n="refresh_list" onclick="refreshGrid('user')"></button>
             <a id="linkExportUsers" style="display:none" href="#" onclick="exportCSV('user')" data-i18n="export_to_csv"></a><br/>
-            <table id="grid_user"><tr><td/></tr></table> 
+            <table id="grid_user"><tbody><tr><td/></tr></tbody></table>
             <div id="pager_user"></div> 
             <button type="button" id="buttonDeleteSelected_user" style="display:none" data-i18n="users_delete_selected"></button>
          </div>
@@ -115,7 +115,7 @@
                <p data-i18n="schools_list"></p>
                <button type="button" id="buttonRefreshSchools" style="display:none" data-i18n="refresh_list" onclick="refreshGrid('school')"></button>
                <a href="#" onclick="exportCSV('school')" data-i18n="export_to_csv"></a>
-               <table id="grid_school"><tr><td/></tr></table> 
+               <table id="grid_school"><tbody><tr><td/></tr></tbody></table>
                <div id="pager_school"></div> 
                <button type="button" onclick="searchSchool()" onclick_old="newSchool()" data-i18n="schools_add"></button>
                <button type="button" id="buttonDeleteSelected_school" data-i18n="schools_delete"></button><br/><br/>
@@ -126,14 +126,14 @@
             <p data-i18n="colleagues">
             </p>
             <p>
-            <table id="grid_colleagues"><tr><td/></tr></table> 
+            <table id="grid_colleagues"><tbody><tr><td/></tr></tbody></table>
             <div id="pager_colleagues"></div> 
             </p>
          </div>
          <div id="tabs-groups">
             <p data-i18n="[html]groups_intro">
             <button type="button" data-i18n="refresh_list" onclick="refreshGrid('group')"></button><a href="#" onclick="exportCSV('group')" data-i18n="export_to_csv"></a>
-            <table id="grid_group"><tr></tr></table>
+            <table id="grid_group"><tbody><tr><td/></tr></tbody></table>
             <div id="pager_group"></div> 
             <button type="button" data-i18n="groups_create" onclick="newGroup()"></button>
             <button type="button" id="buttonEditSelected_group" data-i18n="groups_edit_selected" onclick="editGroup()"></button>
@@ -156,7 +156,7 @@
          <div id="tabs-teams">
             <p data-i18n="[html]teams_intro"></p>
             <button type="button" data-i18n="refresh_list" onclick="refreshGrid('team_view')"></button><a href="#" onclick="exportCSV('team_view')" data-i18n="export_to_csv"></a>
-            <table id="grid_team_view"><tr><td/></tr></table> 
+            <table id="grid_team_view"><tbody><tr><td/></tr></tbody></table>
             <div id="pager_team_view"></div> 
             <button type="button" id="buttonDeleteSelected_team_view" data-i18n="teams_delete_selected" style="display:none"></button>
          </div>
@@ -164,7 +164,7 @@
             <p data-i18n="[html]contestants_intro"></p>
             
             <button type="button" data-i18n="refresh_list" onclick="refreshGrid('contestant')"></button><a href="#" onclick="exportCSV('contestant')" data-i18n="export_to_csv"></a>
-            <table id="grid_contestant"><tr><td/></tr></table> 
+            <table id="grid_contestant"><tbody><tr><td/></tr></tbody></table>
             <div id="pager_contestant"></div> 
             <button type="button" id="buttonDeleteSelected_contestant" data-i18n="contestants_delete_selected" style="display:none"></button>
          </div>
@@ -174,7 +174,7 @@
             </div>
          </div>
          <div id="tabs-questions">
-            <table id="grid_question"><tr><td/></tr></table> 
+            <table id="grid_question"><tbody><tr><td/></tr></tbody></table>
             <div id="pager_question"></div> 
             <div>
                <button type="button" data-i18n="questions_create" onclick="newItem('question')"></button>
@@ -183,7 +183,7 @@
             <iframe id="preview_question" src="" style="width:800px;height:800px;"></iframe>
          </div>
          <div id="tabs-contests">
-            <table id="grid_contest"><tr><td/></tr></table> 
+            <table id="grid_contest"><tbody><tr><td/></tr></tbody></table>
             <div id="pager_contest"></div> 
             <button type="button" data-i18n="contests_create" onclick="newItem('contest')"></button>
             <button type="button" id="buttonDeleteSelected_contest" data-i18n="contests_delete_selected"></button>
@@ -195,7 +195,7 @@
             <div id="gradeContestState"></div>
             <br/><br/>
             <p data-i18n="contests_questions"></p>
-            <table id="grid_contest_question"><tr><td/></tr></table> 
+            <table id="grid_contest_question"><tbody><tr><td/></tr></tbody></table>
             <div id="pager_contest_question"></div> 
             <button type="button" data-i18n="contests_questions_add" onclick="newContestQuestion()"></button>
             <button type="button" id="buttonDeleteSelected_contest_question" data-i18n="contests_questions_delete"></button>
@@ -204,12 +204,12 @@
             <div data-i18n="[html]awards_content_intro"></div>
             <p data-i18n="[html]award2"></p>
             <p><a id="linkExportAwards2" href="#" onclick="exportCSV('award2')" data-i18n="export_to_csv"></a><br/></p>
-            <table id="grid_award2"><tr><td/></tr></table> 
+            <table id="grid_award2"><tbody><tr><td/></tr></tbody></table>
             <div id="pager_award2"></div> 
             <div data-i18n="[html]awards_content_detail"></div>
             <p><a id="linkExportAwards1" href="#" onclick="exportCSV('award1')" data-i18n="export_to_csv"></a>
-            <table id="grid_award1"><tr><td/></tr></table> 
-            <div id="pager_award1"></div> 
+            <table id="grid_award1"><tbody><tr><td/></tr></tbody></table>
+            <div id="pager_award1"></div>
           </div>
       </div>
    </div>
@@ -220,7 +220,7 @@
    <div id="divSchoolSearch"style="display:none" class="dialog">
       <p data-i18n="schools_search_text">
       </p>
-      <table id="grid_school_search"><tr></tr></table> 
+      <table id="grid_school_search"><tbody><tr><td/></tr></tbody></table>
       <div id="pager_school_search"></div> 
       <button type="button" data-i18n="school_select" onclick="selectSchool()"></button>
       <p>
@@ -246,8 +246,8 @@
    script_tag('/bower_components/i18next/i18next.min.js');
    script_tag('/bower_components/pem-platform/task-pr.js');
    script_tag('/bower_components/jqgrid/js/minified/jquery.jqGrid.min.js');
-   script_tag('/bower_components/jqgrid/js/minified/i18n/grid.locale-' . $language . '.js');
-   script_tag('/regions/' . $countryCode . '/regions.js');
+   script_tag('/bower_components/jqgrid/js/i18n/grid.locale-' . $language . '.js');
+   script_tag('/regions/' . strtoupper($countryCode) . '/regions.js');
    script_tag('/admin.js?t=1');
 ?>
 <script>

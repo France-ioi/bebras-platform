@@ -548,6 +548,7 @@ function loadGrid(modelName, sortName, rowNum, rowList, onSelectRow, withToolbar
   }
 
   var tableName = models[modelName].tableName;
+//  console.error($("#grid_" + modelName));
   $("#grid_" + modelName).jqGrid({
     url: "jqGridData.php?tableName=" + tableName,
     datatype: 'xml',
@@ -559,6 +560,7 @@ function loadGrid(modelName, sortName, rowNum, rowList, onSelectRow, withToolbar
     rowList: rowList,
     sortname: sortName,
     sortorder: 'asc',
+    regional : 'en',
     viewrecords: true,
     gridview: true,
     width: "100%",

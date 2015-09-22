@@ -69,4 +69,4 @@ Other than that, everything works the same way as public contests.
 - tests!
 - make task directory configurable (now it's certainly hardcoded as beaver_tasks)
 - tracking/ has unmet external dependencies (should probably link to external CDNs)
-- schoolsMap may have unmet external dependencies
+- use something else than jqGrid, which is buggy as hell in all recent versions
