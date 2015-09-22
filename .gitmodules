@@ -1,9 +1,6 @@
 [submodule "dbv"]
 	path = dbv
 	url = https://github.com/France-ioi/dbv
-[submodule "teacherInterface/jqGrid"]
-	path = teacherInterface/jqGrid
-	url = https://github.com/tonytomov/jqGrid.git
 [submodule "commonFramework"]
 	path = commonFramework
 	url = https://github.com/France-ioi/commonFramework.git
