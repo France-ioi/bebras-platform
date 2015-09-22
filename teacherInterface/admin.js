@@ -2195,6 +2195,9 @@ function init() {
       },
       useDataAttrOptions: true
    }, function () {
+      for (var i=0; i < regions.length; i++) {
+         regions[i] = i18n.t(regions[i]);
+      }
       $("#login_link_to_home").attr('data-i18n-options',
          '{"contestPresentationURL": "' + config.contestPresentationURL + '"}');
       $("title").i18n();
