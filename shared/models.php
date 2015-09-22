@@ -3,6 +3,7 @@
 
 $tablesModels = array (
    "contestant" => array(
+      "autoincrementID" => false,
       "fields" => array(
          "firstName" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user"))),
          "lastName" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user"))),
@@ -19,6 +20,7 @@ $tablesModels = array (
       "hasHistory" => false
    ),
    "contest" => array(
+      "autoincrementID" => false,
       "fields" => array(
          "name" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "level" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
@@ -35,6 +37,7 @@ $tablesModels = array (
       )
    ),
    "contest_question" => array(
+      "autoincrementID" => false,
       "fields" => array(
          "contestID" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "questionID" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
@@ -46,6 +49,7 @@ $tablesModels = array (
       )
    ),
    "group" => array(
+      "autoincrementID" => false,
       "fields" => array(
          "schoolID" => array("type" => "int", "access" => array("write" => array("user"), "read" => array("user"))),
          "grade" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user"))),
@@ -66,6 +70,7 @@ $tablesModels = array (
       )
    ),
    "question" => array(
+      "autoincrementID" => false,
       "fields" => array(
          "key" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "folder" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
@@ -75,6 +80,7 @@ $tablesModels = array (
       )
    ),
    "school" => array(
+      "autoincrementID" => false,
       "fields" => array(
          "userID" => array("type" => "int", "access" => array("write" => array("generator", "admin", "user"), "read" => array("admin"))),
          "name" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user"))),
@@ -94,6 +100,7 @@ $tablesModels = array (
       )
    ),
    "school_user" => array(
+      "autoincrementID" => false,
       "fields" => array(
          "userID" => array("type" => "int", "access" => array("write" => array("user"), "read" => array("user"))),
          "schoolID" => array("type" => "int", "access" => array("write" => array("user"), "read" => array("user"))),
@@ -102,6 +109,7 @@ $tablesModels = array (
       )
    ),
    "school_year" => array(
+      "autoincrementID" => false,
       "fields" => array(
          "schoolID" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "year" => array("type" => "int"),
@@ -110,6 +118,7 @@ $tablesModels = array (
       )
    ),
    "team" => array(
+      "autoincrementID" => false,
       "fields" => array(
          "groupID" => array("type" => "int"),
          "password" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
@@ -121,6 +130,7 @@ $tablesModels = array (
       "hasHistory" => false
    ),
    "team_question" => array(
+      "autoincrementID" => false,
       "primaryKey" => false,
       "fields" => array(
          "teamID" => array("type" => "int"),
@@ -168,6 +178,7 @@ $tablesModels = array (
         )
    ),
     "user_user" => array(
+        "autoincrementID" => false,
         "fields" => array(
             "userID" => array(
                 "type" => "int",

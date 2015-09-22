@@ -280,7 +280,7 @@ function checkRequestSchool($db, &$request, &$record, $operation, &$roles) {
 
    // Filters
    if (!$_SESSION["isAdmin"]) {
-      $request["filters"]["accessUserID"] = $_SESSION["userID"];
+      $request["filters"]["accessUserID"] = array('values' => array('userID' => $_SESSION["userID"]));
       $request["filters"]["userID"] = $_SESSION["userID"];
    }
    return true;

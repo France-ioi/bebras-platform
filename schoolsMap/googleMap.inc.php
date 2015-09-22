@@ -30,10 +30,19 @@ function getCoordinatesSchool($record)
    return array($lat, $lng, $msg);
 }
 
+function url_get_contents($URL){
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+      curl_setopt($ch, CURLOPT_URL, $URL);
+      $data = curl_exec($ch);
+      curl_close($ch);
+      return $data;
+}
+
 function getCoordinates($address)
 {
    $mapURL = "http://maps.googleapis.com/maps/api/geocode/json?address=".urlencode($address)."&sensor=true";
-   $json = file_get_contents($mapURL);
+   $json = url_get_contents($mapURL);
    //$json = file_get_contents("json.ex");
    $data = json_decode($json, true);
    if (count($data['results']) == 0)

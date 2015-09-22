@@ -172,7 +172,7 @@ function createRecommendationQuery() {
    $query = "DROP TABLE IF EXISTS `recommend_user`;
    CREATE TABLE `recommend_user` (
      `ID` int(11) NOT NULL AUTO_INCREMENT,
-     `userID` int(11) NOT NULL,
+     `userID` bigint(20) NOT NULL,
      `email` varchar(50) NOT NULL,
      `date` datetime NOT NULL,
      PRIMARY KEY (ID),
@@ -209,7 +209,7 @@ function prepareEtablissementsQuery() {
 function prepareNormalizedNamesQuery() {
    $query = "DROP TABLE IF EXISTS `recommend_listedschool_normalized`;
    CREATE TABLE `recommend_listedschool_normalized` (
-     `listedschoolID` int(11) NOT NULL,
+     `listedschoolID` bigint(20) NOT NULL,
      `codePostal` varchar(5) NOT NULL,
      `lastWord` varchar(200) NOT NULL,
      `normalizedName` varchar(200) NOT NULL,
@@ -665,8 +665,8 @@ function getSchoolsMatchingQuery() {
 
    CREATE TABLE `recommend_school_listedschool` (
      `ID` INT(11) NOT NULL AUTO_INCREMENT,
-     `schoolID` int(11) NOT NULL,
-     `listedschoolID` int(11) NOT NULL,
+     `schoolID` bigint(20) NOT NULL,
+     `listedschoolID` bigint(20) NOT NULL,
      PRIMARY KEY(ID),
      KEY (schoolID),
      KEY (listedschoolID)
