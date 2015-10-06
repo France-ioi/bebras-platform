@@ -4,11 +4,17 @@ This repository contains everythin you need to run the *Bebras* Task Platform, h
 
 ## Installation
 
+Clone the repository:
+
+    git clone https://github.com/France-ioi/bebras-platform.git
+    cd bebras-platform
+    git submodule update --init
+
 Copy `config_local_template.php` into `config_local.php`, and set the parameters for urls and database.
 
-Visit `dbv/index.php`.
+Visit `dbv/index.php`, login and passwords are `dbv` / `dbv` by default, change them in `dbv/config.php`.
 
-Get composer dependencies:
+Get [composer](https://getcomposer.org/) dependencies:
 
     composer install
 
