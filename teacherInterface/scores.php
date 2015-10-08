@@ -23,7 +23,10 @@ if (!isset($_POST['scores'])) {
 
 // getting contestID or groupID, and sticking to it:
 $contestID = $_POST['scores'][0]['contestID'];
-$groupID = isset($_POST['scores'][0]['groupID']) ? $_POST['scores'][0]['groupID'] : null;
+$groupID = false;
+if (isset($_POST['scores'][0]['groupID'])) {
+   $groupID = $_POST['scores'][0]['groupID'];
+}
 if ($groupID) {
    $query = "SELECT `group`.`ID`, `contest`.`ID` as `contestID`, `contest`.`folder` as `folder`, `contest`.`year` as `year` FROM `group` JOIN `contest` on `group`.`contestID` = `contest`.`ID` WHERE `group`.`ID` = ?";
    $args = array($groupID);
