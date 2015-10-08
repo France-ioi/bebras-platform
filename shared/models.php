@@ -486,7 +486,7 @@ $viewsModels = array(
       "mainTable" => "school",
       "adminOnly" => false,
       "joins" => array(
-         "user" => array("srcTable" => "school", "srcField" => "userID", "dstField" => "ID"),
+         "user" => array("srcTable" => "school", "srcField" => "userID", "dstField" => "ID", "type" => "LEFT"),
          "school_user" => array("srcTable" => "school", "srcField" => "ID", "dstField" => "schoolID"),
          "school_user_count" => array("srcTable" => "school", "srcField" => "ID", "dstTable" => "school_user", "dstField" => "schoolID", "type" => "LEFT")
       ),
