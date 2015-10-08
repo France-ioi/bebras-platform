@@ -117,6 +117,8 @@ function getGroupsColModel() {
             width: 260, comment: t("contestID_comment")},
          grade: {label: "Classe", editable: true, edittype: "select", width: 100, required: true, editoptions:{
             value:{
+               "4": t("grade_4"),
+               "5": t("grade_5"),
                "6": t("grade_6"),
                "7": t("grade_7"),
                "8": t("grade_8"),

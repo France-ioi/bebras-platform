@@ -87,6 +87,8 @@
     "option_no_filter": "Pas de filtre",
     "contestID_label": "Épreuve",
     "contestID_comment": "Vous pouvez créer des groupes pour entraîner vos élèves sur les épreuves passées.<!--<br/><b>Attention :</b> seules les épreuves dont le nom commence par 'Entraînement' peuvent être utilisées en entraînement.-->",
+    "grade_4": "CM1",
+    "grade_5": "CM2",
     "grade_6": "6ème",
     "grade_7": "5ème",
     "grade_8": "4ème",
