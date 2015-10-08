@@ -58,9 +58,12 @@ $contestsParams = array(
    )
 );
 
-$query = "SELECT `group`.`name`, `contestant`.`firstName`, `contestant`.`lastName`, `team`.`password`, `algorea_registration`.`algoreaAccount` FROM `group` JOIN `team` ON (`team`.`groupID` = `group`.`ID` AND `team`.`participationType`= 'Official') ".
+$query = "SELECT `group`.`name`, `contestant`.`firstName`, `contestant`.`lastName`, `team`.`password`, `algorea_registration`.`algoreaAccount`, ".
+   " `resultstour2`.`iGrade`, `resultstour2`.`rank`, `resultstour2`.`rankGeneral`, `resultstour2`.`iScore` ".
+   "FROM `group` JOIN `team` ON (`team`.`groupID` = `group`.`ID` AND `team`.`participationType`= 'Official') ".
          "JOIN `contestant` ON (`contestant`.`teamID` = `team`.`ID`) ".
          "LEFT JOIN `algorea_registration` ON (`team`.`password` = `algorea_registration`.`code`) ".
+         "LEFT JOIN `resultstour2` ON (`algorea_registration`.`algoreaAccount` = `resultstour2`.`sLogin`) ".
          "WHERE `group`.`contestID` = 51 AND `group`.`userID` = :userID AND (";
 $first = true;
 foreach ($contestsParams[2015] as $iParam => $params) {
@@ -73,28 +76,44 @@ $query .= ")";
 $stmt = $db->prepare($query);
 $stmt->execute(array("userID" => $_SESSION["userID"]));
 $rows = $stmt->fetchAll();
-echo "<h3>Qualifiés au 2ème tour, ayant participé au 1er tour au sein d'un groupe créé pour une participation en classe</h3>";
+echo "<h3>Qualifiés au 2ème tour, ayant participé au 1er tour soit au sein d'un groupe créé pour une participation en classe, soit avec le code personnel fourni par l'enseignant</h3>";
 if (count($rows) == 0) {
    echo "<p>Aucun participant de ce type n'a été qualifié.</p>";
 } else {
-   echo "<table cellspacing=0><tr><td>Groupe</td><td>Nom</td><td>Prénom</td><td>Code d'accès</td><td>Compte france-ioi</td></tr>";
+   echo "<table cellspacing=0><tr><td>Groupe</td><td>Nom</td><td>Prénom</td><td>Code d'accès</td><td>Compte france-ioi</td>" .
+      "<td>Score 2e tour</td><td>Rang par niveau</td><td>Rang global</td></tr>";
    foreach ($rows as $row) {
+      if ($row["rank"] == null) {
+         $score = "--";
+         $rank = "--";
+         $rankGeneral = "--";
+      } else {
+         $score = $row["iScore"];
+         $rank = $row["rank"];
+         $rankGeneral = $row["rankGeneral"];
+      }
       echo "<tr><td>".$row["name"]."</td>".
          "<td>".$row["lastName"]."</td>".
          "<td>".$row["firstName"]."</td>".
          "<td>".$row["password"]."</td>".
-         "<td>".$row["algoreaAccount"]."</td></tr>";
+         "<td>".$row["algoreaAccount"]."</td>".
+         "<td>".$score."</td>".
+         "<td>".$rank."</td>".
+         "<td>".$rankGeneral."</td>".
+         "</tr>";
    }
    echo "</table>";
 }
-
-$query = "SELECT `contestant`.`firstName`, `contestant`.`lastName`, `ta`.`password`, `algorea_registration`.`algoreaAccount` ".
+/*
+$query = "SELECT `contestant`.`firstName`, `contestant`.`lastName`, `ta`.`password`, `algorea_registration`.`algoreaAccount`, ".
+         "`resultstour2`.`iGrade`, `resultstour2`.`rank`, `resultstour2`.`rankGeneral` ".
          "FROM `group` `gc` ".
          "JOIN `team` `tc` ON (`tc`.`groupID` = `gc`.`ID`) ".
          "JOIN `contestant` `cc` ON (`cc`.`teamID` = `tc`.`ID`) ".
          "JOIN `team` `ta` ON (`cc`.`algoreaCode` = `ta`.`password` AND `ta`.`participationType` = 'Official') ".
          "JOIN `contestant` ON (`contestant`.`teamID` = `ta`.`ID`) ".
          "LEFT JOIN `algorea_registration` ON (`ta`.`password` = `algorea_registration`.`code`) ".
+         "LEFT JOIN `resultstour2` ON (`algorea_registration`.`algoreaAccount` = `resultstour2`.`sLogin`) ".
          "WHERE `gc`.`contestID` >= 32 AND `gc`.`contestID` <= 37 AND `gc`.`userID` = :userID AND (";
 $first = true;
 foreach ($contestsParams[2015] as $iParam => $params) {
@@ -111,17 +130,31 @@ echo "<h3>Qualifiés au 2ème tour, ayant participé au 1er tour via le code per
 if (count($rows) == 0) {
    echo "<p>Aucun participant de ce type n'a été qualifié.</p>";
 } else {
-   echo "<table cellspacing=0><tr><td>Nom</td><td>Prénom</td><td>Code d'accès</td><td>Compte france-ioi</td></tr>";
+   echo "<table cellspacing=0><tr><td>Nom</td><td>Prénom</td><td>Code d'accès</td><td>Compte france-ioi</td>".
+      "<td>Score 2e tour</td><td>Rang par niveau</td><td>Rang global</td></tr>";
    foreach ($rows as $row) {
+      if ($row["rank"] == null) {
+         $score = "--";
+         $rank = "--";
+         $rankGeneral = "--";
+      } else {
+         $score = $row["iScore"];
+         $rank = $row["rank"];
+         $rankGeneral = $row["rankGeneral"];
+      }
       echo "<tr>".
          "<td>".$row["lastName"]."</td>".
          "<td>".$row["firstName"]."</td>".
          "<td>".$row["password"]."</td>".
-         "<td>".$row["algoreaAccount"]."</td></tr>";
+         "<td>".$row["algoreaAccount"]."</td>".
+         "<td>".$score."</td>".
+         "<td>".$rank."</td>".
+         "<td>".$rankGeneral."</td>".
+         "</tr>";
    }
    echo "</table>";
 }
-
+*/
 
 ?>
 <h3>Procédure à suivre par vos élèves (eux-mêmes autant que possible)</h3>
@@ -135,7 +168,7 @@ if (count($rows) == 0) {
 3) Ils doivent alors voir apparaître dans l'encadré un message leur confirmant leur qualification au 2ème tour avec leur compte france-ioi.
 </p>
 <p>
-4) À partir du 4 mai, ils auront accès à l'épreuve depuis la page <a href="http://www.algorea.org">www.algorea.org</a>. Ils peuvent choisir de la faire à tout moment entre le 4 mai et le 15 mai, et doivent y consacrer 2h30 consécutives.
+4) Dès maintenant, ils ont accès à l'épreuve depuis la page <a href="http://www.algorea.org">www.algorea.org</a>. Ils peuvent choisir de la faire à tout moment avant 17 mai, et doivent y consacrer 2h30 consécutives.
 </p>
 <p>
 En cas de question, contactez info@france-ioi.org
