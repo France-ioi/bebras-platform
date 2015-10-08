@@ -6,6 +6,7 @@
 var loggedUser = undefined;
 var contests = undefined;
 var questions = undefined;
+var questionsKeysToIds = undefined;
 var schools = undefined;
 var groups = undefined;
 var filterSchoolID = "0";
@@ -1001,6 +1002,11 @@ function loadContests() {
 function loadQuestions() {
    return loadData("question", function(items) {
       questions = items;
+      questionsKeysToIds = {};
+      for (var questionID in questions) {
+         var question = questions[questionID];
+         questionsKeysToIds[question.key = questionID;
+      }
    });
 }
 
