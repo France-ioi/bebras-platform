@@ -67,8 +67,6 @@ if (!$row) {
    exit;
 }
 
-$bebras = file_get_contents(__DIR__.$config->teacherInterface->sContestGenerationPath.$contestFolder.'/'.$questionKey.'/bebras.js');
-
 $teamQuestionTable = getTeamQuestionTableForGrading();
 if (!$groupID) {
    $query = 'SELECT `'.$teamQuestionTable.'`.`teamID`, `'.$teamQuestionTable.'`.`questionID`, `'.$teamQuestionTable.'`.`answer` FROM `'.$teamQuestionTable.'` JOIN `question` ON (`'.$teamQuestionTable.'`.`questionID` = `question`.`ID`) JOIN `contest_question` ON (`contest_question`.`questionID` = `question`.`ID`) JOIN `team` ON (`team`.`ID`= `'.$teamQuestionTable.'`.`teamID`) JOIN `group` ON (`team`.`groupID` = `group`.`ID`) WHERE `contest_question`.`contestID` = ? AND `group`.`contestID` = ? AND `question`.`key` = ? AND (`'.$teamQuestionTable.'`.`score` IS NULL OR (`'.$teamQuestionTable.'`.`ffScore` is not null and `'.$teamQuestionTable.'`.`score` != `'.$teamQuestionTable.'`.`ffScore`));';
@@ -93,7 +91,6 @@ echo json_encode(array(
    'status' => 'success',
    'questionKey' => $questionKey,
    'contestYear' => $contestYear,
-   'bebras' => $bebras,
    'teamQuestions' => $teamQuestions,
    'minScore' => intval($row->minScore),
    'noAnswerScore' => intval($row->noAnswerScore),
