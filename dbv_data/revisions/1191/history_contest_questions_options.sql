@@ -22,8 +22,8 @@ ALTER TABLE `history_school_user` CHANGE `schoolID` `schoolID` BIGINT(20) NOT NU
 ALTER TABLE `school_year` CHANGE `ID` `ID` BIGINT(20) NOT NULL;
 ALTER TABLE `history_school_year` CHANGE `ID` `ID` BIGINT(20) NOT NULL;
 
-ALTER TABLE `school_year` CHANGE `schoolID` `userID` BIGINT(20) NOT NULL;
-ALTER TABLE `history_school_year` CHANGE `schoolID` `userID` BIGINT(20) NOT NULL;
+ALTER TABLE `school_year` CHANGE `schoolID` `schoolID` BIGINT(20) NOT NULL;
+ALTER TABLE `history_school_year` CHANGE `schoolID` `schoolID` BIGINT(20) NOT NULL;
 
 ALTER TABLE `team` CHANGE `ID` `ID` BIGINT(20) NOT NULL;
 ALTER TABLE `history_team` CHANGE `ID` `ID` BIGINT(20) NOT NULL;
