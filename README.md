@@ -12,7 +12,7 @@ Clone the repository:
 
 Copy `config_local_template.php` into `config_local.php`, and set the parameters for urls and database.
 
-Visit `dbv/index.php`, login and passwords are `dbv` / `dbv` by default, change them in `dbv/config.php`.
+Visit `dbv/index.php`, login and passwords are those of the database.
 
 Get [composer](https://getcomposer.org/) dependencies:
 
