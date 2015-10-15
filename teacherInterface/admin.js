@@ -1,17 +1,16 @@
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 
 // TODO: avoid using undefined as a value, use null instead.
-// TODO: avoid x === undefined, use typeof x === 'undefined' instead.
 
-var loggedUser = undefined;
-var contests = undefined;
-var questions = undefined;
-var questionsKeysToIds = undefined;
-var schools = undefined;
-var groups = undefined;
+var loggedUser;
+var contests;
+var questions;
+var questionsKeysToIds;
+var schools;
+var groups;
 var filterSchoolID = "0";
 var filterGroupID = "0";
-var tasks = new Array();
+var tasks = [];
 var generating = false;
 var gradePackSize = 100;
 var curGradingData = null;
@@ -176,7 +175,7 @@ function getContestQuestionsColModel() {
          options: {label: t("contest_question_options_label"), editable: true, edittype: "text", width: 250},
          order: {label: t("contest_question_order_label"), editable: true, edittype: "text", subtype:"int", width: 80}
       }
-   }
+   };
 }
 
 function initModels(isLogged) {
@@ -468,20 +467,20 @@ function initModels(isLogged) {
    // These fields are only needed if your are an admin
    if (isAdmin())
    {
-       models["school"].fields["lastName"] = {label: t("school_admin_1_lastName"), editable: false, width: 150};
-       models["school"].fields["firstName"] = {label: t("school_admin_1_firstName"), editable: false, width: 150};
-       models["school"].fields["saniValid"] = 
+       models.school.fields.lastName = {label: t("school_admin_1_lastName"), editable: false, width: 150};
+       models.school.fields.firstName = {label: t("school_admin_1_firstName"), editable: false, width: 150};
+       models.school.fields.saniValid = 
            {label: t("school_saniValid_label"), 
                         editable: false, width:120,
                         edittype: "select", editoptions: editYesNo,
                         stype: "select", searchoptions: searchYesNo,
            };
-       models["school"].fields["saniMsg"] = {label: t("school_saniMsg_label"), editable: true, edittype: "text", width: 200};
-       models["school"].fields["coords"] = {label: t("school_coords_label"), editable: false, edittype: "text", width: 150};
+       models.school.fields.saniMsg = {label: t("school_saniMsg_label"), editable: true, edittype: "text", width: 200};
+       models.school.fields.coords = {label: t("school_coords_label"), editable: false, edittype: "text", width: 150};
    }
    if (isLogged) {
-      models["group"] = getGroupsColModel();
-      models["contest_question"] = getContestQuestionsColModel();
+      models.group = getGroupsColModel();
+      models.contest_question = getContestQuestionsColModel();
    }
 }
 
@@ -496,7 +495,7 @@ function jqGridNames(modelName) {
 
 function jqGridModel(modelName) {
    var fields = models[modelName].fields;
-   var jqGridModel = [];
+   var res = [];
    for (var fieldName in fields) {
       var field = fields[fieldName];
       var jqGridField = {
@@ -513,11 +512,11 @@ function jqGridModel(modelName) {
          search: field.search
       };
       if (field.edittype === "select") {
-         jqGridField["formatter"] = "select";
+         jqGridField.formatter = "select";
       }
-      jqGridModel.push(jqGridField);
+      res.push(jqGridField);
    }
-   return jqGridModel;
+   return res;
 }
 
 function teamViewMakeUnofficial(id) {
@@ -543,7 +542,7 @@ function teamViewLoadComplete() {
 
 function loadGrid(modelName, sortName, rowNum, rowList, onSelectRow, withToolbar) {
   var lastSel = 0;
-  var loadComplete = undefined;
+  var loadComplete;
   if (modelName == "group") {
      loadComplete = groupLoadComplete;
   } else if (modelName == 'team_view') {
@@ -851,7 +850,7 @@ function continueLogUser() {
 
    if (state === 'normal') {
       certiGenUpdate();
-      setInterval("certiGenUpdate()", 60 * 1000);
+      setInterval(certiGenUpdate, 60 * 1000);
    }
 }
 
@@ -923,7 +922,7 @@ function initSpreadCastor() {
             s += "<li>" + names[i] + "</li>";
          }
          s += "</ul></td><td><ul>";
-         for (var i = 5; i < Math.min(9, nb); i++) {
+         for (i = 5; i < Math.min(9, nb); i++) {
             s += "<li>" + names[i] + "</li>";
          }
          s += "<li>... <span style='font-size: small'><a href='" + url + "'>" + t("schools_view_all") + "</a></span></li>";
@@ -937,7 +936,7 @@ function initDeleteButton(modelName, afterSubmit) {
    $("#buttonDeleteSelected_" + modelName).show();
    $("#buttonDeleteSelected_" + modelName).click(function(){
       var gr = jQuery("#grid_" + modelName).jqGrid('getGridParam','selrow');
-      if( gr != null ) {
+      if( gr ) {
          if (modelName === "school") {
          }
          if (modelName === "group") {
@@ -1007,7 +1006,7 @@ function loadQuestions() {
       questionsKeysToIds = {};
       for (var questionID in questions) {
          var question = questions[questionID];
-         questionsKeysToIds[question.key = questionID;
+         questionsKeysToIds[question.key] = questionID;
       }
    });
 }
@@ -1025,26 +1024,27 @@ function loadSchoolsYears(school_users) {
    }
    return loadData("school_year", function(items) {
       var school_user_by_school = {};
+      var school_user;
       for (var school_userID in school_users) {
-         var school_user = school_users[school_userID];
+         school_user = school_users[school_userID];
          school_user_by_school[school_user.schoolID] = school_user;
       }
       for (var itemID in items) {
          var school_year = items[itemID];
-         var school_user = school_user_by_school[school_year.schoolID];
+         school_user = school_user_by_school[school_year.schoolID];
          school_year.awarded = parseInt(school_year.awarded);
          school_year.year = parseInt(school_year.year);
-         if (school_user.awardsReceivedYear != null) {
+         if (school_user.awardsReceivedYear) {
             school_user.awardsReceivedYear = parseInt(school_user.awardsReceivedYear);
          }
-         if ((school_user != undefined) && ((school_user.awardsReceivedYear == undefined) || (school_user.awardsReceivedYear < school_year.year)) && (school_year.awarded > 0) && (school_year.year > 2013)) {
+         if (school_user && ((!school_user.awardsReceivedYear) || (school_user.awardsReceivedYear < school_year.year)) && (school_year.awarded > 0) && (school_year.year > 2013)) {
             var buttons =  [ { text: "Oui", click: function() {
                school_user.awardsReceivedYear = Math.max(school_user.awardsReceivedYear, school_year.year);
                $.post("jqGridData.php", {tableName:"school_user", oper: "update", record:school_user}, function(data) {});
                $(this).dialog( "close" );
             }},
             { text: "Non", click: function() {
-               if (school_user.awardsReceivedYear == null) {
+               if (!school_user.awardsReceivedYear) {
                   school_user.awardsReceivedYear = 0;
                $.post("jqGridData.php", {tableName:"school_user", oper: "update", record:school_user}, function(data) {});
                }
@@ -1114,12 +1114,12 @@ function newItem(modelName, params, callback) {
       params = {};
    }
    var tableName = models[modelName].tableName;
-   params["oper"] = "insert";
-   params["tableName"] = tableName;
-   if (callback == undefined) {
+   params.oper = "insert";
+   params.tableName = tableName;
+   if (!callback) {
       callback = function(data) {
          $('#grid_' + modelName).trigger('reloadGrid');   
-      }
+      };
    }
    $.post("jqGridData.php", params, callback);
 }
@@ -1224,6 +1224,11 @@ function gradeQuestionPack(curContestID, curGroupID, questionKeys, curIndex, cur
    
    var scores = {};
    var i = 0;
+   function gradeCallbackFactory(scores, i) {
+      return function(score) {
+         scores[i].score = score;
+      };
+   }
    for (var curTeamQuestion = curPackIndex; curTeamQuestion < packEndIndex; curTeamQuestion++) {
       var teamQuestion = curGradingData.teamQuestions[curTeamQuestion];
       // XXX : must be in sync with common.js!!!
@@ -1243,7 +1248,7 @@ function gradeQuestionPack(curContestID, curGroupID, questionKeys, curIndex, cur
       scores[i].usesRandomSeed = usesRandomSeed;
       
       // No answer
-      if ($.trim(teamQuestion.answer) == '') {
+      if ($.trim(teamQuestion.answer)) {
          scores[i].score = parseInt(curGradingData.noAnswerScore);
       }
       else if (curGradingBebras.acceptedAnswers && curGradingBebras.acceptedAnswers[0]) {
@@ -1261,9 +1266,7 @@ function gradeQuestionPack(curContestID, curGroupID, questionKeys, curIndex, cur
                console.log('Answer too long scored 0 : questionID='+teamQuestion.questionID+' teamID='+teamQuestion.teamID);
             }
             else {
-               $('#preview_question')[0].contentWindow.grader.gradeTask($.trim(teamQuestion.answer), null, function(score) {
-                  scores[i].score = score;
-               });
+               $('#preview_question')[0].contentWindow.grader.gradeTask($.trim(teamQuestion.answer), null, gradeCallbackFactory(scores, i));
             }
          }
          catch (e) {
@@ -1280,7 +1283,7 @@ function gradeQuestionPack(curContestID, curGroupID, questionKeys, curIndex, cur
    }
    
    // If not score need to be send, go to the next packet directly
-   if (i == 0) {
+   if (!i) {
       $(selectorState+' .gradeprogressing').text($(selectorState+' .gradeprogressing').text()+'.');
       gradeQuestionPack(curContestID, curGroupID, questionKeys, curIndex, curPackIndex + gradePackSize);
       return;
@@ -1295,7 +1298,7 @@ function gradeQuestionPack(curContestID, curGroupID, questionKeys, curIndex, cur
       /**
        * Timeout each 25 packs to make the garbage collector work
        */
-      if (parseInt(curPackIndex / gradePackSize) % 25 == 0) {
+      if (parseInt(curPackIndex / gradePackSize) % 25 === 0) {
          setTimeout(function() {
             $(selectorState+' .gradeprogressing').text($(selectorState+' .gradeprogressing').text()+'.');
             gradeQuestionPack(curContestID, curGroupID, questionKeys, curIndex, curPackIndex + gradePackSize);
@@ -1385,7 +1388,7 @@ function computeCoordsSchools() {
    $.get("actions.php", {action: "getSchoolList"},
       function(data) {
          if (!data.success)
-            return
+            return;
          computeCoords(0, data.schools);
       }, "json"
    );
@@ -1473,7 +1476,7 @@ function genContest() {
    var button = $("#generateContest");
    button.attr("disabled", true);
    
-   tasks = new Array(); // Reinit
+   tasks = []; // Reinit
    loadContests().done(function() {
       // Retrieve the tasks' list
       $.post("generateContest.php", {contestID: contestID, contestFolder: contests[contestID].folder}, function(data) {
@@ -1493,7 +1496,7 @@ function genQuestion() {
    var button = $("#generateQuestion");
    button.attr("disabled", true);
    
-   tasks = new Array(); // Reinit
+   tasks = []; // Reinit
    var url = "beaver-tasks/" + questions[questionID].folder + "/" + questions[questionID].key + "/";
    $("#preview_question").attr("src", url);
    
@@ -1606,17 +1609,18 @@ function newForm(modelName, title, message) {
       } else if (field.edittype === "select") {
          html += "<select id='" + fieldId + "'>";
          html += "<option value='0'>" + t("select") + "</option>";
+         var optionValue, optionName;
          if (typeof field.editoptions.value === "string") {
             var optionsList = field.editoptions.value.split(";");
             for (var iOption = 0; iOption < optionsList.length; iOption++)  {
                var optionParts = optionsList[iOption].split(":");
-               var optionValue = optionParts[0];
-               var optionName = optionParts[1];
+               optionValue = optionParts[0];
+               optionName = optionParts[1];
                html += "<option value='" + optionValue + "'>" + optionName + "</option>";
             }
          } else {
-            for (var optionValue in field.editoptions.value) {
-               var optionName = field.editoptions.value[optionValue];
+            for (optionValue in field.editoptions.value) {
+               optionName = field.editoptions.value[optionValue];
                html += "<option value='" + optionValue + "'>" + optionName + "</option>";
             }
          }
@@ -1632,7 +1636,7 @@ function newForm(modelName, title, message) {
          html += "</select>";
       } else if (field.edittype === "datetime") {
          html += "<input id='" + fieldId + "_date' type='text' /> ";
-         html += " à "
+         html += " à ";
          html += getSelectHours(fieldId) + ":" + getSelectMinutes(fieldId);
          js += "$('#" + fieldId + "_date').datepicker({ dateFormat: 'dd/mm/yy' });";
       }
@@ -1710,7 +1714,7 @@ function editForm(modelName, title, item) {
       if (field.edittype !== "datetime") {
          $("#" + modelName + "_" + fieldName).val(item[fieldName]);
       } else {
-         if ((item[fieldName] != null) && (item[fieldName].length > 0)) {
+         if ((item[fieldName]) && (item[fieldName].length > 0)) {
             var parts = item[fieldName].split(' ');
 
             $("#" + modelName + "_" + fieldName + "_date").val(getDateFromSQL(parts[0]));
@@ -1778,12 +1782,12 @@ function jqAlert(message, closeFunction, buttons) {
 }
 
 function getSQLFromJSDate(d) {
-   return d.getFullYear()
-   + "-" + ("0" + (d.getMonth() + 1)).slice(-2)
-   + "-" + ("0" + d.getDate()).slice(-2)
-   + " " + ("0" + d.getHours()).slice(-2)
-   + ":" + ("0" + d.getMinutes()).slice(-2)
-   + ":" + ("0" + d.getSeconds()).slice(-2);
+   return d.getFullYear() +
+      "-" + ("0" + (d.getMonth() + 1)).slice(-2) +
+      "-" + ("0" + d.getDate()).slice(-2) +
+      " " + ("0" + d.getHours()).slice(-2) +
+      ":" + ("0" + d.getMinutes()).slice(-2) +
+      ":" + ("0" + d.getSeconds()).slice(-2);
 }
 
 function getSQLFromDate(date) {
@@ -1797,7 +1801,7 @@ function getSQLFromDate(date) {
 
 function validateForm(modelName) {
    var item = {};
-   item["ID"] = $("#" + modelName + "_ID").val();
+   item.ID = $("#" + modelName + "_ID").val();
    var fields = models[modelName].fields;
    for (var fieldName in fields) {
       field = fields[fieldName];
@@ -1806,11 +1810,11 @@ function validateForm(modelName) {
          var date = $("#" + modelName + "_" + fieldName + "_date").val();
          date = getSQLFromDate(date);
          var hours = $("#" + modelName + "_" + fieldName + "_hours").val();
-         if (hours == "") {
+         if (!hours) {
             hours = "00";
          }
          var minutes = $("#" + modelName + "_" + fieldName + "_minutes").val();
-         if (minutes == "") {
+         if (!minutes) {
             minutes = "00";
          }
          if ((parseInt(hours) > 23) || (parseInt(minutes) > 59)) {
@@ -1859,12 +1863,12 @@ function validateForm(modelName) {
       }
    } else if (modelName === "group") {
       // TODO: prevent changing group level if already started
-      if (item["schoolID"] == undefined) {
+      if (!item.schoolID) {
          return;
       }
-      var contest = contests[item["contestID"]];
+      var contest = contests[item.contestID];
       if ((contest.status != "RunningContest") && (contest.status != "FutureContest") && (contest.status != "PreRanking")) {
-         if (item["participationType"] == "Official") {
+         if (item.participationType == "Official") {
             alert(t("official_contests_restricted"));
             return;
          }
@@ -1874,7 +1878,7 @@ function validateForm(modelName) {
    $("#buttonValidate_" + modelName).attr("disabled", true);
    $("#buttonCancel_" + modelName).attr("disabled", true);
    var oper = "insert";
-   if ((item["ID"] != "") && (item["ID"] !== undefined)) {
+   if (item.ID) {
       oper = "update";
    }
    $.post("jqGridData.php", {tableName:models[modelName].tableName, oper: oper, record:item},
@@ -1891,7 +1895,7 @@ function validateForm(modelName) {
          }
          endEditForm(modelName, data.recordID, item);
          if (modelName === "user_create") {
-            if (item["officialEmail"] != "") {
+            if (item.officialEmail) {
                jqAlert(t("you_will_get_email"));
             } else {
                jqAlert(t("no_official_email_1") + getMailToManualValidation(t("contact_us")) + t("no_official_email_2"));
@@ -1907,7 +1911,7 @@ function endEditForm(modelName, recordID, item) {
    } else if (modelName === "group") {
       endEditGroup(recordID);
       if (!isAdmin()) {
-         if (groups[recordID] != undefined) {
+         if (groups[recordID]) {
             item.userID = groups[recordID].userID; // TODO: do this in a generic way!
          } else {
             item.userID = loggedUser.ID;
@@ -1931,7 +1935,7 @@ function newSchool() {
 function editUser() {
    editForm("user_edit", t("edit_user"), loggedUser);
    var officialEmail = loggedUser.officialEmail;
-   if (officialEmail == "") {
+   if (!officialEmail) {
       return;
    }
    var parts = officialEmail.split("@");
@@ -1957,14 +1961,14 @@ function endSearchSchool() {
 function selectSchool() {
    $("#divSchoolSearch").show();
    var schoolID = jQuery("#grid_school_search").jqGrid('getGridParam','selrow');
-   if (schoolID == null) {
+   if (!schoolID) {
       jqAlert(t("warning_no_school_selected"));
       return false;
    }
    var params = {schoolID: schoolID, userID: loggedUser.ID};
    newItem("school_user", params, function(data) {
       loadSchools().done(function() {
-         models["group"] = getGroupsColModel();
+         models.group = getGroupsColModel();
          $('#grid_school').trigger('reloadGrid');   
          $('#grid_colleagues').trigger('reloadGrid');   
       });
@@ -1978,7 +1982,7 @@ function editSchool() {
 
 function endEditSchool(schoolID) {
    loadSchools().done(function() {
-      models["group"] = getGroupsColModel();
+      models.group = getGroupsColModel();
       $('#grid_school').trigger('reloadGrid');
       //selectSchool(schoolID);
    });
@@ -1986,8 +1990,8 @@ function endEditSchool(schoolID) {
 
 function endEditGroup(groupID) {
    loadContests().done(function() {
-      models["group"] = getGroupsColModel();
-      $('#grid_group').jqGrid('setGridParam', {colModel:jqGridModel("group")}).trigger('reloadGrid')
+      models.group = getGroupsColModel();
+      $('#grid_group').jqGrid('setGridParam', {colModel:jqGridModel("group")}).trigger('reloadGrid');
    });
 }
 
@@ -2001,7 +2005,7 @@ function endEditUser(userID, user) {
 }
 
 function warningUsers(users) {
-   if ((users == null) || (users.length == 0)) {
+   if (!users || !users.length) {
       return;
    }
    var msg = t("several_users_for_school");
@@ -2080,7 +2084,7 @@ function changePassword(email, recoverCode) {
             enableButton("buttonChangePassword");
             return;
          } else {
-            jqAlert(t("password_changed"), function() {window.location.replace(t("index_url"))});
+            jqAlert(t("password_changed"), function() {window.location.replace(t("index_url"));});
          }
       }, "json"
    );
@@ -2109,7 +2113,8 @@ Number.prototype.pad = function(size){
       var s = String(this);
       while (s.length < size) s = "0" + s;
       return s;
-    }
+    };
+
 function getDateFromSQLFormat(string) {
   var d = new Date(Date.parse(string));
     return d.getDate().pad() + "/" + (d.getMonth() + 1).pad() + "/" + d.getFullYear() + " à " + d.getHours().pad() + "h" + d.getMinutes().pad(); 
@@ -2117,7 +2122,7 @@ function getDateFromSQLFormat(string) {
 
 function certiGenShow(data) {
    var schools = data;
-   if (schools.length == 0) {
+   if (!schools.length) {
       $("#certiGenList").html(t("no_school_with_certificates_to_print"));
    } else {
       $("#certiGenList").html("<ul></ul>");
@@ -2151,7 +2156,7 @@ function certiGenShow(data) {
          // List of pdfs
          if (school.state == 'FINISHED') {
              $(li).append("<p>" + t("certificates_download") + "</p>");
-             var list = $("<ul></ul>")
+             var list = $("<ul></ul>");
              $(list).append('<li><a href="'+school.url+'" target="_blank">' + t("certificates_full_school") + '</a><br/>&nbsp;</li>');
              for (var i = 0; i < school.groups.length; i++) {
                  var group = school.groups[i];
