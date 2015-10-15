@@ -28,9 +28,9 @@ function sendMail($sTo, $sTitle, $sBody, $sFrom, $sBCC = NULL)
    $mail->IsSMTP(); // telling the class to use SMTP
    $mail->SMTPDebug  = 0; // SMTP debug information 0, 1 (errors and messages), 2 (messages only)
    $mail->SMTPAuth   = true;
-   $mail->SMTPSecure = "ssl";
-   $mail->Host       = "smtp.gmail.com";
-   $mail->Port       = 465;
+   $mail->SMTPSecure = $config->email->smtpSecurity;
+   $mail->Host       = $config->email->smtpHost;
+   $mail->Port       = $config->email->smtpPort;
    $mail->Username   = $config->email->sGMailUsername;
    $mail->Password   = $config->email->sGMailPassword;
    // General configuration
