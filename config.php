@@ -24,8 +24,11 @@ $config->email->sFileStoringSentMails = 'logs/mails.txt';
 $config->email->bSendMailForReal = false;
 $config->email->sEmailSender = '';
 $config->email->sEmailInsriptionBCC = '';
-$config->email->sGMailUsername = '';
-$config->email->sGMailPassword = 'PASSWORD';
+$config->email->smtpHost = '';
+$config->email->smtpPort = '';
+$config->email->smtpSecurity = ''; // to fill PHPMailer->SMTPSecure, "tls" or "ssl"
+$config->email->smtpUsername = '';
+$config->email->smtpPassword = 'PASSWORD';
 $config->email->sInfoAddress = 'info@castor-informatique.fr';
 
 $config->aws = (object) array();
