@@ -562,7 +562,7 @@ function loadGrid(modelName, sortName, rowNum, rowList, onSelectRow, withToolbar
     rowList: rowList,
     sortname: sortName,
     sortorder: 'asc',
-    regional : 'en',
+    regional : config.defaultLanguage,
     viewrecords: true,
     gridview: true,
     width: "100%",
