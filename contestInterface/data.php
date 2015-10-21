@@ -141,6 +141,12 @@ function reloginTeam($db, $password, $teamID) {
    return false;
 }
 
+function getRandomID() {
+   $rand = (string) mt_rand(100000, 999999999);
+   $rand .= (string) mt_rand(1000000, 999999999);
+   return $rand;
+}
+
 function createTeam($db, $contestants) {
    global $tinyOrm, $config;
    if ($_SESSION["groupClosed"]) {
@@ -153,9 +159,9 @@ function createTeam($db, $contestants) {
    } else {
       $password = genAccessCode($db);
    }
-   $stmt = $db->prepare("INSERT INTO `team` (`groupID`, `password`) VALUES (?, ?)");
-   $stmt->execute(array($_SESSION["groupID"], $password));
-   $teamID = $db->lastInsertId();
+   $teamID = getRandomID();
+   $stmt = $db->prepare("INSERT INTO `team` (`ID`, `groupID`, `password`) VALUES (?, ?, ?)");
+   $stmt->execute(array($teamID, $_SESSION["groupID"], $password));
    if ($config->db->use == 'dynamoDB') {
       try {
          $tinyOrm->insert('team', array(
@@ -282,8 +288,10 @@ function recoverGroup($db) {
    }
    $stmtUpdate = $db->prepare("UPDATE `group` SET `code` = ?, `password` = ?, `bRecovered`=1 WHERE `ID` = ?;");
    $stmtUpdate->execute(array('#'.$_POST['groupCode'], '#'.$row->password, $row->ID));
-   $stmtInsert = $db->prepare("INSERT INTO `group` (`startTime`, `bRecovered`, `contestID`, `expectedStartTime`, `name`, `userID`, `gradeDetail`, `grade`, `schoolID`, `nbStudents`, `nbTeamsEffective`, `nbStudentsEffective`, `noticePrinted`, `isPublic`, `participationType`, `password`, `code`) values (NOW(), 1, :contestID, NOW(), :name, :userID, :gradeDetail, :grade, :schoolID, :nbStudents, 0, 0, 0, :isPublic, :participationType, :password, :code);");
+   $groupID = getRandomID();
+   $stmtInsert = $db->prepare("INSERT INTO `group` (`ID`, `startTime`, `bRecovered`, `contestID`, `expectedStartTime`, `name`, `userID`, `gradeDetail`, `grade`, `schoolID`, `nbStudents`, `nbTeamsEffective`, `nbStudentsEffective`, `noticePrinted`, `isPublic`, `participationType`, `password`, `code`) values (:groupID, NOW(), 1, :contestID, NOW(), :name, :userID, :gradeDetail, :grade, :schoolID, :nbStudents, 0, 0, 0, :isPublic, :participationType, :password, :code);");
    $stmtInsert->execute(array(
+      'groupID' => $groupID,
       'contestID' => $row->contestID,
       'name' => ($row->name).'-bis',
       'userID' => $row->userID,
@@ -296,7 +304,7 @@ function recoverGroup($db) {
       'password' => $row->password,
       'code' => $_POST['groupCode'],
    ));
-   $_SESSION["groupID"] = $db->lastInsertId();
+   $_SESSION["groupID"] = $groupID;
    $_SESSION["startTime"] = time(); // warning: SQL and PHP server must be in sync...
    $_SESSION["closed"] = false;
    $_SESSION["groupClosed"] = false;
