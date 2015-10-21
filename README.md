@@ -18,6 +18,8 @@ Get [composer](https://getcomposer.org/) dependencies:
 
     composer install
 
+Make the directories `logs/` and `contestInterface/contests/` writable by php.
+
 Run `php commonFramework/modelsManager/triggers.php`.
 
 Get Bower dependencies: run `bower install` in both `contestInterface` and `teacherInterface`.
