@@ -54,8 +54,9 @@ function inArray(arr, value) {
  * @type type
  */
 var platform = {
-   updateHeight: function(height) {
+   updateHeight: function(height, success, error) {
       questionIframe.setHeight(height);
+      if (success) {success();}
    },
    openUrl: function(url) {
       // not used here
@@ -66,7 +67,7 @@ var platform = {
    askHint: function(numHint) {
       // not used here
    },
-   getTaskParams: function(key, defaultValue) {
+   getTaskParams: function(key, defaultValue, success, error) {
       var questionData = questionsData[questionsKeyToID[questionIframe.questionKey]];
       var res = {'minScore': questionData.minScore, 'maxScore': questionData.maxScore, 'noScore': questionData.noAnswerScore, 'randomSeed': teamID, 'options': questionData.options};
       if (typeof key !== 'undefined') {
@@ -77,11 +78,16 @@ var platform = {
          }
          return (typeof defaultValue !== 'undefined') ? defaultValue : null;
       }
-      return res;
+      if (success) {
+        success(res);
+      } else {
+        return res;
+      }
    },
-   validate: function(mode) {
+   validate: function(mode, success, error) {
       if (TimeManager.isContestOver()) {
          alert(t("contest_closed_answers_readonly"));
+         if (error) {error();} else if (success) {success();}
          return;
       }
 
@@ -117,6 +123,7 @@ var platform = {
             answers[questionIframe.questionKey] = answer;
             platform.continueValidate(mode);
          }
+         if (success) {success();}
       });
    },
    continueValidate: function(mode) {
