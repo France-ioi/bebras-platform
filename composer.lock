@@ -5,6 +5,7 @@
         "This file is @generated automatically"
     ],
     "hash": "5d76f77684b5f80340c303075304f4c0",
+    "content-hash": "ae643d93c92ac42060554b80b49cc63f",
     "packages": [
         {
             "name": "France-ioi/pem-task-compiler",
@@ -12,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/France-ioi/pem-task-compiler.git",
-                "reference": "854b9fba5ebed9aca1ebeb3c51f90a5cdacaf892"
+                "reference": "5872991cbe28038fdc5895788d7091e185303c3c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/France-ioi/pem-task-compiler/zipball/854b9fba5ebed9aca1ebeb3c51f90a5cdacaf892",
-                "reference": "854b9fba5ebed9aca1ebeb3c51f90a5cdacaf892",
+                "url": "https://api.github.com/repos/France-ioi/pem-task-compiler/zipball/5872991cbe28038fdc5895788d7091e185303c3c",
+                "reference": "5872991cbe28038fdc5895788d7091e185303c3c",
                 "shasum": ""
             },
             "type": "library",
@@ -30,20 +31,20 @@
                 "source": "https://github.com/France-ioi/pem-task-compiler/tree/master",
                 "issues": "https://github.com/France-ioi/pem-task-compiler/issues"
             },
-            "time": "2015-08-06 11:49:20"
+            "time": "2015-10-21 15:40:03"
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.3.8",
+            "version": "3.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "f09d297fd919fadf9b12ac0cbea082a5494e63e9"
+                "reference": "5de9bee69024457be14d125b2ad1598d17968e11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/f09d297fd919fadf9b12ac0cbea082a5494e63e9",
-                "reference": "f09d297fd919fadf9b12ac0cbea082a5494e63e9",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/5de9bee69024457be14d125b2ad1598d17968e11",
+                "reference": "5de9bee69024457be14d125b2ad1598d17968e11",
                 "shasum": ""
             },
             "require": {
@@ -106,7 +107,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2015-09-17 19:59:34"
+            "time": "2015-10-15 21:40:56"
         },
         {
             "name": "doctrine/cache",
@@ -241,16 +242,16 @@
         },
         {
             "name": "guzzlehttp/promises",
-            "version": "1.0.2",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/promises.git",
-                "reference": "97fe7210def29451ec74923b27e552238defd75a"
+                "reference": "b1e1c0d55f8083c71eda2c28c12a228d708294ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/97fe7210def29451ec74923b27e552238defd75a",
-                "reference": "97fe7210def29451ec74923b27e552238defd75a",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/b1e1c0d55f8083c71eda2c28c12a228d708294ea",
+                "reference": "b1e1c0d55f8083c71eda2c28c12a228d708294ea",
                 "shasum": ""
             },
             "require": {
@@ -288,7 +289,7 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2015-08-15 19:37:21"
+            "time": "2015-10-15 22:28:00"
         },
         {
             "name": "guzzlehttp/psr7",
