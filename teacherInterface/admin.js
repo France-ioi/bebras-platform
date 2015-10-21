@@ -1537,21 +1537,22 @@ function genTasks(questionsUrl, curIndex)
       return;
    }
    
-   var url = "beaver-tasks/" + questionsUrl[curIndex];
+   var url = "bebras-tasks/" + questionsUrl[curIndex];
    $("#preview_question").attr("src", url);
    generating = true;
    $('#preview_question').load(function() {
       $('#preview_question').unbind('load');
       
-      var bebras = $('#preview_question')[0].contentWindow.getTaskResources();
-      tasks.push({
-         'bebras': bebras,
-         'url': questionsUrl[curIndex]
+      $('#preview_question')[0].contentWindow.getTaskResources(function(bebras) {
+         tasks.push({
+            'bebras': bebras,
+            'url': questionsUrl[curIndex]
+         });
+         
+         generating = false;
+         
+         genTasks(questionsUrl, curIndex + 1);
       });
-      
-      generating = false;
-      
-      genTasks(questionsUrl, curIndex + 1);
    });
 }
 
