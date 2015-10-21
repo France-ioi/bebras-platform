@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__.'/../../vendor/France-ioi/pem-task-compiler/PEMTaskCompiler.php';
-
 class Bebras
 {
    private $taskDirectory;
@@ -13,7 +11,7 @@ class Bebras
     */
    public static function getQuestionsDirectory()
    {
-      return realpath(__DIR__ . '/../../teacherInterface/beaver_tasks');
+      return realpath(__DIR__ . '/../../teacherInterface/bebras-tasks');
    }
 
    /**

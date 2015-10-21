@@ -273,7 +273,7 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
       
       list($curFolder, $curKey) = explode('/', $curTask['url']);
       $taskUrl = $curTask['url'].'/';
-      $task = new PEMTaskCompiler($curTask['bebras'], __DIR__.'/beaver_tasks/'.$curFolder.'/'.$curKey.'/', true);
+      $task = new PEMTaskCompiler($curTask['bebras'], __DIR__.'/bebras-tasks/'.$curFolder.'/'.$curKey.'/', true);
 
       // Task directory
       if ($mode != "aws") {

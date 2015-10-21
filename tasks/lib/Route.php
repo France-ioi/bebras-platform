@@ -85,7 +85,7 @@ class Route
     */
    public function getTaskPath()
    {      
-      return 'beaver_tasks/'.$this->route;
+      return 'bebras-tasks/'.$this->route;
    }
    
    /**
