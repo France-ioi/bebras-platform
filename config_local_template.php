@@ -40,7 +40,7 @@ $config->contestInterface->baseUrl = 'http://concours.castor-informatique.fr';
 $config->certificates->webServiceUrl = 'http://castor-informatique.fr.localhost/certificates/';
 
 $config->timezone = 'Europe/Paris';
-$config->defaultLanguage = 'en';
+$config->defaultLanguage = 'fr';
 $config->contestPresentationURL = 'http://castor-informatique.fr';
 $config->contestOfficialURL = 'http://concours.castor-informatique.fr';
 $config->contestBackupURL = '';
