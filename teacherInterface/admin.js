@@ -1179,16 +1179,24 @@ function grade(curContestID, curGroupID, questionKeys, curIndex)
             try {
                var task = TaskProxyManager.getTaskProxy('preview_question', true);
                var platform = new Platform(task);
-               platform.getTaskParams = function(key, defaultValue) {
-                  if (typeof key !== 'undefined') {
+               platform.getTaskParams = function(key, defaultValue, success, error) {
+                  var res = {};
+                  if (key) {
                      if (key !== 'options' && key in curGradingData) {
-                        return curGradingData[key];
+                        res = curGradingData[key];
                      } else if (curGradingData.options && key in curGradingData.options) {
-                        return curGradingData.options[key];
+                        res = curGradingData.options[key];
+                     } else {
+                        res = (typeof defaultValue !== 'undefined') ? defaultValue : null;
                      }
-                     return (typeof defaultValue !== 'undefined') ? defaultValue : null; 
+                  } else {
+                     res = curGradingData;
                   }
-                  return curGradingData;
+                  if (success) {
+                     success(res);
+                  } else {
+                     return res;
+                  }
                };
                TaskProxyManager.setPlatform(task, platform);
                task.load({'task': true, 'grader': true}, function() {

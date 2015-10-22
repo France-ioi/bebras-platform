@@ -1,6 +1,8 @@
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 !function () {
 
+'use strict';
+
 var contestID;
 var contestFolder;
 var contestStatus;
