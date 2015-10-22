@@ -70,13 +70,18 @@ var platform = {
    getTaskParams: function(key, defaultValue, success, error) {
       var questionData = questionsData[questionsKeyToID[questionIframe.questionKey]];
       var res = {'minScore': questionData.minScore, 'maxScore': questionData.maxScore, 'noScore': questionData.noAnswerScore, 'randomSeed': teamID, 'options': questionData.options};
-      if (typeof key !== 'undefined') {
+      if (key) {
          if (key !== 'options' && key in res) {
             return res[key];
          } else if (res.options && key in res.options) {
             return res.options[key];
          }
-         return (typeof defaultValue !== 'undefined') ? defaultValue : null;
+         res = (typeof defaultValue !== 'undefined') ? defaultValue : null;
+         if (success) {
+            success(res);
+         } else {
+            return res;
+         }
       }
       if (success) {
         success(res);
