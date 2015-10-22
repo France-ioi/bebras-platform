@@ -12,7 +12,9 @@ var questionsData = [];
 var questionsKeyToID = {};
 var questionsToGrade = [];
 var scores = {};
-var bonusScore, ffTeamScore, ffMaxTeamScore; // fullFeedback versions
+var bonusScore = 0;
+var ffTeamScore = 0;
+var ffMaxTeamScore = 0; // fullFeedback versions
 var teamScore = 0;
 var maxTeamScore = 0;
 var sending = false;
@@ -1458,16 +1460,16 @@ function gradeQuestion(i) {
    var curQuestion = questionsToGrade[i];
 
    questionIframe.load({'task': true, 'grader': true}, curQuestion.questionKey, function() {
-      var score = null;
+      var score = 0;
       questionIframe.iframe.contentWindow.grader.gradeTask(curQuestion.answer, null, function(newScore, message) {
          score = newScore;
+         scores[curQuestion.questionKey] = {
+            score: score,
+            maxScore: curQuestion.maxScore
+         };
+         teamScore += parseInt(scores[curQuestion.questionKey].score);
+         gradeQuestion(i + 1);
       });
-      scores[curQuestion.questionKey] = {
-         score: score,
-         maxScore: curQuestion.maxScore
-      };
-      teamScore += parseInt(scores[curQuestion.questionKey].score);
-      gradeQuestion(i + 1);
    });
 }
 
@@ -1488,8 +1490,8 @@ function sendScores() {
             var questionID = sortedQuestionIDs[iQuestionID];
             var questionKey = questionsData[questionID].key;
             var image = "";
-            var score = "";
-            var maxScore = "";
+            var score = 0;
+            var maxScore = 0;
             if (scores[questionKey] !== undefined) {
                score = scores[questionKey].score;
                maxScore = scores[questionKey].maxScore;
@@ -1650,7 +1652,7 @@ function submitAnswer(questionKey, answer, score) {
 }
 
 function computeFullFeedbackScore() {
-   ffTeamScore = bonusScore;
+   ffTeamScore = bonusScore ? bonusScore : 0;
    ffMaxTeamScore = 0;
    for (var questionID in questionsData) {
       var questionKey = questionsData[questionID].key;
