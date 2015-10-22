@@ -637,7 +637,7 @@ var questionID;
 function loadListQuestions() {
    loadGrid("question", "key", 20, [20, 50, 200], function(id) {
       questionID = id;
-      var url = "beaver-tasks/" + questions[id].folder + "/" + questions[id].key + "/";
+      var url = "bebras-tasks/" + questions[id].folder + "/" + questions[id].key + "/index.html";
       $("#preview_question").attr("src", url);
    }, true);
 }
@@ -1157,7 +1157,7 @@ function grade(curContestID, curGroupID, questionKeys, curIndex)
    // Retrieve the bebras/grader of the current question
    $.post('grader.php', { contestID: curContestID, groupID: curGroupID, questionKey: questionKeys[curIndex] },function(data) {
       if (data.status === 'success') {
-         var url = "beaver-tasks/" + data.contestYear + "/" + questionKeys[curIndex] + "/";
+         var url = "bebras-tasks/" + data.contestYear + "/" + questionKeys[curIndex] + "/index.html";
          $("#preview_question").attr("src", url);
          
          // Retrieve bebras
@@ -1165,48 +1165,48 @@ function grade(curContestID, curGroupID, questionKeys, curIndex)
          $('#preview_question').load(function() {
             $('#preview_question').unbind('load');
 
-            var bebras = $('#preview_question')[0].contentWindow.getTaskResources();
-
-            generating = false;
-            curGradingBebras = bebras;
-            curGradingData = data;
-            curGradingData.noScore = curGradingData.noAnswerScore;
-            // will be filled later
-            curGradingData.randomSeed = 0;
-            
-            // Reset answers score cache
-            curGradingScoreCache = {};
-            try {
-               var task = TaskProxyManager.getTaskProxy('preview_question', true);
-               var platform = new Platform(task);
-               platform.getTaskParams = function(key, defaultValue, success, error) {
-                  var res = {};
-                  if (key) {
-                     if (key !== 'options' && key in curGradingData) {
-                        res = curGradingData[key];
-                     } else if (curGradingData.options && key in curGradingData.options) {
-                        res = curGradingData.options[key];
-                     } else {
-                        res = (typeof defaultValue !== 'undefined') ? defaultValue : null;
-                     }
-                  } else {
-                     res = curGradingData;
-                  }
-                  if (success) {
-                     success(res);
-                  } else {
-                     return res;
-                  }
-               };
-               TaskProxyManager.setPlatform(task, platform);
-               task.load({'task': true, 'grader': true}, function() {
-                  gradeQuestion(curContestID, groupID, questionKeys, curIndex);
-               });
-            } catch (e) {
-               console.log('Task loading error catched : questionKey='+questionKeys[curIndex]);
-               console.log(e);
-               console.log(teamQuestion.answer);
-            }
+             $('#preview_question')[0].contentWindow.task.getResources(function(bebras) {
+               generating = false;
+               curGradingBebras = bebras;
+               curGradingData = data;
+               curGradingData.noScore = curGradingData.noAnswerScore;
+               // will be filled later
+               curGradingData.randomSeed = 0;
+               
+               // Reset answers score cache
+               curGradingScoreCache = {};
+               try {
+                  TaskProxyManager.getTaskProxy('preview_question', function(task) {
+                     var platform = new Platform(task);
+                     platform.getTaskParams = function(key, defaultValue, success, error) {
+                        var res = {};
+                        if (key) {
+                           if (key !== 'options' && key in curGradingData) {
+                              res = curGradingData[key];
+                           } else if (curGradingData.options && key in curGradingData.options) {
+                              res = curGradingData.options[key];
+                           } else {
+                              res = (typeof defaultValue !== 'undefined') ? defaultValue : null;
+                           }
+                        } else {
+                           res = curGradingData;
+                        }
+                        if (success) {
+                           success(res);
+                        } else {
+                           return res;
+                        }
+                     };
+                     TaskProxyManager.setPlatform(task, platform);
+                     task.load({'task': true, 'grader': true}, function() {
+                        gradeQuestion(curContestID, groupID, questionKeys, curIndex);
+                     });
+                  }, true);
+               } catch (e) {
+                  console.log('Task loading error catched : questionKey='+questionKeys[curIndex]);
+                  console.log(e);
+               }
+            });
          });
       }
       else {
@@ -1505,7 +1505,7 @@ function genQuestion() {
    button.attr("disabled", true);
    
    tasks = []; // Reinit
-   var url = "beaver-tasks/" + questions[questionID].folder + "/" + questions[questionID].key + "/";
+   var url = "bebras-tasks/" + questions[questionID].folder + "/" + questions[questionID].key + "/";
    $("#preview_question").attr("src", url);
    
    // Retrieve bebras
@@ -1513,7 +1513,7 @@ function genQuestion() {
    $('#preview_question').load(function() {
       $('#preview_question').unbind('load');
       
-      var bebras = $('#preview_question')[0].contentWindow.getTaskResources();
+      var bebras = $('#preview_question')[0].contentWindow.task.getResources();
       tasks.push({
          'bebras': bebras,
          'url': questions[questionID].folder + "/" + questions[questionID].key + "/"
