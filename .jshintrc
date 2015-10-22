@@ -1,0 +1,17 @@
+{
+   "devel":true,
+   "browser": true,
+   "globals":{
+      "task": true,
+      "TaskProxyManager": true,
+      "Platform": true,
+      "i18n": true,
+      "utf8": true
+   },
+   "trailing": true,
+   "undef":true,
+   "unused":true,
+   "indent":3,
+   "jquery": true,
+   "multistr": true
+}

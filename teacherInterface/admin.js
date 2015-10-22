@@ -1596,7 +1596,7 @@ function newForm(modelName, title, message) {
    var html = "<h3>" + title + "</h3>" + message +
       "<input type='hidden' id='" + modelName + "_ID' /><table>";
    for (var fieldName in models[modelName].fields) {
-      field = models[modelName].fields[fieldName];
+      var field = models[modelName].fields[fieldName];
       if (field.edittype === undefined) {
          continue;
       }
@@ -1813,7 +1813,7 @@ function validateForm(modelName) {
    item.ID = $("#" + modelName + "_ID").val();
    var fields = models[modelName].fields;
    for (var fieldName in fields) {
-      field = fields[fieldName];
+      var field = fields[fieldName];
       item[fieldName] = $("#" + modelName + "_" + fieldName).val();
       if (field.edittype === "datetime") {
          var date = $("#" + modelName + "_" + fieldName + "_date").val();

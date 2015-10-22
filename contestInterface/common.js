@@ -1,8 +1,6 @@
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 !function () {
 
-'use strict';
-
 var contestID;
 var contestFolder;
 var contestStatus;
@@ -36,6 +34,8 @@ var t = i18n.t;
  * Old IE versions does not implement the Array.indexOf function
  * Setting it in Array.prototype.indexOf makes IE crash
  * So the graders are using this inArray function
+ *
+ * TODO: is it still used?
  *
  * @param {array} arr
  * @param {type} value
@@ -157,13 +157,12 @@ var platform = {
          case 'cancel':
             break;
          case 'next':
-            delay = 400;
          case 'done':
-         default:
+            delay = 400;
             // Next question
             if (nextQuestionID !== "0") {
                setTimeout(function() {
-                  selectQuestion(nextQuestionID, false);
+                  window.selectQuestion(nextQuestionID, false);
                }, delay);
             }
             else {
@@ -171,6 +170,9 @@ var platform = {
                   alert(t("last_question_message"));
                }, delay);
             }
+            break;
+         default:
+            // problem!
             break;
       }
    }
@@ -207,7 +209,7 @@ var questionIframe = {
             if (script.readyState === 'complete' || script.readyState === 'loaded') {
                callback();
             }
-         }
+         };
       }
 
       this.tbody.appendChild(script);
@@ -308,9 +310,9 @@ var questionIframe = {
       iframe.setAttribute('scrolling', 'no');
       iframe.setAttribute('src', 'about:blank');
 
-      var content = '<!DOCTYPE html>'
-       + '<html><head><meta http-equiv="X-UA-Compatible" content="IE=edge"></head>'
-       + '<body></body></html>';
+      var content = '<!DOCTYPE html>' +
+         '<html><head><meta http-equiv="X-UA-Compatible" content="IE=edge"></head>' +
+         '<body></body></html>';
       var ctnr = document.getElementById('question-iframe-container');
       ctnr.appendChild(iframe);
 
@@ -435,7 +437,7 @@ var questionIframe = {
       //this.addCssFile(contestsRoot + '/' + contestFolder + '/contest_' + contestID + '.css');
 
       // Call image preloading
-      this.addJsFile(contestsRoot + '/' + contestFolder + '/contest_' + contestID + '.js', callback);
+      this.addJsFile(window.contestsRoot + '/' + contestFolder + '/contest_' + contestID + '.js', callback);
 
       this.body.append('<div id="jsContent"></div><div id="container" style="border: 1px solid #000000; padding: 10px 20px 10px 20px;"><div class="question" style="font-size: 20px; font-weight: bold;">Le contenu du concours est en train d\'être téléchargé, merci de patienter le temps nécessaire.</div></div>');
 
@@ -488,10 +490,10 @@ var questionIframe = {
                  }
               }, 200);
 
-              if (callback != undefined) {
+              if (callback) {
                  callback();
               }
-           }
+           };
 
            // Load the session's answer, if any
            if (answers[questionIframe.questionKey]) {
@@ -540,7 +542,6 @@ var questionIframe = {
       }
 
       // Load css modules
-      var that = this;
       $('.css-module-'+questionKey).each(function() {
          var cssModuleId = 'css-module-'+$(this).attr('data-content');
          that.addCssContent($('#'+cssModuleId).attr('data-content'));
@@ -567,7 +568,7 @@ var questionIframe = {
             questionIframe.task.unload(function() {
                that.loaded = false;
                that.loadQuestion(taskViews, questionKey, callback);
-            })
+            });   
          }
          else {
             this.loaded = false;
@@ -620,7 +621,7 @@ var Utils = {
       if (preventShuffle) {
          return order;
       }
-      for (var iValue = 0; iValue < nbValues; iValue++) {
+      for (iValue = 0; iValue < nbValues; iValue++) {
          var pos = iValue + (orderKey % (nbValues - iValue));
          var tmp = order[iValue];
          order[iValue] = order[pos];
@@ -655,7 +656,7 @@ var TimeManager = {
       this.endTimeCallback = endTimeCallback;
       var curDate = new Date();
       this.timeStart = curDate.getTime() / 1000;
-      if (this.endTime != null) {
+      if (this.endTime) {
          contestOverCallback();
       } else if (this.totalTime > 0) {
          this.prevTime = this.timeStart;
@@ -683,7 +684,7 @@ var TimeManager = {
       var timeDiff = curDate.getTime() / 1000 - TimeManager.prevTime;
       TimeManager.timeStart += timeDiff - 1;
       setTimeout(function() {
-         TimeManager.syncWithServer(message);
+         TimeManager.syncWithServer();
       }, 120000);
    },
 
@@ -699,8 +700,8 @@ var TimeManager = {
             } else {
                TimeManager.simpleTimeAdjustment();
             }
-         }
-      , 'json').done(function() {
+         },
+      'json').done(function() {
          var curDate = new Date();
          TimeManager.prevTime = curDate.getTime() / 1000;
          TimeManager.synchronizing = false;
@@ -711,7 +712,7 @@ var TimeManager = {
    },
 
    updateTime: function() {
-      if (TimeManager.endTime != null || TimeManager.synchronizing) {
+      if (TimeManager.endTime || TimeManager.synchronizing) {
          return;
       }
       var curDate = new Date();
@@ -744,7 +745,7 @@ var TimeManager = {
    },
 
    isContestOver: function() {
-      return this.endTime != null;
+      return this.endTime;
    }
 };
 
@@ -761,12 +762,12 @@ window.selectMainTab = function(tabName) {
          $("#button-" + tabNames[iTab]).removeClass("selected");
       }
    }
-}
+};
 
 window.confirmPublicGroup = function() {
    $("#warningPublicGroups").hide();
    $("#publicGroups").show();
-}
+};
 // Contest startup
 
 /*
@@ -776,7 +777,7 @@ function fillListQuestions(sortedQuestionIDs, questionsData)
 {
    var strListQuestions = "";
    for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
-      questionID = sortedQuestionIDs[iQuestionID];
+      var questionID = sortedQuestionIDs[iQuestionID];
       var questionData = questionsData[questionID];
       var encodedName = questionData.name.replace("'", "&rsquo;");
 
@@ -804,14 +805,15 @@ function fillListQuestions(sortedQuestionIDs, questionsData)
  * the team's password given to the students, and the images preloaded
 */
 function setupContest(data) {
-   teamPassword = data["teamPassword"];
-   questionsData = data["questionsData"];
+   teamPassword = data.teamPassword;
+   questionsData = data.questionsData;
 
+   var questionKey;
    // Reloads previous scores to every question
    scores = {};
    for (var questionID in data.scores) {
       if (questionID in questionsData) {
-         var questionKey = questionsData[questionID].key;
+         questionKey = questionsData[questionID].key;
          scores[questionKey] = {score: data.scores[questionID], maxScore: questionsData[questionID].maxScore};
       }
    }
@@ -827,10 +829,10 @@ function setupContest(data) {
    // Defines function to call if students try to close their browser or tab
    window.onbeforeunload = function() {
       return t("warning_confirm_close_contest");
-   }
+   };
 
    // Map question key to question id array
-   for (var questionID in questionsData) {
+   for (questionID in questionsData) {
       questionsKeyToID[questionsData[questionID].key] = questionID;
    }
 
@@ -839,13 +841,13 @@ function setupContest(data) {
    // We don't want to start the process of selecting a question, if the grading is going to start !
    var noLoad = (data.endTime != null);
 
-   selectQuestion(sortedQuestionIDs[0], false, noLoad);
+   window.selectQuestion(sortedQuestionIDs[0], false, noLoad);
 
    // Reloads previous answers to every question
    answers = {};
-   for (var questionID in data.answers) {
+   for (questionID in data.answers) {
       if (questionID in questionsData) {
-         var questionKey = questionsData[questionID].key;
+         questionKey = questionsData[questionID].key;
          answers[questionKey] = data.answers[questionID];
          markAnswered(questionKey, answers[questionKey]);
          hasAnsweredQuestion = true;
@@ -914,7 +916,7 @@ function loadContestData(contestID, contestFolder, groupPassword, teamID)
             $("#divCheckGroup").hide();
 
             function oldLoader() {
-               $.get(contestsRoot + '/' + contestFolder + "/contest_" + contestID + ".html", function(content) {
+               $.get(window.contestsRoot + '/' + contestFolder + "/contest_" + contestID + ".html", function(content) {
                   $('#divQuestionsContent').html(content);
                   setupContest(data);
                });
@@ -924,7 +926,7 @@ function loadContestData(contestID, contestFolder, groupPassword, teamID)
                var log_fn = function(text) {
                   $('#questionList').html("<span style='font-size:2em;padding-left:10px'>" + text + "</span>");
                };
-               var loader = new Loader(contestsRoot + '/' + contestFolder + '/', log_fn);
+               var loader = new Loader(window.contestsRoot + '/' + contestFolder + '/', log_fn);
                loader.run().done(function(content) {
                   $('#divQuestionsContent').html(content);
                   setupContest(data);
@@ -951,7 +953,7 @@ function loadContestData(contestID, contestFolder, groupPassword, teamID)
  */
 window.setNbImagesLoaded = function(content) {
    $("#nbImagesLoaded").html(content);
-}
+};
 
 // Team connexion
 
@@ -960,8 +962,8 @@ window.setNbImagesLoaded = function(content) {
 */
 window.checkGroup = function() {
    var groupCode = $("#groupCode").val();
-   return checkGroupFromCode("CheckGroup", groupCode, false, false);
-}
+   return window.checkGroupFromCode("CheckGroup", groupCode, false, false);
+};
 
 window.recoverGroup = function() {
    var curStep = 'CheckGroup';
@@ -980,10 +982,10 @@ window.recoverGroup = function() {
             }
             return;
          }
-         checkGroup();
-      }
-   , 'json').done(function() { Utils.enableButton("buttonRecoverGroup") });
-}
+         window.checkGroup();
+      },
+   'json').done(function() { Utils.enableButton("buttonRecoverGroup"); });
+};
 
 /*
  * Called when trying to continue a contest after an interruption
@@ -992,8 +994,8 @@ window.recoverGroup = function() {
 */
 window.checkPasswordInterrupted = function() {
    var password = $("#interruptedPassword").val();
-   return checkGroupFromCode("Interrupted", password, true, false)
-}
+   return window.checkGroupFromCode("Interrupted", password, true, false);
+};
 
 /*
  * Fills a select field with all the names of the teams (of a given group)
@@ -1013,6 +1015,20 @@ function fillListTeams(teams) {
       $("#selectTeam").append("<option value='" + curTeamID + "'>" + teamName + "</option>");
    }
 }
+
+/*
+ * Called when students validate the form that asks them if they participate
+ * alone or in a team of two students.
+*/
+var nbContestants;
+window.setNbContestants = function(nb) {
+   nbContestants = nb;
+   if (nbContestants === 2) {
+      $("#contestant2").show();
+   }
+   $("#divLogin").show();
+   $("#divCheckNbContestants").hide();
+};
 
 /*
  * Checks if a group is valid and loads information about the group and corresponding contest,
@@ -1062,20 +1078,20 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic) {
             $("#div" + curStep).hide();
             if (curStep === "CheckGroup") {
                if (isPublic) {
-                  nbContestants = 1;
+                  window.setNbContestants(1);
                   createTeam([{ lastName: "Anonymous", firstName: "Anonymous", genre: 2}]);
                } else if (data.allowTeamsOfTwo == 1) {
                   $("#divCheckNbContestants").show();
                } else {
-                  setNbContestants(1);
+                  window.setNbContestants(1);
                }
             } else {
                fillListTeams(data.teams);
                $("#divRelogin").show();
             }
          }
-      }, "json").done(function() { Utils.enableButton("button" + curStep) });
-}
+      }, "json").done(function() { Utils.enableButton("button" + curStep); });
+};
 
 /*
  * Validates student's information form
@@ -1107,7 +1123,7 @@ window.validateLoginForm = function() {
    }
    Utils.disableButton("buttonLogin"); // do not re-enable
    createTeam(contestants);
-}
+};
 
 /*
  * Creates a new team using contestants information
@@ -1133,7 +1149,7 @@ window.confirmTeamPassword = function() {
    }
    $("#divPassword").hide();
    loadContestData(contestID, contestFolder);
-}
+};
 
 /*
  * Called when students select their team in the list of teams of their group,
@@ -1149,20 +1165,7 @@ window.relogin = function() {
    }
    Utils.disableButton("buttonRelogin");
    loadContestData(contestID, contestFolder, groupPassword, teamID);
-}
-
-/*
- * Called when students validate the form that asks them if they participate
- * alone or in a team of two students.
-*/
-window.setNbContestants = function(nb) {
-   nbContestants = nb;
-   if (nbContestants === 2) {
-      $("#contestant2").show();
-   }
-   $("#divLogin").show();
-   $("#divCheckNbContestants").hide();
-}
+};
 
 /*
  * Generates the html for the list of public groups
@@ -1170,13 +1173,14 @@ window.setNbContestants = function(nb) {
 function getPublicGroupsList(groups) {
    var arrGroups = {};
    var years = {};
+   var year, group;
    var maxYear = 0;
    for (var iGroup = 0 ; iGroup < groups.length ; iGroup ++) {
-      var group = groups[iGroup];
-      if (arrGroups[group.level] == undefined) {
+      group = groups[iGroup];
+      if (!arrGroups[group.level]) {
          arrGroups[group.level] = {};
       }
-      var year = group.year % 10000;
+      year = group.year % 10000;
       arrGroups[group.level][year] = group;
       years[year] = true;
       maxYear = Math.max(maxYear, year);
@@ -1189,15 +1193,15 @@ function getPublicGroupsList(groups) {
       {name: t("level_all_name"), id: 0}
    ];
    var strGroups = "<table style='border:solid 1px black' cellspacing=0 cellpadding=5>";
-   for (var year = maxYear; years[year] == true; year--) {
+   for (year = maxYear; years[year] === true; year--) {
       strGroups += "<tr class='groupRow'><td style='width:100px;border:solid 1px black'><b>Castor " + year + "</b></td>";
       for (var iLevel = 0; iLevel < levels.length; iLevel++) {
          var level = levels[iLevel];
-         var group = undefined;
-         if (arrGroups[level.id] != undefined) {
+         group = undefined;
+         if (arrGroups[level.id]) {
             group = arrGroups[level.id][year];
          }
-         if (group != undefined) {
+         if (group) {
             strGroups += "<td style='width:100px;border:solid 1px black;text-align:center'>" +
                "<a href='#' onclick='checkGroupFromCode(\"CheckGroup\", \"" + group.code + "\", false, true)'> " + level.name + "</a></td>";
          } else {
@@ -1222,7 +1226,7 @@ function loadSessionOrPublicGroups(restartSession) {
    $.post("data.php", {SID: SID, action: action},
       function(data) {
          SID = data.SID;
-         if (data.teamID != undefined) {
+         if (data.teamID) {
             if (!confirm("Voulez-vous reprendre l'épreuve commencée ?")) {
                loadSessionOrPublicGroups(true);
                return;
@@ -1253,7 +1257,7 @@ function loadSessionOrPublicGroups(restartSession) {
 function getPageParameters() {
    var str = window.location.search.substr(1);
    var params = {};
-   if (str != null && str != "") {
+   if (str) {
       var items = str.split("&");
       for (var idItem = 0; idItem < items.length; idItem++) {
          var tmp = items[idItem].split("=");
@@ -1280,8 +1284,8 @@ function init() {
    loadSessionOrPublicGroups(false);
    // Load initial tab according to parameters
    var params = getPageParameters();
-   if (params.tab != undefined)
-      selectMainTab(params.tab);
+   if (params.tab)
+      window.selectMainTab(params.tab);
 }
 
 /*
@@ -1299,7 +1303,7 @@ window.tryCloseContest = function() {
       }
    }
    closeContest(t("thanks_for_participating"));
-}
+};
 
 /*
  * Called when the contest is over, whether from the student's action,
@@ -1353,7 +1357,7 @@ function doCloseContest(message) {
 function finalCloseContest(message) {
    TimeManager.stopNow();
    $.post("data.php", {SID: SID, action: "closeContest", teamID: teamID, teamPassword: teamPassword},
-      function(data) {}, "json"
+      function() {}, "json"
    ).always(function() {
       window.onbeforeunload = function(){};
       if (contestStatus === "RunningContest") {
@@ -1364,7 +1368,7 @@ function finalCloseContest(message) {
             var answerObj = answersToSend[questionID];
             listAnswers.push([questionID, answerObj.answer]);
          }
-         if (listAnswers.length != 0) {
+         if (listAnswers.length !== 0) {
             var encodedAnswers = base64_encode(JSON.stringify({pwd: teamPassword, ans: listAnswers}));
             $("#encodedAnswers").html(encodedAnswers);
             $("#divClosedEncodedAnswers").show();
@@ -1400,7 +1404,7 @@ function showScoresHat() {
             showScores(data);
          } else {
             $.get(data.gradersUrl, function(content) {
-               $('#divGradersContent').html(content)
+               $('#divGradersContent').html(content);
                showScores(data);
             });
          }
@@ -1481,13 +1485,14 @@ function sendScores() {
          $(".question, #divQuestionParams, #divClosed, .questionsTable").css("left", "270px");
          var sortedQuestionIDs = getSortedQuestionIDs(questionsData);
          for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
-            questionID = sortedQuestionIDs[iQuestionID];
-            var questionKey = questionsData[questionID].key
-            var questionData = questionsData[questionID];
+            var questionID = sortedQuestionIDs[iQuestionID];
+            var questionKey = questionsData[questionID].key;
             var image = "";
+            var score = "";
+            var maxScore = "";
             if (scores[questionKey] !== undefined) {
-               var score = scores[questionKey].score;
-               var maxScore = scores[questionKey].maxScore;
+               score = scores[questionKey].score;
+               maxScore = scores[questionKey].maxScore;
                if (score < 0) {
                   image = "<img src='images/35.png'>";
                } else if (score == maxScore) {
@@ -1504,7 +1509,7 @@ function sendScores() {
          $("#scoreTotal").hide();
          $("#chrono").html("<tr><td style='font-size:28px'> " + t("score") + ' ' + teamScore + " / " + maxTeamScore + "</td></tr>");
          $("#chrono").css("background-color", "#F66");
-   //      selectQuestion(sortedQuestionIDs[0], false);
+   //      window.selectQuestion(sortedQuestionIDs[0], false);
       }
    }, 'json');
 }
@@ -1514,9 +1519,10 @@ function sendScores() {
 function getSortedQuestionIDs(questionsData) {
    var questionsByOrder = {};
    var orders = [];
+   var order;
    for (var questionID in questionsData) {
       var questionData = questionsData[questionID];
-      var order = parseInt(questionData.order);
+      order = parseInt(questionData.order);
       if (questionsByOrder[order] === undefined) {
          questionsByOrder[order] = [];
          orders.push(order);
@@ -1531,7 +1537,7 @@ function getSortedQuestionIDs(questionsData) {
    });
    var sortedQuestionsIDs = [];
    for (var iOrder = 0; iOrder < orders.length; iOrder++) {
-      var order = orders[iOrder];
+      order = orders[iOrder];
       questionsByOrder[order].sort(function(id1, id2) { if (id1 < id2) return -1; return 1; });
       var shuffledOrder = Utils.getShuffledOrder(questionsByOrder[order].length, teamID + iOrder);
       for (var iSubOrder = 0; iSubOrder < shuffledOrder.length; iSubOrder++) {
@@ -1560,11 +1566,11 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
    try {
       if (document.getSelection) {
          var selection = document.getSelection();
-         if (selection != undefined && selection.removeAllRanges != undefined) {
+         if (selection && selection.removeAllRanges) {
             selection.removeAllRanges();
          }
       }
-   } catch(err) {};
+   } catch(err) {}
    var questionData = questionsData[questionID];
    var questionKey = questionData.key;
    if (questionKey == currentQuestionKey) {
@@ -1581,7 +1587,6 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
       $("#question-" + questionKey).show();
       $("#link_" + currentQuestionKey).attr("class", "questionLink");
       $("#link_" + questionKey).attr("class", "questionLinkSelected");
-      var strQuestionParams = "";
       if (! fullFeedback) {
          $("#questionPoints").html( "<table class='questionScores' cellspacing=0><tr><td>" + t("no_answer") + "</td><td>" + t("bad_answer") + "</td><td>" + t("good_answer") + "</td></tr>" +
             "<tr><td><span class='scoreNothing'>" + noAnswerScore + "</span></td>" +
@@ -1596,15 +1601,15 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
       }
       var taskViews = {"task": true};
       if (questionIframe.gradersLoaded) {
-         taskViews['grader'] = true;
+         taskViews.grader = true;
       }
       if (TimeManager.isContestOver()) {
-         taskViews['solution'] = true;
+         taskViews.solution = true;
       }
       if (!noLoad) {
          questionIframe.load(taskViews, questionKey, function() {});
       }
-   }
+   };
 
    if (questionIframe.task) {
       questionIframe.task.getAnswer(function(answer) {
@@ -1622,7 +1627,7 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
    } else {
       nextStep();
    }
-}
+};
 
 function markAnswered(questionKey, answer) {
    if (answer === "") {
@@ -1667,7 +1672,7 @@ function failedSendingAnswers() {
    for(var questionID in answersToSend) {
       answersToSend[questionID].sending = false;
    }
-   setTimeout("sendAnswers()", delaySendingAttempts);
+   setTimeout(sendAnswers, delaySendingAttempts);
 }
 
 function initErrorHandler() {
@@ -1699,6 +1704,7 @@ function base64url_encode(str) {
 	return base64_encode(str).replace('+', '-').replace('/', '_');
 }
 
+// TODO: is it still used?
 function addAnswerPing(questionID, answer) {
    // add image ping
    var img = document.createElement('img');
@@ -1749,7 +1755,7 @@ function sendAnswers() {
             }
          }
          if (answersRemaining) {
-            setTimeout("sendAnswers()", 1000);
+            setTimeout(sendAnswers, 1000);
          }
       }, "json");
    } catch(exception) {
@@ -1774,7 +1780,7 @@ function loadSolutionsHat() {
             loadSolutions(data);
          } else {
             $.get(data.solutionsUrl, function(content) {
-               $('#divSolutionsContent').html(content)
+               $('#divSolutionsContent').html(content);
                loadSolutions(data);
             });
          }
@@ -1785,7 +1791,7 @@ function loadSolutionsHat() {
 function loadSolutions(data) {
    var sortedQuestionIDs = getSortedQuestionIDs(questionsData);
    for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
-      questionID = sortedQuestionIDs[iQuestionID];
+      var questionID = sortedQuestionIDs[iQuestionID];
       var questionData = questionsData[questionID];
       $("#question-" + questionData.key).append("<hr>" + $("#solution-" + questionData.key).html());
    }
@@ -1796,7 +1802,7 @@ function loadSolutions(data) {
    $("#divHeader").show();
 
    // The callback will be used by the task
-   if (questionIframe.iframe.contentWindow.preloadSolImages != undefined) {
+   if (questionIframe.iframe.contentWindow.preloadSolImages) {
      questionIframe.iframe.contentWindow.preloadSolImages();
    }
    setTimeout(function() {
@@ -1817,7 +1823,7 @@ function loadSolutions(data) {
                questionIframe.loadQuestion({'task': true, 'solution': true, 'grader': true}, currentQuestionKey);
             }
             alert(t("check_score_detail"));
-         })
+         });
 
      });
 
@@ -1839,8 +1845,9 @@ var Tracker = {
          );
       }
    }
-}
+};
 
+// TODO: is it still used?
 function htmlspecialchars_decode(string, quote_style) {
    var optTemp = 0;
    var i = 0;
@@ -1928,9 +1935,9 @@ Loader.prototype.assemble = function() {
       self.promise.resolve(data);
    }, 100);
 };
-Loader.prototype.load_next = function(item) {
+Loader.prototype.load_next = function() {
    var self = this;
-   if (self.queue.length == 0) {
+   if (self.queue.length === 0) {
       this.assemble();
    } else {
       var item = self.queue.shift();
@@ -1979,7 +1986,7 @@ Loader.prototype.run = function() {
 };
 Loader.prototype.shuffleArray= function (values) {
    var nbValues = values.length;
-   for (iValue = 0; iValue < nbValues; iValue++) {
+   for (var iValue = 0; iValue < nbValues; iValue++) {
       var pos = iValue + (Math.round(1000 * Math.random()) % (nbValues - iValue));
       var tmp = values[iValue];
       values[iValue] = values[pos];
