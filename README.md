@@ -10,7 +10,7 @@ Clone the repository:
     cd bebras-platform
     git submodule update --init
 
-Copy `config_local_template.php` into `config_local.php`, and set the parameters for urls and database.
+Copy `config_local_template.php` into `config_local.php`, and set the parameters for URLs and database.
 
 Visit `dbv/index.php` with your web browser, login and passwords are those of the database.
 

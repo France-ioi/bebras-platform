@@ -1,7 +1,7 @@
 # Bebras platform internationalization
 
 This file briefly describes the translation system used by the platform, as well
-as the system used for regions ("académies" in French system) and official
+as the system used for regions (« académies » in French system) and official
 domain names linked to a country.
 
 ## Translation
@@ -11,7 +11,7 @@ are present in simple json files, one by language:
 
 - `teacherInterface/i18n/xx/translation.json`
 - `contestInterface/i18n/xx/translation.json`
- 
+
 where xx is the *ISO639* code corresponding to the language (such as fr for
 French). It is also possible to have variants by having the whole locale (such
 as fr_FR for French language specific to France).
@@ -23,8 +23,8 @@ only (like `fr`) and then will default to `fr`.
 
 ## Country-specific settings
 
-France has a system of "Académies", which are administrative regions linked to
-educations. Each academy has a dns domain name, and the platform checks for
+France has a system of « académies », which are administrative regions linked to
+educations. Each academy has a DNS domain name, and the platform checks for
 emails with these domains for administrators.
 
 These regions and domains depend on the country and must be translated. The

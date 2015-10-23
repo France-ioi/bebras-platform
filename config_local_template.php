@@ -1,17 +1,18 @@
 <?php
 
+// Database
 $config->db->use = 'mysql';
 $config->db->testMode = false;
 $config->db->dynamoSessions = false;
 
-// MySQL
-$config->db->mysql->host = '';
-$config->db->mysql->database = '';
-$config->db->mysql->password = '';
-$config->db->mysql->user = '';
-$config->db->mysql->logged = false;
+   // MySQL
+   $config->db->mysql->host = '127.0.0.1';
+   $config->db->mysql->database = 'beaver_contest';
+   $config->db->mysql->user = '';
+   $config->db->mysql->password = '';
+   $config->db->mysql->logged = false;
 
-// Aws, if relevant
+// AWS, if relevant
 $config->aws->key = '';
 $config->aws->secret = '';
 $config->aws->region = '';
@@ -22,7 +23,7 @@ $config->email->bSendMailForReal = false;
 $config->email->sEmailSender = '';
 $config->email->sEmailInsriptionBCC = '';
 $config->email->sGMailUsername = '';
-$config->email->sGMailPassword = 'PASSWORD';
+$config->email->sGMailPassword = '';
 $config->email->sInfoAddress = 'info@castor-informatique.fr';
 
 $config->teacherInterface->sCoordinatorFolder = 'http://127.0.0.1/beaver_platform/teacherInterface/';
