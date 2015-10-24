@@ -75,3 +75,9 @@ $config->db->host = $config->db->mysql->host;
 $config->db->database = $config->db->mysql->database;
 $config->db->password = $config->db->mysql->password;
 $config->db->user = $config->db->mysql->user;
+
+
+if(preg_match('/(?i)msie [5-7]/',$_SERVER['HTTP_USER_AGENT'])) {
+    // if IE<=7
+    $config->teacherInterface->sAssetsStaticPath = $config->teacherInterface->sAbsoluteStaticPathOldIE;
+}

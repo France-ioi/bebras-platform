@@ -534,6 +534,9 @@ var questionIframe = {
          that.addJsContent($('#'+jsModuleId).attr('data-content'));
       });
 
+      this.addJsContent('window.contestsRoot = "'+window.contestsRoot+'";');
+      this.addJsContent('window.sAbsoluteStaticPath = "'+window.sAbsoluteStaticPath+'";');
+
       // Load specific js
       this.addJsContent($('#javascript-' + questionKey).attr('data-content'));
       if ('solution' in taskViews) {
