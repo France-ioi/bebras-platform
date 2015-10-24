@@ -73,8 +73,8 @@ Other than that, everything works the same way as public contests.
 
 # TODO
 
-- prepare gulp files for contestInterface and teacherInterface to compile all needed dependencies into one big uglified js (see [this example](https://github.com/France-ioi/fioi-editor/blob/master/gulpfile.js)) and document it into the installation
-- tests!
-- make task directory configurable (now it's certainly hardcoded as beaver_tasks)
-- tracking/ has unmet external dependencies (should probably link to external CDNs)
-- use something else than jqGrid, which is buggy as hell in all recent versions
+- Prepare gulp files for contestInterface and teacherInterface to compile all needed dependencies into one big uglified js (see [this example](https://github.com/France-ioi/fioi-editor/blob/master/gulpfile.js)) and document it into the installation.
+- Tests!
+- Make task directory configurable (now it's certainly hardcoded as beaver_tasks).
+- Tracking/ has unmet external dependencies (should probably link to external CDNs).
+- Use something else than jqGrid, which is buggy as hell in all recent versions.
