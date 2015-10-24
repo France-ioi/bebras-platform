@@ -25,7 +25,6 @@ Run `php commonFramework/modelsManager/triggers.php`.
 Get Bower dependencies: run `bower install` in both `contestInterface` and `teacherInterface`.
 
 If you want to test the platform, import `sampleDatabase/database_content.sql`.
-You may convert it to UTF-8 before.
 
 For translation and country-specific features, please refer to the [documentation](teacherInterface/i18n/README.md).
 
