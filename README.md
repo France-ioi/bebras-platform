@@ -25,6 +25,7 @@ Run `php commonFramework/modelsManager/triggers.php`.
 Get Bower dependencies: run `bower install` in both `contestInterface` and `teacherInterface`.
 
 If you want to test the platform, import `sampleDatabase/database_content.sql`.
+You may convert it to UTF-8 before.
 
 For translation and country-specific features, please refer to the [documentation](teacherInterface/i18n/README.md).
 
@@ -32,23 +33,23 @@ For installation on [AWS](https://aws.amazon.com/), see [README.AWS.md](README.A
 
 ## Initial configuration
 
-*Create an admin user:* go to /teacherInterface/, register
-through the link "Register!". For the first user, you need to
+*Create an admin user:* go to `/teacherInterface/`, register
+through the link ‘Register!’. For the first user, you need to
 validate it manually through the database. A record should have been
-created in the "user" table, and you need to set the fields
-"validated" and "isAdmin" to 1. You can then log in on the
+created in the ‘user’ table, and you need to set the fields
+‘validated’ and ‘isAdmin’ to 1. You can then log in on the
 `/teacherInterface/index.php` page.
 
-*Generating contests:* contests need to be "generated", which means compiling all of the
-questions into a single html file, a css file, a js file and a php
-file. You do that as an admin in the "Contest" tab by selecting a
-contest in the first grid, and clicking on "Regenerate selected contest".
+*Generating contests:* contests need to be ‘generated’, which means compiling all of the
+questions into a single HTML file, a CSS file, a JS file and a PHP
+file. You do that as an administrator in the ‘Contest’ tab by selecting a
+contest in the first grid, and clicking on ‘Regenerate selected contest’.
 Make sure php has read/write access to the contests
 folder, where it will create a sub-folder for each contest that you
 generate. The interface doesn't say anything if there is an error, so
 you have to check that the folder has been created.
 
-Once contests have been generated, you can try them as a contestant :
+Once contests have been generated, you can try them as a contestant:
 go to contestInterface/index_en.html in the root folder. It should look exactly the same
 as [http://concours.castor-informatique.fr](http://concours.castor-informatique.fr), and you can click on any
 contest that has been generated.

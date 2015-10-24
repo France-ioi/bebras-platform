@@ -38,7 +38,7 @@
     "login_start_contest": "Commencer le concours",
     "password_warning": "<b>Attention :</b><br/>Avant de commencer, <b>veuillez noter le code d'accès ci-dessous</b>.<br/>Il vous permettra de reprendre le concours en cas d'interruption, et plus tard, d'accéder à vos résultats.<br/>Conservez-le bien et gardez-le secret.",
     "password_confirm": "J'ai bien noté le code. Je commence l'épreuve !",
-    "images_preloaded": "Images préchargées. Merci de patienter.",
+    "images_preloaded": "images préchargées. Merci de patienter.",
     "questions_bonus": "Bonus de départ : 50 points",
     "questions_loading": "Chargement en cours…",
     "questions_finish_early": "J'ai fini en avance",
