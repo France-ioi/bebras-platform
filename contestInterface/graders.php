@@ -41,7 +41,6 @@ $gradersUrl = null;
 $gradersUrlIE = null;
 $graders = null;
 if ($config->teacherInterface->generationMode == 'local') {
-   var_dump($_POST['IEMode']);
    $graders = file_get_contents(__DIR__.$config->teacherInterface->sContestGenerationPath.$contestFolder.'/contest_'.$contestID.'_graders.html');
 } else if (!$row->fullFeedback) {
    require '../ext/autoload.php';
