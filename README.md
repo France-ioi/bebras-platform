@@ -34,16 +34,16 @@ For installation on [AWS](https://aws.amazon.com/), see [README.AWS.md](README.A
 ## Initial configuration
 
 *Create an admin user:* go to `/teacherInterface/`, register
-through the link ‘Register!’. For the first user, you need to
+through the link “Register!”. For the first user, you need to
 validate it manually through the database. A record should have been
-created in the ‘user’ table, and you need to set the fields
-‘validated’ and ‘isAdmin’ to 1. You can then log in on the
+created in the “user” table, and you need to set the fields
+“validated” and “isAdmin” to 1. You can then log in on the
 `/teacherInterface/index.php` page.
 
-*Generating contests:* contests need to be ‘generated’, which means compiling all of the
+*Generating contests:* contests need to be “generated”, which means compiling all of the
 questions into a single HTML file, a CSS file, a JS file and a PHP
-file. You do that as an administrator in the ‘Contest’ tab by selecting a
-contest in the first grid, and clicking on ‘Regenerate selected contest’.
+file. You do that as an administrator in the “Contest” tab by selecting a
+contest in the first grid, and clicking on “Regenerate selected contest”.
 Make sure PHP has read/write access to the contests
 folder, where it will create a sub-folder for each contest that you
 generate. The interface doesn't say anything if there is an error, so
@@ -63,10 +63,10 @@ questions from the admin interface.
 Teachers use a reduced version of the admin interface, so you might
 want to create a different user, that is not an admin to see how it
 looks. For that, register a new user through the interface, and set
-‘validated’ to 1 from the interface of the admin user. Teachers can
+“validated” to 1 from the interface of the admin user. Teachers can
 create groups, and get a password that students input to participate
 in the corresponding contest (this is explained in detail in the
-‘Explanations’ tab). When a contestant participates through a group,
+“Explanations” tab). When a contestant participates through a group,
 there are two extra steps compared to the public contest: he/she is
 asked for the number of students doing the contest as a team (1 or 2),
 then each student is prompted for her firstname, lastname and gender.
