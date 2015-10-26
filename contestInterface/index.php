@@ -208,7 +208,6 @@
   script_tag('/bower_components/jQuery-ajaxTransport-XDomainRequest/jquery.xdomainrequest.min.js');
   script_tag('/bower_components/jquery-ui/jquery-ui.min.js');
   script_tag('/bower_components/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js');
-  script_tag('/bower_components/jquery-postmessage/jquery.ba-postmessage.min.js');
   script_tag('/bower_components/i18next/i18next.min.js');
   script_tag('/bower_components/utf8/utf8.js');
   script_tag('/bower_components/base64/base64.min.js');
