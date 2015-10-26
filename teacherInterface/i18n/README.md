@@ -1,7 +1,7 @@
 # Bebras platform internationalization
 
 This file briefly describes the translation system used by the platform, as well
-as the system used for regions (« académies » in French system) and official
+as the system used for regions (“académies” in French system) and official
 domain names linked to a country.
 
 ## Translation
@@ -23,7 +23,7 @@ only (like `fr`) and then will default to `fr`.
 
 ## Country-specific settings
 
-France has a system of « académies », which are administrative regions linked to
+France has a system of “académies”, which are administrative regions linked to
 educations. Each academy has a DNS domain name, and the platform checks for
 emails with these domains for administrators.
 

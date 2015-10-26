@@ -28,20 +28,20 @@ $config->email->sInfoAddress = 'info@castor-informatique.fr';
 
 $config->teacherInterface->sCoordinatorFolder = 'http://127.0.0.1/beaver_platform/teacherInterface/';
 $config->teacherInterface->sAssetsStaticPath = 'http://127.0.0.1/beaver_platform/contestInterface/';
-$config->teacherInterface->sAbsoluteStaticPath = 'http://127.0.0.1/beaver_platform/teacherInterface/';
+$config->teacherInterface->sAbsoluteStaticPath = 'http://127.0.0.1/beaver_platform/contestInterface/';
+$config->teacherInterface->sAbsoluteStaticPathOldIE = 'http://127.0.0.1/beaver_platform/contestInterface/';
 $config->teacherInterface->genericPasswordMd5 = '';
 $config->teacherInterface->countryCode = 'FR';
 $config->teacherInterface->generationMode = 'local';
-$config->teacherInterface->sAbsoluteStaticPathOldIE = 'http://127.0.0.1/beaver_platform/teacherInterface/';
 $config->teacherInterface->sContestGenerationPath = '/../contestInterface/contests/';
-$config->teacherInterface->baseUrl = 'http://coordinateur.castor-informatique.fr';
+$config->teacherInterface->baseUrl = 'http://coordinateur.castor-informatique.fr/';
 
-$config->contestInterface->baseUrl = 'http://concours.castor-informatique.fr';
+$config->contestInterface->baseUrl = 'http://concours.castor-informatique.fr/';
 
 $config->certificates->webServiceUrl = 'http://castor-informatique.fr.localhost/certificates/';
 
 $config->timezone = 'Europe/Paris';
 $config->defaultLanguage = 'fr';
-$config->contestPresentationURL = 'http://castor-informatique.fr';
-$config->contestOfficialURL = 'http://concours.castor-informatique.fr';
+$config->contestPresentationURL = 'http://castor-informatique.fr/';
+$config->contestOfficialURL = 'http://concours.castor-informatique.fr/';
 $config->contestBackupURL = '';
