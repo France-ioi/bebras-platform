@@ -1,4 +1,4 @@
-# Installing Bebras platform on AWS
+# Installing Bebras platform on Amazon Web Services
 
 This file is a documentation to get the Beaver Contest working on AWS. The goal
 is to have:

@@ -2,6 +2,15 @@
 
 This repository contains everythin you need to run the *Bebras* Task Platform, historically developped for (and run at) [French Beaver Contest](http://castor-informatique.fr/).
 
+## Prerequisites
+
+You need:
+- [Git](http://git-scm.com/)
+- [Composer](https://getcomposer.org/)
+- [Bower](http://bower.io/)
+
+You also need a web server with PHP and a SQL database.
+
 ## Installation
 
 Clone the repository:
@@ -14,7 +23,7 @@ Copy `config_local_template.php` into `config_local.php`, and set the parameters
 
 Visit `dbv/index.php` with your web browser, login and passwords are those of the database.
 
-Get [composer](https://getcomposer.org/) dependencies:
+Get composer dependencies:
 
     composer install
 
