@@ -9,7 +9,7 @@ You need:
 - [Composer](https://getcomposer.org/)
 - [Bower](http://bower.io/)
 
-You also need a web server with PHP and a SQL database.
+You also need a web server with PHP and a MySQL database.
 
 ## Installation
 
@@ -17,7 +17,7 @@ Clone the repository:
 
     git clone https://github.com/France-ioi/bebras-platform.git
     cd bebras-platform
-    git submodule update --init
+    git submodule update --recursive --init
 
 Copy `config_local_template.php` into `config_local.php`, and set the parameters for URLs and database.
 
@@ -33,11 +33,21 @@ Run `php commonFramework/modelsManager/triggers.php`.
 
 Get Bower dependencies: run `bower install` in both `contestInterface` and `teacherInterface`.
 
-If you want to test the platform, import `sampleDatabase/database_content.sql`.
+### Additions
+
+If you want to test the platform, run `sampleDatabase/database_content.sql` in your database.
 
 For translation and country-specific features, please refer to the [documentation](teacherInterface/i18n/README.md).
 
 For installation on [AWS](https://aws.amazon.com/), see [README.AWS.md](README.AWS.md).
+
+### Update
+
+    git pull
+    git submodule update --recursive
+    composer install
+    cd contestInterface && bower update && cd ..
+    cd teacherInterface && bower update && cd ..
 
 ## Initial configuration
 
@@ -48,19 +58,19 @@ created in the “user” table, and you need to set the fields
 “validated” and “isAdmin” to 1. You can then log in on the
 `/teacherInterface/index.php` page.
 
-*Generating contests:* contests need to be “generated”, which means compiling all of the
+*Generate contests:* contests need to be “generated”, which means compiling all of the
 questions into a single HTML file, a CSS file, a JS file and a PHP
 file. You do that as an administrator in the “Contest” tab by selecting a
 contest in the first grid, and clicking on “Regenerate selected contest”.
-Make sure PHP has read/write access to the contests
-folder, where it will create a sub-folder for each contest that you
+Make sure PHP has read/write access to the contests folder,
+where it will create a sub-folder for each contest that you
 generate. The interface doesn't say anything if there is an error, so
 you have to check that the folder has been created.
 
 Once contests have been generated, you can try them as a contestant:
 go to contestInterface/index_en.html in the root folder. It should look exactly the same
-as [http://concours.castor-informatique.fr](http://concours.castor-informatique.fr), and you can click on any
-contest that has been generated.
+as [http://concours.castor-informatique.fr](http://concours.castor-informatique.fr),
+and you can click on any contest that has been generated.
 
 Note that if it were a production server, you would want to put an
 `.htaccess` file or equivalent in the questions folder, otherwise people
@@ -79,6 +89,13 @@ there are two extra steps compared to the public contest: he/she is
 asked for the number of students doing the contest as a team (1 or 2),
 then each student is prompted for her firstname, lastname and gender.
 Other than that, everything works the same way as public contests.
+
+## Common problems
+
+- *Something doesn't load.* Check out the web console to know why.
+  If a contest doesn't generate, verify PHP can write into the `contestInterface/contests/` folder.
+- *I get a 404 error.* Check your URLs. Be sure not to mix server name synonyms (like `127.0.0.1` and `localhost`)
+  as some web browsers block third party calls. Verify your contest has been generated.
 
 # TODO
 

@@ -32,7 +32,6 @@ $config->defaultLanguage = 'fr';
 $config->teacherInterface->countryCode = 'FR';
 
 // Teacher interface settings
-   // Warning: do not mix synonyms (like 127.0.0.1 and localhost) to avoid browser's security prevention
 $config->teacherInterface->sCoordinatorFolder = 'http://127.0.0.1/beaver_platform/teacherInterface/';
 $config->teacherInterface->sAssetsStaticPath = 'http://127.0.0.1/beaver_platform/contestInterface/';
 $config->teacherInterface->sAbsoluteStaticPath = 'http://127.0.0.1/beaver_platform/contestInterface/';
