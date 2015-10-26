@@ -35,11 +35,14 @@ $solutionsUrl = null;
 if ($config->teacherInterface->generationMode == 'local') {
    $solutions = file_get_contents(__DIR__.$config->teacherInterface->sContestGenerationPath.$contestFolder.'/contest_'.$contestID.'_sols.html');
 } else {
-   require '../ext/autoload.php';
+   require '../vendor/autoload.php';
    $publicClient = S3Client::factory(array(
-      'key'    => $config->aws->key,
-      'secret' => $config->aws->secret,
+      'credentials' => array(
+           'key'    => $config->aws->key,
+           'secret' => $config->aws->secret
+       ),
       'region' => $config->aws->region,
+      'version' => '2006-03-01'
    ));
    $publicBucket = $config->aws->bucketName;
    $solutionsUrl = $publicClient->getObjectUrl($publicBucket, 'contests/'.$contestFolder.'/contest_'.$contestID.'_sols.html', '+10 minutes');

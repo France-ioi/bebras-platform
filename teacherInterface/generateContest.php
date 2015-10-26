@@ -13,17 +13,21 @@ if (property_exists($config->teacherInterface, 'sContestGenerationPath')) {
    $contestLocalDir = __DIR__.$config->teacherInterface->sContestGenerationPath;
 }
 
+require_once('../vendor/autoload.php');
+
 // use cannot be in an "if" block
 use Aws\S3\S3Client;
 $copy_file_func_name = "copy";
 $put_contents_func_name = "file_put_contents";
 
 if ($mode == "aws"|| $mode == "aws+local") {
-   require '../ext/autoload.php';
    $publicClient = S3Client::factory(array(
-      'key'    => $config->aws->key,
-      'secret' => $config->aws->secret,
+      'credentials' => array(
+           'key'    => $config->aws->key,
+           'secret' => $config->aws->secret
+       ),
       'region' => $config->aws->region,
+      'version' => '2006-03-01'
    ));
    $publicBucket = $config->aws->bucketName;
    $copy_file_func_name = "awsCopyFile";
@@ -32,7 +36,6 @@ if ($mode == "aws"|| $mode == "aws+local") {
 
 
 require_once('path.inc.php');
-require_once('../vendor/autoload.php');
 require_once('../tasks/bebras/Bebras.php');
 
 if (!isset($_REQUEST["contestID"])) {

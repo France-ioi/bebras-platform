@@ -1,7 +1,7 @@
 <?php
 
 use Aws\DynamoDb\DynamoDbClient;
-use Aws\DynamoDb\Session\SessionHandler;
+use Aws\DynamoDb\SessionHandler;
 require_once 'LoggedPDO.php';
 require_once __DIR__.'/../config.php';
 
@@ -40,24 +40,24 @@ function connect_pdo($config) {
 
 function connect_dynamoDB($config) {
    $client = DynamoDbClient::factory(array(
-      'key'    => $config->aws->key,
-      'secret' => $config->aws->secret,
+      'credentials' => array(
+           'key'    => $config->aws->key,
+           'secret' => $config->aws->secret
+       ),
       'region' => $config->aws->region,
+      'version' => '2012-08-10'
    ));
    return $client;
 }
 
 if ($config->db->dynamoSessions) {
-   require_once dirname(__FILE__).'/../ext/autoload.php';
+   require_once dirname(__FILE__).'/../vendor/autoload.php';
    $dynamoDB = connect_dynamoDB($config);
    // registering the dynamodb session handler performs some useless operations
    // in session!
    if (!isset($noSessions) || !$noSessions) {
-      $sessionHandler = SessionHandler::factory(array(
-         'dynamodb_client'  => $dynamoDB,
+      $sessionHandler = SessionHandler::fromClient($dynamoDB, array(
          'table_name'       => 'sessions',
-         'locking_strategy' => 'pessimistic',
-         'consistent_read'  => true,
       ));
       $sessionHandler->register();
    }
