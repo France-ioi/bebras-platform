@@ -216,8 +216,9 @@
   global $config;
 ?>
 <script>
-  window.contestsRoot = <?= json_encode(static_asset('/contests')) ?>;
-  window.sAbsoluteStaticPath = <?= json_encode(static_asset('/')) ?>;
+  window.contestsRoot = <?= json_encode($config->teacherInterface->sAbsoluteStaticPath.'/contests') ?>;
+  window.sAbsoluteStaticPath = <?= json_encode($config->teacherInterface->sAbsoluteStaticPath.'/') ?>;
+  window.sAssetsStaticPath = <?= json_encode(static_asset('/')) ?>;
   i18n.init(<?= json_encode([
     'lng' => $config->defaultLanguage,
     'fallbackLng' => [$config->defaultLanguage],
