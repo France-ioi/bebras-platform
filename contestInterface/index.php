@@ -225,6 +225,7 @@
     'getAsync' => true,
     'resGetPath' => static_asset('/i18n/__lng__/__ns__.json')
   ]) ?>, function () {
+    window.i18nLoaded = true;
     $("title").i18n();
     $("body").i18n();
   });

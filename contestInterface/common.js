@@ -1191,11 +1191,11 @@ function getPublicGroupsList(groups) {
       maxYear = Math.max(maxYear, year);
    }
    var levels = [
-      {name: t("level_1_name"), id: 1},
-      {name: t("level_2_name"), id: 2},
-      {name: t("level_3_name"), id: 3},
-      {name: t("level_4_name"), id: 4},
-      {name: t("level_all_name"), id: 0}
+      {name: t("level_1_name"), i18name: "level_1_name", id: 1},
+      {name: t("level_2_name"), i18name: "level_2_name", id: 2},
+      {name: t("level_3_name"), i18name: "level_3_name", id: 3},
+      {name: t("level_4_name"), i18name: "level_4_name", id: 4},
+      {name: t("level_all_name"), i18name: "level_all_name", id: 0}
    ];
    var strGroups = "<table style='border:solid 1px black' cellspacing=0 cellpadding=5>";
    for (year = maxYear; years[year] === true; year--) {
@@ -1208,7 +1208,7 @@ function getPublicGroupsList(groups) {
          }
          if (group) {
             strGroups += "<td style='width:100px;border:solid 1px black;text-align:center'>" +
-               "<a href='#' onclick='checkGroupFromCode(\"CheckGroup\", \"" + group.code + "\", false, true)'> " + level.name + "</a></td>";
+               "<a href='#' onclick='checkGroupFromCode(\"CheckGroup\", \"" + group.code + "\", false, true)' data-i18n=\"[html]"+level.i18name+"\"> " + level.name + "</a></td>";
          } else {
             strGroups += "<td width=20%></td>";
          }
