@@ -697,11 +697,12 @@ var TimeManager = {
       TimeManager.synchronizing = true;
       $("#minutes").html('');
       $("#seconds").html('synchro...');
-      var remainingTime = this.getRemainingTime();
+      var self = this;
       $.post('data.php', {SID: SID, action: 'getRemainingTime', teamID: teamID},
          function(data) {
             if (data.success) {
-               TimeManager.timeStart = TimeManager.timeStart + remainingTime - data.remainingTime;
+               var remainingTime = self.getRemainingTime();
+               TimeManager.timeStart = TimeManager.timeStart + data.remainingTime - remainingTime;
             } else {
                TimeManager.simpleTimeAdjustment();
             }
@@ -722,9 +723,9 @@ var TimeManager = {
       }
       var curDate = new Date();
       var curTime = curDate.getTime() / 1000;
-      var timeDiff = curTime - TimeManager.prevTime;
+      var timeDiff = Math.abs(curTime - TimeManager.prevTime);
       // We traveled through time, more than 60s difference compared to 1 second ago !
-      if (Math.abs(timeDiff) > 60) {
+      if (timeDiff > 60 || timeDiff < -60) {
          TimeManager.syncWithServer();
          return;
       }
