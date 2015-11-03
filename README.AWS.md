@@ -42,7 +42,7 @@ Add a CORS rule to your bucket (select bucket in console, properties, permission
 Also, enable Static Website Hosting.
 
 Before generating a contest, you also need to:
-   - set `teacherInterface->sAbsoluteStaticPath` in `config.json` to the absolute
+   - set `teacherInterface->sAbsoluteStaticPath` in `config_local.php` to the absolute
      path of your bucket (without the final `contest/` directory)
    - regenerate your `contestInterface/index_*.html` files. For this you can call
      `contestInterface/generateIndexes.php`.
@@ -74,7 +74,7 @@ in the console by clicking "Edit" on the dashboard page.
 
 ## DynamoDB
 
-Set `db->use` to *dynamoDB* in config.json to use DynamoDB for:
+Set `db->use` to *dynamoDB* in `config_local.php` to use DynamoDB for:
 
 - read/write in `team_question` in DynamoDB only
 - read/write in `team` in both DynamoDB and MySQL (with checks for sync)
@@ -122,7 +122,7 @@ environment is created, go in the console for one environment, select
 *Configuration*, *Software Configuration* and modify *Document root* to
 respectively `/contestInterface` and `/teacherInterface`.
 
-Configure your config.json to access your rds database and upload your files to
+Configure your `config_local.php` to access your rds database and upload your files to
 the application.
 
 Important: if you use auto-scaling, you'll experience trouble unless you follow
@@ -137,18 +137,17 @@ interface: the git interface. To use it, see the [doc](http://docs.aws.amazon.co
 
 The files you need to upload are, for both the interfaces:
 
-- .htacces
-- config.json
-- contestInterface/
-- dataSanitizer/
-- sync/
-- modelsManager/
-- teacherInterface/
-- schoolsMap/
-- certificates/
+- all files in the root folder
+- `contestInterface/`
+- `dataSanitizer/`
+- `sync/`
+- `modelsManager/`
+- `teacherInterface/`
+- `schoolsMap/`
+- `certificates/`
 
 Or you can simply upload all files on both. It's quite important to protect
-teacherInterface/bever_tasks/, you can do it by adding a .htpasswd.
+`teacherInterface/bever_tasks/`, you can do it by adding a .htpasswd.
 These are referenced by an absolute path in .htaccess files (a questionable
 design choice), hence there is no such file in the svn. If you didn't do any
 extra configuration, the absolute path of the root of your app is in 
