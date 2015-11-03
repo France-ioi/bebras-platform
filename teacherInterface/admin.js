@@ -2211,9 +2211,10 @@ function init() {
       fallbackLng: [config.defaultLanguage],
       getAsync: true,
       resGetPath: config.i18nResourcePath,
+      fallbackNS: 'translation',
       ns: {
-         namespaces: ['translation', 'country' + config.countryCode],
-         defaultNs: 'translation'
+         namespaces: config.useCustomStrings ? ['custom', 'translation', 'country' + config.countryCode] : ['translation', 'country' + config.countryCode],
+         defaultNs: config.useCustomStrings ? 'custom' : 'translation',
       },
       useDataAttrOptions: true
    }, function () {

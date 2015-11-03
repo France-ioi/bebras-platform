@@ -47,3 +47,4 @@ $config->certificates->webServiceUrl = 'http://castor-informatique.fr.localhost/
 $config->contestPresentationURL = 'http://castor-informatique.fr/';
 $config->contestOfficialURL = 'http://concours.castor-informatique.fr/';
 $config->contestBackupURL = '';
+$config->useCustomStrings = false; // see README

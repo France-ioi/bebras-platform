@@ -63,6 +63,7 @@ $config->defaultLanguage = 'fr';
 $config->contestPresentationURL = '';
 $config->contestOfficialURL = '';
 $config->contestBackupURL = '';
+$config->useCustomStrings = false; // see README
 
 if (is_readable(__DIR__.'/config_local.php')) {
    include_once __DIR__.'/config_local.php';

@@ -258,7 +258,8 @@
       'infoEmail' => $config->email->sInfoAddress,
       'forceOfficialEmailDomain' => $config->teacherInterface->forceOfficialEmailDomain,
       'contestPresentationURL' => $config->contestPresentationURL,
-      'i18nResourcePath' => static_asset('/i18n/__lng__/__ns__.json')
+      'i18nResourcePath' => static_asset('/i18n/__lng__/__ns__.json'),
+      'useCustomStrings' => $config->useCustomStrings
    ]) ?>;
    init();
 </script>

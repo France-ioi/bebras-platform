@@ -222,9 +222,14 @@
   i18n.init(<?= json_encode([
     'lng' => $config->defaultLanguage,
     'fallbackLng' => [$config->defaultLanguage],
+    'fallbackNS' => 'translation',
+    'ns' => [
+      'namespaces' => $config->useCustomStrings ? ['custom', 'translation'] : ['translation'],
+      'defaultNs' => $config->useCustomStrings ? 'custom' : 'translation',
+    ],
     'getAsync' => true,
     'resGetPath' => static_asset('/i18n/__lng__/__ns__.json')
-  ]) ?>, function () {
+  ]); ?>, function () {
     window.i18nLoaded = true;
     $("title").i18n();
     $("body").i18n();

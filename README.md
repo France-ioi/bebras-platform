@@ -90,6 +90,15 @@ asked for the number of students doing the contest as a team (1 or 2),
 then each student is prompted for her firstname, lastname and gender.
 Other than that, everything works the same way as public contests.
 
+## Custom translation
+
+If you want to use custom strings:
+
+- create `contestInterface/i18n/lng/custom.json` and `contestInterface/i18n/lng/custom.json`, 
+replacing `lng` by each language you want to translate the platform into. The format
+is the same as the other `json` files in these directories.
+- set `$config->useCustomStrings` to *true*
+
 ## Common problems
 
 - *Something doesn't load.* Check out the web console to know why.
@@ -101,6 +110,5 @@ Other than that, everything works the same way as public contests.
 
 - Prepare gulp files for contestInterface and teacherInterface to compile all needed dependencies into one big uglified JS (see [this example](https://github.com/France-ioi/fioi-editor/blob/master/gulpfile.js)) and document it into the installation.
 - Tests!
-- Make task directory configurable (now it's certainly hardcoded as beaver_tasks).
+- Make task directory configurable (now it's certainly hardcoded as bebras-tasks).
 - Tracking/ has unmet external dependencies (should probably link to external CDNs).
-- Use something else than jqGrid, which is buggy as hell in all recent versions.
