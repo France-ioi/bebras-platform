@@ -31,8 +31,8 @@ function sendMail($sTo, $sTitle, $sBody, $sFrom, $sBCC = NULL)
    $mail->SMTPSecure = $config->email->smtpSecurity;
    $mail->Host       = $config->email->smtpHost;
    $mail->Port       = $config->email->smtpPort;
-   $mail->Username   = $config->email->sGMailUsername;
-   $mail->Password   = $config->email->sGMailPassword;
+   $mail->Username   = $config->email->smtpUsername;
+   $mail->Password   = $config->email->smtpPassword;
    // General configuration
    $mail->CharSet = 'UTF-8';
    

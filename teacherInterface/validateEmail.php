@@ -9,6 +9,7 @@ $errorMessage = "<p><b style='color:red'>Erreur. L'url est invalide.</b></p><p>R
 function validateEmail($type, $email, $salt) {
    global $db;
    global $config;
+   global $errorMessage;
    $query = "SELECT * FROM `user` WHERE (`".$type."` = ? AND `salt` = ?)";
    $stmt = $db->prepare($query);
    $stmt->execute(array($email, $salt));
