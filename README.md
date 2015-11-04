@@ -9,7 +9,7 @@ You need:
 - [Composer](https://getcomposer.org/)
 - [Bower](http://bower.io/)
 
-You also need a web server with PHP and a MySQL database.
+You also need a web server with PHP (>= 5.5) and a MySQL database.
 
 ## Installation
 
