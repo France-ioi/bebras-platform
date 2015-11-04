@@ -218,8 +218,10 @@ function loadContestData($db) {
    try {
       $results = $tinyOrm->select('team_question', array('questionID', 'answer', 'ffScore'), array('teamID' =>$teamID));
    } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
-      error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
-      error_log('DynamoDB error retrieving team_questions for teamID: '.$teamID);
+      if ($e->getAwsErrorCode() != 'ConditionalCheckFailedException') {
+         error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
+         error_log('DynamoDB error retrieving team_questions for teamID: '.$teamID);
+      }
       $results = [];
    }
    $answers = array();
