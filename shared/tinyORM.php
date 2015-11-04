@@ -8,9 +8,8 @@
 require_once('connect.php');
 require_once('models.php');
 
-use Aws\DynamoDb\Enum\Type;
-use Aws\DynamoDb\Enum\ComparisonOperator;
 use Aws\DynamoDb\Exception;
+use Aws\DynamoDb\Marshaler;
 
 // list of all tables we want to sync
 $tablesToSync = array(
@@ -42,6 +41,7 @@ class tinyOrm {
       $this->mode = $config->db->use;
       $this->dynamoDB = $dynamoDB;
       $this->table_infos = $tablesModels;
+      $this->marshaler = new Marshaler();
    }
    private $data_types;
    private function getRandomID() {
@@ -80,10 +80,12 @@ class tinyOrm {
    
    public function normalizeField($table, $field, $value, $mode) {
       $fields_infos = $this->table_infos[$table]['fields'];
-      if ($field == 'ID' || $field == 'iVersion') {return intval($value);}
+      if ($field == 'ID' || $field == 'iVersion') {
+         return ($mode == 'dynamoDB') ? new Aws\DynamoDb\NumberValue($value) : intval($value);
+      }
       switch($fields_infos[$field]['type']) {
          case 'int':
-            return ($mode == 'dynamoDB') ? intval($value) : $this->db->quote(intval($value));
+            return ($mode == 'dynamoDB') ? new Aws\DynamoDb\NumberValue($value) : $this->db->quote(intval($value));
             break;
          case 'string':
             return ($mode == 'dynamoDB') ? strval($value) : $this->db->quote($value);
@@ -147,7 +149,7 @@ class tinyOrm {
       if (!isset($fields['ID'])) {unset($fields['ID']);}
       $query = array(
          'TableName' => $table,
-         'Item' => $this->dynamoDB->formatAttributes($fields),
+         'Item' => $this->formatAttributes($fields),
          'ReturnConsumedCapacity' => 'TOTAL'
       );
       $res = $this->dynamoDB->putItem($query);
@@ -175,7 +177,7 @@ class tinyOrm {
             $item['ID'] = $this->getHash($table, $item);
          }
          $itemRequest = $this->normalizeFields($table, $item, 'dynamoDB');
-         $itemRequest = $this->dynamoDB->formatAttributes($itemRequest);
+         $itemRequest = $this->formatAttributes($itemRequest);
          $request['RequestItems'][$table][] = array('PutRequest' => array('Item' => $itemRequest));
       }
       return $this->dynamoDB->batchWriteItem($request);
@@ -204,17 +206,13 @@ class tinyOrm {
       $query .= ';';
       $sth = $this->db->exec($query);
    }
-   
-   // opposite of dynamoDB->formatAttributes();
+
    public function deformatAttributes($result) {
-      $res = array();
-      $newresult = array();
-      foreach((array)$result as $field => $value) {
-         foreach($value as $type => $val) {
-            $newresult[$field] = ($type == Type::NUMBER) ? intval($val) : strval($val);
-         }
-      }
-      return $newresult;
+      return $this->marshaler->unmarshalItem($result);
+   }
+
+   public function formatAttributes($result) {
+      return $this->marshaler->marshalItem($result);
    }
    
    private function selectDynamoDB($table, $fields, $where, $options) {
@@ -237,22 +235,23 @@ class tinyOrm {
       $queryFilter = array();
       foreach ($where as $field => $value) {
          $type = ($field == 'ID') ? 'int' : $this->table_infos[$table]['fields'][$field]['type'];
-         $type = ($type == 'int') ? Type::NUMBER : Type::STRING;
+         $type = ($type == 'int') ? 'N' : 'S';
+         $value = ($type == 'N') ? new Aws\DynamoDb\NumberValue($value) : $value;
          if ($field == 'ID') {
             $keyConditions[$field] = array(
-               'ComparisonOperator' => ComparisonOperator::EQ,
+               'ComparisonOperator' => 'EQ',
                'AttributeValueList' => array(array($type => $value)),
                );
          } else if (isset($this->secondary_indexes[$table]) && in_array($field, $this->secondary_indexes[$table]) && !isset($where['ID'])) {
             $query['IndexName'] = $field.'-index'; // TODO: maybe a better system...
             $query['ConsistentRead'] = false; // No consistent read with secondary indexes
             $keyConditions[$field] = array(
-               'ComparisonOperator' => ComparisonOperator::EQ,
+               'ComparisonOperator' => 'EQ',
                'AttributeValueList' => array(array($type => $value)),
                );
          } else {
             $queryFilter[$field] = array(
-               'ComparisonOperator' => ComparisonOperator::EQ,
+               'ComparisonOperator' => 'EQ',
                'AttributeValueList' => array(array($type => $value)),
                );
          }
@@ -289,7 +288,8 @@ class tinyOrm {
       $keyConditions = array();
       foreach ($where as $field => $value) {
          $type = ($field == 'ID') ? 'int' : $this->table_infos[$table]['fields'][$field]['type'];
-         $type = ($type == 'int') ? Type::NUMBER : Type::STRING;
+         $type = ($type == 'int') ? 'N' : 'S';
+         $value = ($type == 'N') ? new Aws\DynamoDb\NumberValue($value) : $value;
          if ($field == 'ID') {
             $keyConditions[$field] = array($type => $value);
          }
@@ -380,17 +380,17 @@ class tinyOrm {
             } else {
                $request['Expected'][$field]['ComparisonOperator'] = 'EQ';
                $value = $this->normalizeField($table, $field, $value, 'dynamoDB');
-               $type = (gettype($value) == 'integer') ? Type::NUMBER : Type::STRING;
+               $type = (gettype($value) == 'integer') ? 'N' : 'S';
                $request['Expected'][$field]['AttributeValueList'] = array(array($type => $value));
             }
          }
       }
-      $request['Key'] = $this->dynamoDB->formatAttributes($keyArray);
+      $request['Key'] = $this->formatAttributes($keyArray);
       $request['AttributeUpdates'] = array();
       foreach ($fields as $field => $value) {
          $request['AttributeUpdates'][$field] = array('Action' => 'PUT', 'Value' => array());
          $value = $this->normalizeField($table, $field, $value, 'dynamoDB');
-         $type = (gettype($value) == 'integer') ? Type::NUMBER : Type::STRING;
+         $type = (gettype($value) == 'integer') ? 'N' : 'S';
          $request['AttributeUpdates'][$field]['Value'] = array($type => $value);
       }
       try {
@@ -438,7 +438,7 @@ class tinyOrm {
             return false;
          }
       }
-      $request['Key'] = $this->dynamoDB->formatAttributes($keyArray);
+      $request['Key'] = $this->formatAttributes($keyArray);
       return $this->dynamoDB->deleteItem($request);
    }
    

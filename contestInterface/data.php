@@ -4,7 +4,6 @@
 include_once("../shared/common.php");
 include_once("../shared/tinyORM.php");
 include_once("common_contest.php");
-use Aws\DynamoDb\Exception;
 
 function loadPublicGroups($db) {
    restartSession();
@@ -125,8 +124,8 @@ function reloginTeam($db, $password, $teamID) {
          if ($config->db->use == 'dynamoDB') {
             try {
                $teamDynamoDB = $tinyOrm->get('team', array('ID', 'groupID'), array('ID' => $teamID));
-            } catch (\Aws\DynamoDb\Exception $e) {
-               error_log($e->getMessage . " - " . $e->getCode());
+            } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
+               error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
                error_log('DynamoDB error retrieving: '.$teamID);
             }
             if (!count($teamDynamoDB) || $teamDynamoDB['groupID'] != $_SESSION["groupID"]) {
@@ -169,8 +168,8 @@ function createTeam($db, $contestants) {
             'groupID'  => $_SESSION["groupID"],
             'password' => $password,
          ));
-      } catch (\Aws\DynamoDb\Exception $e) {
-         error_log($e->getMessage . " - " . $e->getCode());
+      } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
+         error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
          error_log('DynamoDB error creating team, teamID: '.$teamID);
       }
    }
@@ -207,21 +206,21 @@ function loadContestData($db) {
       $row = $stmt->fetchObject();
       try {
          $tinyOrm->update('team', array('startTime' => $row->startTime), array('ID'=>$teamID, 'startTime'=>null));
-      } catch (\Aws\DynamoDb\Exception $e) {
-         error_log($e->getMessage . " - " . $e->getCode());
+      } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
+         error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
          error_log('DynamoDB error updating team for teamID: '.$teamID);
       }
    }
 
    $questionsData = getQuestions($db, $_SESSION["contestID"]);
-
    //$stmt = $db->prepare("SELECT `questionID`, `answer` FROM `team_question` WHERE `teamID` = ?");
    //$stmt->execute(array($teamID));
    try {
       $results = $tinyOrm->select('team_question', array('questionID', 'answer', 'ffScore'), array('teamID' =>$teamID));
-   } catch (\Aws\DynamoDb\Exception $e) {
-      error_log($e->getMessage . " - " . $e->getCode());
+   } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
+      error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
       error_log('DynamoDB error retrieving team_questions for teamID: '.$teamID);
+      $results = [];
    }
    $answers = array();
    $scores = array();
