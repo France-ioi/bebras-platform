@@ -83,11 +83,11 @@ class tinyOrm {
    public function normalizeField($table, $field, $value, $mode) {
       $fields_infos = $this->table_infos[$table]['fields'];
       if ($field == 'ID' || $field == 'iVersion') {
-         return ($mode == 'dynamoDB') ? new Aws\DynamoDb\NumberValue($value) : intval($value);
+         return ($mode == 'dynamoDB') ? new Aws\DynamoDb\NumberValue($value) : $this->db->quote($value);
       }
       switch($fields_infos[$field]['type']) {
          case 'int':
-            return ($mode == 'dynamoDB') ? new Aws\DynamoDb\NumberValue($value) : $this->db->quote(intval($value));
+            return ($mode == 'dynamoDB') ? new Aws\DynamoDb\NumberValue($value) : $this->db->quote($value);
             break;
          case 'string':
             return ($mode == 'dynamoDB') ? strval($value) : $this->db->quote($value);
@@ -363,7 +363,7 @@ class tinyOrm {
          'TableName' => $table,
          'Key' => array()
       );
-      $keyArray = array('ID' => intval($where['ID']));
+      $keyArray = array('ID' => new Aws\DynamoDb\NumberValue($where['ID']));
       if (!isset($keyArray['ID'])) {
          $keyArray['ID'] = $this->getHash($table, $where);
          if (!isset($keyArray['ID'])) {
@@ -432,7 +432,7 @@ class tinyOrm {
          'TableName' => $table,
          'Key' => array()
       );
-      $keyArray = array('ID' => intval($where['ID']));
+      $keyArray = array('ID' => new Aws\DynamoDb\NumberValue($where['ID']));
       if (!isset($keyArray['ID'])) {
          $keyArray['ID'] = $this->getHash($table, $where);
          if (!isset($keyArray['ID'])) {
