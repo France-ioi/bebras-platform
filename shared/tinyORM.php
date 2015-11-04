@@ -41,7 +41,9 @@ class tinyOrm {
       $this->mode = $config->db->use;
       $this->dynamoDB = $dynamoDB;
       $this->table_infos = $tablesModels;
-      $this->marshaler = new Marshaler();
+      if ($config->db->use == 'dynamoDB') {
+         $this->marshaler = new Marshaler();
+      }
    }
    private $data_types;
    private function getRandomID() {
