@@ -235,4 +235,9 @@
     $("body").i18n();
   });
 </script>
+<!--[if IE 6]>
+<script>
+window.sAbsoluteStaticPath = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathOldIE.'/') ?>;
+</script>
+<![endif]-->
 </body></html>
