@@ -92,5 +92,19 @@
     "group_session_expired_recover": "<p>This group's session started more than 30 minutes ago and cannot be used anymore.</p><p>If it has been used by mistake, it is possible to generate a new group.</p><p>To do so, the teacher must type the group's recovery code <b>on only one computer</b>, below, <b>without giving it to the students</b>:</p>",
     "submitPass": "Submit recovery code",
     "rank": "Rank: ",
-    "others_retry": "Others can just <input type='button' onclick='checkGroup()' value='Retry'/>."
+    "others_retry": "Others can just <input type='button' onclick='checkGroup()' value='Retry'/>.",
+    "grade_4": "4th grade",
+    "grade_5": "5th grade",
+    "grade_6": "6th grade",
+    "grade_7": "7th grade",
+    "grade_8": "8th grade",
+    "grade_9": "9th grade",
+    "grade_10": "10th grade",
+    "grade_11": "11th grade",
+    "grade_12": "12th grade",
+    "grade_select": "Select your grade",
+    "grade_question": "What grade are you?",
+    "grade_-1": "Teacher",
+    "grade_-4": "Other"
+}
 }

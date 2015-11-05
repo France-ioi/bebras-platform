@@ -92,5 +92,18 @@
     "group_session_expired_recover": "<p>Ce groupe a déjà servi il y a plus de 30 minutes et ne peut plus être utilisé.</p><p>S'il a été utilisé par erreur, il est possible de regénérer un groupe équivalent.</p><p>Pour cela, l'enseignant doit saisir le code de secours du groupe <b>sur un seul poste</b>, ci-dessous, <b>sans le donner aux élèves</b> :</p>",
     "submitPass": "Soumettre le code de secours",
     "rank": "Classement : ",
-    "others_retry": "Pour les autres il suffira de <input type='button' onclick='checkGroup()' value='Réessayer'/>."
+    "others_retry": "Pour les autres il suffira de <input type='button' onclick='checkGroup()' value='Réessayer'/>.",
+    "grade_4": "En CM1",
+    "grade_5": "En CM2",
+    "grade_6": "En 6e",
+    "grade_7": "En 5e",
+    "grade_8": "En 4e",
+    "grade_9": "En 3e",
+    "grade_10": "En seconde",
+    "grade_11": "En première",
+    "grade_12": "En terminale",
+    "grade_select": "Sélectionnez votre classe",
+    "grade_question": "En quelle classe êtes-vous ?",
+    "grade_-1": "Je suis un enseignant",
+    "grade_-4": "Autre"
 }

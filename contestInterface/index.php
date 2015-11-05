@@ -107,6 +107,20 @@
             <br><input type="radio" id="genre1_male" name="genre1" value="2" autocomplete="off"><label for="genre1_male" data-i18n="login_male"></label>
          </div>
    </p>
+   <p> <span data-i18n="grade_question"></span> <select id="grade1">
+       <option value="" data-i18n="grade_select" selected></option>
+       <option value="-1" data-i18n="grade_-1"></option>
+       <option value="4" data-i18n="grade_4"></option>
+       <option value="5" data-i18n="grade_5"></option>
+       <option value="6" data-i18n="grade_6"></option>
+       <option value="7" data-i18n="grade_7"></option>
+       <option value="8" data-i18n="grade_8"></option>
+       <option value="9" data-i18n="grade_9"></option>
+       <option value="10" data-i18n="grade_10"></option>
+       <option value="11" data-i18n="grade_11"></option>
+       <option value="12" data-i18n="grade_12"></option>
+       <option value="-4" data-i18n="grade_-4">Autre</option>
+   </select> </p>
    <div id="contestant2" style="display:none">
       <p><b data-i18n="login_teammate"></b></p>
       <p><span data-i18n="[html]login_input_firstname"></span> <input id="firstName2" type="text" autocomplete="off"></input></p>
@@ -117,6 +131,20 @@
          <input type="radio" id="genre2_male" name="genre2" value="2" autocomplete="off"/><label for="genre2_male" data-i18n="login_male"></label></input>
          </div>
       </p>
+         <p> <span data-i18n="grade_question"></span> <select id="grade2">
+       <option value="" data-i18n="grade_select" selected></option>
+       <option value="-1" data-i18n="grade_-1"></option>
+       <option value="4" data-i18n="grade_4"></option>
+       <option value="5" data-i18n="grade_5"></option>
+       <option value="6" data-i18n="grade_6"></option>
+       <option value="7" data-i18n="grade_7"></option>
+       <option value="8" data-i18n="grade_8"></option>
+       <option value="9" data-i18n="grade_9"></option>
+       <option value="10" data-i18n="grade_10"></option>
+       <option value="11" data-i18n="grade_11"></option>
+       <option value="12" data-i18n="grade_12"></option>
+       <option value="-4" data-i18n="grade_-4">Autre</option>
+   </select> </p>
    </div>
    <p><button type="button" id="buttonLogin" onclick="validateLoginForm()" data-i18n="login_start_contest"></button><span id="LoginResult" style="color:red"></span></p>
 </div>
