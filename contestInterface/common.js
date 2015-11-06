@@ -76,22 +76,14 @@ var platform = {
       var res = {'minScore': questionData.minScore, 'maxScore': questionData.maxScore, 'noScore': questionData.noAnswerScore, 'randomSeed': teamID, 'options': questionData.options};
       if (key) {
          if (key !== 'options' && key in res) {
-            return res[key];
+            res = res[key];
          } else if (res.options && key in res.options) {
-            return res.options[key];
-         }
-         res = (typeof defaultValue !== 'undefined') ? defaultValue : null;
-         if (success) {
-            success(res);
+            res = res.options[key];
          } else {
-            return res;
+            res = (typeof defaultValue !== 'undefined') ? defaultValue : null;
          }
       }
-      if (success) {
-        success(res);
-      } else {
-        return res;
-      }
+      success(res);
    },
    validate: function(mode, success, error) {
       if (TimeManager.isContestOver()) {
