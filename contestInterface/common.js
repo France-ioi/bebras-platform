@@ -1755,7 +1755,7 @@ function sendAnswers() {
          if (answersRemaining) {
             setTimeout(sendAnswers, 1000);
          }
-      }, "json");
+      }, "json").fail(failedSendingAnswers);
    } catch(exception) {
       failedSendingAnswers();
    }
