@@ -796,7 +796,7 @@ function fillListQuestions(sortedQuestionIDs, questionsData)
          }
       }
       strListQuestions += "<tr><td class='questionBullet' id='bullet_" + questionData.key + "'></td><td class='questionLink' id='link_" + questionData.key + "' " +
-         "onclick='selectQuestion(" + questionData.ID + ", true)'>" +
+         "onclick='selectQuestion(" + JSON.stringify(questionData.ID) + ", true)'>" +
          encodedName + "</td><td class='questionScore' id='score_" + questionData.key + "'>" + strScore + "</td></tr>";
    }
    $("#questionList").html("<table>" + strListQuestions + "</table>");
