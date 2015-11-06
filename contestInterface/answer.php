@@ -30,8 +30,8 @@ function handleAnswers($db, $tinyOrm) {
    $teamPassword = $_POST["teamPassword"];
    try {
       $rows = $tinyOrm->select('team', array('password', 'startTime'), array('ID' => $teamID));
-   } catch (\Aws\DynamoDb\Exception $e) {
-      error_log($e->getMessage . " - " . $e->getCode());
+  } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
+      error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
       error_log('DynamoDB error trying to get record: teamID: '.$teamID.', questionID: '.$questionID, ', answer: '.$answerObj['answer']);
       echo json_encode((object)array("success" => false, 'error' => 'DynamoDB', 'message' => $e->getMessage()));
       return;
@@ -59,10 +59,10 @@ function handleAnswers($db, $tinyOrm) {
       }
       try {
          $tinyOrm -> batchWrite('team_question', $items, array('teamID', 'questionID', 'answer', 'ffScore', 'date'), array('answer', 'ffScore', 'date'));
-      } catch (\Aws\DynamoDb\Exception $e) {
-         error_log($e->getMessage . " - " . $e->getCode());
-         error_log('DynamoDB error trying to write record: teamID: '.$teamID.', questionID: '.$questionID, ', answer: '.$answerObj['answer']);
-         echo json_encode((object)array("success" => false, 'error' => 'DynamoDB', 'message' => $e->getMessage()));
+      } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
+         error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
+         error_log('DynamoDB error trying to write record: teamID: '.$teamID.', questionID: '.$questionID.', items: '.json_encode($items));
+         echo json_encode((object)array("success" => false, 'error' => 'DynamoDB', 'message' => $e->getAwsErrorCode()));
          return;
       }
       echo json_encode((object)array("success" => true));
