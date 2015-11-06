@@ -50,36 +50,6 @@ class tinyOrm {
       return mt_rand()*mt_rand();
    }
    
-   public function getHash($table, $fields) {
-      if (!isset($this->hash_fields[$table])) {return false;}
-      $hash_fields = $this->hash_fields[$table];
-      /*
-      $str = '';
-      $first = true;
-      foreach ($hash_fields as $hash_field) {
-         if (!$first) {$str .= '-';}
-         if (!isset($fields[$hash_field])) {return false;}
-         $str .= $fields[$hash_field];
-         $first = false;
-      }*/
-      // warning: According to 
-      // http://php.net/manual/en/language.types.integer.php, windows version of
-      // php doesn't support 64-bit integers, so we stick to 32 bit.
-      // PHP max int is 2^63 so we can't take first 16 (hex) characters of md5
-      // or we'll get collisions. Hence we have a 60-bit number.
-      //return intval(substr(sha1($str), 0, ((PHP_INT_SIZE == 8) ? 15 : 7)), 16);
-      $values = array();
-      foreach($hash_fields as $hash_field) {
-         if (!isset($fields[$hash_field])) {return false;}
-         $values[] = $fields[$hash_field];
-      }
-      $res = 1000000000*intval($values[0]) + intval($values[1]);
-      if ($res == PHP_INT_MAX) {
-         die('cannot compute hash: value too large! 0: '.$values[0].', 1: '.$values[1]);
-      }
-      return $res;
-   }
-   
    public function normalizeField($table, $field, $value, $mode) {
       $fields_infos = $this->table_infos[$table]['fields'];
       if ($field == 'ID' || $field == 'iVersion') {
@@ -147,8 +117,7 @@ class tinyOrm {
    
    private function insertDynamoDB($table, $fields, $options) {
       $fields = $this->normalizeFields($table, $fields, 'dynamoDB');
-      if (!isset($fields['ID'])) {$fields['ID'] = $this->getHash($table, $fields);}
-      if (!isset($fields['ID'])) {unset($fields['ID']);}
+      if (!isset($fields['ID'])) {$fields['ID'] = $this->getRandomID();}
       $query = array(
          'TableName' => $table,
          'Item' => $this->formatAttributes($fields),
@@ -176,7 +145,7 @@ class tinyOrm {
          }
          $i = $i + 1;
          if (!isset($item['ID'])) {
-            $item['ID'] = $this->getHash($table, $item);
+            $item['ID'] = $this->getRandomID();
          }
          $itemRequest = $this->normalizeFields($table, $item, 'dynamoDB');
          $itemRequest = $this->formatAttributes($itemRequest);
@@ -223,16 +192,6 @@ class tinyOrm {
          'ConsistentRead'  => true,
          'TableName'       => $table,
       );
-      if (!isset($where['ID'])) {
-         $where['ID'] = $this->getHash($table, $where);
-         if (!$where['ID']) {
-            unset($where['ID']);
-         } else {
-            foreach($this->hash_fields[$table] as $field) {
-               unset($where[$field]);
-            }
-         }
-      }
       $keyConditions = array();
       $queryFilter = array();
       foreach ($where as $field => $value) {
@@ -277,16 +236,6 @@ class tinyOrm {
    
    private function getDynamoDB($table, $fields, $where, $options) {
       $where = $this->normalizeFields($table, $where, 'dynamoDB');
-      if (!isset($where['ID'])) {
-         $where['ID'] = $this->getHash($table, $where);
-         if (!$where['ID']) {
-            unset($where['ID']);
-         } else {
-            foreach($this->hash_fields[$table] as $field) {
-               unset($where[$field]);
-            }
-         }
-      }
       $keyConditions = array();
       foreach ($where as $field => $value) {
          $type = ($field == 'ID') ? 'int' : $this->table_infos[$table]['fields'][$field]['type'];
@@ -364,14 +313,6 @@ class tinyOrm {
          'Key' => array()
       );
       $keyArray = array('ID' => new Aws\DynamoDb\NumberValue($where['ID']));
-      if (!isset($keyArray['ID'])) {
-         $keyArray['ID'] = $this->getHash($table, $where);
-         if (!isset($keyArray['ID'])) {
-            // TODO: in this case, make a query, but this is costly...
-            error_log('DynamoDB: cannot compute ID field in delete request');
-            return false;
-         }
-      }
       unset($where['ID']);
       if (count($where)) {
          $request['Expected'] = array();
@@ -399,7 +340,11 @@ class tinyOrm {
          $res = $this->dynamoDB->updateItem($request);
          return true;
          // ignoring if no item corresponds (like in mysql)
-      } catch (Aws\DynamoDb\Exception\ConditionalCheckFailedException $e) {
+      } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
+         if (strval($e->getAwsErrorCode()) != 'ConditionalCheckFailedException') {
+            error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
+            error_log('DynamoDB error in update query: '.json_encode($request));
+         }
          return false;
       }
    }
@@ -433,13 +378,6 @@ class tinyOrm {
          'Key' => array()
       );
       $keyArray = array('ID' => new Aws\DynamoDb\NumberValue($where['ID']));
-      if (!isset($keyArray['ID'])) {
-         $keyArray['ID'] = $this->getHash($table, $where);
-         if (!isset($keyArray['ID'])) {
-            error_log('DynamoDB: cannot compute ID field in delete request');
-            return false;
-         }
-      }
       $request['Key'] = $this->formatAttributes($keyArray);
       return $this->dynamoDB->deleteItem($request);
    }
