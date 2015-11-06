@@ -38,7 +38,8 @@ $config->teacherInterface->sAbsoluteStaticPath = 'http://127.0.0.1/beaver_platfo
 $config->teacherInterface->sAbsoluteStaticPathOldIE = 'http://127.0.0.1/beaver_platform/contestInterface/';
 $config->teacherInterface->genericPasswordMd5 = '';
 $config->teacherInterface->generationMode = 'local';
-$config->teacherInterface->sContestGenerationPath = '/../contestInterface/contests/';
+$config->teacherInterface->sContestGenerationPath = '/../contestInterface/contests/'; // *MUST* be relative!
+$config->teacherInterface->forceOfficialEmailDomain = false;
 
 // URLs
 $config->teacherInterface->baseUrl = 'http://coordinateur.castor-informatique.fr/';
