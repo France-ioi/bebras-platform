@@ -1163,9 +1163,9 @@ window.confirmTeamPassword = function() {
  * Tries to load the corresponding contest.
 */
 window.relogin = function() {
-   teamID = parseInt($("#selectTeam").val());
+   teamID = $("#selectTeam").val();
    var groupPassword = $("#groupPassword").val();
-   if (teamID === 0) {
+   if (teamID == '0') {
       $("#ReloginResult").html(t("select_team"));
       return;
    }
