@@ -266,6 +266,7 @@
 <!--[if IE 6]>
 <script>
 window.sAbsoluteStaticPath = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathOldIE.'/') ?>;
+window.contestsRoot = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathOldIE.'/contests') ?>;
 </script>
 <![endif]-->
 </body></html>
