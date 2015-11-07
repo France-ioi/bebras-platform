@@ -266,7 +266,7 @@
   script_tag('/bower_components/utf8/utf8.js');
   script_tag('/bower_components/base64/base64.min.js');
   script_tag('/bower_components/pem-platform/task-pr.js');
-  script_tag('raphael-min.js');
+  script_tag('/raphael-min.js');
   script_tag('/common.js');
   global $config;
 ?>
