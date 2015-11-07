@@ -75,13 +75,18 @@ var platform = {
    },
    getTaskParams: function(key, defaultValue, success, error) {
       var questionData = questionsData[questionsKeyToID[questionIframe.questionKey]];
+      var unlockedLevels = 1;
+      if (questionUnlockedLevels[questionIframe.questionKey] != undefined) {
+         unlockedLevels = questionUnlockedLevels[questionIframe.questionKey];
+      }
       var res = {
          'minScore': questionData.minScore,
          'maxScore': questionData.maxScore,
          'noScore': questionData.noAnswerScore,
          'randomSeed': teamID,
          'options': questionData.options,
-         'pointsAsStars': newInterface
+         'pointsAsStars': newInterface,
+         'unlockedLevels': unlockedLevels
       };
       if (key) {
          if (key !== 'options' && key in res) {
