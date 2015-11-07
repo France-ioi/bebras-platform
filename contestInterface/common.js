@@ -934,7 +934,6 @@ function setupContest(data) {
    }
    if (fullFeedback) {
       computeFullFeedbackScore();
-      $(".scoreTotalFullFeedback").html(ffTeamScore + ' / ' + ffMaxTeamScore);
    }
 
    // Determines the order of the questions, and displays them on the left
@@ -1341,10 +1340,9 @@ function initContestData(data) {
    TimeManager.setTotalTime(data.nbMinutes * 60);
    if (newInterface) {
       $("#question-iframe-container").addClass("newInterfaceIframeContainer");
-      $("#question-iframe-container").hide();
-      $(".button_return_list").hide();
       $(".oldInterface").html("").hide();
       $(".newInterface").show();
+      window.backToList();
    } else {
       $("#question-iframe-container").addClass("oldInterfaceIframeContainer");
       $(".newInterface").html("").hide();
@@ -1697,7 +1695,7 @@ function fillNextQuestionID(sortedQuestionsIDs) {
 window.backToList = function() {
    $(".questionList").show();
    $("#question-iframe-container").hide();
-   $(".button_return_list").hide();
+   $(".button_return_list").prop("disabled",true);
 }
 
 window.selectQuestion = function(questionID, clicked, noLoad) {
@@ -1716,7 +1714,7 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
    if (newInterface) {
       $(".questionList").hide();
       $("#question-iframe-container").show();
-      $(".button_return_list").show();
+      $(".button_return_list").prop("disabled", false);
    }
 
    if (questionKey == currentQuestionKey) {
@@ -1814,7 +1812,15 @@ function computeFullFeedbackScore() {
          ffTeamScore += questionsData[questionID].noAnswerScore;
       }
    }
-   $(".scoreTotalFullFeedback").html(ffTeamScore+' / '+ffMaxTeamScore);
+   if (newInterface) {
+      var strScore = ffTeamScore + " point";
+      if (ffTeamScore > 1) {
+         strScore += "s";
+      }
+      $(".scoreTotalFullFeedback").html(strScore);
+   } else {
+      $(".scoreTotalFullFeedback").html(ffTeamScore+' / '+ffMaxTeamScore);
+   }
 }
 
 // Sending answers
