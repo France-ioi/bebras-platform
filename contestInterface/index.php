@@ -204,13 +204,13 @@
             </tr>
          </table>
       </div>
-      <div id="header_sep_top"></div>
+      <div class="header_sep_top"></div>
       <div class="layout_table_wrapper">
          <div class="questionList task_icons">
             <span style="color:red" data-i18n="questions_loading"></span>
          </div>
       </div>
-      <div id="header_sep_bottom"></div>
+      <div class="header_sep_bottom"></div>
    </div>
    <span id="divQuestionsContent" style="display:none">
    </span>
