@@ -37,7 +37,7 @@ function getGroupTeams($db, $groupID) {
 }
 
 function openGroup($db, $password, $getTeams) {
-   $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, NOW()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`status` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
+   $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, NOW()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`status` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
    $stmt = $db->prepare($query);
    $stmt->execute(array($password));
    $row = $stmt->fetchObject();
@@ -61,6 +61,7 @@ function openGroup($db, $password, $getTeams) {
    $nbMinutes = $row->nbMinutes;
    $bonusScore = $row->bonusScore;
    $allowTeamsOfTwo = $row->allowTeamsOfTwo;
+   $newInterface = $row->newInterface;
    $fullFeedback = $row->fullFeedback;
    $nextQuestionAuto = $row->nextQuestionAuto;
    $isPublic = $row->isPublic;
@@ -82,6 +83,7 @@ function openGroup($db, $password, $getTeams) {
    $_SESSION["nbMinutes"] = $nbMinutes;
    $_SESSION["bonusScore"] = $bonusScore;
    $_SESSION["allowTeamsOfTwo"] = $allowTeamsOfTwo;
+   $_SESSION["newInterface"] = $newInterface;
    $_SESSION["fullFeedback"] = $fullFeedback;
    $_SESSION["nextQuestionAuto"] = $nextQuestionAuto;
    $_SESSION["groupClosed"] = (($nbMinutesElapsed > 60) && (!$isPublic));
@@ -96,6 +98,7 @@ function openGroup($db, $password, $getTeams) {
       "nbMinutes" => $nbMinutes,
       "bonusScore" => $bonusScore,
       "allowTeamsOfTwo" => $allowTeamsOfTwo,
+      "newInterface" => $newInterface,
       "fullFeedback" => $fullFeedback,
       'bRecovered' => $row->bRecovered,
       "nbMinutesElapsed" => $nbMinutesElapsed,
@@ -263,6 +266,7 @@ function loadSession() {
       "nbMinutes" => $_SESSION["nbMinutes"],
       "bonusScore" => $_SESSION["bonusScore"],
       "allowTeamsOfTwo" => $_SESSION["allowTeamsOfTwo"],
+      "newInterface" => $_SESSION["newInterface"],
       "fullFeedback" => $_SESSION["fullFeedback"],
       "contestID" => $_SESSION["contestID"],
       "contestFolder" => $_SESSION["contestFolder"],

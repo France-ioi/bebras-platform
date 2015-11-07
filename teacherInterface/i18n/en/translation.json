@@ -295,6 +295,7 @@
     "login_link_to_home": "For a general impression of the Bebras contest, go to <a href=\"__contestPresentationURL__\">the French contest home page</a>.",
     "login_teacher_wannabe_admin": "If you are a teacher, would you like to become a contest organizer in your school?",
     "contest_allowTeamsOfTwo_label": "Teams of two",
+    "contest_newInterface_label": "New interface",
     "contest_bonusScore_label": "Bonus score",
     "contest_question_noAnswerScore_label": "No answer score",
     "expectedStartTime_long_label": "Expected contest start time",

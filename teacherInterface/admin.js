@@ -414,6 +414,13 @@ function initModels(isLogged) {
                stype: "select", searchoptions: searchYesNo,
                width: 100
             },
+            newInterface: {
+               label: t("contest_newInterface_label"),
+               editable: true,
+               edittype: "select", editoptions: editYesNo,
+               stype: "select", searchoptions: searchYesNo,
+               width: 100
+            },
             fullFeedback: {
                label: t("contest_fullFeedback_label"),
                editable: true,

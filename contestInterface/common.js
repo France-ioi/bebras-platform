@@ -6,12 +6,14 @@ var contestFolder;
 var contestStatus;
 var fullFeedback;
 var nextQuestionAuto;
+var newInterface;
 var teamID = 0;
 var teamPassword = "";
 var questionsData = [];
 var questionsKeyToID = {};
 var questionsToGrade = [];
 var scores = {};
+var questionUnlockedLevels = {};
 var bonusScore = 0;
 var ffTeamScore = 0;
 var ffMaxTeamScore = 0; // fullFeedback versions
@@ -73,7 +75,14 @@ var platform = {
    },
    getTaskParams: function(key, defaultValue, success, error) {
       var questionData = questionsData[questionsKeyToID[questionIframe.questionKey]];
-      var res = {'minScore': questionData.minScore, 'maxScore': questionData.maxScore, 'noScore': questionData.noAnswerScore, 'randomSeed': teamID, 'options': questionData.options};
+      var res = {
+         'minScore': questionData.minScore,
+         'maxScore': questionData.maxScore,
+         'noScore': questionData.noAnswerScore,
+         'randomSeed': teamID,
+         'options': questionData.options,
+         'pointsAsStars': newInterface
+      };
       if (key) {
          if (key !== 'options' && key in res) {
             res = res[key];
@@ -113,7 +122,14 @@ var platform = {
                      scores[questionIframe.questionKey] = {score: score, maxScore: questionData.maxScore};
                      submitAnswer(questionIframe.questionKey, answer, score);
                      answers[questionIframe.questionKey] = answer;
-                     $('#score_' + questionData.key).html(score + " / " + questionData.maxScore);
+
+                     if (newInterface) {
+                        drawStars('score_' + questionData.key, 4, 20, score / questionData.maxScore, "normal");
+                        drawStars('questionStars', 4, 20, score / questionData.maxScore, "normal");
+                     } else {
+                        $('#score_' + questionData.key).html(score + " / " + questionData.maxScore);
+                     }
+                     updateUnlockedLevels(getSortedQuestionIDs(questionsData));
                   }
                }
                computeFullFeedbackScore();
@@ -660,7 +676,7 @@ var TimeManager = {
          this.updateTime();
          this.interval = setInterval(this.updateTime, 1000);
       } else {
-         $("#chrono").hide();
+         $(".chrono").hide();
       }
    },
 
@@ -687,8 +703,8 @@ var TimeManager = {
 
    syncWithServer: function() {
       TimeManager.synchronizing = true;
-      $("#minutes").html('');
-      $("#seconds").html('synchro...');
+      $(".minutes").html('');
+      $(".seconds").html('synchro...');
       var self = this;
       $.post('data.php', {SID: SID, action: 'getRemainingTime', teamID: teamID},
          function(data) {
@@ -725,8 +741,8 @@ var TimeManager = {
       var remainingTime = TimeManager.getRemainingTime();
       var minutes = Math.floor(remainingTime / 60);
       var seconds = Math.floor(remainingTime - 60 * minutes);
-      $("#minutes").html(minutes);
-      $("#seconds").html(Utils.pad2(seconds));
+      $(".minutes").html(minutes);
+      $(".seconds").html(Utils.pad2(seconds));
       if (remainingTime <= 0) {
          clearInterval(this.interval);
          TimeManager.endTimeCallback();
@@ -771,6 +787,7 @@ window.confirmPublicGroup = function() {
 /*
  * Generates the html that displays the list of questions on the left side of the page
 */
+
 function fillListQuestions(sortedQuestionIDs, questionsData)
 {
    var strListQuestions = "";
@@ -787,15 +804,110 @@ function fillListQuestions(sortedQuestionIDs, questionsData)
             strScore = questionData.noAnswerScore + " / " + questionData.maxScore;
          }
       }
-      strListQuestions += "<tr><td class='questionBullet' id='bullet_" + questionData.key + "'></td><td class='questionLink' id='link_" + questionData.key + "' " +
-         "onclick='selectQuestion(" + JSON.stringify(questionData.ID) + ", true)'>" +
-         encodedName + "</td><td class='questionScore' id='score_" + questionData.key + "'>" + strScore + "</td></tr>";
+      strListQuestions += "<tr id='row_" + questionData.key + "'><td class='questionBullet' id='bullet_" + questionData.key + "'></td>" +
+         "<td class='questionLink' id='link_" + questionData.key + "' " + "onclick='selectQuestion(" + questionData.ID + ", true)'>" +
+            encodedName + 
+         "</td>" + 
+         "<td class='questionScore' id='score_" + questionData.key + "'>" +
+            strScore +
+         "</td></tr><tr id='place_" + questionData.key + "'><td></td><td class='questionToUnlock'>Question à débloquer</td></tr>";
+
    }
-   $("#questionList").html("<table>" + strListQuestions + "</table>");
+   $(".questionList").html("<table>" + strListQuestions + "</table>");
    if (fullFeedback) {
       $(".questionListHeader").css("width", "240px");
       $(".question, #divQuestionParams, #divClosed, .questionsTable, #question-iframe-container").css("left", "245px");
    }
+}
+
+function fillListQuestionsNew(sortedQuestionIDs, questionsData)
+{
+   var strListQuestions = "";
+   for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
+      var questionData = questionsData[sortedQuestionIDs[iQuestionID]];
+      var encodedName = questionData.name.replace("'", "&rsquo;");
+
+      strListQuestions += 
+         '<div id="row_' + questionData.key + '" class="icon" onclick="selectQuestion(' + questionData.ID + ', true)">' +
+            '<div class="icon_title"><span class="questionBullet" id="bullet_' + questionData.key + '"></span>&nbsp;' + encodedName + '&nbsp;&nbsp;</div>' +
+            '<div class="icon_img">' +
+               '<table>' +
+                  '<tr>' +
+                     '<td class="icon_img_td" style="vertical-align: middle;">' +
+                        '<img src="' + window.contestsRoot + '/' + contestFolder + '/' + questionData.key + '/icon.png" />' +
+                     '</td>' +
+                  '</tr>' +
+               '</table>' +
+            '</div>' +
+            '<div class="questionScore" style="margin:auto" id="score_' + questionData.key + '"></div>' +
+         '</div>' +
+         '<div id="place_' + questionData.key + '" class="icon">' +
+            '<div class="icon_title" style="color:gray">Question à débloquer</div>' +
+            '<div class="icon_img">' +
+               '<table>' +
+                  '<tr>' +
+                     '<td class="icon_img_td" style="vertical-align: middle;">' +
+                        '<img src="images/locked_task.png" />' +
+                     '</td>' +
+                  '</tr>' +
+               '</table>' +
+            '</div>' +
+         '</div>';
+   }
+   $(".questionList").html(strListQuestions);
+   for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
+      var questionData = questionsData[sortedQuestionIDs[iQuestionID]];
+      var score = 0;
+      if (scores[questionData.key] !== undefined) {
+         score = scores[questionData.key].score;
+      }
+      drawStars("score_" + questionData.key, 4, 20, score / questionData.maxScore, "normal");
+   }
+}
+
+function updateUnlockedLevels(sortedQuestionIDs) {
+   if (!newInterface) {
+      return;
+   }
+   var epsilon = 0.001;
+   var nbTasksUnlocked = [5, 0, 0];
+   for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
+      var questionID = sortedQuestionIDs[iQuestionID];
+      var questionKey = questionsData[questionID].key;
+      if (scores[questionKey] != undefined) {
+         var score = scores[questionKey].score;
+         var maxScore = scores[questionKey].maxScore;
+         if (score >= (maxScore / 2) - epsilon) {
+            nbTasksUnlocked[0]++;
+            nbTasksUnlocked[1]++;
+         }
+         if (score >= (3 * maxScore / 4) - epsilon) {
+            nbTasksUnlocked[1]++;
+            nbTasksUnlocked[2]++;
+         }
+         if (score >= maxScore - epsilon) {
+            nbTasksUnlocked[2]++;
+         }
+      }
+   }
+   for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
+      var questionID = sortedQuestionIDs[iQuestionID];
+      var questionKey = questionsData[questionID].key;
+      questionUnlockedLevels[questionKey] = 0;
+      for (var iLevel = 0; iLevel < 3; iLevel++) {
+         if (nbTasksUnlocked[iLevel] > 0) {
+            questionUnlockedLevels[questionKey] = iLevel + 1;
+            nbTasksUnlocked[iLevel]--;
+         }
+      }
+      if (questionUnlockedLevels[questionKey] == 0) {
+         $("#row_" + questionKey).hide();
+         $("#place_" + questionKey).show();
+      } else {
+         $("#place_" + questionKey).hide();
+         $("#row_" + questionKey).show();
+      }
+   };
 }
 
 /*
@@ -817,12 +929,17 @@ function setupContest(data) {
    }
    if (fullFeedback) {
       computeFullFeedbackScore();
-      $("#scoreTotalFullFeedback").html(ffTeamScore + ' / ' + ffMaxTeamScore);
+      $(".scoreTotalFullFeedback").html(ffTeamScore + ' / ' + ffMaxTeamScore);
    }
 
    // Determines the order of the questions, and displays them on the left
    var sortedQuestionIDs = getSortedQuestionIDs(questionsData);
-   fillListQuestions(sortedQuestionIDs, questionsData);
+   if (newInterface) {
+      fillListQuestionsNew(sortedQuestionIDs, questionsData);
+   } else {
+      fillListQuestions(sortedQuestionIDs, questionsData);
+   }
+   updateUnlockedLevels(sortedQuestionIDs);
 
    // Defines function to call if students try to close their browser or tab
    window.onbeforeunload = function() {
@@ -839,7 +956,9 @@ function setupContest(data) {
    // We don't want to start the process of selecting a question, if the grading is going to start !
    var noLoad = (data.endTime != null);
 
-   window.selectQuestion(sortedQuestionIDs[0], false, noLoad);
+   if (!newInterface) {
+      window.selectQuestion(sortedQuestionIDs[0], false, noLoad);
+   }
 
    // Reloads previous answers to every question
    answers = {};
@@ -898,7 +1017,7 @@ function loadContestData(contestID, contestFolder, groupPassword, teamID)
          $("#divHeader").hide();
          $("#divQuestions").show();
          if (fullFeedback) {
-            $('#chrono').css('font-size', '1.3em');
+            $('.chrono').css('font-size', '1.3em');
             $('.fullFeedback').show();
          }
          showQuestionIframe();
@@ -922,7 +1041,7 @@ function loadContestData(contestID, contestFolder, groupPassword, teamID)
 
             function newLoader() {
                var log_fn = function(text) {
-                  $('#questionList').html("<span style='font-size:2em;padding-left:10px'>" + text + "</span>");
+                  $('.questionList').html("<span style='font-size:2em;padding-left:10px'>" + text + "</span>");
                };
                var loader = new Loader(window.contestsRoot + '/' + contestFolder + '/', log_fn);
                loader.run().done(function(content) {
@@ -1050,12 +1169,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic) {
             }
             return;
          }
-         contestID = data.contestID;
-         contestFolder = data.contestFolder;
-         fullFeedback = parseInt(data.fullFeedback);
-         nextQuestionAuto = parseInt(data.nextQuestionAuto);
-         contestStatus = data.contestStatus;
-         TimeManager.setTotalTime(data.nbMinutes * 60);
+         initContestData(data);
          $("#headerH2").html(data.name);
          if (data.teamID !== undefined) { // The password of the team was provided directly
             $("#div" + curStep).hide();
@@ -1212,6 +1326,27 @@ function getPublicGroupsList(groups) {
    return strGroups;
 }
 
+function initContestData(data) {
+   contestID = data.contestID;
+   contestFolder = data.contestFolder;
+   fullFeedback = parseInt(data.fullFeedback);
+   nextQuestionAuto = parseInt(data.nextQuestionAuto);
+   newInterface = parseInt(data.newInterface);
+   contestStatus = data.contestStatus;
+   TimeManager.setTotalTime(data.nbMinutes * 60);
+   if (newInterface) {
+      $("#question-iframe-container").addClass("newInterfaceIframeContainer");
+      $("#question-iframe-container").hide();
+      $(".button_return_list").hide();
+      $(".oldInterface").html("").hide();
+      $(".newInterface").show();
+   } else {
+      $("#question-iframe-container").addClass("oldInterfaceIframeContainer");
+      $(".newInterface").html("").hide();
+      $(".oldInterface").show();
+   }
+}
+
 /*
  * Loads all the information about a session if a session is already opened
  * Otherwise, displays the list of public groups.
@@ -1230,12 +1365,7 @@ function loadSessionOrPublicGroups(restartSession) {
                return;
             }
             teamID = data.teamID;
-            contestID = data.contestID;
-            contestFolder = data.contestFolder;
-            fullFeedback = parseInt(data.fullFeedback);
-            nextQuestionAuto = parseInt(data.nextQuestionAuto);
-            contestStatus = data.contestStatus;
-            TimeManager.setTotalTime(data.nbMinutes * 60);
+            initContestData(data);
             $("#divCheckGroup").hide();
             loadContestData(contestID, contestFolder);
             return;
@@ -1411,7 +1541,7 @@ function showScoresHat() {
 }
 
 function showScores(data) {
-   $("#scoreTotal").hide();
+   $(".scoreTotal").hide();
    // Compute scores
    teamScore = parseInt(data.bonusScore);
    maxTeamScore = parseInt(data.bonusScore);
@@ -1475,8 +1605,8 @@ function sendScores() {
       if (data.status === 'success') {
          loadSolutionsHat();
          if (bonusScore) {
-            $("#scoreBonus").html($("#scoreBonus").html().replace('50', bonusScore));
-            $("#scoreBonus").show();
+            $(".scoreBonus").html($(".scoreBonus").html().replace('50', bonusScore));
+            $(".scoreBonus").show();
          }
          $(".questionScore").css("width", "50px");
          $(".questionListHeader").css("width", "265px");
@@ -1504,9 +1634,9 @@ function sendScores() {
             $("#bullet_" + questionKey).html(image);
             $("#score_" + questionKey).html("<b>" + score + "</b> / " + maxScore);
          }
-         $("#scoreTotal").hide();
-         $("#chrono").html("<tr><td style='font-size:28px'> " + t("score") + ' ' + teamScore + " / " + maxTeamScore + "</td></tr>");
-         $("#chrono").css("background-color", "#F66");
+         $(".scoreTotal").hide();
+         $(".chrono").html("<tr><td style='font-size:28px'> " + t("score") + ' ' + teamScore + " / " + maxTeamScore + "</td></tr>");
+         $(".chrono").css("background-color", "#F66");
    //      window.selectQuestion(sortedQuestionIDs[0], false);
       }
    }, 'json');
@@ -1559,6 +1689,12 @@ function fillNextQuestionID(sortedQuestionsIDs) {
    questionsData[prevQuestionID].nextQuestionID = "0";
 }
 
+window.backToList = function() {
+   $(".questionList").show();
+   $("#question-iframe-container").hide();
+   $(".button_return_list").hide();
+}
+
 window.selectQuestion = function(questionID, clicked, noLoad) {
    $("body").scrollTop(0);
    try {
@@ -1571,6 +1707,13 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
    } catch(err) {}
    var questionData = questionsData[questionID];
    var questionKey = questionData.key;
+
+   if (newInterface) {
+      $(".questionList").hide();
+      $("#question-iframe-container").show();
+      $(".button_return_list").show();
+   }
+
    if (questionKey == currentQuestionKey) {
       return;
    }
@@ -1592,6 +1735,13 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
             "<td><span class='scoreGood'>+" + maxScore + "</span></td></tr></table>");
       }
       $("#questionTitle").html(questionName);
+      if (newInterface) {
+         var score = 0;
+         if (scores[questionData.key] != undefined) {
+            score = scores[questionData.key].score;
+         }
+         drawStars('questionStars', 4, 20, score / questionData.maxScore, "normal");
+      }
       currentQuestionKey = questionKey;
 
       if (!questionIframe.initialized) {
@@ -1659,7 +1809,7 @@ function computeFullFeedbackScore() {
          ffTeamScore += questionsData[questionID].noAnswerScore;
       }
    }
-   $("#scoreTotalFullFeedback").html(ffTeamScore+' / '+ffMaxTeamScore);
+   $(".scoreTotalFullFeedback").html(ffTeamScore+' / '+ffMaxTeamScore);
 }
 
 // Sending answers
@@ -1992,6 +2142,87 @@ Loader.prototype.shuffleArray= function (values) {
    }
    return values;
 };
+
+var drawStars = function(id, nbStars, starWidth, rate, mode) {
+   $('#' + id).addClass('stars');
+
+   function clipPath(coords, xClip) {
+      var result = [[coords[0][0], coords[0][1]]];
+      var clipped = false;
+      for (var iCoord = 1; iCoord <= coords.length; iCoord++) {
+         var x1 = coords[iCoord - 1][0];
+         var y1 = coords[iCoord - 1][1];
+         var x2 = coords[iCoord % coords.length][0];
+         var y2 = coords[iCoord % coords.length][1];
+         if (x2 > xClip) {
+            if (!clipped) {
+               result.push([xClip, y1 + (y2 - y1) * (xClip - x1) / (x2 - x1)]);
+               clipped = true;
+            }
+         } else {
+            if (clipped) {
+               result.push([xClip, y1 + (y2 - y1) * (xClip - x1) / (x2 - x1)]);
+               clipped = false;
+            }
+            result.push([x2, y2]);
+         }
+      }
+      result.pop();
+      return result;
+   }
+
+   function pathFromCoords(coords) {
+      var result = 'm' + coords[0][0] + ',' + coords[0][1];
+      for (var iCoord = 1; iCoord < coords.length; iCoord++) {
+         var x1 = coords[iCoord - 1][0];
+         var y1 = coords[iCoord - 1][1];
+         var x2 = coords[iCoord][0];
+         var y2 = coords[iCoord][1];
+         result += ' ' + (x2 - x1) + ',' + (y2 - y1);
+      }
+      result += 'z';
+      return result;
+   }
+
+   var fillColors = { normal: 'white', locked: '#ddd', useless: '#ced' };
+   var strokeColors = { normal: 'black', locked: '#ddd', useless: '#444' };
+   var starCoords = [[25, 60], [5, 37], [35, 30], [50, 5], [65, 30], [95, 37], [75, 60], [78, 90], [50, 77], [22, 90]];
+   var fullStarCoords = [
+      [[5, 37], [35, 30], [50, 5], [65, 30], [95, 37], [75, 60], [25, 60]],
+      [[22, 90], [50, 77], [78, 90], [75, 60], [25, 60]]
+   ];
+
+   $('#' + id).html('');
+   var paper = new Raphael(id, starWidth * nbStars, starWidth * 0.95);
+   for (var iStar = 0; iStar < nbStars; iStar++) {
+      var scaleFactor = starWidth / 100;
+      var deltaX = iStar * starWidth;
+      var coordsStr = pathFromCoords(starCoords, iStar * 100);
+
+      paper.path(coordsStr).attr({
+         fill: fillColors[mode],
+         stroke: 'none'
+      }).transform('s' + scaleFactor + ',' + scaleFactor + ' 0,0 t' + (deltaX / scaleFactor) + ',0');
+      
+      var ratio = Math.min(1, Math.max(0, rate * nbStars  - iStar));
+      var xClip = ratio * 100;
+      if (xClip > 0) {
+         for (var iPiece in fullStarCoords) {
+            var coords = clipPath(fullStarCoords[iPiece], xClip);
+            var star = paper.path(pathFromCoords(coords)).attr({
+               fill: '#ffc90e',
+               stroke: 'none'
+            }).transform('s' + scaleFactor + ',' + scaleFactor + ' 0,0 t' + (deltaX / scaleFactor) + ",0");
+         }
+      }
+      paper.path(coordsStr).attr({
+         fill: 'none',
+         stroke: strokeColors[mode],
+         'stroke-width': 5 * scaleFactor
+      }).transform('s' + scaleFactor + ',' + scaleFactor + ' 0,0 t' + (deltaX / scaleFactor) + ',0');
+   }
+}
+
 
   $(init);
 

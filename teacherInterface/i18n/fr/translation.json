@@ -295,6 +295,7 @@
     "login_link_to_home": "Pour accéder à une présentation générale du concours Castor Informatique, allez sur <a href=\"__contestPresentationURL__\">la page d'accueil</a>.",
     "login_teacher_wannabe_admin": "Vous êtes enseignant, vous souhaitez devenir coordinateur ?",
     "contest_allowTeamsOfTwo_label": "Binômes",
+    "contest_newInterface_label": "Nouvelle interface",
     "contest_bonusScore_label": "Score bonus",
     "contest_question_noAnswerScore_label": "Score rien",
     "expectedStartTime_long_label": "Date de passage prévue",
