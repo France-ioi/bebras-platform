@@ -128,13 +128,10 @@ var platform = {
                      submitAnswer(questionIframe.questionKey, answer, score);
                      answers[questionIframe.questionKey] = answer;
 
-                     if (newInterface) {
-                        drawStars('score_' + questionData.key, 4, 20, score / questionData.maxScore, "normal");
-                        drawStars('questionStars', 4, 20, score / questionData.maxScore, "normal");
-                     } else {
+                     updateUnlockedLevels(getSortedQuestionIDs(questionsData), questionIframe.questionKey);
+                     if (!newInterface) {
                         $('#score_' + questionData.key).html(score + " / " + questionData.maxScore);
                      }
-                     updateUnlockedLevels(getSortedQuestionIDs(questionsData));
                   }
                }
                computeFullFeedbackScore();
@@ -860,35 +857,50 @@ function fillListQuestionsNew(sortedQuestionIDs, questionsData)
          '</div>';
    }
    $(".questionList").html(strListQuestions);
+   updateUnlockedLevels(sortedQuestionIDs);
    for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
       var questionData = questionsData[sortedQuestionIDs[iQuestionID]];
-      var score = 0;
-      if (scores[questionData.key] !== undefined) {
-         score = scores[questionData.key].score;
-      }
-      drawStars("score_" + questionData.key, 4, 20, score / questionData.maxScore, "normal");
+      drawStars("score_" + questionData.key, 4, 20, getQuestionScoreRate(questionData), "normal", getNbLockedStars(questionData)); // stars under question icon
    }
 }
 
-function updateUnlockedLevels(sortedQuestionIDs) {
+function getQuestionScoreRate(questionData) {
+   if (scores[questionData.key] !== undefined) {
+      return scores[questionData.key].score / questionData.maxScore;
+   }
+   return 0;
+}
+
+function getNbLockedStars(questionData) {
+   if (questionUnlockedLevels[questionData.key] != 0) {
+      return 3 - questionUnlockedLevels[questionData.key];
+   }
+   return 4;
+}
+
+function updateUnlockedLevels(sortedQuestionIDs, updatedQuestionKey) {
    if (!newInterface) {
       return;
    }
    var epsilon = 0.001;
    var nbTasksUnlocked = [5, 0, 0];
+   var prevQuestionUnlockedLevels = {};
    for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
-      var questionID = sortedQuestionIDs[iQuestionID];
-      var questionKey = questionsData[questionID].key;
+      var questionKey = questionsData[sortedQuestionIDs[iQuestionID]].key;
+      prevQuestionUnlockedLevels[questionKey] = questionUnlockedLevels[questionKey];
+      questionUnlockedLevels[questionKey] = 0;
       if (scores[questionKey] != undefined) {
          var score = scores[questionKey].score;
          var maxScore = scores[questionKey].maxScore;
          if (score >= (maxScore / 2) - epsilon) {
             nbTasksUnlocked[0]++;
             nbTasksUnlocked[1]++;
+            questionUnlockedLevels[questionKey] = 2;
          }
          if (score >= (3 * maxScore / 4) - epsilon) {
             nbTasksUnlocked[1]++;
             nbTasksUnlocked[2]++;
+            questionUnlockedLevels[questionKey] = 3;
          }
          if (score >= maxScore - epsilon) {
             nbTasksUnlocked[2]++;
@@ -896,12 +908,13 @@ function updateUnlockedLevels(sortedQuestionIDs) {
       }
    }
    for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
-      var questionID = sortedQuestionIDs[iQuestionID];
-      var questionKey = questionsData[questionID].key;
-      questionUnlockedLevels[questionKey] = 0;
+      var questionData = questionsData[sortedQuestionIDs[iQuestionID]];
+      var questionKey = questionData.key;
       for (var iLevel = 0; iLevel < 3; iLevel++) {
          if (nbTasksUnlocked[iLevel] > 0) {
-            questionUnlockedLevels[questionKey] = iLevel + 1;
+            if (questionUnlockedLevels[questionKey] < iLevel + 1) {
+               questionUnlockedLevels[questionKey] = iLevel + 1;
+            }
             nbTasksUnlocked[iLevel]--;
          }
       }
@@ -912,6 +925,16 @@ function updateUnlockedLevels(sortedQuestionIDs) {
          $("#place_" + questionKey).hide();
          $("#row_" + questionKey).show();
       }
+      if ((questionKey == updatedQuestionKey) || 
+          (prevQuestionUnlockedLevels[questionKey] != questionUnlockedLevels[questionKey])) {
+         var nbLocked = getNbLockedStars(questionData);
+         var scoreRate = getQuestionScoreRate(questionData);
+         drawStars('score_' + questionData.key, 4, 20, scoreRate, "normal", nbLocked);  // stars under icon on main page
+         if (questionKey == updatedQuestionKey) {
+            drawStars('questionStars', 4, 20, scoreRate, "normal", nbLocked); // stars in question title
+         }
+      }
+
    };
 }
 
@@ -1739,11 +1762,7 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
       }
       $("#questionTitle").html(questionName);
       if (newInterface) {
-         var score = 0;
-         if (scores[questionData.key] != undefined) {
-            score = scores[questionData.key].score;
-         }
-         drawStars('questionStars', 4, 20, score / questionData.maxScore, "normal");
+         drawStars('questionStars', 4, 20, getQuestionScoreRate(questionData), "normal", getNbLockedStars(questionData)); // stars under icon on main page
       }
       currentQuestionKey = questionKey;
 
@@ -2154,7 +2173,7 @@ Loader.prototype.shuffleArray= function (values) {
    return values;
 };
 
-var drawStars = function(id, nbStars, starWidth, rate, mode) {
+var drawStars = function(id, nbStars, starWidth, rate, mode, nbStarsLocked) {
    $('#' + id).addClass('stars');
 
    function clipPath(coords, xClip) {
@@ -2209,9 +2228,13 @@ var drawStars = function(id, nbStars, starWidth, rate, mode) {
       var scaleFactor = starWidth / 100;
       var deltaX = iStar * starWidth;
       var coordsStr = pathFromCoords(starCoords, iStar * 100);
+      var starMode = mode;
+      if (iStar >= nbStars - nbStarsLocked) {
+         starMode = "locked";
+      }
 
       paper.path(coordsStr).attr({
-         fill: fillColors[mode],
+         fill: fillColors[starMode],
          stroke: 'none'
       }).transform('s' + scaleFactor + ',' + scaleFactor + ' 0,0 t' + (deltaX / scaleFactor) + ',0');
       
@@ -2228,7 +2251,7 @@ var drawStars = function(id, nbStars, starWidth, rate, mode) {
       }
       paper.path(coordsStr).attr({
          fill: 'none',
-         stroke: strokeColors[mode],
+         stroke: strokeColors[starMode],
          'stroke-width': 5 * scaleFactor
       }).transform('s' + scaleFactor + ',' + scaleFactor + ' 0,0 t' + (deltaX / scaleFactor) + ',0');
    }
