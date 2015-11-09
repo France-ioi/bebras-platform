@@ -528,6 +528,8 @@ var questionIframe = {
 
       this.addJsContent('window.contestsRoot = "'+window.contestsRoot+'";');
       this.addJsContent('window.sAbsoluteStaticPath = "'+window.sAbsoluteStaticPath+'";');
+      this.addJsContent('window.sAssetsStaticPath = "'+window.sAssetsStaticPath+'";');
+      this.addJsContent('window.contestFolder = "'+contestFolder+'";');
 
       // Load specific js
       this.addJsContent($('#javascript-' + questionKey).attr('data-content'));
