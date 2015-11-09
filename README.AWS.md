@@ -86,11 +86,9 @@ It works with the following indexes in DynamoDB:
    - main hash : ID (number), no range
    - secondary index hash : password (string), no range.
 - team_question:
-   - main hash: ID (number), no range
-   - secondary index hash: teamID (number), no range
+   - main hash: teamID (number), range questionID (number)
 - sessions (see [doc](http://aws.amazon.com/fr/blogs/aws/scalable-session-handling-in-php-using-amazon-dynamodb/)):
    - main hash: id (string), no range (note that you must provide reasonable read/write units),
-   - no secondary index
 
 The ID of team is the same as in MySQL; the ID of team_question is a unique
 hash built from teamID and questionID (see corresponding function in

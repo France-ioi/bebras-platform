@@ -28,11 +28,10 @@ class tinyOrm {
    private $dynamoDB;
    private $mode;//"mysql" or "dynamoDB"
    private $table_infos;
-   private $hash_fields = array(
-      'team_question' => array('teamID', 'questionID')
+   private $hash_range = array(
+      'team_question' => ['hash' => 'teamID', 'range' => 'questionID']
    );
    private $secondary_indexes = array(
-      'team_question' => array('teamID'),
       'team' => array('password')
    );
    public function __construct() {
@@ -49,7 +48,7 @@ class tinyOrm {
    private function getRandomID() {
       return mt_rand()*mt_rand();
    }
-   
+
    public function normalizeField($table, $field, $value, $mode) {
       $fields_infos = $this->table_infos[$table]['fields'];
       if ($field == 'ID' || $field == 'iVersion') {
@@ -117,7 +116,6 @@ class tinyOrm {
    
    private function insertDynamoDB($table, $fields, $options) {
       $fields = $this->normalizeFields($table, $fields, 'dynamoDB');
-      if (!isset($fields['ID'])) {$fields['ID'] = $this->getRandomID();}
       $query = array(
          'TableName' => $table,
          'Item' => $this->formatAttributes($fields),
@@ -144,9 +142,6 @@ class tinyOrm {
             );
          }
          $i = $i + 1;
-         if (!isset($item['ID'])) {
-            $item['ID'] = $this->getRandomID();
-         }
          $itemRequest = $this->normalizeFields($table, $item, 'dynamoDB');
          $itemRequest = $this->formatAttributes($itemRequest);
          $request['RequestItems'][$table][] = array('PutRequest' => array('Item' => $itemRequest));
@@ -198,7 +193,7 @@ class tinyOrm {
          $type = ($field == 'ID') ? 'int' : $this->table_infos[$table]['fields'][$field]['type'];
          $type = ($type == 'int') ? 'N' : 'S';
          $value = ($type == 'N') ? new Aws\DynamoDb\NumberValue($value) : $value;
-         if ($field == 'ID') {
+         if ($field == 'ID' || (isset($this->hash_range[$table]) && $field == $this->hash_range[$table]['hash'])) {
             $keyConditions[$field] = array(
                'ComparisonOperator' => 'EQ',
                'AttributeValueList' => array(array($type => $value)),
@@ -313,6 +308,7 @@ class tinyOrm {
          'Key' => array()
       );
       $keyArray = array('ID' => new Aws\DynamoDb\NumberValue($where['ID']));
+      // TODO: update to get the where from $this->hash_range
       unset($where['ID']);
       if (count($where)) {
          $request['Expected'] = array();
