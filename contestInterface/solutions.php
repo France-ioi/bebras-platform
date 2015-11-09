@@ -22,10 +22,10 @@ if (!($row = $stmt->fetchObject())) {
    exit;
 }
 
-if ($row->score == null) {
-   echo json_encode(array('success' => false, 'message' => 'Afichage de la solution : action impossible'));
-   exit;
-}
+// if ($row->score == null) {
+//    echo json_encode(array('success' => false, 'message' => 'Afichage de la solution : action impossible', 'row'=> $row, 'teamID' => $teamID));
+//    exit;
+// }
 
 $contestID = $row->ID;
 $contestFolder = $row->folder;
