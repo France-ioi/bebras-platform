@@ -247,7 +247,7 @@ function contestAddContent($contestFolder, $content, &$listParts, &$buffer, &$nu
 }
 
 function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = false, $status = 'RunningContest') {
-   global $mode, $contestLocalDir;
+   global $mode, $contestLocalDir, $config;
    if ($status == 'RunningContest' || $status == 'FutureContest') {
       $generateSolutions = false;
    }
@@ -354,6 +354,11 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
       $strQuestions.= $strQuestion;
       contestAddContent($contestFolder, $strQuestion, $nameParts, $buffer, $numPart, false);
    }
+   contestCopyFile(__DIR__.'/bebras-tasks/modules/img/castor.png', $contestFolder.'/castor.png');
+   contestCopyFile(__DIR__.'/bebras-tasks/modules/img/fleche-bulle.png', $contestFolder.'/fleche-bulle.png');
+   $images[] = $config->teacherInterface->sAbsoluteStaticPath.'/contests/'.$contestFolder.'/castor.png';
+   $images[] = $config->teacherInterface->sAbsoluteStaticPath.'/contests/'.$contestFolder.'/fleche-bulle.png';
+
    $jsPreload = "\r\n//ImagesLoader is injected by the platform just before the contest is loaded\r\n";
    
    $jsPreload .= "ImagesLoader.setImagesToPreload([\n'".
