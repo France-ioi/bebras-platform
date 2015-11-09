@@ -812,7 +812,10 @@ function fillListQuestions(sortedQuestionIDs, questionsData)
          "</td>" + 
          "<td class='questionScore' id='score_" + questionData.key + "'>" +
             strScore +
-         "</td></tr><tr id='place_" + questionData.key + "'><td></td><td class='questionToUnlock'>Question à débloquer</td></tr>";
+         "</td></tr>";
+      if (newInterface) {
+         strListQuestions += "<tr id='place_" + questionData.key + "'><td></td><td class='questionToUnlock'>Question à débloquer</td></tr>";
+      }
 
    }
    $(".questionList").html("<table>" + strListQuestions + "</table>");
