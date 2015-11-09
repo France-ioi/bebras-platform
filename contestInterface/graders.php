@@ -44,7 +44,7 @@ if ($config->teacherInterface->generationMode == 'local') {
    $graders = file_get_contents(__DIR__.$config->teacherInterface->sContestGenerationPath.$contestFolder.'/contest_'.$contestID.'_graders.html');
 } else if (!$row->fullFeedback) {
    require '../vendor/autoload.php';
-   $publicClient = S3Client::factory(array(
+   $s3Client = S3Client::factory(array(
       'credentials' => array(
            'key'    => $config->aws->key,
            'secret' => $config->aws->secret
@@ -52,8 +52,12 @@ if ($config->teacherInterface->generationMode == 'local') {
       'region' => $config->aws->region,
       'version' => '2006-03-01'
    ));
-   $publicBucket = $config->aws->bucketName;
-   $gradersUrl = $privateClient->getObjectUrl($publicBucket, 'contests/'.$contestFolder.'/contest_'.$contestID.'_graders.html', '+10 minutes');
+   $cmd = $s3Client->getCommand('GetObject', [
+      'Bucket' => $config->aws->bucketName,
+      'Key'    => 'contests/'.$contestFolder.'/contest_'.$contestID.'_graders.html'
+   ]);
+   $request = $s3Client->createPresignedRequest($cmd, '+10 minutes');
+   $gradersUrl = (string) $request->getUri();
 } else {
    $gradersUrl = $config->teacherInterface->sAbsoluteStaticPath.'contests/'.$contestFolder.'/contest_'.$contestID.'_graders.html';
 }
