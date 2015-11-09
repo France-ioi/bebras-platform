@@ -28,7 +28,7 @@ a {
    text-decoration: none;
 }
 
-#chrono {
+.chrono {
   font-size: 2em;
   background-color: #4D87CE;
   text-align: center;
@@ -37,7 +37,7 @@ a {
   padding-bottom: 10px;
 }
 
-#rank {
+.rank {
   display:none;
   font-size: 1.2em;
   background-color: #4D87CE;
@@ -118,14 +118,22 @@ a {
    display: none;
 }
 
-.questionLink, .questionLinkSelected {
+
+.questionToUnlock, .questionLink, .questionLinkSelected {
    font-size: 0.9em;
    line-height:180%;
-   color: #4D87CE;
    width: 170px;
    font-weight: bold;
    cursor: pointer;
    padding: 0px;
+}
+
+.questionToUnlock {
+   color:gray;
+}
+
+.questionLink, .questionLinkSelected {
+   color: #4D87CE;
 }
 
 .questionLink:hover {
@@ -250,13 +258,18 @@ a {
    width: 0;
    height: 0;
 }
-#question-iframe-container {
+.oldInterfaceIframeContainer {
    position: absolute;
    left: 248px;
    top: 88px;
    width: 0;
    height: 0;
 }
+
+.newInterfaceIframeContainer {
+	text-align: center;
+}
+
 
 .hidden {
   display: none;
@@ -278,4 +291,104 @@ a {
   -webkit-user-select: text;
   -o-user-select: text;
   user-select: text;
+}
+
+/* new interface styles */
+
+.header, .layout_table_wrapper {
+  max-width: 880px;
+  min-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;        
+}
+.header_table {
+  height: 40px;
+  width: 100%;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+.header_sep_top, .header_sep_bottom {
+  width: 100%;
+  border-bottom: 1px solid #B47238; 
+}
+.header_sep_bottom {
+  margin-bottom: 30px;
+}
+.header_table td { /* border: 1px solid gray; */
+  text-align: center;
+  font-size: 20px;
+  line-height: 115%;
+}
+.header_logo {
+  padding-bottom: 0px;
+  width: 60px;
+}
+.header_logo_img {
+  width: 60px;
+}
+.button_return_list {
+  font-size: 20px;
+  font-weight: bold;
+  padding: 8px;
+}
+.header_score {
+  width: 140px;
+  padding-bottom: 10px;
+}
+.header_time {
+  width: 160px;
+  padding-bottom: 10px;
+}
+.header_space {
+}
+.header_button {
+  width: 310px; /**/
+  text-align: right;
+  padding-bottom: 10px;
+}
+.icon {
+  border: 1px solid #CCCCCC;
+  height: 155px;
+  width: 200px;
+  display: inline-block;
+  margin: 7px;
+  cursor: pointer;
+  vertical-align: top;
+}
+.icon div {
+  text-align: center;
+}
+.icon_title {
+  color: #0000CC;
+}
+.icon_title a:hover {
+  text-decoration: none;
+}
+.icon_img {
+  text-align: center;
+}
+.icon_img_td {
+  height: 90px;
+  width: 230px;
+  vertical-align: middle; /* not effective */
+  text-align: center;
+} 
+.icon_img img {
+  max-height: 80px;
+  max-width: 150px;
+  cursor: pointer;
+}
+.menu_item {
+  color: #0000AA;
+  cursor: pointer;
+}
+.icon_title {
+  font-size: 17px;
+  font-weight: bold;
+  margin-top: 0.3em;
+  margin-bottom: 0.3em;
+}
+.icon_stars {
+  margin: 0.3em;
 }

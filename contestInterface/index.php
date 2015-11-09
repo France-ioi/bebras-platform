@@ -131,7 +131,7 @@
          <input type="radio" id="genre2_male" name="genre2" value="2" autocomplete="off"/><label for="genre2_male" data-i18n="login_male"></label></input>
          </div>
       </p>
-         <p> <span data-i18n="grade_question"></span> <select id="grade2">
+      <p> <span data-i18n="grade_question"></span> <select id="grade2">
        <option value="" data-i18n="grade_select" selected></option>
        <option value="-1" data-i18n="grade_-1"></option>
        <option value="4" data-i18n="grade_4"></option>
@@ -144,7 +144,7 @@
        <option value="11" data-i18n="grade_11"></option>
        <option value="12" data-i18n="grade_12"></option>
        <option value="-4" data-i18n="grade_-4">Autre</option>
-   </select> </p>
+      </select> </p>
    </div>
    <p><button type="button" id="buttonLogin" onclick="validateLoginForm()" data-i18n="login_start_contest"></button><span id="LoginResult" style="color:red"></span></p>
 </div>
@@ -161,43 +161,69 @@
 <div id="divImagesLoading" style="display:none" class="dialog">
   <span id="nbImagesLoaded">0</span> <span data-i18n="images_preloaded"></span>
 </div>
+
 <div id="divQuestions" style="display:none">
-   <div class="questionListHeader">
-      <table id="chrono" width="95%">
-         <tr><td class="fullFeedback">Temps&nbsp;: </td><td><span id='minutes'></span>:<span id='seconds'></span></td></tr>
-         <tr><td class="fullFeedback">Score&nbsp;:</td><td><span id='scoreTotalFullFeedback'></span></td></tr>
-      </table>
-<!--      <p>Cliquez ci-dessous pour changer de question :</p>-->
+   <div class="oldInterface">
+      <div class="questionListHeader">
+         <table class="chrono" width="95%">
+            <tr><td class="fullFeedback">Temps&nbsp;: </td><td><span class='minutes'></span>:<span class='seconds'></span></td></tr>
+            <tr><td class="fullFeedback">Score&nbsp;:</td><td><span class='scoreTotalFullFeedback'></span></td></tr>
+         </table>
+         <p></p>
+         <div class="scoreBonus" style="display:none"><b data-i18n="questions_bonus"></b><br/></div>
+         <div class="rank" width="95%"></div>
+      </div>
+      <div class='questionList'>
+         <span style="color:red" data-i18n="questions_loading"></span>
+      </div>
       <p></p>
-      <div id="scoreBonus" style="display:none"><b data-i18n="questions_bonus"></b><br/></div>
-      <div id="rank" width="95%"></div>
+      <div style="text-align:center;width:180px;">
+         <button type="button" id="buttonClose" style="display:none;" data-i18n="questions_finish_early" onclick='tryCloseContest()'></button>
+      </div>
+      <table class="questionsTable"><tr><td>
+      <div id="divQuestionParams">
+         <table style="width:100%"><tr>
+            <td style="width:10%"><img src="images/castor_small.png" style="width:65px" /></td>
+            <td><div id="questionTitle"></div></td>
+            <td style="width:25%"><div id="questionPoints"></div></td>
+         </tr></table>
+      </div>
+      </table>
    </div>
-   <div id="questionList" class='questionList'>
-   <span style="color:red" data-i18n="questions_loading"></span>
+   <div class="newInterface">
+      <div class="header">
+         <table class="header_table">
+            <tr>
+               <td class="header_logo"><img class="header_logo_img" src="images/castor_small.png" /></td>
+               <td class="header_score">Score&nbsp;:<br/><b><span class='scoreTotalFullFeedback'></span></b></td>
+               <td class="header_time">Temps restant&nbsp;: <br/><b><span class='minutes'></span>:<span class='seconds'></span></b></td>
+               <td class="header_rank" style="display:none">Classement&nbsp; <br/><b><span class="rank" width="95%"></span></b></td>
+               <td class="header_button">
+                 <input class="button_return_list" type="button" value="Retour à la liste des questions" onclick="backToList()"></input>
+               </td>
+            </tr>
+         </table>
+      </div>
+      <div class="header_sep_top"></div>
+      <div class="layout_table_wrapper">
+         <div class="questionList task_icons">
+            <span style="color:red" data-i18n="questions_loading"></span>
+         </div>
+      </div>
+      <div class="header_sep_bottom"></div>
    </div>
-   <p></p>
-   <div style="text-align:center;width:180px;">
-      <button type="button" id="buttonClose" style="display:none;" data-i18n="questions_finish_early" onclick='tryCloseContest()'></button>
-   </div>
-   <table class="questionsTable"><tr><td>
-   <div id="divQuestionParams">
-      <table style="width:100%"><tr>
-         <td style="width:10%"><img src="images/castor_small.png" style="width:65px" /></td>
-         <td><div id="questionTitle"></div></td>
-         <td style="width:25%"><!--<div id="questionType"></div>--><div id="questionPoints"></div></td>
-      </tr></table>
-   </div>
-   </td></tr>
-   <tr><td>
-   <span id="divQuestionsContent">
+   <span id="divQuestionsContent" style="display:none">
    </span>
    <span id="divSolutionsContent" style="display:none">
    </span>
    <span id="divGradersContent" style="display:none">
    </span>
-   </td></tr></table>
 </div>
+
 <div id="question-iframe-container">
+   <div class="newInterface">
+      <span id="questionTitle"></span>&nbsp;<span id="questionStars"></span>
+   </div>
    <iframe src="about:blank" id="question-iframe" scrolling="no"></iframe>
 </div>
 <div id="divClosed" style="display:none" class="dialog">
@@ -240,6 +266,7 @@
   script_tag('/bower_components/utf8/utf8.js');
   script_tag('/bower_components/base64/base64.min.js');
   script_tag('/bower_components/pem-platform/task-pr.js');
+  script_tag('/raphael-min.js');
   script_tag('/common.js');
   global $config;
 ?>
