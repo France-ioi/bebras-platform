@@ -185,7 +185,7 @@
             <div id="divQuestionParams">
                <table style="width:100%"><tr>
                   <td style="width:10%"><img src="images/castor_small.png" style="width:65px" /></td>
-                  <td><div id="questionTitle"></div></td>
+                  <td><div class="questionTitle"></div></td>
                   <td style="width:25%"><div id="questionPoints"></div></td>
                </tr></table>
             </div>
@@ -222,8 +222,8 @@
 </div>
 
 <div id="question-iframe-container">
-   <div class="newInterface">
-      <span id="questionTitle"></span>&nbsp;<span id="questionStars"></span>
+   <div class="newInterface" style="width:770px;margin:auto;text-align:left;padding: 10px 0 10px">
+      <span class="questionTitle" style="padding-right: 20px"></span><span id="questionStars"></span>
    </div>
    <iframe src="about:blank" id="question-iframe" scrolling="no"></iframe>
 </div>

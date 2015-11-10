@@ -104,7 +104,7 @@ a {
    padding-right: 5px;
 }
 
-#questionTitle {
+.questionTitle {
    text-align: center;
    font-size: 2em;
    font-weight: bold;

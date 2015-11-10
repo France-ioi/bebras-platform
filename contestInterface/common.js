@@ -1782,9 +1782,9 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
             "<td><span class='scoreBad'>" + minScore + "</span></td>" +
             "<td><span class='scoreGood'>+" + maxScore + "</span></td></tr></table>");
       }
-      $("#questionTitle").html(questionName);
+      $(".questionTitle").html(questionName);
       if (newInterface) {
-         drawStars('questionStars', 4, 20, getQuestionScoreRate(questionData), "normal", getNbLockedStars(questionData)); // stars under icon on main page
+         drawStars('questionStars', 4, 24, getQuestionScoreRate(questionData), "normal", getNbLockedStars(questionData)); // stars under icon on main page
       }
       currentQuestionKey = questionKey;
 
