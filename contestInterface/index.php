@@ -227,7 +227,7 @@
    </div>
    <iframe src="about:blank" id="question-iframe" scrolling="no"></iframe>
 </div>
-<div class="newInterface buttonClose" style="display:none;text-align:center">
+<div id="divFooter" style="display:none;text-align:center">
    <div class="header_sep_bottom"></div>
    <button type="button" id="buttonCloseNew" class="buttonClose" data-i18n="questions_finish_early" onclick='tryCloseContest()'></button>
 </div>

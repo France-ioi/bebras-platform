@@ -882,6 +882,7 @@ function fillListQuestionsNew(sortedQuestionIDs, questionsData)
       var questionData = questionsData[sortedQuestionIDs[iQuestionID]];
       drawStars("score_" + questionData.key, 4, 20, getQuestionScoreRate(questionData), "normal", getNbLockedStars(questionData)); // stars under question icon
    }
+   $("#divFooter").show();
 }
 
 function getQuestionScoreRate(questionData) {
