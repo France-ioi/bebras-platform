@@ -2255,7 +2255,7 @@ var drawStars = function(id, nbStars, starWidth, rate, mode, nbStarsLocked) {
       var ratio = Math.min(1, Math.max(0, rate * nbStars  - iStar));
       var xClip = ratio * 100;
       if (xClip > 0) {
-         for (var iPiece in fullStarCoords) {
+         for (var iPiece = 0; iPiece < fullStarCoords.length; iPiece++) {
             var coords = clipPath(fullStarCoords[iPiece], xClip);
             var star = paper.path(pathFromCoords(coords)).attr({
                fill: '#ffc90e',
