@@ -8,6 +8,7 @@ $config = (object) array();
 $config->db = (object) array();
 $config->db->use = 'mysql';
 $config->db->dynamoSessions = false;
+$config->db->dynamoDBPrefix = ''; // prefix for team and team_question
 $config->db->testMode = false;
 
 // MySQL
@@ -50,7 +51,7 @@ $config->teacherInterface->genericPasswordMd5 = '';
 $config->teacherInterface->countryCode = 'FR';
 $config->teacherInterface->generationMode = 'local';
 $config->teacherInterface->sAbsoluteStaticPathOldIE = 'http://coordinateur.castor-informatique.fr/';
-$config->teacherInterface->sContestGenerationPath = '/../contestInterface/contests/';
+$config->teacherInterface->sContestGenerationPath = '/../contestInterface/contests/'; // *MUST* be relative!
 $config->teacherInterface->forceOfficialEmailDomain = false;
 // Point teacherInterface->baseUrl to an URL serving the teacherInterface directory.
 $config->teacherInterface->baseUrl = 'http://coordinateur.castor-informatique.fr';

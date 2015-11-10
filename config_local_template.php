@@ -4,13 +4,14 @@
 $config->db->use = 'mysql';
 $config->db->testMode = false;
 $config->db->dynamoSessions = false;
+$config->db->dynamoDBPrefix = ''; // prefix for team and team_question
 
-   // MySQL
-   $config->db->mysql->host = '127.0.0.1';
-   $config->db->mysql->database = 'beaver_contest';
-   $config->db->mysql->user = '';
-   $config->db->mysql->password = '';
-   $config->db->mysql->logged = false;
+// MySQL
+$config->db->mysql->host = '127.0.0.1';
+$config->db->mysql->database = 'beaver_contest';
+$config->db->mysql->user = '';
+$config->db->mysql->password = '';
+$config->db->mysql->logged = false;
 
 // AWS, if relevant
 $config->aws->key = '';

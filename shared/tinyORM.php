@@ -28,6 +28,7 @@ class tinyOrm {
    private $dynamoDB;
    private $mode;//"mysql" or "dynamoDB"
    private $table_infos;
+   private $ddb_prefix;
    private $hash_range = array(
       'team_question' => ['hash' => 'teamID', 'range' => 'questionID']
    );
@@ -40,6 +41,7 @@ class tinyOrm {
       $this->mode = $config->db->use;
       $this->dynamoDB = $dynamoDB;
       $this->table_infos = $tablesModels;
+      $this->ddb_prefix = $config->db->dynamoDBPrefix;
       if ($config->db->use == 'dynamoDB') {
          $this->marshaler = new Marshaler();
       }
@@ -117,7 +119,7 @@ class tinyOrm {
    private function insertDynamoDB($table, $fields, $options) {
       $fields = $this->normalizeFields($table, $fields, 'dynamoDB');
       $query = array(
-         'TableName' => $table,
+         'TableName' => $this->ddb_prefix . $table,
          'Item' => $this->formatAttributes($fields),
          'ReturnConsumedCapacity' => 'TOTAL'
       );
@@ -127,7 +129,7 @@ class tinyOrm {
    
    public function batchWriteDynamoDB($table, $items) {
       $request = array(
-         'RequestItems' => array($table => array()),
+         'RequestItems' => array($this->ddb_prefix . $table => array()),
          'ReturnConsumedCapacity' => 'TOTAL'
       );
       // 25 items max per request
@@ -144,7 +146,7 @@ class tinyOrm {
          $i = $i + 1;
          $itemRequest = $this->normalizeFields($table, $item, 'dynamoDB');
          $itemRequest = $this->formatAttributes($itemRequest);
-         $request['RequestItems'][$table][] = array('PutRequest' => array('Item' => $itemRequest));
+         $request['RequestItems'][$this->ddb_prefix . $table][] = array('PutRequest' => array('Item' => $itemRequest));
       }
       return $this->dynamoDB->batchWriteItem($request);
    }
@@ -185,7 +187,7 @@ class tinyOrm {
       $where = $this->normalizeFields($table, $where, 'dynamoDB');
       $query = array(
          'ConsistentRead'  => true,
-         'TableName'       => $table,
+         'TableName'       => $this->ddb_prefix . $table,
       );
       $keyConditions = array();
       $queryFilter = array();
@@ -242,7 +244,7 @@ class tinyOrm {
       }
       $query = array(
          'ConsistentRead'  => true,
-         'TableName'       => $table,
+         'TableName'       => $this->ddb_prefix . $table,
       );
       if (count($fields)) {
          $query['AttributesToGet'] = $fields;
@@ -304,7 +306,7 @@ class tinyOrm {
    // works only if ID is in $where // TODO: make the SQL equivalent
    private function updateDynamoDB($table, $fields, $where, $options = null) {
       $request = array(
-         'TableName' => $table,
+         'TableName' => $this->ddb_prefix . $table,
          'Key' => array()
       );
       $keyArray = array('ID' => new Aws\DynamoDb\NumberValue($where['ID']));
@@ -370,7 +372,7 @@ class tinyOrm {
    // works only if ID is in $where // TODO: make the SQL equivalent
    public function deleteDynamoDB($table, $where, $options = null) {
       $request = array(
-         'TableName' => $table,
+         'TableName' => $this->ddb_prefix . $table,
          'Key' => array()
       );
       $keyArray = array('ID' => new Aws\DynamoDb\NumberValue($where['ID']));
