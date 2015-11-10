@@ -348,7 +348,7 @@ var questionIframe = {
       this.tbody = this.doc.getElementsByTagName('body')[0];
 
       this.setHeight(0);
-      this.body.css('width', '822px');
+      this.body.css('width', '770px');
       this.body.css('margin', '0');
       this.body.css('padding', '0');
 
@@ -459,8 +459,12 @@ var questionIframe = {
 
       // Call image preloading
       this.addJsFile(window.contestsRoot + '/' + contestFolder + '/contest_' + contestID + '.js', callback);
-
-      this.body.append('<div id="jsContent"></div><div id="container" style="border: 1px solid #000000; padding: 10px 20px 10px 20px;"><div class="question" style="font-size: 20px; font-weight: bold;">Le contenu du concours est en train d\'être téléchargé, merci de patienter le temps nécessaire.</div></div>');
+      
+      var border = "border: 1px solid #000000;";
+      if (newInterface) {
+         border = "";
+      }
+      this.body.append('<div id="jsContent"></div><div id="container" style="' + border + 'padding: 5px;"><div class="question" style="font-size: 20px; font-weight: bold;">Le contenu du concours est en train d\'être téléchargé, merci de patienter le temps nécessaire.</div></div>');
 
       this.initialized = true;
    },
@@ -503,7 +507,9 @@ var questionIframe = {
               setTimeout(function() {
                  if (!hasDisplayedContestStats) {
                     if (fullFeedback) {
-                       alert("C'est parti ! Notez votre score en haut à gauche qui se met à jour au fur et à mesure de vos réponses !");
+                       if (!newInterface) {
+                          alert("C'est parti ! Notez votre score en haut à gauche qui se met à jour au fur et à mesure de vos réponses !");
+                       }
                     } else {
                        alert(t("contest_starts_now"));
                     }
@@ -1011,7 +1017,7 @@ function setupContest(data) {
          hasAnsweredQuestion = true;
       }
    }
-   $('#buttonClose').show();
+   $('.buttonClose').show();
    // Starts the timer
    TimeManager.init(
       data.timeUsed,
@@ -1485,6 +1491,7 @@ window.tryCloseContest = function() {
 function closeContest(message) {
    hasDisplayedContestStats = true;
    Utils.disableButton("buttonClose");
+   Utils.disableButton("buttonCloseNew");
    $("#divQuestions").hide();
    hideQuestionIframe();
    if (questionIframe.task) {
@@ -2098,7 +2105,7 @@ function showQuestionIframe()
 {
    $('#question-iframe-container').css('width', 'auto');
    $('#question-iframe-container').css('height', 'auto');
-   $('#question-iframe').css('width', '822px');
+   $('#question-iframe').css('width', '770px');
    $('#question-iframe').css('height', 'auto');
 }
 
