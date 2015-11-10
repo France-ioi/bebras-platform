@@ -106,6 +106,10 @@ var platform = {
          return;
       }
 
+      if (mode == "nextImmediate") {
+         platform.nextQuestion(0);
+      }
+
       // Store the answer
       questionIframe.task.getAnswer(function(answer) {
          if (mode == "cancel") {
@@ -145,6 +149,21 @@ var platform = {
          if (success) {success();}
       });
    },
+   nextQuestion: function(delay) {
+      var questionData = questionsData[questionsKeyToID[questionIframe.questionKey]];
+      var nextQuestionID = questionData.nextQuestionID;
+      // Next question
+      if (nextQuestionID !== "0") {
+         setTimeout(function() {
+            window.selectQuestion(nextQuestionID, false);
+         }, delay);
+      }
+      else {
+         setTimeout(function() {
+            alert(t("last_question_message"));
+         }, delay);
+      }
+   },
    continueValidate: function(mode) {
       if (!nextQuestionAuto) {
          return;
@@ -171,17 +190,7 @@ var platform = {
          case 'next':
          case 'done':
             delay = 400;
-            // Next question
-            if (nextQuestionID !== "0") {
-               setTimeout(function() {
-                  window.selectQuestion(nextQuestionID, false);
-               }, delay);
-            }
-            else {
-               setTimeout(function() {
-                  alert(t("last_question_message"));
-               }, delay);
-            }
+            platform.nextQuestion(delay);
             break;
          default:
             // problem!
