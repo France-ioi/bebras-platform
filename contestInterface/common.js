@@ -1592,7 +1592,11 @@ function finalCloseContest(message) {
  * Send the scores to the server, then display the solutions
 */
 function showScoresHat() {
-   // Retrieve the grader of each questions
+   // in case of fullFeedback, we don't need other graders
+   // XXX: bonusScore is not handled for fullFeedback contests
+   if (fullFeedback) {
+      showScores({bonusScore: 0});
+   }
    $.post("graders.php", {SID: SID}, function(data) {
       if (data.status === 'success' && (data.graders || data.gradersUrl)) {
          questionIframe.gradersLoaded = true;
@@ -1603,6 +1607,9 @@ function showScoresHat() {
             $.get(data.gradersUrl, function(content) {
                $('#divGradersContent').html(content);
                showScores(data);
+            }).fail(function() {
+               logError('cannot find '+data.gradersUrl);
+               showScores({bonusScore: 0});
             });
          }
       }
