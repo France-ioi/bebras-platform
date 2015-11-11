@@ -37,10 +37,10 @@ var logToConsole = function(logStr) {
   if (window.console) {
     console.error(logStr);
   }
-}
+};
 
 var nbErrorsSent = 0;
-window.logError = function(error, errormsg) {
+var logError = function(error, errormsg) {
   var logStr = (currentQuestionKey ? currentQuestionKey+': ' : '')+error+(errormsg ? ' '+errormsg : '');
   logToConsole(logStr);
   nbErrorsSent = nbErrorsSent + 1;
@@ -49,12 +49,14 @@ window.logError = function(error, errormsg) {
   }
   $.post('logError.php', {errormsg: logStr}, function(data) {
     if (!data || !data.success) {
-      logToConsole('error from logError.php')
+      logToConsole('error from logError.php');
     }
   }, 'json').fail(function() {
     logToConsole('error calling logError.php');
   });
-}
+};
+
+window.logError = logError;
 
 /**
  * Old IE versions does not implement the Array.indexOf function
@@ -98,7 +100,7 @@ var platform = {
    getTaskParams: function(key, defaultValue, success, error) {
       var questionData = questionsData[questionsKeyToID[questionIframe.questionKey]];
       var unlockedLevels = 1;
-      if (questionUnlockedLevels[questionIframe.questionKey] != undefined) {
+      if (questionUnlockedLevels[questionIframe.questionKey] != null) {
          unlockedLevels = questionUnlockedLevels[questionIframe.questionKey];
       }
       var res = {
@@ -868,8 +870,9 @@ function fillListQuestions(sortedQuestionIDs, questionsData)
 function fillListQuestionsNew(sortedQuestionIDs, questionsData)
 {
    var strListQuestions = "";
-   for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
-      var questionData = questionsData[sortedQuestionIDs[iQuestionID]];
+   var iQuestionID, questionData;
+   for (iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
+      questionData = questionsData[sortedQuestionIDs[iQuestionID]];
       var encodedName = questionData.name.replace("'", "&rsquo;");
 
       strListQuestions += 
@@ -901,8 +904,8 @@ function fillListQuestionsNew(sortedQuestionIDs, questionsData)
    }
    $(".questionList").html(strListQuestions);
    updateUnlockedLevels(sortedQuestionIDs);
-   for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
-      var questionData = questionsData[sortedQuestionIDs[iQuestionID]];
+   for (iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
+      questionData = questionsData[sortedQuestionIDs[iQuestionID]];
       drawStars("score_" + questionData.key, 4, 20, getQuestionScoreRate(questionData), "normal", getNbLockedStars(questionData)); // stars under question icon
    }
    $("#divFooter").show();
@@ -929,11 +932,12 @@ function updateUnlockedLevels(sortedQuestionIDs, updatedQuestionKey) {
    var epsilon = 0.001;
    var nbTasksUnlocked = [5, 0, 0];
    var prevQuestionUnlockedLevels = {};
-   for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
-      var questionKey = questionsData[sortedQuestionIDs[iQuestionID]].key;
+   var iQuestionID, questionKey;
+   for (iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
+      questionKey = questionsData[sortedQuestionIDs[iQuestionID]].key;
       prevQuestionUnlockedLevels[questionKey] = questionUnlockedLevels[questionKey];
       questionUnlockedLevels[questionKey] = 0;
-      if (scores[questionKey] != undefined) {
+      if (scores[questionKey] != null) {
          var score = scores[questionKey].score;
          var maxScore = scores[questionKey].maxScore;
          if (score >= (maxScore / 2) - epsilon) {
@@ -951,9 +955,9 @@ function updateUnlockedLevels(sortedQuestionIDs, updatedQuestionKey) {
          }
       }
    }
-   for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
+   for (iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
       var questionData = questionsData[sortedQuestionIDs[iQuestionID]];
-      var questionKey = questionData.key;
+      questionKey = questionData.key;
       for (var iLevel = 0; iLevel < 3; iLevel++) {
          if (nbTasksUnlocked[iLevel] > 0) {
             if (questionUnlockedLevels[questionKey] < iLevel + 1) {
@@ -978,8 +982,7 @@ function updateUnlockedLevels(sortedQuestionIDs, updatedQuestionKey) {
             drawStars('questionStars', 4, 20, scoreRate, "normal", nbLocked); // stars in question title
          }
       }
-
-   };
+   }
 }
 
 /*
@@ -1772,7 +1775,7 @@ window.backToList = function() {
    $(".questionList").show();
    $("#question-iframe-container").hide();
    $(".button_return_list").prop("disabled",true);
-}
+};
 
 window.selectQuestion = function(questionID, clicked, noLoad) {
    $("body").scrollTop(0);
@@ -2314,7 +2317,7 @@ var drawStars = function(id, nbStars, starWidth, rate, mode, nbStarsLocked) {
          'stroke-width': 5 * scaleFactor
       }).transform('s' + scaleFactor + ',' + scaleFactor + ' 0,0 t' + (deltaX / scaleFactor) + ',0');
    }
-}
+};
 
 
   $(init);
