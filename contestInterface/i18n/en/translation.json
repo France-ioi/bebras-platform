@@ -105,5 +105,6 @@
     "grade_select": "Select your grade",
     "grade_question": "What grade are you in?",
     "grade_-1": "Teacher",
-    "grade_-4": "Other"
+    "grade_-4": "Other",
+    "question_locked": "Question locked"
 }

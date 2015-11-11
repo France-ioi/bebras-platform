@@ -105,5 +105,6 @@
     "grade_select": "Sélectionnez votre classe",
     "grade_question": "En quelle classe êtes-vous ?",
     "grade_-1": "Je suis un enseignant",
-    "grade_-4": "Autre"
+    "grade_-4": "Autre",
+    "question_locked": "Question à débloquer"
 }

@@ -882,7 +882,7 @@ function fillListQuestionsNew(sortedQuestionIDs, questionsData)
             '<div class="questionScore" style="margin:auto" id="score_' + questionData.key + '"></div>' +
          '</span>' +
          '<span id="place_' + questionData.key + '" class="icon">' +
-            '<div class="icon_title" style="color:gray">Question à débloquer</div>' +
+            '<div class="icon_title" style="color:gray">'+t("question_locked")+'</div>' +
             '<div class="icon_img">' +
                '<table>' +
                   '<tr>' +
