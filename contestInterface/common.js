@@ -33,6 +33,11 @@ var delaySendingAttempts = 60000;
 var nbSubmissions = 0;
 var t = i18n.t;
 
+window.logError = function(error, errormsg) {
+  if (window.console) {
+    console.error(error+(errormsg ? ' '+errormsg : ''));
+  }
+}
 
 /**
  * Old IE versions does not implement the Array.indexOf function
@@ -113,7 +118,7 @@ var platform = {
          }
          var questionData = questionsData[questionsKeyToID[questionIframe.questionKey]];
          if (fullFeedback) {
-            questionIframe.iframe.contentWindow.grader.gradeTask(answer, null, function(score, message) {
+            questionIframe.task.gradeAnswer(answer, null, function(score, message) {
                if (score < questionData.maxScore) {
                   mode = "stay";
                }
@@ -136,14 +141,14 @@ var platform = {
                }
                computeFullFeedbackScore();
                platform.continueValidate(mode);
-            });
+            }, logError);
          } else {
             submitAnswer(questionIframe.questionKey, answer, null);
             answers[questionIframe.questionKey] = answer;
             platform.continueValidate(mode);
          }
          if (success) {success();}
-      });
+      }, logError);
    },
    continueValidate: function(mode) {
       if (!nextQuestionAuto) {
@@ -469,23 +474,23 @@ var questionIframe = {
               if (typeof defaultAnswers[questionIframe.questionKey] == 'undefined') {
                  task.getAnswer(function(strAnswer) {
                     defaultAnswers[questionIframe.questionKey] = strAnswer;
-                 });
+                 }, logError);
               }
               task.getHeight(function(height) {
                  platform.updateHeight(height);
-              });
-           });
-        });
+              }, logError);
+           }, logError);
+        }, logError);
         // Iframe height "hack" TODO: why two timers?
         setTimeout(function() {
            task.getHeight(function(height) {
               platform.updateHeight(height);
-           });
+           }, logError);
         }, 500);
         setTimeout(function() {
            task.getHeight(function(height) {
               platform.updateHeight(height);
-           });
+           }, logError);
         }, 1000);
 
         // TODO : test without timeout : should not be needed.
@@ -512,7 +517,7 @@ var questionIframe = {
               var answer = answers[questionIframe.questionKey];
               task.reloadAnswer(answer, function() {
                  nextStep();
-              });
+              }, logError);
            } else {
               nextStep();
            }
@@ -583,6 +588,10 @@ var questionIframe = {
          var that = this;
          if (questionIframe.task && questionIframe.task.iframe_loaded) {
             questionIframe.task.unload(function() {
+               that.loaded = false;
+               that.loadQuestion(taskViews, questionKey, callback);
+            }, function() {
+               logError(arguments);
                that.loaded = false;
                that.loadQuestion(taskViews, questionKey, callback);
             });   
@@ -814,10 +823,7 @@ function fillListQuestions(sortedQuestionIDs, questionsData)
          "</td>" + 
          "<td class='questionScore' id='score_" + questionData.key + "'>" +
             strScore +
-         "</td></tr>";
-      if (newInterface) {
-         strListQuestions += "<tr id='place_" + questionData.key + "'><td></td><td class='questionToUnlock'>Question à débloquer</td></tr>";
-      }
+         "</td></tr><tr id='place_" + questionData.key + "'><td></td><td class='questionToUnlock'>Question à débloquer</td></tr>";
 
    }
    $(".questionList").html("<table>" + strListQuestions + "</table>");
@@ -1481,6 +1487,9 @@ function closeContest(message) {
    if (questionIframe.task) {
       questionIframe.task.unload(function() {
          doCloseContest(message);
+      }, function() {
+         logError(arguments);
+         doCloseContest(message);
       });
    } else {
       doCloseContest(message);
@@ -1798,7 +1807,7 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
             }
          }
          nextStep();
-      });
+      }, logError);
    } else {
       nextStep();
    }
@@ -1817,6 +1826,11 @@ function markAnswered(questionKey, answer) {
 }
 
 function submitAnswer(questionKey, answer, score) {
+   if (typeof answer !== 'string') {
+      console.error(answer);
+      logError('trying to submit non-string answer: '+answer);
+      return;
+   }
    $("#bullet_" + questionKey).html("&loz;");
    answersToSend[questionsKeyToID[questionKey]] = { answer: answer, sending:false, 'score': score };
    nbSubmissions++;
@@ -2001,13 +2015,15 @@ function loadSolutions(data) {
             if (questionIframe.loaded) {
                questionIframe.task.unload(function() {
                   questionIframe.loadQuestion({'task': true, 'solution': true, 'grader': true}, currentQuestionKey);
+               }, function() {
+                  logError(arguments);
+                  questionIframe.loadQuestion({'task': true, 'solution': true, 'grader': true}, currentQuestionKey);
                });
             } else {
                questionIframe.loadQuestion({'task': true, 'solution': true, 'grader': true}, currentQuestionKey);
             }
             alert(t("check_score_detail"));
-         });
-
+         }, logError);
      });
 
      questionIframe.iframe.contentWindow.ImagesLoader.preload(contestFolder);
