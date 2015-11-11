@@ -39,9 +39,14 @@ var logToConsole = function(logStr) {
   }
 }
 
+var nbErrorsSent = 0;
 window.logError = function(error, errormsg) {
   var logStr = (currentQuestionKey ? currentQuestionKey+': ' : '')+error+(errormsg ? ' '+errormsg : '');
   logToConsole(logStr);
+  nbErrorsSent = nbErrorsSent + 1;
+  if (nbErrorsSent > 10) {
+    return;
+  }
   $.post('logError.php', {errormsg: logStr}, function(data) {
     if (!data || !data.success) {
       logToConsole('error from logError.php')
