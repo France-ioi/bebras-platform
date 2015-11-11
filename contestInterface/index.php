@@ -178,16 +178,18 @@
       </div>
       <p></p>
       <div style="text-align:center;width:180px;">
-         <button type="button" id="buttonClose" style="display:none;" data-i18n="questions_finish_early" onclick='tryCloseContest()'></button>
+         <button type="button" id="buttonClose" class="buttonClose" style="display:none;" data-i18n="questions_finish_early" onclick='tryCloseContest()'></button>
       </div>
-      <table class="questionsTable"><tr><td>
-      <div id="divQuestionParams">
-         <table style="width:100%"><tr>
-            <td style="width:10%"><img src="images/castor_small.png" style="width:65px" /></td>
-            <td><div id="questionTitle"></div></td>
-            <td style="width:25%"><div id="questionPoints"></div></td>
-         </tr></table>
-      </div>
+      <table class="questionsTable">
+         <tr><td>
+            <div id="divQuestionParams">
+               <table style="width:100%"><tr>
+                  <td style="width:10%"><img src="images/castor_small.png" style="width:65px" /></td>
+                  <td><div class="questionTitle"></div></td>
+                  <td style="width:25%"><div id="questionPoints"></div></td>
+               </tr></table>
+            </div>
+         </td></tr>
       </table>
    </div>
    <div class="newInterface">
@@ -210,7 +212,6 @@
             <span style="color:red" data-i18n="questions_loading"></span>
          </div>
       </div>
-      <div class="header_sep_bottom"></div>
    </div>
    <span id="divQuestionsContent" style="display:none">
    </span>
@@ -221,11 +222,16 @@
 </div>
 
 <div id="question-iframe-container">
-   <div class="newInterface">
-      <span id="questionTitle"></span>&nbsp;<span id="questionStars"></span>
+   <div class="newInterface" style="width:770px;margin:auto;text-align:left;padding: 10px 0 10px">
+      <span class="questionTitle" style="padding-right: 20px"></span><span id="questionStars"></span>
    </div>
    <iframe src="about:blank" id="question-iframe" scrolling="no"></iframe>
 </div>
+<div id="divFooter" style="display:none;text-align:center">
+   <div class="header_sep_bottom"></div>
+   <button type="button" id="buttonCloseNew" class="buttonClose" data-i18n="questions_finish_early" onclick='tryCloseContest()'></button>
+</div>
+
 <div id="divClosed" style="display:none" class="dialog">
    <h3 id="divClosedMessage">
    </h3>
@@ -296,4 +302,6 @@ window.sAbsoluteStaticPath = <?= json_encode($config->teacherInterface->sAbsolut
 window.contestsRoot = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathOldIE.'/contests') ?>;
 </script>
 <![endif]-->
+<div style="height:400px">
+</div>
 </body></html>

@@ -111,6 +111,10 @@ var platform = {
          return;
       }
 
+      if (mode == "nextImmediate") {
+         platform.nextQuestion(0);
+      }
+
       // Store the answer
       questionIframe.task.getAnswer(function(answer) {
          if (mode == "cancel") {
@@ -150,6 +154,21 @@ var platform = {
          if (success) {success();}
       }, logError);
    },
+   nextQuestion: function(delay) {
+      var questionData = questionsData[questionsKeyToID[questionIframe.questionKey]];
+      var nextQuestionID = questionData.nextQuestionID;
+      // Next question
+      if (nextQuestionID !== "0") {
+         setTimeout(function() {
+            window.selectQuestion(nextQuestionID, false);
+         }, delay);
+      }
+      else {
+         setTimeout(function() {
+            alert(t("last_question_message"));
+         }, delay);
+      }
+   },
    continueValidate: function(mode) {
       if (!nextQuestionAuto) {
          return;
@@ -176,17 +195,7 @@ var platform = {
          case 'next':
          case 'done':
             delay = 400;
-            // Next question
-            if (nextQuestionID !== "0") {
-               setTimeout(function() {
-                  window.selectQuestion(nextQuestionID, false);
-               }, delay);
-            }
-            else {
-               setTimeout(function() {
-                  alert(t("last_question_message"));
-               }, delay);
-            }
+            platform.nextQuestion(delay);
             break;
          default:
             // problem!
@@ -344,7 +353,7 @@ var questionIframe = {
       this.tbody = this.doc.getElementsByTagName('body')[0];
 
       this.setHeight(0);
-      this.body.css('width', '822px');
+      this.body.css('width', '770px');
       this.body.css('margin', '0');
       this.body.css('padding', '0');
 
@@ -455,8 +464,12 @@ var questionIframe = {
 
       // Call image preloading
       this.addJsFile(window.contestsRoot + '/' + contestFolder + '/contest_' + contestID + '.js', callback);
-
-      this.body.append('<div id="jsContent"></div><div id="container" style="border: 1px solid #000000; padding: 10px 20px 10px 20px;"><div class="question" style="font-size: 20px; font-weight: bold;">Le contenu du concours est en train d\'être téléchargé, merci de patienter le temps nécessaire.</div></div>');
+      
+      var border = "border: 1px solid #000000;";
+      if (newInterface) {
+         border = "";
+      }
+      this.body.append('<div id="jsContent"></div><div id="container" style="' + border + 'padding: 5px;"><div class="question" style="font-size: 20px; font-weight: bold;">Le contenu du concours est en train d\'être téléchargé, merci de patienter le temps nécessaire.</div></div>');
 
       this.initialized = true;
    },
@@ -499,7 +512,9 @@ var questionIframe = {
               setTimeout(function() {
                  if (!hasDisplayedContestStats) {
                     if (fullFeedback) {
-                       alert("C'est parti ! Notez votre score en haut à gauche qui se met à jour au fur et à mesure de vos réponses !");
+                       if (!newInterface) {
+                          alert("C'est parti ! Notez votre score en haut à gauche qui se met à jour au fur et à mesure de vos réponses !");
+                       }
                     } else {
                        alert(t("contest_starts_now"));
                     }
@@ -841,7 +856,7 @@ function fillListQuestionsNew(sortedQuestionIDs, questionsData)
       var encodedName = questionData.name.replace("'", "&rsquo;");
 
       strListQuestions += 
-         '<div id="row_' + questionData.key + '" class="icon" onclick="selectQuestion(' + questionData.ID + ', true)">' +
+         '<span id="row_' + questionData.key + '" class="icon" onclick="selectQuestion(' + questionData.ID + ', true)">' +
             '<div class="icon_title"><span class="questionBullet" id="bullet_' + questionData.key + '"></span>&nbsp;' + encodedName + '&nbsp;&nbsp;</div>' +
             '<div class="icon_img">' +
                '<table>' +
@@ -853,8 +868,8 @@ function fillListQuestionsNew(sortedQuestionIDs, questionsData)
                '</table>' +
             '</div>' +
             '<div class="questionScore" style="margin:auto" id="score_' + questionData.key + '"></div>' +
-         '</div>' +
-         '<div id="place_' + questionData.key + '" class="icon">' +
+         '</span>' +
+         '<span id="place_' + questionData.key + '" class="icon">' +
             '<div class="icon_title" style="color:gray">Question à débloquer</div>' +
             '<div class="icon_img">' +
                '<table>' +
@@ -865,7 +880,7 @@ function fillListQuestionsNew(sortedQuestionIDs, questionsData)
                   '</tr>' +
                '</table>' +
             '</div>' +
-         '</div>';
+         '</span>';
    }
    $(".questionList").html(strListQuestions);
    updateUnlockedLevels(sortedQuestionIDs);
@@ -873,6 +888,7 @@ function fillListQuestionsNew(sortedQuestionIDs, questionsData)
       var questionData = questionsData[sortedQuestionIDs[iQuestionID]];
       drawStars("score_" + questionData.key, 4, 20, getQuestionScoreRate(questionData), "normal", getNbLockedStars(questionData)); // stars under question icon
    }
+   $("#divFooter").show();
 }
 
 function getQuestionScoreRate(questionData) {
@@ -1008,7 +1024,7 @@ function setupContest(data) {
          hasAnsweredQuestion = true;
       }
    }
-   $('#buttonClose').show();
+   $('.buttonClose').show();
    // Starts the timer
    TimeManager.init(
       data.timeUsed,
@@ -1482,6 +1498,7 @@ window.tryCloseContest = function() {
 function closeContest(message) {
    hasDisplayedContestStats = true;
    Utils.disableButton("buttonClose");
+   Utils.disableButton("buttonCloseNew");
    $("#divQuestions").hide();
    hideQuestionIframe();
    if (questionIframe.task) {
@@ -1774,9 +1791,9 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
             "<td><span class='scoreBad'>" + minScore + "</span></td>" +
             "<td><span class='scoreGood'>+" + maxScore + "</span></td></tr></table>");
       }
-      $("#questionTitle").html(questionName);
+      $(".questionTitle").html(questionName);
       if (newInterface) {
-         drawStars('questionStars', 4, 20, getQuestionScoreRate(questionData), "normal", getNbLockedStars(questionData)); // stars under icon on main page
+         drawStars('questionStars', 4, 24, getQuestionScoreRate(questionData), "normal", getNbLockedStars(questionData)); // stars under icon on main page
       }
       currentQuestionKey = questionKey;
 
@@ -2105,7 +2122,7 @@ function showQuestionIframe()
 {
    $('#question-iframe-container').css('width', 'auto');
    $('#question-iframe-container').css('height', 'auto');
-   $('#question-iframe').css('width', '822px');
+   $('#question-iframe').css('width', '770px');
    $('#question-iframe').css('height', 'auto');
 }
 
@@ -2262,7 +2279,7 @@ var drawStars = function(id, nbStars, starWidth, rate, mode, nbStarsLocked) {
       var ratio = Math.min(1, Math.max(0, rate * nbStars  - iStar));
       var xClip = ratio * 100;
       if (xClip > 0) {
-         for (var iPiece in fullStarCoords) {
+         for (var iPiece = 0; iPiece < fullStarCoords.length; iPiece++) {
             var coords = clipPath(fullStarCoords[iPiece], xClip);
             var star = paper.path(pathFromCoords(coords)).attr({
                fill: '#ffc90e',
