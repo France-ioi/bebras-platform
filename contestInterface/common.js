@@ -850,7 +850,7 @@ function fillListQuestions(sortedQuestionIDs, questionsData)
          "</td>" + 
          "<td class='questionScore' id='score_" + questionData.key + "'>" +
             strScore +
-         "</td></tr><tr id='place_" + questionData.key + "'><td></td><td class='questionToUnlock'>Question à débloquer</td></tr>";
+         "</td></tr>";
 
    }
    $(".questionList").html("<table>" + strListQuestions + "</table>");
@@ -1397,7 +1397,7 @@ function initContestData(data) {
    contestFolder = data.contestFolder;
    fullFeedback = parseInt(data.fullFeedback);
    nextQuestionAuto = parseInt(data.nextQuestionAuto);
-   newInterface = parseInt(data.newInterface);
+   newInterface = !!parseInt(data.newInterface);
    contestStatus = data.contestStatus;
    TimeManager.setTotalTime(data.nbMinutes * 60);
    if (newInterface) {
