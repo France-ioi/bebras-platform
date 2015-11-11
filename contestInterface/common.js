@@ -9,7 +9,7 @@ var nextQuestionAuto;
 var newInterface;
 var teamID = 0;
 var teamPassword = "";
-var questionsData = [];
+var questionsData = {};
 var questionsKeyToID = {};
 var questionsToGrade = [];
 var scores = {};
