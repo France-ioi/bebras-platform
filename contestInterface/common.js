@@ -850,7 +850,7 @@ function fillListQuestionsNew(sortedQuestionIDs, questionsData)
       var encodedName = questionData.name.replace("'", "&rsquo;");
 
       strListQuestions += 
-         '<div id="row_' + questionData.key + '" class="icon" onclick="selectQuestion(' + questionData.ID + ', true)">' +
+         '<span id="row_' + questionData.key + '" class="icon" onclick="selectQuestion(' + questionData.ID + ', true)">' +
             '<div class="icon_title"><span class="questionBullet" id="bullet_' + questionData.key + '"></span>&nbsp;' + encodedName + '&nbsp;&nbsp;</div>' +
             '<div class="icon_img">' +
                '<table>' +
@@ -862,8 +862,8 @@ function fillListQuestionsNew(sortedQuestionIDs, questionsData)
                '</table>' +
             '</div>' +
             '<div class="questionScore" style="margin:auto" id="score_' + questionData.key + '"></div>' +
-         '</div>' +
-         '<div id="place_' + questionData.key + '" class="icon">' +
+         '</span>' +
+         '<span id="place_' + questionData.key + '" class="icon">' +
             '<div class="icon_title" style="color:gray">Question à débloquer</div>' +
             '<div class="icon_img">' +
                '<table>' +
@@ -874,7 +874,7 @@ function fillListQuestionsNew(sortedQuestionIDs, questionsData)
                   '</tr>' +
                '</table>' +
             '</div>' +
-         '</div>';
+         '</span>';
    }
    $(".questionList").html(strListQuestions);
    updateUnlockedLevels(sortedQuestionIDs);

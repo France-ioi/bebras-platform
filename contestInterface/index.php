@@ -302,4 +302,6 @@ window.sAbsoluteStaticPath = <?= json_encode($config->teacherInterface->sAbsolut
 window.contestsRoot = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathOldIE.'/contests') ?>;
 </script>
 <![endif]-->
+<div style="height:400px">
+</div>
 </body></html>
