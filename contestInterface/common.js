@@ -1600,6 +1600,7 @@ function showScoresHat() {
    // in case of fullFeedback, we don't need other graders
    if (fullFeedback) {
       showScores({bonusScore: bonusScore});
+      return;
    }
    $.post("graders.php", {SID: SID}, function(data) {
       if (data.status === 'success' && (data.graders || data.gradersUrl)) {
@@ -1666,11 +1667,9 @@ function gradeQuestion(i) {
    var curQuestion = questionsToGrade[i];
 
    questionIframe.load({'task': true, 'grader': true}, curQuestion.questionKey, function() {
-      var score = 0;
-      questionIframe.iframe.contentWindow.grader.gradeTask(curQuestion.answer, null, function(newScore, message) {
-         score = newScore;
+      questionIframe.task.gradeAnswer(curQuestion.answer, null, function(newScore, message) {
          scores[curQuestion.questionKey] = {
-            score: score,
+            score: newScore,
             maxScore: curQuestion.maxScore
          };
          teamScore += parseInt(scores[curQuestion.questionKey].score);
@@ -1867,7 +1866,6 @@ function markAnswered(questionKey, answer) {
 
 function submitAnswer(questionKey, answer, score) {
    if (typeof answer !== 'string') {
-      console.error(answer);
       logError('trying to submit non-string answer: '+answer);
       return;
    }
