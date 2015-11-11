@@ -370,7 +370,7 @@ var questionIframe = {
       this.tbody = this.doc.getElementsByTagName('body')[0];
 
       this.setHeight(0);
-      this.body.css('width', '770px');
+      this.body.css('width', '782px');
       this.body.css('margin', '0');
       this.body.css('padding', '0');
 
@@ -1690,7 +1690,7 @@ function sendScores() {
          }
          $(".questionScore").css("width", "50px");
          $(".questionListHeader").css("width", "265px");
-         $(".question, #divQuestionParams, #divClosed, .questionsTable").css("left", "270px");
+         $(".question, #divQuestionParams, #divClosed, .questionsTable").css("left", "272px");
          var sortedQuestionIDs = getSortedQuestionIDs(questionsData);
          for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
             var questionID = sortedQuestionIDs[iQuestionID];
@@ -2145,7 +2145,7 @@ function showQuestionIframe()
 {
    $('#question-iframe-container').css('width', 'auto');
    $('#question-iframe-container').css('height', 'auto');
-   $('#question-iframe').css('width', '770px');
+   $('#question-iframe').css('width', '782px');
    $('#question-iframe').css('height', 'auto');
 }
 
