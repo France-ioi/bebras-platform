@@ -102,6 +102,20 @@ under some precise assumptions.
 See `shared/transferTable.php` for a small script to transfer a table from MySQL
 to DynamoDB.
 
+## DynamodDB backup/recovery
+
+For backup/recoveries, install dynamo-archive: `npm install -g dynamo-archive` as root.
+
+You can run a cron on `shared/dump-dynamodb.sh`, adjusting the `RATE` variable
+(representing the rate over 100 of "read speed used by the script" / "read throughput")
+and the `BUCKETNAME` variable. It will dump the team and team_question bases in a file
+with one json entry per line, and upload it on s3.
+
+To recover from a backup file:
+
+`aws s3 cp s3://$BUCKET/$FILE - | dynamo-restore --table $TABLE --key $KEY --secret $SECRET --region $REGION`
+
+replacing the different variables starting with `$`.
 
 ## Elastic Beanstalk (EBS)
 
