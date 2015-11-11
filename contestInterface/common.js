@@ -1593,7 +1593,6 @@ function finalCloseContest(message) {
 */
 function showScoresHat() {
    // in case of fullFeedback, we don't need other graders
-   // XXX: bonusScore is not handled for fullFeedback contests
    if (fullFeedback) {
       showScores({bonusScore: bonusScore});
    }
