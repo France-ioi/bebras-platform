@@ -852,7 +852,7 @@ function fillListQuestions(sortedQuestionIDs, questionsData)
          }
       }
       strListQuestions += "<tr id='row_" + questionData.key + "'><td class='questionBullet' id='bullet_" + questionData.key + "'></td>" +
-         "<td class='questionLink' id='link_" + questionData.key + "' " + "onclick='selectQuestion(\"" + questionData.ID + "\", true)'>" +
+         "<td class='questionLink' id='link_" + questionData.key + "' " + "onclick='selectQuestion(\\\"" + questionData.ID + "\\\", true)'>" +
             encodedName + 
          "</td>" + 
          "<td class='questionScore' id='score_" + questionData.key + "'>" +
