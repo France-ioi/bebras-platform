@@ -38,7 +38,6 @@ $contestID = $row->ID;
 $contestFolder = $row->folder;
 
 $gradersUrl = null;
-$gradersUrlIE = null;
 $graders = null;
 if ($config->teacherInterface->generationMode == 'local') {
    $graders = file_get_contents(__DIR__.$config->teacherInterface->sContestGenerationPath.$contestFolder.'/contest_'.$contestID.'_graders.html');
@@ -59,7 +58,7 @@ if ($config->teacherInterface->generationMode == 'local') {
    $request = $s3Client->createPresignedRequest($cmd, '+10 minutes');
    $gradersUrl = (string) $request->getUri();
 } else {
-   $gradersUrl = $config->teacherInterface->sAbsoluteStaticPath.'contests/'.$contestFolder.'/contest_'.$contestID.'_graders.html';
+   $gradersUrl = $config->teacherInterface->sAbsoluteStaticPath.'/contests/'.$contestFolder.'/contest_'.$contestID.'_graders.html';
 }
 
 header("Content-Type: application/json");
