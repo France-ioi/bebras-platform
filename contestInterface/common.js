@@ -852,7 +852,7 @@ function fillListQuestions(sortedQuestionIDs, questionsData)
          }
       }
       strListQuestions += "<tr id='row_" + questionData.key + "'><td class='questionBullet' id='bullet_" + questionData.key + "'></td>" +
-         "<td class='questionLink' id='link_" + questionData.key + "' " + "onclick='selectQuestion(" + questionData.ID + ", true)'>" +
+         "<td class='questionLink' id='link_" + questionData.key + "' " + "onclick='selectQuestion(\"" + questionData.ID + "\", true)'>" +
             encodedName + 
          "</td>" + 
          "<td class='questionScore' id='score_" + questionData.key + "'>" +
@@ -876,7 +876,7 @@ function fillListQuestionsNew(sortedQuestionIDs, questionsData)
       var encodedName = questionData.name.replace("'", "&rsquo;");
 
       strListQuestions += 
-         '<span id="row_' + questionData.key + '" class="icon" onclick="selectQuestion(' + questionData.ID + ', true)">' +
+         '<span id="row_' + questionData.key + '" class="icon" onclick="selectQuestion(\"' + questionData.ID + '\", true)">' +
             '<div class="icon_title"><span class="questionBullet" id="bullet_' + questionData.key + '"></span>&nbsp;' + encodedName + '&nbsp;&nbsp;</div>' +
             '<div class="icon_img">' +
                '<table>' +
