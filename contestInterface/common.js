@@ -33,10 +33,22 @@ var delaySendingAttempts = 60000;
 var nbSubmissions = 0;
 var t = i18n.t;
 
-window.logError = function(error, errormsg) {
+var logToConsole = function(logStr) {
   if (window.console) {
-    console.error(error+(errormsg ? ' '+errormsg : ''));
+    console.error(logStr);
   }
+}
+
+window.logError = function(error, errormsg) {
+  var logStr = error+(errormsg ? ' '+errormsg : '');
+  logToConsole(logStr);
+  $.post('logError.php', {errormsg: logStr}, function(data) {
+    if (!data || !data.success) {
+      logToConsole('error from logError.php')
+    }
+  }, 'json').fail(function() {
+    logToConsole('error calling logError.php');
+  });
 }
 
 /**

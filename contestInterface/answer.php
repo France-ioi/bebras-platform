@@ -61,7 +61,7 @@ function handleAnswers($db, $tinyOrm) {
          $tinyOrm -> batchWrite('team_question', $items, array('teamID', 'questionID', 'answer', 'ffScore', 'date'), array('answer', 'ffScore', 'date'));
       } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
          error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
-         error_log('DynamoDB error trying to write record: teamID: '.$teamID.', questionID: '.$questionID.', items: '.json_encode($items));
+         error_log('DynamoDB error trying to write records: teamID: '.$teamID.', answers: '.json_encode($items).', items: '.json_encode($items));
          echo json_encode((object)array("success" => false, 'error' => 'DynamoDB', 'message' => $e->getAwsErrorCode()));
          return;
       }
