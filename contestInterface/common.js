@@ -40,7 +40,7 @@ var logToConsole = function(logStr) {
 }
 
 window.logError = function(error, errormsg) {
-  var logStr = error+(errormsg ? ' '+errormsg : '');
+  var logStr = (currentQuestionKey ? currentQuestionKey+': ' : '')+error+(errormsg ? ' '+errormsg : '');
   logToConsole(logStr);
   $.post('logError.php', {errormsg: logStr}, function(data) {
     if (!data || !data.success) {
