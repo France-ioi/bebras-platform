@@ -239,7 +239,7 @@ function contestAddContent($contestFolder, $content, &$listParts, &$buffer, &$nu
    $buffer .= $content;
    if ((strlen($buffer) + strlen($content) > 200000) || ($isLast && (strlen($buffer) != 0))) {
       $part = "part_".$numPart.".html";
-      contestPutContents($contestFolder."/".$part, $buffer);
+      contestPutContents($contestFolder."/".$part, "<!doctype html>\n".$buffer);
       $listParts .= $part." ";
       $buffer = "";
       $numPart++;
@@ -251,14 +251,14 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
    if ($status == 'RunningContest' || $status == 'FutureContest') {
       $generateSolutions = false;
    }
-   $strQuestions = '';
+   $strQuestions = "<!doctype html>\n";
    $strQuestionsArr = array();
-   $strSolutions = '';
+   $strSolutions = "<!doctype html>\n";
    $images = array();
    $imagesSols = array();
    $jsModulesRes = array();
    $cssModulesRes = array();
-   $strGraders = "";
+   $strGraders = "<!doctype html>\n";
 
    $tasks = json_decode($_REQUEST['tasks'], true);
    $numPart = 0;
