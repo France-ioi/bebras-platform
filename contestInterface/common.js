@@ -173,7 +173,25 @@ var platform = {
          if (success) {success();}
       }, logError);
    },
+   firstNonVisitedQuestion(delay) {
+      var sortedQuestionIDs = getSortedQuestionIDs(questionsData);
+      for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
+         var questionID = sortedQuestionIDs[iQuestionID];
+         var questionData = questionsData[questionID];
+         if ((questionUnlockedLevels[questionData.key] > 0) && (!questionData.visited)) {
+            setTimeout(function() {
+               window.selectQuestion(questionID, false);
+            }, delay);
+            return;
+         }
+      }
+      window.backToList();
+   },
    nextQuestion: function(delay) {
+      if (newInterface) {
+         this.firstNonVisitedQuestion(delay);
+         return;
+      }
       var questionData = questionsData[questionsKeyToID[questionIframe.questionKey]];
       var nextQuestionID = questionData.nextQuestionID;
       // Next question
@@ -1788,6 +1806,7 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
       }
    } catch(err) {}
    var questionData = questionsData[questionID];
+   questionData.visited = true;
    var questionKey = questionData.key;
 
    if (newInterface) {
