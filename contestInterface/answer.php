@@ -32,7 +32,7 @@ function handleAnswers($db, $tinyOrm) {
       $rows = $tinyOrm->select('team', array('password', 'startTime'), array('ID' => $teamID));
   } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
       error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
-      error_log('DynamoDB error trying to get record: teamID: '.$teamID.', questionID: '.$questionID, ', answer: '.$answerObj['answer']);
+      error_log('DynamoDB error trying to get record: teamID: '.$teamID);
       echo json_encode((object)array("success" => false, 'error' => 'DynamoDB', 'message' => $e->getMessage()));
       return;
    }
