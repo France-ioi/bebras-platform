@@ -208,7 +208,7 @@
       </div>
       <div class="header_sep_top"></div>
       <div class="layout_table_wrapper">
-         <div class="questionListIntro" style="text-align:left">
+         <div class="questionListIntro" style="text-align:left;line-height:170%">
             <ul data-i18n="[html]question_list_intro">
             </ul>
          </div>

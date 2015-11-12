@@ -107,5 +107,5 @@
     "grade_-1": "Je suis un enseignant",
     "grade_-4": "Autre",
     "question_locked": "Question à débloquer",
-    "question_list_intro": "<li>Résolvez les sujets en commençant par ceux du haut, qui sont les plus faciles. Vous débloquerez ainsi d'autres sujets.<li>Si vous êtes bloqués, vous pouvez à tout moment revenir à la liste des sujets à l'aide du bouton en haut à droite.<li>Chaque sujet comporte trois versions, et permet de gagner jusqu'à 4 étoiles, selon la version résolue.<li>Vous pourrez parfois commencer directement sur les versions rapportant 3 ou 4 étoiles."
+    "question_list_intro": "<li>Chaque question comporte trois versions, pour gagner 2, 3 ou 4 étoiles.<li>Résoudre une version débloque la version suivante et une autre question.<li>Si les versions 3 ou 4 étoiles sont débloquées, vous pouvez y aller directement.<li>Vous pouvez revenir ici à tout moment en cliquant sur le bouton en haut à droite."
 }
