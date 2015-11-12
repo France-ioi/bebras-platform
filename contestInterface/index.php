@@ -208,6 +208,10 @@
       </div>
       <div class="header_sep_top"></div>
       <div class="layout_table_wrapper">
+         <div class="questionListIntro" style="text-align:left">
+            <ul data-i18n="[html]question_list_intro">
+            </ul>
+         </div>
          <div class="questionList task_icons">
             <span style="color:red" data-i18n="questions_loading"></span>
          </div>

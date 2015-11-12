@@ -1790,6 +1790,7 @@ function fillNextQuestionID(sortedQuestionsIDs) {
 }
 
 window.backToList = function() {
+   $(".questionListIntro").show();
    $(".questionList").show();
    $("#question-iframe-container").hide();
    $(".button_return_list").prop("disabled",true);
@@ -1810,6 +1811,7 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
    var questionKey = questionData.key;
 
    if (newInterface) {
+      $(".questionListIntro").hide();
       $(".questionList").hide();
       $("#question-iframe-container").show();
       $(".button_return_list").prop("disabled", false);

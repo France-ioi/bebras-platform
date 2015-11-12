@@ -43,7 +43,7 @@
     "questions_loading": "Chargement en cours…",
     "questions_finish_early": "Quitter le concours",
     "closed_please_wait": "<b>Attention :</b> l'épreuve est terminée, mais vos dernières réponses n'ont pas enore été transmises. Merci de patienter une vingtaine de secondes.",
-    "closed_connexion_error": "<p><b>Attention</b>, du fait d'un problème de connexion, certaines de vos réponses n'ont pas pu être envoyées. Pour que vos réponses soient prises en compte, sauvegardez le texte ci-dessous, et envoyez-le-nous par messagerie électronique à info@castor-informatique.fr dès que vous en avez la possibilité.</p><p>Copiez le texte lui-même dans un fichier texte et envoyez-nous le. <b>Ne faites pas une copie d'écran ou une photo</b></p>",
+    "closed_connexion_error": "<b>Attention</b>, du fait d'un problème de connexion, certaines de vos réponses n'ont pas pu être envoyées. Pour que vos réponses soient prises en compte, sauvegardez le texte ci-dessous, et envoyez-le-nous par messagerie électronique à info@castor-informatique.fr dès que vous en avez la possibilité :",
     "closed_remind_password": "Avez-vous bien noté le code qui vous permettra de connaître votre classement à partir du 20 novembre ?",
     "closed_your_password": "Votre code est :",
     "closed_announcement": "<p>Vous pourrez alors savoir si vous êtes sélectionnés pour le premier tour du concours de programmation <a href='http://algorea.org'>Algoréa</a>. Un ordinateur portable est à gagner.</p><p>Pour poursuivre votre découverte de l'informatique chez vous ou en classe, allez sur <a href='http://www.france-ioi.org'>france-ioi.org</a>.</p><p>Vous pourrez y apprendre à programmer, et progresser en algorithmique grâce à de nombreux exercices pour tous les niveaux.</p>",
@@ -106,5 +106,6 @@
     "grade_question": "En quelle classe êtes-vous ?",
     "grade_-1": "Je suis un enseignant",
     "grade_-4": "Autre",
-    "question_locked": "Question à débloquer"
+    "question_locked": "Question à débloquer",
+    "question_list_intro": "<li>Résolvez les sujets en commençant par ceux du haut, qui sont les plus faciles. Vous débloquerez ainsi d'autres sujets.<li>Si vous êtes bloqués, vous pouvez à tout moment revenir à la liste des sujets à l'aide du bouton en haut à droite.<li>Chaque sujet comporte trois versions, et permet de gagner jusqu'à 4 étoiles, selon la version résolue.<li>Vous pourrez parfois commencer directement sur les versions rapportant 3 ou 4 étoiles."
 }
