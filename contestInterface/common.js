@@ -173,15 +173,18 @@ var platform = {
          if (success) {success();}
       }, logError);
    },
-   firstNonVisitedQuestion(delay) {
+   firstNonVisitedQuestion: function(delay) {
+      function timeoutFunFactory(questionID) {
+         return function() {
+            window.selectQuestion(questionID, false); 
+         };
+      }
       var sortedQuestionIDs = getSortedQuestionIDs(questionsData);
       for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
          var questionID = sortedQuestionIDs[iQuestionID];
          var questionData = questionsData[questionID];
          if ((questionUnlockedLevels[questionData.key] > 0) && (!questionData.visited)) {
-            setTimeout(function() {
-               window.selectQuestion(questionID, false);
-            }, delay);
+            setTimeout(timeoutFunFactory(questionID), delay);
             return;
          }
       }
