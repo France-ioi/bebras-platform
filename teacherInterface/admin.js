@@ -312,7 +312,7 @@ function initModels(isLogged) {
             gender: {label: t("user_gender_label"), editable: true, edittype: "select", width: 50, editoptions:{ value:{"F": t("user_gender_female"), "M": t("user_gender_male")}}},
             lastName: {label: t("user_lastName_label"), editable: true, edittype: "text", width: 90},
             firstName: {label: t("user_firstName_label"), editable: true, edittype: "text", width: 90},
-            officialEmail: {label: t("user_officialEmail_label"), editable: true, edittype: officialEmailEditType, width: 200},
+            officialEmail: {label: t("user_officialEmail_label"), editable: true, edittype: "text", width: 200},
             officialEmailValidated: {label: t("user_officialEmailValidated_label"), editable: true, edittype: "select", width: 50, editoptions: editYesNo, stype: "select", searchoptions: searchYesNo},
             alternativeEmail: {label: t("user_alternativeEmail_label"), editable: true, edittype: "text", width: 200},
             validated: {label: t("user_validated_label"), editable: true, edittype: "select", width: 60, editoptions: editYesNo},
