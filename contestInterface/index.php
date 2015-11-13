@@ -192,7 +192,7 @@
          </td></tr>
       </table>
    </div>
-   <div class="newInterface">
+   <div class="newInterface" style="padding-bottom:1em">
       <div class="header">
          <table class="header_table">
             <tr>
