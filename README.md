@@ -27,6 +27,10 @@ Get composer dependencies:
 
     composer install
 
+Update browser detection library (_WARNING_: run with same user as web server):
+
+    ./vendor/bin/browscap browscap:update
+
 Make the directories `logs/` and `contestInterface/contests/` writable by PHP.
 
 Run `php commonFramework/modelsManager/triggers.php`.
