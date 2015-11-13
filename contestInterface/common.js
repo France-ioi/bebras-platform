@@ -1875,7 +1875,10 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
             }
          }
          nextStep();
-      }, logError);
+      }, function() {
+         logError(arguments);
+         nextStep();
+      });
    } else {
       nextStep();
    }
