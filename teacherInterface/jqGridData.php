@@ -18,7 +18,7 @@ function checkOfficialEmail($email) {
    }
    $start = strpos($email, "@");
    if ($start === FALSE) {
-      return false;
+      return "impossible de trouver le caractère @ dans l'email.";
    }
    if ($config->teacherInterface->forceOfficialEmailDomain) {
       $domain = substr($email, $start + 1);
@@ -28,7 +28,7 @@ function checkOfficialEmail($email) {
             return true;
          }
       }
-      return false;
+      return "l'adresse email ne correspond pas à un domaine académique";
    } else {
       return true;
    }
@@ -61,8 +61,9 @@ function getUser($db) {
 }
 
 function checkUser($record) {
-   if (!checkOfficialEmail($record["officialEmail"])) {
-      return false;
+   $officialOk = checkOfficialEmail($record["officialEmail"]);
+   if ($officialOk !== true) {
+      return $officialOk;
    }
    if ($record["officialEmail"] === "") {
       $record["officialEmail"] = null;
@@ -232,8 +233,10 @@ function checkRequestUser($db, &$request, &$record, $operation, &$roles) {
       }
       $record["registrationDate"] = date('Y-m-d H:i:s');
    }
-   if (!checkUser($record)) {
-      error_log("checkUser false");
+   $userOk = checkUser($record);
+   if ($userOk !== true) {
+      echo json_encode(array("success" => false, "message" => $userOk));
+      error_log($userOk);
       return false;
    }
 
