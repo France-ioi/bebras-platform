@@ -1795,6 +1795,7 @@ function fillNextQuestionID(sortedQuestionsIDs) {
 window.backToList = function() {
    $(".questionListIntro").show();
    $(".questionList").show();
+   $(".buttonClose").show();
    $("#question-iframe-container").hide();
    $(".button_return_list").prop("disabled",true);
 };
@@ -1816,6 +1817,7 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
    if (newInterface) {
       $(".questionListIntro").hide();
       $(".questionList").hide();
+      $(".buttonClose").hide();
       $("#question-iframe-container").show();
       $(".button_return_list").prop("disabled", false);
    }
