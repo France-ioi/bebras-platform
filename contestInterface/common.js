@@ -41,13 +41,16 @@ var logToConsole = function(logStr) {
 
 var nbErrorsSent = 0;
 var logError = function(error, errormsg) {
-  var logStr = (currentQuestionKey ? currentQuestionKey+': ' : '')+error+(errormsg ? ' '+errormsg : '');
-  logToConsole(logStr);
+  var logStr = error+(errormsg ? ' '+errormsg : '');
+  if (error.stack) {
+    logStr = logStr + ' ' + error.stack;
+  }
+  logToConsole((currentQuestionKey ? currentQuestionKey+': ' : '')+logStr);
   nbErrorsSent = nbErrorsSent + 1;
   if (nbErrorsSent > 10) {
     return;
   }
-  $.post('logError.php', {errormsg: logStr}, function(data) {
+  $.post('logError.php', {errormsg: logStr, questionKey: currentQuestionKey}, function(data) {
     if (!data || !data.success) {
       logToConsole('error from logError.php');
     }
