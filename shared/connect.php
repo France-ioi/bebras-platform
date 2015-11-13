@@ -57,7 +57,7 @@ if ($config->db->dynamoSessions) {
    // in session!
    if (!isset($noSessions) || !$noSessions) {
       $sessionHandler = SessionHandler::fromClient($dynamoDB, array(
-         'table_name'       => 'sessions',
+         'table_name'       => $config->db->dynamoDBPrefix . 'sessions',
       ));
       $sessionHandler->register();
    }
