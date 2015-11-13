@@ -1,0 +1,1 @@
+ALTER TABLE `error_log` ADD `browser` VARCHAR(100) NULL DEFAULT NULL ;

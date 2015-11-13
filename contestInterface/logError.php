@@ -12,6 +12,12 @@ $teamID = isset($_SESSION["teamID"]) ? $_SESSION["teamID"] : null;
 
 $errormsg = $_POST['errormsg'];
 
-$stmt = $db->prepare('insert into error_log (date, teamID, message) values (NOW(), :teamID, :errormsg);');
-$stmt->execute(['teamID' => $teamID, 'errormsg' => $errormsg]);
+$bc = new BrowscapPHP\Browscap();
+
+$browser = $bc->getBrowser();
+
+$browserStr = $browser->browser.' '.$browser->version.' ('.$browser->platform.')';
+
+$stmt = $db->prepare('insert into error_log (date, teamID, message, browser) values (NOW(), :teamID, :errormsg, :browserStr);');
+$stmt->execute(['teamID' => $teamID, 'errormsg' => $errormsg, 'browserStr' => $browserStr]);
 echo json_encode(['success' => true]);
