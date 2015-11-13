@@ -1825,10 +1825,6 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
       $(".button_return_list").prop("disabled", false);
    }
 
-   if (questionKey == currentQuestionKey) {
-      return;
-   }
-
    var nextStep = function() {
       Tracker.trackData({dataType:"selectQuestion", teamID: teamID, questionKey: questionKey, clicked: clicked});
       var questionName = questionData.name.replace("'", "&rsquo;");
