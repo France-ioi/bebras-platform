@@ -12,10 +12,10 @@
 <form autocomplete="off">
 <div id="divHeader">
      <table style="width:100%"><tr>
-         <td style="width:20%"><img src="images/castor_small.png"/></td>
+         <td style="width:20%" data-i18n="[html]left_title"></td>
          <td><p id="headerH1" data-i18n="general_title"></p>
          <p id="headerH2" data-i18n="general_subtitle"></p></td>
-         <td></td>
+         <td style="width:20%" data-i18n="[html]right_title"></td>
       </tr></table>
 </div>
 <div id="divCheckGroup" class="dialog">
@@ -184,7 +184,7 @@
          <tr><td>
             <div id="divQuestionParams">
                <table style="width:100%"><tr>
-                  <td style="width:10%"><img src="images/castor_small.png" style="width:65px" /></td>
+                  <td style="width:10%" data-i18n="[html]top_image"></td>
                   <td><div class="questionTitle"></div></td>
                   <td style="width:25%"><div id="questionPoints"></div></td>
                </tr></table>
@@ -196,7 +196,7 @@
       <div class="header">
          <table class="header_table">
             <tr>
-               <td class="header_logo"><img class="header_logo_img" src="images/castor_small.png" /></td>
+               <td class="header_logo" data-i18n="[html]top_image_new"></td>
                <td class="header_score">Score&nbsp;:<br/><b><span class='scoreTotalFullFeedback'></span></b></td>
                <td class="header_time">Temps restant&nbsp;: <br/><b><span class='minutes'></span>:<span class='seconds'></span></b></td>
                <td class="header_rank" style="display:none">Classement&nbsp; <br/><b><span class="rank" width="95%"></span></b></td>
