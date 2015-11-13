@@ -4,7 +4,7 @@
     "general_choice": "Choisissez ce que vous souhaitez :",
     "general_start_contest": "Commencer un concours<br/>en classe",
     "general_public_contests": "S'entraîner à la maison<br/>Consulter les annales",
-    "general_view_results": "Continuer le concours<br/>",
+    "general_view_results": "Continuer le concours<br/>&nbsp;",
     "tab_start_contest_enter_code": "Entrez le code de votre groupe, fourni par votre enseignant : ",
     "tab_start_contest_start_button": "Je commence le concours",
     "tab_public_contests_info": "<b>Testez-vous sur l'un des concours des années précédentes :</b>",
