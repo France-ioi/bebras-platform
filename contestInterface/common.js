@@ -1101,7 +1101,7 @@ function loadContestData(contestID, contestFolder, groupPassword, teamID)
    $("#divImagesLoading").show();
    questionIframe.initialize(function() {
       if (fullFeedback) {
-         $.post("graders.php", {SID: SID}, function(data) {
+         $.post("graders.php", {SID: SID, ieMode: window.ieMode}, function(data) {
             if (data.status === 'success' && (data.graders || data.gradersUrl)) {
                questionIframe.gradersLoaded = true;
                if (data.graders) {
@@ -1632,7 +1632,7 @@ function showScoresHat() {
       showScores({bonusScore: bonusScore});
       return;
    }
-   $.post("graders.php", {SID: SID}, function(data) {
+   $.post("graders.php", {SID: SID, ieMode: window.ieMode}, function(data) {
       if (data.status === 'success' && (data.graders || data.gradersUrl)) {
          questionIframe.gradersLoaded = true;
          if (data.graders) {
@@ -2042,7 +2042,7 @@ function loadSolutionChoices(questionKey) {
 }
 
 function loadSolutionsHat() {
-   $.post('solutions.php', {SID: SID}, function(data) {
+   $.post('solutions.php', {SID: SID, ieMode: window.ieMode}, function(data) {
       if (data.success) {
          if (data.solutions) {
             $('#divSolutionsContent').html(data.solutions);

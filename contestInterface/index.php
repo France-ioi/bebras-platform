@@ -299,9 +299,11 @@
     $("title").i18n();
     $("body").i18n();
   });
+  window.ieMode = false;
 </script>
 <!--[if IE 6]>
 <script>
+window.ieMode = true;
 window.sAbsoluteStaticPath = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathOldIE.'/') ?>;
 window.contestsRoot = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathOldIE.'/contests') ?>;
 </script>

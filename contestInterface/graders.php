@@ -37,11 +37,12 @@ if ($row->fullFeedback == 0 && (!isset($_SESSION["closed"]) || $row->status == '
 $contestID = $row->ID;
 $contestFolder = $row->folder;
 
+$ieMode = isset($_POST['ieMode']) ? $_POST['ieMode'] : false;
 $gradersUrl = null;
 $graders = null;
 if ($config->teacherInterface->generationMode == 'local') {
    $graders = file_get_contents(__DIR__.$config->teacherInterface->sContestGenerationPath.$contestFolder.'/contest_'.$contestID.'_graders.html');
-} else if (!$row->fullFeedback) {
+} else if (!$row->fullFeedback && !$ieMode) {
    require '../vendor/autoload.php';
    $s3Client = S3Client::factory(array(
       'credentials' => array(
@@ -57,6 +58,19 @@ if ($config->teacherInterface->generationMode == 'local') {
    ]);
    $request = $s3Client->createPresignedRequest($cmd, '+10 minutes');
    $gradersUrl = (string) $request->getUri();
+} else if ($ieMode) {
+   $s3Client = S3Client::factory(array(
+      'credentials' => array(
+           'key'    => $config->aws->key,
+           'secret' => $config->aws->secret
+       ),
+      'region' => $config->aws->region,
+      'version' => '2006-03-01'
+   ));
+   $graders = $s3->getObject(array(
+       'Bucket' => $config->aws->bucketName,
+       'Key'    => 'contests/'.$contestFolder.'/contest_'.$contestID.'_graders.html'
+   ));
 } else {
    $gradersUrl = $config->teacherInterface->sAbsoluteStaticPath.'/contests/'.$contestFolder.'/contest_'.$contestID.'_graders.html';
 }

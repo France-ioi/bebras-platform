@@ -30,10 +30,24 @@ if (!($row = $stmt->fetchObject())) {
 $contestID = $row->ID;
 $contestFolder = $row->folder;
 
+$ieMode = isset($_POST['ieMode']) ? $_POST['ieMode'] : false;
 $solutions = null;
 $solutionsUrl = null;
 if ($config->teacherInterface->generationMode == 'local') {
    $solutions = file_get_contents(__DIR__.$config->teacherInterface->sContestGenerationPath.$contestFolder.'/contest_'.$contestID.'_sols.html');
+} else if ($ieMode) {
+   $s3Client = S3Client::factory(array(
+      'credentials' => array(
+           'key'    => $config->aws->key,
+           'secret' => $config->aws->secret
+       ),
+      'region' => $config->aws->region,
+      'version' => '2006-03-01'
+   ));
+   $solutions = $s3->getObject(array(
+       'Bucket' => $config->aws->bucketName,
+       'Key'    => 'contests/'.$contestFolder.'/contest_'.$contestID.'_sols.html'
+   ));
 } else {
    require '../vendor/autoload.php';
    $s3Client = S3Client::factory(array(
