@@ -37,7 +37,7 @@ if ($row->fullFeedback == 0 && (!isset($_SESSION["closed"]) || $row->status == '
 $contestID = $row->ID;
 $contestFolder = $row->folder;
 
-$ieMode = isset($_POST['ieMode']) ? $_POST['ieMode'] : false;
+$ieMode = (isset($_POST['ieMode']) && $_POST['ieMode'] == 'true') ? true : false;
 $gradersUrl = null;
 $graders = null;
 if ($config->teacherInterface->generationMode == 'local') {
@@ -67,7 +67,7 @@ if ($config->teacherInterface->generationMode == 'local') {
       'region' => $config->aws->region,
       'version' => '2006-03-01'
    ));
-   $graders = $s3->getObject(array(
+   $graders = $s3Client->getObject(array(
        'Bucket' => $config->aws->bucketName,
        'Key'    => 'contests/'.$contestFolder.'/contest_'.$contestID.'_graders.html'
    ));
