@@ -2225,9 +2225,11 @@ function init() {
       },
       useDataAttrOptions: true
    }, function () {
+      var newRegions = {};
       for (var i=0; i < regions.length; i++) {
-         regions[i] = i18n.t(regions[i]);
+         newRegions[regions[i].split(':')[1]] = i18n.t(regions[i]);
       }
+      window.regions = newRegions;
       $("#login_link_to_home").attr('data-i18n-options',
          '{"contestPresentationURL": "' + config.contestPresentationURL + '"}');
       $("title").i18n();
