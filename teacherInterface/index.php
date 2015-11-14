@@ -249,7 +249,7 @@
    script_tag('/bower_components/jqgrid/js/i18n/grid.locale-' . $language . '.js');
    script_tag('/regions/' . strtoupper($countryCode) . '/regions.js');
    script_tag('/config.js.php');
-   script_tag('/admin.js?t=1');
+   script_tag('/admin.js');
 ?>
 <script>
    window.config = <?= json_encode([
