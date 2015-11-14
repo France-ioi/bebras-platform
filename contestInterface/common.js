@@ -600,6 +600,9 @@ var questionIframe = {
       // Remove task-specific previous added JS, then add the new one
       this.removeJsContent();
 
+      this.addJsContent('window.grader = null;');
+      this.addJsContent('window.task = null;');
+
       // Load js modules
       var that = this;
       $('.js-module-'+questionKey).each(function() {
