@@ -1808,8 +1808,11 @@ window.backToList = function() {
 };
 
 window.selectQuestion = function(questionID, clicked, noLoad) {
+   // Prevent double-click until we fix the issue with timeouts
    var curTime = (new Date()).getTime();
-   if (curTime - lastSelectQuestionTime < 2000) {
+   if (curTime - lastSelectQuestionTime < 1000) {
+      // in case the computer time changes during the contest, we reset lastSelectQuestionTime, to make sure the user doesn't get stuck
+      lastSelectQuestionTime = curTime - 1000; 
       return;
    }
    lastSelectQuestionTime = curTime;
