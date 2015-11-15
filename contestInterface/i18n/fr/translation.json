@@ -44,7 +44,7 @@
     "questions_finish_early": "Quitter le concours",
     "closed_please_wait": "<b>Attention :</b> l'épreuve est terminée, mais vos dernières réponses n'ont pas enore été transmises. Merci de patienter une vingtaine de secondes.",
     "closed_connexion_error": "<b>Attention</b>, du fait d'un problème de connexion, certaines de vos réponses n'ont pas pu être envoyées. Pour que vos réponses soient prises en compte, sauvegardez le texte ci-dessous, et envoyez-le-nous par messagerie électronique à info@castor-informatique.fr dès que vous en avez la possibilité :",
-    "closed_remind_password": "Avez-vous bien noté le code qui vous permettra de connaître votre classement à partir du 20 novembre ?",
+    "closed_remind_password": "Avez-vous bien noté le code qui vous permettra de connaître votre classement à partir du 23 novembre ?",
     "closed_your_password": "Votre code est :",
     "closed_announcement": "<p>Vous pourrez alors savoir si vous êtes sélectionnés pour le premier tour du concours de programmation <a href='http://algorea.org'>Algoréa</a>. Un ordinateur portable est à gagner.</p><p>Pour poursuivre votre découverte de l'informatique chez vous ou en classe, allez sur <a href='http://www.france-ioi.org'>france-ioi.org</a>.</p><p>Vous pourrez y apprendre à programmer, et progresser en algorithmique grâce à de nombreux exercices pour tous les niveaux.</p>",
     "error_server": "Erreur dans la réponse du serveur",
