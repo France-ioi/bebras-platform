@@ -23,6 +23,7 @@ var sending = false;
 var answersToSend = {};
 var answers = {};
 var defaultAnswers = {};
+var lastSelectQuestionTime = 0;
 var currentQuestionKey = "";
 // SID is initialized to the empty string so that its encoding in an AJAX query
 // is predictable (rather than being either '' or 'null').
@@ -1807,6 +1808,11 @@ window.backToList = function() {
 };
 
 window.selectQuestion = function(questionID, clicked, noLoad) {
+   var curTime = (new Date()).getTime();
+   if (curTime - lastSelectQuestionTime < 2000) {
+      return;
+   }
+   lastSelectQuestionTime = curTime;
    $("body").scrollTop(0);
    try {
       if (document.getSelection) {
