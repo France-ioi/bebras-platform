@@ -54,7 +54,7 @@ while ($row = $stmt->fetchObject())
 {
 
    if ($row->contestYear === "2015") {
-      $row->contestType = "Concours Algoréa 2015";
+      $row->contestType = "Concours Castor 2015";
    } else {
       $row->contestType = "Castor Informatique : Entraînement";
    }
