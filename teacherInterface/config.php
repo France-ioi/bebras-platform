@@ -1,5 +1,6 @@
 <?php
-require('../config.php');
+
+require_once '../config.php';
 
 function escape_js($str) {
 	return str_replace('"', '\\"', $str);

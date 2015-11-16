@@ -80,7 +80,7 @@
     "server_not_responding": "The server is not responding. Try again?",
     "extract_error_message": "View error message",
     "session_expired": "Your session is expired. You need to log in again.",
-    "index_url": "index_template_en.html",
+    "index_url": "index.php",
     "exception": "Exception:",
     "server_response": "Server response",
     "option_no_filter": "No filter",

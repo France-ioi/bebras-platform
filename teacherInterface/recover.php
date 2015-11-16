@@ -3,6 +3,7 @@
 
 require_once("../shared/common.php");
 require_once("commonAdmin.php");
+require_once 'config.php';
 
 function getUserFromEmail($db, $email) {
    $query = "SELECT * FROM `user` WHERE (`officialEmail` = ? OR `alternativeEmail` = ?)";
@@ -63,23 +64,43 @@ if ($action == "sendMail") {
    <!DOCTYPE html>
    <html>
    <head>
-      <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-      <link rel='stylesheet' href='jquery-ui-1.8.20.custom.css' />
-      <link rel='stylesheet' href='admin.css' />
-      <script src='jqGrid/js/jquery-1.7.2.min.js'></script> 
-      <script src='jquery-ui-1.8.20.custom.min.js'></script>
+      <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />";
+      stylesheet_tag('/bower_components/jquery-ui/themes/base/jquery-ui.min.css');
+      stylesheet_tag('/admin.css');
+      script_tag('/bower_components/jquery/jquery.min.js');
+      script_tag('/bower_components/jquery-ui/jquery-ui.min.js');
+      script_tag('/bower_components/i18next/i18next.min.js');
+      echo "
       <script type='text/javascript'>
-      var strings = {
-         'unknown_email': 'Email inconnu',
-         'recover_email_sent_1': 'Vous allez recevoir un email à l\'adresse ',
-         'recover_email_sent_2': '. Cliquez sur le lien qu\'il contient pour définir un nouveau mot de passe',
-         'password_changed': 'Votre mot de passe a été modifié',
-         'option_no_filter': 'Pas de filtre',
-         'index_url': 'index.html'
-      }
+         window.config = ".json_encode([
+            'defaultLanguage' => $config->defaultLanguage,
+            'countryCode' => $config->teacherInterface->countryCode,
+            'infoEmail' => $config->email->sInfoAddress,
+            'forceOfficialEmailDomain' => $config->teacherInterface->forceOfficialEmailDomain,
+            'contestPresentationURL' => $config->contestPresentationURL,
+            'i18nResourcePath' => static_asset('/i18n/__lng__/__ns__.json'),
+            'useCustomStrings' => $config->useCustomStrings
+         ]).";
       function getRegions() { return {} };
+      </script>";
+      script_tag('/admin.js');
+      echo "<script type=\"text/javascript\">
+         i18n.init({
+            lng: config.defaultLanguage,
+            fallbackLng: [config.defaultLanguage],
+            getAsync: true,
+            resGetPath: config.i18nResourcePath,
+            fallbackNS: 'translation',
+            ns: {
+               namespaces: config.useCustomStrings ? ['custom', 'translation', 'country' + config.countryCode] : ['translation', 'country' + config.countryCode],
+               defaultNs: config.useCustomStrings ? 'custom' : 'translation',
+            },
+            useDataAttrOptions: true
+         }, function () {
+            $(\"title\").i18n();
+            $(\"body\").i18n();
+         });
       </script>
-      <script src='admin.js'></script>
    </head>
    <body>
    <div id='divHeader'>
@@ -112,5 +133,3 @@ if ($action == "sendMail") {
    echo json_encode(array("success" => true));
 }
 unset($db);
-
-?>

@@ -81,7 +81,7 @@
     "server_not_responding": "Le serveur ne répond pas. Réessayer ?",
     "extract_error_message": "utilisateur non conn",
     "session_expired": "Votre session a expiré, vous devez vous reconnecter",
-    "index_url": "index.html",
+    "index_url": "index.php",
     "exception": "Exception :",
     "server_response": "Réponse du serveur :",
     "option_no_filter": "Pas de filtre",
