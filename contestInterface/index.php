@@ -281,24 +281,42 @@
   global $config;
 ?>
 <script>
+  function updateQueryStringParameter(uri, key, value) {
+    var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+    var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+    if (uri.match(re)) {
+      return uri.replace(re, '$1' + key + "=" + value + '$2');
+    }
+    else {
+      return uri + separator + key + "=" + value;
+    }
+  }
   window.contestsRoot = <?= json_encode($config->teacherInterface->sAbsoluteStaticPath.'/contests') ?>;
   window.sAbsoluteStaticPath = <?= json_encode($config->teacherInterface->sAbsoluteStaticPath.'/') ?>;
   window.sAssetsStaticPath = <?= json_encode(static_asset('/')) ?>;
-  i18n.init(<?= json_encode([
-    'lng' => $config->defaultLanguage,
-    'fallbackLng' => [$config->defaultLanguage],
-    'fallbackNS' => 'translation',
-    'ns' => [
-      'namespaces' => $config->useCustomStrings ? ['custom', 'translation'] : ['translation'],
-      'defaultNs' => $config->useCustomStrings ? 'custom' : 'translation',
-    ],
-    'getAsync' => true,
-    'resGetPath' => static_asset('/i18n/__lng__/__ns__.json')
-  ]); ?>, function () {
-    window.i18nLoaded = true;
-    $("title").i18n();
-    $("body").i18n();
-  });
+  try {
+    i18n.init(<?= json_encode([
+      'lng' => $config->defaultLanguage,
+      'fallbackLng' => [$config->defaultLanguage],
+      'fallbackNS' => 'translation',
+      'ns' => [
+        'namespaces' => $config->useCustomStrings ? ['custom', 'translation'] : ['translation'],
+        'defaultNs' => $config->useCustomStrings ? 'custom' : 'translation',
+      ],
+      'getAsync' => true,
+      'resGetPath' => static_asset('/i18n/__lng__/__ns__.json')
+    ]); ?>, function () {
+      window.i18nLoaded = true;
+      $("title").i18n();
+      $("body").i18n();
+    });
+  } catch(e) {
+    // assuming s3 was blocked, so add ?p=1 to url, see contestInterface/config.php
+    var newLocation = updateQueryStringParameter(window.location.toString(), 'p', '1');
+    if (newLocation != window.location.toString()) {
+      window.location = newLocation;
+    }
+  }
   window.ieMode = false;
 </script>
 <!--[if IE 6]>
