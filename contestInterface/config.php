@@ -1,6 +1,11 @@
 <?php
 require('../config.php');
 
+if(preg_match('/(?i)msie [5-7]/',$_SERVER['HTTP_USER_AGENT']) || (isset($_GET['p']) && $_GET['p'] == '1')) {
+    // if IE<=7 or ?p=1
+    $config->teacherInterface->sAssetsStaticPath = $config->teacherInterface->sAbsoluteStaticPathOldIE;
+}
+
 function escape_js($str) {
 	return str_replace('"', '\\"', $str);
 }
