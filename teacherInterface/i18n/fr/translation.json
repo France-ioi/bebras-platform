@@ -3,7 +3,7 @@
     "logout": "Se déconnecter",
     "title": "Castor Informatique France",
     "subtitle": "Plateforme du concours - <span style='color:red;font-weight:bold'>ACCÈS COORDINATEUR</span>",
-    "announcement": "<p>Bonjour et bienvenue.</p> <p>Le concours Castor 2015 est en cours. Il a lieu du 14 novembre à 7h au 21 novembre à 20h (heure de Paris)</p> <p><b>Nouveau :</b> cette année, le concours est ouvert aussi aux élèves de CM1 et CM2, et la difficulté du concours s'adapte automatiquement au niveau des élèves.</p> <p>La création des groupes est possible jusqu'à la fin de la semaine du concours.</p>",
+    "announcement": "<p>Bonjour et bienvenue.</p> <p>Le concours Castor 2015 est en cours. Il a lieu du 14 novembre à 7h au 21 novembre à 20h (heure de Paris)</p> <p><b>Nouveau :</b> cette année, le concours est ouvert aussi aux élèves de CM1 et CM2, et la difficulté du concours s'adapte automatiquement au niveau des élèves.</p> <p>La création des groupes est possible jusqu'à la fin de la semaine du concours.</p><p>Notez que les scores de vos élèves ne s'afficheront dans l'interface coordinateur qu'après la semaine du concours. Les scores des entraînements ne s'affichent pas toujours, nous allons faire le nécessaire pour qu'ils soient visibles bientôt.</p>",
     "loading": "Chargement en cours…",
     "login_register": "Inscrivez-vous !",
     "login_are_you_admin": "Vous êtes coordinateur ?",
