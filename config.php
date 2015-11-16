@@ -41,6 +41,8 @@ $config->aws->bucketName = '';
 $config->contestInterface = (object) array();
 // Point contestInterface->baseUrl to an URL serving the contestInterface directory.
 $config->contestInterface->baseUrl = 'http://concours.castor-informatique.fr';
+$config->contestInterface->sAbsoluteStaticPathNoS3 = 'http://concours.castor-informatique.fr';
+$config->contestInterface->sAssetsStaticPathNoS3 = 'http://concours.castor-informatique.fr';
 
 $config->teacherInterface = (object) array();
 $config->teacherInterface->sHotlineNumber = '';

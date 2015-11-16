@@ -1,9 +1,14 @@
 <?php
 require('../config.php');
 
-if(preg_match('/(?i)msie [5-7]/',$_SERVER['HTTP_USER_AGENT']) || (isset($_GET['p']) && $_GET['p'] == '1')) {
+if (preg_match('/(?i)msie [5-7]/',$_SERVER['HTTP_USER_AGENT'])) {
     // if IE<=7 or ?p=1
     $config->teacherInterface->sAssetsStaticPath = $config->teacherInterface->sAbsoluteStaticPathOldIE;
+}
+
+if (isset($_GET['p']) && $_GET['p'] == '1') {
+	$config->contestInterface->sAssetsStaticPath = $config->contestInterface->sAssetsStaticPathNoS3;
+	$config->contestInterface->sAbsoluteStaticPath = $config->contestInterface->sAbsoluteStaticPathNoS3;
 }
 
 function escape_js($str) {
