@@ -2,11 +2,11 @@
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 
 function createTeamFromUserCode($db, $password) {
-   if (strlen($password) > 8) {
-      $password = substr($password, strlen($password) - 8, 8);
-      commonLoginTeam($db, $password);
-      return;
-   }
+   // Uncomment to transform algorea-foo into foo
+   // if (strlen($password) > 8) {
+   //    $password = substr($password, strlen($password) - 8, 8);
+   //    return commonLoginTeam($db, $password);
+   // }
    $stmt = $db->prepare("SELECT `ID` FROM `algorea_registration` WHERE `code` = ?");
    $stmt->execute(array($password));
    $row = $stmt->fetchObject();
