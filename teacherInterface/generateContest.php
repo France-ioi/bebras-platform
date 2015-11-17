@@ -410,4 +410,5 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
    contestPutContents($contestFolder.'/contest_'.$contestID.'.js', $jsPreload);
    contestPutContents($contestFolder.'/contest_'.$contestID.'_graders.html', $strGraders, !$fullFeedback);
    contestPutContents($contestFolder.'/.htaccess', $htAccessContent, true);
+   echo json_encode(['success' => true]);
 }

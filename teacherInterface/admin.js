@@ -1531,7 +1531,14 @@ function genQuestion() {
       // Compilation
       tasks = JSON.stringify(tasks);
       $.post("generateContest.php", { contestID: questions[questionID].key, contestFolder: questions[questionID].key, 'tasks': tasks }, function(data) {
-         jqAlert(t("question_generated"));
+         if (data.success) {
+            jqAlert(t("question_generated"));
+         } else {
+            jqAlert(t("question_generation_failed"));
+         }
+         button.attr("disabled", false);
+      }, 'json').fail(function() {
+         jqAlert(t("question_generation_failed"));
          button.attr("disabled", false);
       });
    });
@@ -1545,7 +1552,14 @@ function genTasks(questionsUrl, curIndex)
       tasks = JSON.stringify(tasks);
       // XXX: status is needed only because of https://github.com/aws/aws-sdk-php/
       $.post("generateContest.php", { contestID: contestID, contestFolder: contests[contestID].folder, 'tasks': tasks, fullFeedback: contests[contestID].fullFeedback, status: contests[contestID].status}, function(data) {
-         jqAlert(t("contest_generated"));
+         if (data.success) {
+            jqAlert(t("contest_generated"));
+         } else {
+            jqAlert(t("contest_generation_failed"));
+         }
+         button.attr("disabled", false);
+      }, 'json').fail(function() {
+         jqAlert(t("contest_generation_failed"));
          button.attr("disabled", false);
       });
       
