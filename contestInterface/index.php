@@ -333,7 +333,7 @@ if (window.useOverride) {
         'defaultNs': <?= json_encode($config->useCustomStrings ? 'custom' : 'translation') ?>,
       },
       'getAsync': true,
-      'resGetPath': window.sAssetsStaticPath+'/i18n/__lng__/__ns__.json'
+      'resGetPath': window.sAssetsStaticPath+'i18n/__lng__/__ns__.json'
     }, function () {
       window.i18nLoaded = true;
       $("title").i18n();
