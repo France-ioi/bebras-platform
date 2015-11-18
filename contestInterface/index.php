@@ -331,7 +331,7 @@ if (window.useOverride) {
       'fallbackNS': 'translation',
       'ns': {
         'namespaces': <?= json_encode($config->useCustomStrings ? ['custom', 'translation'] : ['translation']) ?>,
-        'defaultNs': <?= json_encode($config->useCustomStrings ? 'custom' : 'translation') ?>
+        'defaultNs': <?= json_encode($config->useCustomStrings ? 'custom' : 'translation') ?>,
       },
       'getAsync': true,
       'resGetPath': window.sAssetsStaticPath+'i18n/__lng__/__ns__.json'
