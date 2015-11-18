@@ -306,7 +306,8 @@
       window.sAbsoluteStaticPath = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathNoS3Override) ?>+'/';
       window.sAssetsStaticPath = <?= json_encode($config->teacherInterface->sAssetsStaticPathNoS3Override.'/') ?>;
     }
-    if (window.location.toString() != <?= json_encode($config->contestInterface->overrideUrl) ?> && window.location.toString() != "<?= $config->contestInterface->overrideUrl ?>#") {
+    var cleanLocation = window.location.toString().replace(/\#$/, '').replace(/\/$/, '');
+    if (cleanLocation != <?= json_encode($config->contestInterface->overrideUrl) ?>) {
       window.location = <?= json_encode($config->contestInterface->overrideUrl) ?>;
     }
   }
