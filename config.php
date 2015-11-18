@@ -58,6 +58,14 @@ $config->teacherInterface->forceOfficialEmailDomain = false;
 // Point teacherInterface->baseUrl to an URL serving the teacherInterface directory.
 $config->teacherInterface->baseUrl = 'http://coordinateur.castor-informatique.fr';
 
+// see README.AWS.md (section "Setting up a proxy in another region"), no use if not on aws:
+$config->contestInterface->overrideUrl = '';
+$config->teacherInterface->sAssetsStaticPathOverride = '';
+$config->teacherInterface->sAbsoluteStaticPathOverride = '';
+$config->teacherInterface->sAbsoluteStaticPathOldIEOverride = '';
+$config->teacherInterface->sAbsoluteStaticPathNoS3Override = '';
+$config->teacherInterface->sAssetsStaticPathNoS3Override = '';
+
 $config->certificates = (object) array();
 $config->certificates->webServiceUrl = 'http://castor-informatique.fr.localhost/certificates/';
 

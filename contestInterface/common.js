@@ -1,6 +1,8 @@
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 !function () {
 
+window.useOverride = true; // see README.AWS.md, section "Setting up a proxy in another region"
+
 var contestID;
 var contestFolder;
 var contestStatus;

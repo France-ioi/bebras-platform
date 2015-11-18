@@ -288,3 +288,35 @@ the inbound rules of the security group of your rds instance, and add a rule
 to enable all TCP traffic from the group of your environment. You can do so
 by selecting "custom IP" and enter the id of the security group corresponding
 to your environment.
+
+# Setting up a proxy in another region
+
+Sometimes peering links between some ISP and AWS is not optimal (as happened
+with Orange during Beaver contest 2015), and having a proxy in another region can prove useful.
+
+The proxy will have its own url, and all traffic will be redirected to it.
+
+Here are the steps to use it:
+
+## The proxy itself
+
+For the proxy, you can take an EC2 instance with reasonable network bandwidth (m4.large for instance), install nginx on it and configure it with something similar to:
+
+```
+server {
+  listen 80;
+  resolver 172.31.0.2;
+  server_name concours4.castor-informatique.fr;
+  location / {
+    include proxy_params;
+    proxy_set_header Host concours.castor-informatique.fr;
+    proxy_pass http://concours.castor-informatique.fr$uri$is_args$args;
+  }
+}
+```
+
+## Configuring and deploying
+
+Set the variables ending with "Override" in you config_local.php to the new variables that must be used on the redirected page.
+
+The idea here is not to redeploy all php files, as it might be in the middle of a peak, so every minute is precious. Simply change the variable `useOverride` in common.js by hand and upload the file to S3.

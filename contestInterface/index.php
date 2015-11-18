@@ -294,18 +294,47 @@
   window.contestsRoot = <?= json_encode($config->teacherInterface->sAbsoluteStaticPath.'/contests') ?>;
   window.sAbsoluteStaticPath = <?= json_encode($config->teacherInterface->sAbsoluteStaticPath.'/') ?>;
   window.sAssetsStaticPath = <?= json_encode(static_asset('/')) ?>;
+
+  // following code is for overriding url (in case of emergency, see README.AWS.md, section "Setting up a proxy in another region")
+  // window.useOverride is defined in common.js
+  if (window.useOverride) {
+    window.contestsRoot = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathOverride) ?>+'/contests';
+    window.sAbsoluteStaticPath = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathOverride) ?>+'/';
+    window.sAssetsStaticPath = <?= json_encode($config->teacherInterface->sAssetsStaticPathOverride) ?>;
+    var detectP = new RegExp("([?&])p=.*?(&|$)", "i");
+    if (window.location.toString().match(detectP)) {
+      window.sAbsoluteStaticPath = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathNoS3Override) ?>+'/';
+      window.sAssetsStaticPath = <?= json_encode($config->teacherInterface->sAssetsStaticPathNoS3Override) ?>;
+    }
+    if (window.location.toString() != <?= json_encode($config->contestInterface->overrideUrl) ?> && window.location.toString() != "<?= $config->contestInterface->overrideUrl ?>#") {
+      window.location = <?= json_encode($config->contestInterface->overrideUrl) ?>;
+    }
+  }
+</script>
+<!--[if IE 6]>
+<script>
+window.ieMode = true;
+window.sAbsoluteStaticPath = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathOldIE.'/') ?>;
+window.contestsRoot = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathOldIE.'/contests') ?>;
+if (window.useOverride) {
+  window.sAbsoluteStaticPath = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathOldIEOverride.'/') ?>;
+  window.contestsRoot = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathOldIEOverride.'/contests') ?>;
+}
+</script>
+<![endif]-->
+<script>
   try {
-    i18n.init(<?= json_encode([
-      'lng' => $config->defaultLanguage,
-      'fallbackLng' => [$config->defaultLanguage],
-      'fallbackNS' => 'translation',
-      'ns' => [
-        'namespaces' => $config->useCustomStrings ? ['custom', 'translation'] : ['translation'],
-        'defaultNs' => $config->useCustomStrings ? 'custom' : 'translation',
-      ],
-      'getAsync' => true,
-      'resGetPath' => static_asset('/i18n/__lng__/__ns__.json')
-    ]); ?>, function () {
+    i18n.init({
+      'lng': <?= json_encode($config->defaultLanguage) ?>,
+      'fallbackLng': <?= json_encode($config->defaultLanguage) ?>,
+      'fallbackNS': 'translation',
+      'ns': {
+        'namespaces': <?= json_encode($config->useCustomStrings ? ['custom', 'translation'] : ['translation']) ?>,
+        'defaultNs': <?= json_encode($config->useCustomStrings ? 'custom' : 'translation') ?>,
+      },
+      'getAsync': true,
+      'resGetPath': window.sAssetsStaticPath+'/i18n/__lng__/__ns__.json'
+    }, function () {
       window.i18nLoaded = true;
       $("title").i18n();
       $("body").i18n();
@@ -319,13 +348,6 @@
   }
   window.ieMode = false;
 </script>
-<!--[if IE 6]>
-<script>
-window.ieMode = true;
-window.sAbsoluteStaticPath = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathOldIE.'/') ?>;
-window.contestsRoot = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathOldIE.'/contests') ?>;
-</script>
-<![endif]-->
 <div style="height:400px">
 </div>
 </body></html>
