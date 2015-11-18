@@ -255,7 +255,7 @@
     "school_edit": "Modifier l'établissement",
     "several_users_for_school": "Vous êtes plusieurs coordinateurs pour le même établissement :<br/>",
     "users_groups_readonly": "Vous pouvez choisir à quels collègues vous permettez d'accéder à vos groupes.",
-    "invalid_identifiers": "Identifiants invalides",
+    "invalid_identifiers": "Identifiant ou mot de passe invalide",
     "unknown_email": "Adresse inconnue",
     "recover_email_sent_1": "Vous allez recevoir un courriel à l'adresse ",
     "recover_email_sent_2": ". Cliquez sur le lien qu'il contient pour définir un nouveau mot de passe",
