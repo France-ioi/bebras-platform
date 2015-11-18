@@ -300,11 +300,11 @@
   if (window.useOverride) {
     window.contestsRoot = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathOverride) ?>+'/contests';
     window.sAbsoluteStaticPath = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathOverride) ?>+'/';
-    window.sAssetsStaticPath = <?= json_encode($config->teacherInterface->sAssetsStaticPathOverride) ?>;
+    window.sAssetsStaticPath = <?= json_encode($config->teacherInterface->sAssetsStaticPathOverride.'/') ?>;
     var detectP = new RegExp("([?&])p=.*?(&|$)", "i");
     if (window.location.toString().match(detectP)) {
       window.sAbsoluteStaticPath = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathNoS3Override) ?>+'/';
-      window.sAssetsStaticPath = <?= json_encode($config->teacherInterface->sAssetsStaticPathNoS3Override) ?>;
+      window.sAssetsStaticPath = <?= json_encode($config->teacherInterface->sAssetsStaticPathNoS3Override.'/') ?>;
     }
     if (window.location.toString() != <?= json_encode($config->contestInterface->overrideUrl) ?> && window.location.toString() != "<?= $config->contestInterface->overrideUrl ?>#") {
       window.location = <?= json_encode($config->contestInterface->overrideUrl) ?>;
