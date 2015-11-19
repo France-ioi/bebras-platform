@@ -288,3 +288,18 @@ the inbound rules of the security group of your rds instance, and add a rule
 to enable all TCP traffic from the group of your environment. You can do so
 by selecting "custom IP" and enter the id of the security group corresponding
 to your environment.
+
+
+##### RDS is very slow
+
+Use these queries to see where the slowness are:
+
+    show full processlist;
+    show engine innodb status;
+    show open tables;
+    select * from information_schema.innodb_trx;
+    select * from information_schema.innodb_locks;
+    select * from information_schema.innodb_lock_waits;
+
+but it might be due to the triggers in `group` and `team` tables that were not removed
+before going into production. In this case the php log will indicate deadlocks.

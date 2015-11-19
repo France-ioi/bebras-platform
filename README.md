@@ -37,6 +37,8 @@ Run `php commonFramework/modelsManager/triggers.php`.
 
 Get Bower dependencies: run `bower install` in both `contestInterface` and `teacherInterface`.
 
+Note that before going into production, you must remove by hand the triggers in team and group (TODO: automate).
+
 ### Additions
 
 If you want to test the platform, run `sampleDatabase/database_content.sql` in your database.
