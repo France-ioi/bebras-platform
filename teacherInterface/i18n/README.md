@@ -39,3 +39,13 @@ system used is the following:
    domains)
 - create `teacherInterface/i18n/xx/regionsXX.json` containing the translation
    of the regions (take FR as an example) in the different languages (xx)
+
+
+## Custom translation
+
+If you want to use custom strings:
+
+- create `contestInterface/i18n/lng/myName.json` and `contestInterface/i18n/lng/myName.json`, 
+replacing `lng` by each language you want to translate the platform into. The format
+is the same as the other `json` files in these directories.
+- set `$config->customStringsName` to *myName* (change *myName* to whatever suits you).

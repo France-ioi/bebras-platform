@@ -300,8 +300,8 @@
       'fallbackLng' => [$config->defaultLanguage],
       'fallbackNS' => 'translation',
       'ns' => [
-        'namespaces' => $config->useCustomStrings ? ['custom', 'translation'] : ['translation'],
-        'defaultNs' => $config->useCustomStrings ? 'custom' : 'translation',
+        'namespaces' => $config->customStringsName ? [$config->customStringsName, 'translation'] : ['translation'],
+        'defaultNs' => $config->customStringsName ? $config->customStringsName : 'translation',
       ],
       'getAsync' => true,
       'resGetPath' => static_asset('/i18n/__lng__/__ns__.json')

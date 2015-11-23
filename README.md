@@ -96,15 +96,6 @@ asked for the number of students doing the contest as a team (1 or 2),
 then each student is prompted for her firstname, lastname and gender.
 Other than that, everything works the same way as public contests.
 
-## Custom translation
-
-If you want to use custom strings:
-
-- create `contestInterface/i18n/lng/custom.json` and `contestInterface/i18n/lng/custom.json`, 
-replacing `lng` by each language you want to translate the platform into. The format
-is the same as the other `json` files in these directories.
-- set `$config->useCustomStrings` to *true*
-
 ## Common problems
 
 - *Something doesn't load.* Check out the web console to know why.

@@ -2234,8 +2234,8 @@ function init() {
       resGetPath: config.i18nResourcePath,
       fallbackNS: 'translation',
       ns: {
-         namespaces: config.useCustomStrings ? ['custom', 'translation', 'country' + config.countryCode] : ['translation', 'country' + config.countryCode],
-         defaultNs: config.useCustomStrings ? 'custom' : 'translation',
+         namespaces: config.customStringsName ? [config.customStringsName, 'translation', 'country' + config.countryCode] : ['translation', 'country' + config.countryCode],
+         defaultNs: config.customStringsName ? config.customStringsName : 'translation',
       },
       useDataAttrOptions: true
    }, function () {
