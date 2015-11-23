@@ -14,7 +14,7 @@
 <form autocomplete="off">
    <div id="divHeader">
         <table style="width:100%"><tr>
-            <td style="width:20%"><img src="images/castor_small.png"/></td>
+            <td style="width:20%" data-i18n="[html]main_logo"></td>
             <td>
             <a id="logoutLink" style="display:none;" href="#" onclick="logout()">[<span data-i18n="logout"></span>]</a>
             <p class="headerH1" data-i18n="title"></p>

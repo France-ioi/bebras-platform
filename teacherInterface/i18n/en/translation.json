@@ -353,5 +353,6 @@
     "grading_scores_one_difference": "with one difference",
     "grading_scores_with_differences": "with __nbDifferences__ differences",
     "awards_content_intro": "TODO",
-    "awards_content_detail": "TODO"
+    "awards_content_detail": "TODO",
+    "main_logo": "<img src=\"images/castor_small.png\"/>"
 }
