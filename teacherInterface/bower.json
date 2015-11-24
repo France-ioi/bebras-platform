@@ -22,6 +22,7 @@
     "i18next": "~1.10.2",
     "jqgrid": "*",
     "jQuery-ajaxTransport-XDomainRequest": "~1.0",
-    "json3": "~3.3"
+    "json3": "~3.3",
+    "jquery-base64": "https://github.com/carlo/jquery-base64.git"
   }
 }
