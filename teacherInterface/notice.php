@@ -207,7 +207,7 @@ Ce code est très important car il sert en cas de panne d'ordinateur ou autre in
    <b>Hotline</b> pendant la semaine du concours, de 8h à 19h :
    <?php 
       if ($config->teacherInterface->sHotlineNumber != '') {
-         echo $config->teacherInterface->sHotlineNumber." ";
+         echo $config->teacherInterface->sHotlineNumber." ; ";
       }
       echo $config->email->sInfoAddress;   
       if ($config->contestBackupURL != '') {

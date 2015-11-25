@@ -57,7 +57,7 @@ if (!isset($_REQUEST["check"])) {
 } else {
    echo $errorMessage;
 }
-echo "<p>Retourner à la la <a href='index.html'>page d'accueil coordinateur</a></p>";
+echo "<p>Retourner à la la <a href='index.php'>page d'accueil coordinateur</a></p>";
 echo "</div></html>"
 
 ?>
