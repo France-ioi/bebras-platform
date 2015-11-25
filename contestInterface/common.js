@@ -1472,11 +1472,9 @@ function loadSessionOrPublicGroups(restartSession) {
             return;
          }
          //$("#classroomGroups").show();
-         if (data.groups.length === 0) {
-            //$("#publicGroups").hide();
-            return;
+         if (data.groups.length !== 0) {
+            $("#listPublicGroups").html(getPublicGroupsList(data.groups));
          }
-         $("#listPublicGroups").html(getPublicGroupsList(data.groups));
          $("#contentPublicGroups").show();
          $("#loadPublicGroups").hide();
       }, "json");
