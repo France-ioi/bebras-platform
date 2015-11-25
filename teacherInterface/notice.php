@@ -4,6 +4,13 @@
 require_once("../shared/common.php");
 require_once("commonAdmin.php");
 
+if ($config->customStringsName) {
+   $translations = json_decode(file_get_contents('i18n/fr/translation.json'), true);
+   $translations = array_merge($translations, json_decode(file_get_contents('i18n/fr/'.$config->customStringsName.'.json'), true));
+} else {
+   $translations = json_decode(file_get_contents('i18n/fr/translation.json'), true);
+}
+
 if (!isset($_SESSION["userID"])) {
    echo "Votre session a expiré, veuillez vous reconnecter.";
    exit;
@@ -53,10 +60,11 @@ $aGroups = array();
 while ($row = $stmt->fetchObject())
 {
 
-   if ($row->contestYear === "2015") {
-      $row->contestType = "Concours Castor 2015";
+   $curYear = date("Y");
+   if ($row->contestYear === $curYear) {
+      $row->contestType = $translations['notice_title_contest'].' '.$curYear;
    } else {
-      $row->contestType = "Castor Informatique : Entraînement";
+      $row->contestType = $translations['notice_title_training'];
    }
    $query = "UPDATE `group` SET `noticePrinted` = 1 WHERE  `group`.`ID` = :groupID";
    $stmtSub = $db->prepare($query);
@@ -121,8 +129,8 @@ if (count($aGroups) == 0) {
 </head>
 <body onload="window.print()">
 
-<? foreach ($aGroups as $id => $row): ?>
-<h1 <?if ($id !=0):?>class="break"<?endif;?>>
+<?php foreach ($aGroups as $id => $row): ?>
+<h1 <?php if ($id !=0):?>class="break"<?php endif;?>>
 <?php echo $row->contestType ?><br/>
 <span class="red">Notice enseignant encadrant</span>
 </h1>
@@ -161,7 +169,7 @@ Groupe <b>
 par ordinateur.</li>
 <li>
 Ils ouvrent un navigateur <b>récent</b> (nous suggérons google chrome) et vont à l'adresse : <br/>
-<center><a href='<? echo $config->contestOfficialURL; ?>'><? echo $config->contestOfficialURL; ?></a></center>
+<center><a href='<?php echo $config->contestOfficialURL; ?>'><?php echo $config->contestOfficialURL; ?></a></center>
 </li>
 <li>
 Ils saisissent le code que vous leur donnez au début du concours, mais pas avant :  <br/>
@@ -185,7 +193,7 @@ Ce code est très important car il sert en cas de panne d'ordinateur ou autre in
 <div class="footer">
    <b>Résolution des problèmes : cas d'un élève déconnecté avant d'avoir terminé.</b>
    <ol>
-   <li>Il retourne sur le site :  <a href='<? echo $config->contestOfficialURL; ?>'><? echo $config->contestOfficialURL; ?></a></li>
+   <li>Il retourne sur le site :  <a href='<?php echo $config->contestOfficialURL; ?>'><?php echo $config->contestOfficialURL; ?></a></li>
    <li>Il clique sur "Continuer le concours".</li>
    <li>Il saisit son code personnel qu'il a noté à l'étape 7.</li>
    <li>Si l'élève n'a pas ou mal noté son code personnel :
@@ -197,7 +205,7 @@ Ce code est très important car il sert en cas de panne d'ordinateur ou autre in
    </li>
    </ol>
    <b>Hotline</b> pendant la semaine du concours, de 8h à 19h :
-   <? 
+   <?php 
       if ($config->teacherInterface->sHotlineNumber != '') {
          echo $config->teacherInterface->sHotlineNumber." ";
       }
@@ -208,7 +216,7 @@ Ce code est très important car il sert en cas de panne d'ordinateur ou autre in
    ?>
 </div>
 
-<? endforeach; ?>
+<?php endforeach; ?>
 
 </body>
 </html>
