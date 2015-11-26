@@ -191,9 +191,9 @@ function createTeam($db, $contestants) {
       list($contestant["firstName"], $contestant["lastName"], $saniValid, $trash) = 
          DataSanitizer::formatUserNames($contestant["firstName"], $contestant["lastName"]);
       $stmt = $db->prepare("
-         INSERT INTO `contestant` (`lastName`, `firstName`, `genre`, `grade`, `teamID`, `cached_schoolID`, `saniValid`) 
-         VALUES (?, ?, ?, ?, ?, ?, ?)");
-      $stmt->execute(array($contestant["lastName"], $contestant["firstName"], $contestant["genre"], $contestant["grade"], $teamID, $_SESSION["schoolID"], $saniValid));
+         INSERT INTO `contestant` (`ID`, `lastName`, `firstName`, `genre`, `grade`, `teamID`, `cached_schoolID`, `saniValid`) 
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+      $stmt->execute(array(getRandomID(), $contestant["lastName"], $contestant["firstName"], $contestant["genre"], $contestant["grade"], $teamID, $_SESSION["schoolID"], $saniValid));
    }
    echo json_encode((object)array("success" => true, "teamID" => $teamID, "password" => $password));
 }
