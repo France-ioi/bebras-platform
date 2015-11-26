@@ -71,6 +71,9 @@ function getMimeTypes() {
        $out['jpg'] = 'image/jpeg';
        $out['svg'] = 'image/svg+xml';
        $out['html'] = 'text/html';
+       $out['ttf'] = 'application/octet-stream';
+       $out['eot'] = 'application/octet-stream';
+       $out['woff'] = 'application/octet-stream';
     }
     return $out;
 }
@@ -410,5 +413,4 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
    contestPutContents($contestFolder.'/contest_'.$contestID.'.js', $jsPreload);
    contestPutContents($contestFolder.'/contest_'.$contestID.'_graders.html', $strGraders, !$fullFeedback);
    contestPutContents($contestFolder.'/.htaccess', $htAccessContent, true);
-   echo json_encode(['success' => true]);
 }
