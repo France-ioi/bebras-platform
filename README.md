@@ -29,7 +29,7 @@ Get composer dependencies:
 
 Update browser detection library (_WARNING_: run with same user as web server):
 
-    ./vendor/bin/browscap browscap:update
+    ./vendor/bin/browscap-php browscap:update
 
 Make the directories `logs/` and `contestInterface/contests/` writable by PHP.
 
