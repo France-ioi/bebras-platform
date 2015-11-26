@@ -4,6 +4,9 @@
 require_once("../shared/common.php");
 require_once("commonAdmin.php");
 
+include('./config.php');
+header('Content-type: text/html');
+
 $errorMessage = "<p><b style='color:red'>Erreur. L'url est invalide.</b></p><p>Réessayez en vous assurant d'inclure l'adresse complète fournie dans l'email que vous avez reçu. Si cela ne fonctionne toujours pas, contactez-nous à ".$config->email->sInfoAddress."</p>";
 
 function validateEmail($type, $email, $salt) {
@@ -33,13 +36,17 @@ echo "
 <head>
    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
    <link rel='stylesheet' href='admin.css' />
+   <title data-i18n=\"page_title\"></title>";
+   script_tag('/bower_components/jquery/jquery.min.js');
+   script_tag('/bower_components/i18next/i18next.min.js');
+echo "
 </head>
 <body>
 <div id='divHeader'>
      <table style='width:100%'><tr>
-         <td style='width:20%'><img src='images/castor_small.png'/></td>
-         <td><p class='headerH1'>Castor Informatique France</p>
-         <p class='headerH2'> Plate-forme du concours Castor - <span style='color:red;font-weight:bold'>ACCÈS COORDINATEUR</span></p>
+         <td style='width:20%' data-i18n=\"[html]main_logo\"></td>
+         <td><p class='headerH1' data-i18n=\"title\"></p>
+         <p class='headerH2' data-i18n=\"[html]subtitle\"></p>
          </td>
          <td></td>
       </tr></table>
@@ -58,6 +65,26 @@ if (!isset($_REQUEST["check"])) {
    echo $errorMessage;
 }
 echo "<p>Retourner à la la <a href='index.php'>page d'accueil coordinateur</a></p>";
-echo "</div></html>"
+echo "</div>
+<script>
+    i18n.init(";
+      echo json_encode([
+      'lng' => $config->defaultLanguage,
+      'fallbackLng' => [$config->defaultLanguage],
+      'fallbackNS' => 'translation',
+      'ns' => [
+        'namespaces' => $config->customStringsName ? [$config->customStringsName, 'translation'] : ['translation'],
+        'defaultNs' => $config->customStringsName ? $config->customStringsName : 'translation',
+      ],
+      'getAsync' => true,
+      'resGetPath' => static_asset('/i18n/__lng__/__ns__.json')
+    ]);
+    echo ", function () {
+      $(\"title\").i18n();
+      $(\"body\").i18n();
+    });
+</script>
+</body>
+</html>"
 
 ?>
