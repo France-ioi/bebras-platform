@@ -7,6 +7,7 @@ ini_set('display_errors', '1');
 require_once("../shared/common.php");
 require_once("commonAdmin.php");
 require_once("../commonFramework/modelsManager/csvExport.php");
+require_once("../commonFramework/modelsManager/modelsTools.inc.php");
 require_once("../schoolsMap/googleMap.inc.php");
 require_once("domains.php");
 //require_once("../modelsManager/modelsManager-DynamoDB.php");
@@ -362,9 +363,9 @@ function insertRecord($db, $modelName, $record, $roles) {
    $insertID = $insertedIDs[0];
 
    if ($modelName == "school") {
-      $querySchoolUser = "INSERT INTO `school_user` (`schoolID`, `userID`, `confirmed`) VALUES (:insertID, :userID, 1)";
+      $querySchoolUser = "INSERT INTO `school_user` (`ID`, `schoolID`, `userID`, `confirmed`) VALUES (:ID, :insertID, :userID, 1)";
       $stmt = $db->prepare($querySchoolUser);
-      $stmt->execute(array("insertID" => $insertID, "userID" => $record["userID"]));
+      $stmt->execute(array("ID" => getRandomID(), "insertID" => $insertID, "userID" => $record["userID"]));
    }
    if ($modelName === "user" && $config->email->bSendMailForReal) {
       sendValidationEmails($record);
