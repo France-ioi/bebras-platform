@@ -1570,17 +1570,18 @@ function genTasks(questionsUrl, curIndex)
    generating = true;
    $('#preview_question').load(function() {
       $('#preview_question').unbind('load');
-      
-      $('#preview_question')[0].contentWindow.getTaskResources(function(bebras) {
-         tasks.push({
-            'bebras': bebras,
-            'url': questionsUrl[curIndex]
+      TaskProxyManager.getTaskProxy('preview_question', function(task) {
+         task.getResources(function(bebras) {
+            tasks.push({
+               'bebras': bebras,
+               'url': questionsUrl[curIndex]
+            });
+            
+            generating = false;
+            
+            genTasks(questionsUrl, curIndex + 1);
          });
-         
-         generating = false;
-         
-         genTasks(questionsUrl, curIndex + 1);
-      });
+      }, true);
    });
 }
 
