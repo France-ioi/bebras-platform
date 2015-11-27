@@ -37,6 +37,7 @@ $config->aws->key = '';
 $config->aws->secret = '';
 $config->aws->region = '';
 $config->aws->bucketName = '';
+$config->aws->s3region = '';
 
 $config->contestInterface = (object) array();
 // Point contestInterface->baseUrl to an URL serving the contestInterface directory.

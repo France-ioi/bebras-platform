@@ -18,6 +18,7 @@ $config->aws->key = '';
 $config->aws->secret = '';
 $config->aws->region = '';
 $config->aws->bucketName = '';
+$config->aws->s3region = '';
 
 // Emails
 $config->email->bSendMailForReal = false;

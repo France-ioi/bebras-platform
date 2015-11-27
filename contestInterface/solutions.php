@@ -41,7 +41,7 @@ if ($config->teacherInterface->generationMode == 'local') {
            'key'    => $config->aws->key,
            'secret' => $config->aws->secret
        ),
-      'region' => $config->aws->region,
+      'region' => $config->aws->s3region,
       'version' => '2006-03-01'
    ));
    $solutions = $s3Client->getObject(array(
@@ -55,7 +55,7 @@ if ($config->teacherInterface->generationMode == 'local') {
            'key'    => $config->aws->key,
            'secret' => $config->aws->secret
        ),
-      'region' => $config->aws->region,
+      'region' => $config->aws->s3region,
       'version' => '2006-03-01'
    ));
    $cmd = $s3Client->getCommand('GetObject', [
