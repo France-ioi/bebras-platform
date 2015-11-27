@@ -369,6 +369,9 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
       contestAddContent($contestFolder, $strQuestion, $nameParts, $buffer, $numPart, false);
    }
    contestCopyFile(__DIR__.'/bebras-tasks/modules/img/castor.png', $contestFolder.'/castor.png');
+   contestCopyFile(__DIR__.'/bebras-tasks/modules/img/laptop_success.png', $contestFolder.'/laptop_success.png');
+   contestCopyFile(__DIR__.'/bebras-tasks/modules/img/laptop_warning.png', $contestFolder.'/laptop_warning.png');
+   contestCopyFile(__DIR__.'/bebras-tasks/modules/img/laptop_error.png', $contestFolder.'/laptop_error.png');
    contestCopyFile(__DIR__.'/bebras-tasks/modules/img/fleche-bulle.png', $contestFolder.'/fleche-bulle.png');
    $images[] = $config->teacherInterface->sAbsoluteStaticPath.'/contests/'.$contestFolder.'/castor.png';
    $images[] = $config->teacherInterface->sAbsoluteStaticPath.'/contests/'.$contestFolder.'/fleche-bulle.png';
