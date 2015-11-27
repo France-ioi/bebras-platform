@@ -249,6 +249,17 @@ function contestAddContent($contestFolder, $content, &$listParts, &$buffer, &$nu
    }
 }
 
+function removeFonts($images) {
+   $imagesToPreload = [];
+   foreach($images as $image) {
+      $ext = pathinfo($image, PATHINFO_EXTENSION);
+      if ($ext != 'eot' && $ext != 'woff' && $ext != 'ttf') {
+         $imagesToPreload[] = $image;
+      }
+   }
+   return $imagesToPreload;
+}
+
 function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = false, $status = 'RunningContest') {
    global $mode, $contestLocalDir, $config;
    if ($status == 'RunningContest' || $status == 'FutureContest') {
@@ -364,12 +375,16 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
 
    $jsPreload = "\r\n//ImagesLoader is injected by the platform just before the contest is loaded\r\n";
    
+   // preloading fonts results in very strange bug with CORS headers...
+   $imagesToPreload = removeFonts($images);
+   $imagesToPreloadSols = removeFonts($imagesSols);
+
    $jsPreload .= "ImagesLoader.setImagesToPreload([\n'".
-      implode("' ,\n'", $images).
+      implode("' ,\n'", $imagesToPreload).
       "']);\r\n";
 
    $jsPreload .= "function preloadSolImages() { var imagesToLoad = [\n'".
-      implode("' ,\n'", $imagesSols).
+      implode("' ,\n'", $imagesToPreloadSols).
       "'];\r\n   ImagesLoader.addImagesToPreload(imagesToLoad);\r\n}\n";
 
    $htAccessContent =
