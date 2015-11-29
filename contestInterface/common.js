@@ -959,7 +959,7 @@ function updateUnlockedLevels(sortedQuestionIDs, updatedQuestionKey) {
    }
    var epsilon = 0.001;
    var nbTasksUnlocked = [5, 0, 0];
-   if (sortedQuestionIDs.length =< 10) {
+   if (sortedQuestionIDs.length <= 10) {
       nbTasksUnlocked[0] = 4;
    }
    var prevQuestionUnlockedLevels = {};
