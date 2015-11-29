@@ -152,7 +152,7 @@
    <p data-i18n="[html]password_warning">
    </p>
    <p>
-   Code d'accès: <span id="teamPassword" class="selectable" style="font-size:2em"></span>
+   Code d'accès : <span id="teamPassword" class="selectable" style="font-size:2em"></span>
    </p>
          <div id="divInput">
             <button type="button" data-i18n="password_confirm" id="buttonConfirmTeamPassword" onclick="confirmTeamPassword()"></button>
