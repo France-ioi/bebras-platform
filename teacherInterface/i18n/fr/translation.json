@@ -3,7 +3,7 @@
     "logout": "Se déconnecter",
     "title": "Castor Informatique France",
     "subtitle": "Plateforme du concours - <span style='color:red;font-weight:bold'>ACCÈS COORDINATEUR</span>",
-    "announcement": "<p>Bonjour et bienvenue.</p> <p>Le concours Castor 2015 est terminé. Les résultats seront bientôt disponibles.</p><p>Des scores apparaîtront bientôt dans l'onglet équipes, mais ne sont <b>pour l'instant pas définitifs</b>, un certain nombre de vérifications étant nécessaires. Les scores des entraînements ne s'affichent pas toujours, nous allons faire le nécessaire pour qu'ils soient visibles bientôt.</p>",
+    "announcement": "<p>Bonjour et bienvenue.</p> <p>Le concours Castor 2015 est terminé. Les résultats seront bientôt disponibles.</p><p><b>Des scores provisoires sont disponibles dans l'onglet équipes.</b> Merci de vérifier et corriger les noms des élèves dans l'onglet élèves. Merci également de marquer comme hors concours, dans la dernière colonnes de l'onglet équipes, les participations qui ne sont pas officielles (enseignants, essais, participation annulée, etc.)</p><p>Les scores des entraînements ne s'affichent pas toujours, nous allons faire le nécessaire pour qu'ils soient visibles bientôt.</p>",
     "loading": "Chargement en cours…",
     "login_register": "Inscrivez-vous !",
     "login_are_you_admin": "Vous êtes coordinateur ?",
