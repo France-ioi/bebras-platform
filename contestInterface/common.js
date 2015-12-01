@@ -645,10 +645,11 @@ var questionIframe = {
          questionIframe.addCssContent($('#'+cssModuleId).attr('data-content'));
       });
 
+      questionIframe.loaded = true;
+      questionIframe.questionKey = questionKey;
+
       setTimeout(function() {
          questionIframe.run(taskViews, function() {
-            questionIframe.loaded = true;
-            questionIframe.questionKey = questionKey;
             loadSolutionChoices(questionKey);
             callback();
          });
