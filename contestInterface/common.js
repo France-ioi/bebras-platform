@@ -2112,6 +2112,9 @@ function loadSolutions(data) {
          $("#divClosed").hide();
          $('#question-iframe-container').css('left', '273px');
          $("#divImagesLoading").hide();
+         if (!currentQuestionKey) {
+            return;
+         }
          questionIframe.task.getHeight(function(height) {
             platform.updateHeight(height);
             if (questionIframe.loaded) {
