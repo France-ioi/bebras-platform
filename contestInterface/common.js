@@ -1,4 +1,4 @@
-/* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
+ /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 !function () {
 
 var contestID;
@@ -42,9 +42,17 @@ var logToConsole = function(logStr) {
 
 var nbErrorsSent = 0;
 var logError = function(error, errormsg) {
-  var logStr = error+(errormsg ? ' '+errormsg : '');
+  var logStr;
+  if (typeof error != "string") {
+     logStr = JSON.stringify(error);
+  } else {
+     logStr = error;
+  }
+  if (errormsg) {
+     logStr += ' ' + errormsg;
+  }
   if (error.stack) {
-    logStr = logStr + ' ' + error.stack;
+    logStr += ' ' + error.stack;
   }
   logToConsole((currentQuestionKey ? currentQuestionKey+': ' : '')+logStr);
   nbErrorsSent = nbErrorsSent + 1;
@@ -60,7 +68,14 @@ var logError = function(error, errormsg) {
   });
 };
 
+window.onerror = function () {
+   logError({
+      message: 'global error handler',
+      details: Array.prototype.slice.call(arguments)});
+};
+
 window.logError = logError;
+
 
 /**
  * Old IE versions does not implement the Array.indexOf function
@@ -605,10 +620,9 @@ var questionIframe = {
       this.addJsContent('window.task = null;');
 
       // Load js modules
-      var that = this;
       $('.js-module-'+questionKey).each(function() {
          var jsModuleId = 'js-module-'+$(this).attr('data-content');
-         that.addJsContent($('#'+jsModuleId).attr('data-content'));
+         questionIframe.addJsContent($('#'+jsModuleId).attr('data-content'));
       });
 
       this.addJsContent('window.contestsRoot = "'+window.contestsRoot+'";');
@@ -628,16 +642,18 @@ var questionIframe = {
       // Load css modules
       $('.css-module-'+questionKey).each(function() {
          var cssModuleId = 'css-module-'+$(this).attr('data-content');
-         that.addCssContent($('#'+cssModuleId).attr('data-content'));
+         questionIframe.addCssContent($('#'+cssModuleId).attr('data-content'));
       });
 
       setTimeout(function() {
-         questionIframe.run(taskViews, callback);
-         loadSolutionChoices(questionKey);
+         questionIframe.run(taskViews, function() {
+            questionIframe.loaded = true;
+            questionIframe.questionKey = questionKey;
+            loadSolutionChoices(questionKey);
+            callback();
+         });
       }, 100);
 
-      this.loaded = true;
-      this.questionKey = questionKey;
    },
 
    /**
