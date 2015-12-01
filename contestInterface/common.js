@@ -1093,17 +1093,19 @@ function setupContest(data) {
       }
    }
    $('.buttonClose').show();
-   // Starts the timer
-   TimeManager.init(
-      data.timeUsed,
-      data.endTime,
-      function() {
-         closeContest(t("contest_is_over"));
-      },
-      function() {
-         closeContest("<b>" + t("time_is_up") + "</b>");
-      }
-   );
+   if (!noLoad || !fullFeedback) {
+      // Starts the timer
+      TimeManager.init(
+         data.timeUsed,
+         data.endTime,
+         function() {
+            closeContest(t("contest_is_over"));
+         },
+         function() {
+            closeContest("<b>" + t("time_is_up") + "</b>");
+         }
+      );
+   }
 
    //questionIframe.iframe.contentWindow.ImagesLoader.refreshImages();
 }
