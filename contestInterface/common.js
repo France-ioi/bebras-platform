@@ -43,7 +43,7 @@ var logToConsole = function(logStr) {
 var nbErrorsSent = 0;
 var logError = function(error, errormsg) {
   var logStr;
-  if (typeof error != "string") {
+  if (typeof error != "string" && !error.stack) {
      logStr = JSON.stringify(error);
   } else {
      logStr = error;
