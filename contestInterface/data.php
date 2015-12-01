@@ -219,7 +219,7 @@ function loadContestData($db) {
    //$stmt = $db->prepare("SELECT `questionID`, `answer` FROM `team_question` WHERE `teamID` = ?");
    //$stmt->execute(array($teamID));
    try {
-      $results = $tinyOrm->select('team_question', array('questionID', 'answer', 'ffScore'), array('teamID' =>$teamID));
+      $results = $tinyOrm->select('team_question', array('questionID', 'answer', 'ffScore', 'score'), array('teamID' =>$teamID));
    } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
       if (strval($e->getAwsErrorCode()) != 'ConditionalCheckFailedException') {
          error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
@@ -234,7 +234,9 @@ function loadContestData($db) {
       if (isset($row['answer'])) {
          $answers[$row['questionID']] = $row['answer'];
       }
-      if (isset($row['ffScore'])) {
+      if (isset($row['score'])) {
+         $scores[$row['questionID']] = $row['score'];
+      } elseif (isset($row['ffScore'])) {
          $scores[$row['questionID']] = $row['ffScore'];
       }
    }
