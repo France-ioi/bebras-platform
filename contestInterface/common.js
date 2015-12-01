@@ -1759,7 +1759,9 @@ function sendScores() {
                   image = "";
                }
             }
-            $("#bullet_" + questionKey).html(image);
+            if (!newInterface) {
+               $("#bullet_" + questionKey).html(image);
+            }
             $("#score_" + questionKey).html("<b>" + score + "</b> / " + maxScore);
          }
          $(".scoreTotal").hide();
