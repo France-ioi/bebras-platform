@@ -2112,8 +2112,8 @@ function loadSolutions(data) {
          $("#divClosed").hide();
          $('#question-iframe-container').css('left', '273px');
          $("#divImagesLoading").hide();
-         questionIframe.task.getHeight(function() {
-            platform.updateHeight();
+         questionIframe.task.getHeight(function(height) {
+            platform.updateHeight(height);
             if (questionIframe.loaded) {
                questionIframe.task.unload(function() {
                   questionIframe.loadQuestion({'task': true, 'solution': true, 'grader': true}, currentQuestionKey);
