@@ -1761,8 +1761,8 @@ function sendScores() {
             }
             if (!newInterface) {
                $("#bullet_" + questionKey).html(image);
+               $("#score_" + questionKey).html("<b>" + score + "</b> / " + maxScore);
             }
-            $("#score_" + questionKey).html("<b>" + score + "</b> / " + maxScore);
          }
          $(".scoreTotal").hide();
          $(".chrono").html("<tr><td style='font-size:28px'> " + t("score") + ' ' + teamScore + " / " + maxTeamScore + "</td></tr>");
@@ -1919,6 +1919,9 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
 };
 
 function markAnswered(questionKey, answer) {
+   if (newInterface) {
+      return;
+   }
    if (answer === "") {
       $("#bullet_" + questionKey).html("");
    } else {
@@ -1935,7 +1938,9 @@ function submitAnswer(questionKey, answer, score) {
       logError('trying to submit non-string answer: '+answer);
       return;
    }
-   $("#bullet_" + questionKey).html("&loz;");
+   if (!newInterface) {
+      $("#bullet_" + questionKey).html("&loz;");
+   }
    answersToSend[questionsKeyToID[questionKey]] = { answer: answer, sending:false, 'score': score };
    nbSubmissions++;
    Tracker.trackData({dataType:"answer", teamID: teamID, questionKey: questionKey, answer: answer});
