@@ -2116,13 +2116,13 @@ function loadSolutions(data) {
             platform.updateHeight(height);
             if (questionIframe.loaded) {
                questionIframe.task.unload(function() {
-                  questionIframe.loadQuestion({'task': true, 'solution': true, 'grader': true}, currentQuestionKey);
+                  questionIframe.loadQuestion({'task': true, 'solution': true, 'grader': true}, currentQuestionKey, function(){});
                }, function() {
                   logError(arguments);
-                  questionIframe.loadQuestion({'task': true, 'solution': true, 'grader': true}, currentQuestionKey);
+                  questionIframe.loadQuestion({'task': true, 'solution': true, 'grader': true}, currentQuestionKey, function(){});
                });
             } else {
-               questionIframe.loadQuestion({'task': true, 'solution': true, 'grader': true}, currentQuestionKey);
+               questionIframe.loadQuestion({'task': true, 'solution': true, 'grader': true}, currentQuestionKey, function(){});
             }
             alert(t("check_score_detail"));
          }, logError);
