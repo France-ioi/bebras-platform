@@ -198,7 +198,7 @@
             <tr>
                <td class="header_logo" data-i18n="[html]top_image_new"></td>
                <td class="header_score">Score&nbsp;:<br/><b><span class='scoreTotalFullFeedback'></span></b></td>
-               <td class="header_time">Temps restant&nbsp;: <br/><b><span class='minutes'></span>:<span class='seconds'></span></b></td>
+               <td class="header_time" id="header_time">Temps restant&nbsp;: <br/><b><span class='minutes'></span>:<span class='seconds'></span></b></td>
                <td class="header_rank" style="display:none">Classement&nbsp; <br/><b><span class="rank" width="95%"></span></b></td>
                <td class="header_button">
                  <input class="button_return_list" type="button" value="Retour à la liste des questions" onclick="backToList()"></input>
@@ -208,7 +208,7 @@
       </div>
       <div class="header_sep_top"></div>
       <div class="layout_table_wrapper">
-         <div class="questionListIntro" style="text-align:left;line-height:170%">
+         <div class="questionListIntro" style="text-align:left;line-height:170%" id="questionListIntro">
             <ul data-i18n="[html]question_list_intro">
             </ul>
          </div>

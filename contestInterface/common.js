@@ -1106,6 +1106,10 @@ function setupContest(data) {
          }
       );
    }
+   if (noLoad && newInterface) {
+      $('#questionListIntro').html('<p>'+t('check_score_detail')+'</p>');
+      $('#header_time').html('');
+   }
 
    //questionIframe.iframe.contentWindow.ImagesLoader.refreshImages();
 }
