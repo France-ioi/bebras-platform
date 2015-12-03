@@ -1363,7 +1363,10 @@ function gradeQuestionPack(task, curContestID, curGroupID, questionKeys, curInde
          $(selectorState+' .gradeprogressing').text($(selectorState+' .gradeprogressing').text()+'.');
          gradeQuestionPack(task, curContestID, curGroupID, questionKeys, curIndex, curPackIndex + gradePackSize);
       }
-   }, 'json');
+   }, 'json').fail(function() {
+      jqAlert('Something went wrong while sending scores...');
+      return false;
+   });
 }
 
 function gradeQuestion(task, curContestID, curGroupID, questionKeys, curIndex) {
