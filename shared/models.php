@@ -363,6 +363,7 @@ $viewsModels = array(
       ),
       "fields" => array(
          "schoolID" => array("tableName" => "group", "access" => array("write" => array(), "read" => array("user"))),
+         "contestID" => array("tableName" => "group", "access" => array("write" => array(), "read" => array("user"))),
          "name" => array("tableName" => "group"),
          "contestants" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin")), "tableName" => "contestant", "sql" => "group_concat(`contestant`.`lastName`,' ',`contestant`.`firstName` separator ',')", "groupBy" => "`team`.`ID`"),
          "password" => array(),
