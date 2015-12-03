@@ -50,6 +50,12 @@ $tablesModels = array (
          "order" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
       )
    ),
+   "grade" => array(
+      "autoincrementID" => false,
+      "fields" => array(
+         "name" => array("type" => "string", "access" => array("write" => array(), "read" => array()))
+      )
+   ),
    "group" => array(
       "autoincrementID" => false,
       "fields" => array(
@@ -327,6 +333,7 @@ $viewsModels = array(
          "group" => array("srcTable" => "team", "srcField" => "groupID", "dstField" => "ID"),
          "contest" => array("srcTable" => "group", "srcField" => "contestID", "dstField" => "ID"),
          "school" => array("srcTable" => "group", "srcField" => "schoolID", "dstField" => "ID"),
+         "grade" => array("srcTable" => "contestant", "srcField" => "grade", "dstField" => "ID"),
          "user_user" => array("type" => "LEFT", "srcTable" => "group", "srcField" => "userID", "dstField" => "userID"),
       ),
       "fields" => array(
@@ -340,6 +347,7 @@ $viewsModels = array(
          "firstName" => array(),
          "lastName" => array(),
          "genre" => array(),
+         "grade" => array("tableName" => "grade", "fieldName" => "name"),
          "score" => array("tableName" => "team"),
          "rank" => array(),
          "algoreaCode" => array()

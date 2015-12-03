@@ -425,5 +425,20 @@ INSERT INTO `question` (`ID`, `key`, `folder`, `name`, `answerType`, `expectedAn
   (138, '2012-LV-02', '2012', 'Transport de troncs', 0, '2'),
   (139, '2012-DE-05', '2012', 'Plantons des fleurs', 0, '1');
 
-COMMIT;
+INSERT INTO `grade` (`ID`, `name`) VALUES
+(-4, 'Autre'),
+(-1, 'Professeur'),
+(4, 'CM1'),
+(5, 'CM2'),
+(6, '6 e.'),
+(7, '5 e.'),
+(8, '4 e.'),
+(9, '3 e.'),
+(10, 'seconde'),
+(11, 'première'),
+(12, 'terminale'),
+(13, 'seconde pro.'),
+(14, 'première pro.'),
+(15, 'terminale pro.');
 
+COMMIT;
