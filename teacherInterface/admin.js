@@ -659,7 +659,7 @@ function loadSchoolSearch() {
 }
 
 function loadTeams() {
-   loadGrid("team_view", "startTime", 20, [20, 50, 200, 500], function() {}, isAdmin());
+   loadGrid("team_view", "startTime", 20, [20, 50, 200, 500], function() {}, true);
 }
 
 function loadUsers() {
