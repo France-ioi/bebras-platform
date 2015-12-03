@@ -117,8 +117,11 @@
        <option value="8" data-i18n="grade_8"></option>
        <option value="9" data-i18n="grade_9"></option>
        <option value="10" data-i18n="grade_10"></option>
+       <option value="13" data-i18n="grade_10_pro"></option>
        <option value="11" data-i18n="grade_11"></option>
+       <option value="14" data-i18n="grade_11_pro"></option>
        <option value="12" data-i18n="grade_12"></option>
+       <option value="15" data-i18n="grade_12_pro"></option>
        <option value="-4" data-i18n="grade_-4">Autre</option>
    </select> </p>
    <div id="contestant2" style="display:none">
@@ -141,8 +144,11 @@
        <option value="8" data-i18n="grade_8"></option>
        <option value="9" data-i18n="grade_9"></option>
        <option value="10" data-i18n="grade_10"></option>
+       <option value="13" data-i18n="grade_10_pro"></option>
        <option value="11" data-i18n="grade_11"></option>
+       <option value="14" data-i18n="grade_11_pro"></option>
        <option value="12" data-i18n="grade_12"></option>
+       <option value="15" data-i18n="grade_12_pro"></option>
        <option value="-4" data-i18n="grade_-4">Autre</option>
       </select> </p>
    </div>
