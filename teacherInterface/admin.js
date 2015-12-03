@@ -267,20 +267,20 @@ function initModels(isLogged) {
                   "12": t("grade_12"),
                   "15": t("grade_12_pro")
                }}, searchoptions:{ value:"_NOF_:" + t("option_no_filter") +
-                  ";-1" + t("grade_-1") +
-                  ";-4" + t("grade_-4") +
-                  ";4" + t("grade_4") +
-                  ";5" + t("grade_5") +
-                  ";6" + t("grade_6") +
-                  ";7" + t("grade_7") +
-                  ";8" + t("grade_8") +
-                  ";9" + t("grade_9") +
-                  ";10" + t("grade_10") +
-                  ";13" + t("grade_10_pro") +
-                  ";11" + t("grade_11") +
-                  ";14" + t("grade_11_pro") +
-                  ";12" + t("grade_12") +
-                  ";15" + t("grade_12_pro")
+                  ";-1:" + t("grade_-1") +
+                  ";-4:" + t("grade_-4") +
+                  ";4:" + t("grade_4") +
+                  ";5:" + t("grade_5") +
+                  ";6:" + t("grade_6") +
+                  ";7:" + t("grade_7") +
+                  ";8:" + t("grade_8") +
+                  ";9:" + t("grade_9") +
+                  ";10:" + t("grade_10") +
+                  ";13:" + t("grade_10_pro") +
+                  ";11:" + t("grade_11") +
+                  ";14:" + t("grade_11_pro") +
+                  ";12:" + t("grade_12") +
+                  ";15:" + t("grade_12_pro")
                },
                stype: "select", width:75},
             score: {label: t("contestant_score_label"), editable: false, width:75},
