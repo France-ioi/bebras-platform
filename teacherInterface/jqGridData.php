@@ -557,7 +557,7 @@ function explicitCSVRequest(&$request) {
       $request['model']['fields']['genre'] = array('sql' => "IF(`genre` = 1, 'F', 'M')", 'tableName' => 'contestant');
    }
    // replacing contestID with contestName
-   if (isset($request['model']['fields']['contestID'])) {
+   if (isset($request['model']['fields']['contestID']) && $request['model']['mainTable'] != 'team') {
       if(($key = array_search('contestID', $request['fields'])) !== false) {
           $request['fields'][$key] = 'contestName';
       }
@@ -571,9 +571,11 @@ function explicitCSVRequest(&$request) {
             'srcField' => 'contestID'
          );
       }
-      foreach ($request['orders'] as $i => $order) {
-         if ($order['field'] == 'contestID') {
-            unset($request['orders'][$i]);
+      if (isset($request['orders'])) {
+         foreach ($request['orders'] as $i => $order) {
+            if ($order['field'] == 'contestID') {
+               unset($request['orders'][$i]);
+            }
          }
       }
    }
