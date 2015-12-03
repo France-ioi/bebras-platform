@@ -1094,7 +1094,7 @@ function loadSchoolsYears(school_users) {
                }
                $(this).dialog( "close" );
             }}];
-            jqAlert(t("alert_awards_received"), null, buttons); // TODO : paramètre pour le nb de lots, établissement
+            //jqAlert(t("alert_awards_received"), null, buttons); // TODO : paramètre pour le nb de lots, établissement
          }
       }
    });
