@@ -1086,7 +1086,7 @@ function setupContest(data) {
    // We don't want to start the process of selecting a question, if the grading is going to start !
 
    if (!newInterface) {
-      window.selectQuestion(sortedQuestionIDs[0], false, contestEnded);
+      window.selectQuestion(sortedQuestionIDs[0], false, contestEnded && !fullFeedback);
    }
 
    // Reloads previous answers to every question
@@ -1113,6 +1113,8 @@ function setupContest(data) {
          }
       );
    } else {
+      TimeManager.endTime = true;
+      hasDisplayedContestStats = true;
       loadSolutionsHat();
    }
    if (contestEnded && newInterface) {
