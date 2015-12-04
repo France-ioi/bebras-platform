@@ -1648,8 +1648,12 @@ function finalCloseContest(message) {
          $("#divHeader").show();
 
          showScoresHat();
-         var sortedQuestionIDs = getSortedQuestionIDs(questionsData);
-         updateUnlockedLevels(sortedQuestionIDs, null, true);
+         if (newInterface) {
+            var sortedQuestionIDs = getSortedQuestionIDs(questionsData);
+            updateUnlockedLevels(sortedQuestionIDs, null, true);
+            $('#questionListIntro').html('<p>'+t('check_score_detail')+'</p>');
+            $('#header_time').html('');
+         }
       }
    });
 }
