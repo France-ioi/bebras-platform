@@ -1439,10 +1439,12 @@ function getPublicGroupsList(groups) {
       {name: t("level_2_name"), i18name: "level_2_name", id: 2},
       {name: t("level_3_name"), i18name: "level_3_name", id: 3},
       {name: t("level_4_name"), i18name: "level_4_name", id: 4},
-      {name: t("level_all_name"), i18name: "level_all_name", id: 0}
+      {name: t("level_all_questions_name"), i18name: "level_all_questions_name", id: 0}
    ];
    var strGroups = "<table style='border:solid 1px black' cellspacing=0 cellpadding=5>";
    for (year = maxYear; years[year] === true; year--) {
+      var nbGroupsInYear = 0;
+      var thisYearStrGroup = '';
       strGroups += "<tr class='groupRow'><td style='width:100px;border:solid 1px black'><b>Castor " + year + "</b></td>";
       for (var iLevel = 0; iLevel < levels.length; iLevel++) {
          var level = levels[iLevel];
@@ -1451,12 +1453,19 @@ function getPublicGroupsList(groups) {
             group = arrGroups[level.id][year];
          }
          if (group) {
-            strGroups += "<td style='width:100px;border:solid 1px black;text-align:center'>" +
+            thisYearStrGroup += "<td style='width:100px;border:solid 1px black;text-align:center'>" +
                "<a href='#' onclick='checkGroupFromCode(\"CheckGroup\", \"" + group.code + "\", false, true)' data-i18n=\"[html]"+level.i18name+"\"> " + level.name + "</a></td>";
+               nbGroupsInYear = nbGroupsInYear + 1;
          } else {
-            strGroups += "<td width=20%></td>";
+            thisYearStrGroup += "<td width=20%></td>";
          }
       }
+      if (nbGroupsInYear == 1 && arrGroups[0] && arrGroups[0][year]) {
+         group = arrGroups[0][year];
+         thisYearStrGroup = "<td colspan=\"5\" style='width:100px;border:solid 1px black;text-align:center'>" +
+               "<a href='#' onclick='checkGroupFromCode(\"CheckGroup\", \"" + group.code + "\", false, true)' data-i18n=\"[html]level_all_levels_name\"> " + t("level_all_levels_name") + "</a></td>";
+      }
+      strGroups = strGroups + thisYearStrGroup;
       strGroups += "</tr>";
    }
    strGroups += "</table>";
