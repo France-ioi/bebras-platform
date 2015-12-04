@@ -366,7 +366,7 @@ $viewsModels = array(
       "adminOnly" => false,
       "joins" => array(
          "group" => array("srcTable" => "team", "srcField" => "groupID", "dstField" => "ID"),
-         "user_user" => array("type" => "LEFT", "srcTable" => "group", "srcField" => "userID", "dstField" => "userID"),
+         "user_user" => array("type" => "LEFT", "srcTable" => "group", "on" => "(`[PREFIX]user_user`.`targetUserID` = :userID and `group`.`userID` = `user_user`.`userID`)"),
          "contestant" => array("srcTable" => "team", "srcField" => "ID", "dstField" => "teamID")
       ),
       "fields" => array(
@@ -381,7 +381,7 @@ $viewsModels = array(
       ),
       "filters" => array(
          "schoolID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`schoolID` = :schoolID"),
-         "userID" => array("joins" => array("user_user"), "condition" => "(`group`.`userID` = :userID OR (`[PREFIX]user_user`.`targetUserID` = :userID AND `[PREFIX]user_user`.`accessType` <> 'none'))"),
+         "userID" => array("joins" => array("user_user"), "condition" => "(`group`.`userID` = :userID OR `[PREFIX]user_user`.`accessType` <> 'none')"),
          "contestants" => array(
             "joins" => array("contestant"),
             "condition" => "concat(`[PREFIX]contestant`.`firstName`,' ',`[PREFIX]contestant`.`lastName`) LIKE :contestants")
