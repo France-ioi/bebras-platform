@@ -2422,7 +2422,19 @@ var drawStars = function(id, nbStars, starWidth, rate, mode, nbStarsLocked) {
    }
 };
 
+function getParameterByName(name) {
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
 
-  $(init);
+$(document).on('ready', function() {
+   var teamParam = getParameterByName('team');
+   if (teamParam !== '') {
+      window.checkGroupFromCode("CheckGroup", teamParam, false, false)
+   } else {
+      init();
+   }
+});
 
 }();
