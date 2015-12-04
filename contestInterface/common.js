@@ -7,6 +7,7 @@ var contestStatus;
 var fullFeedback;
 var nextQuestionAuto;
 var newInterface;
+var solutionsLoaded;
 var teamID = 0;
 var teamPassword = "";
 var questionsData = {};
@@ -970,7 +971,7 @@ function getNbLockedStars(questionData) {
    return 4;
 }
 
-function updateUnlockedLevels(sortedQuestionIDs, updatedQuestionKey) {
+function updateUnlockedLevels(sortedQuestionIDs, updatedQuestionKey, contestEnded) {
    if (!newInterface) {
       return;
    }
@@ -984,6 +985,11 @@ function updateUnlockedLevels(sortedQuestionIDs, updatedQuestionKey) {
    for (iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
       questionKey = questionsData[sortedQuestionIDs[iQuestionID]].key;
       prevQuestionUnlockedLevels[questionKey] = questionUnlockedLevels[questionKey];
+      if (contestEnded) {
+         questionUnlockedLevels[questionKey] = 3;
+         nbTasksUnlocked[2]++;
+         continue;
+      }
       questionUnlockedLevels[questionKey] = 0;
       if (scores[questionKey] != null) {
          var score = scores[questionKey].score;
@@ -1054,6 +1060,8 @@ function setupContest(data) {
       computeFullFeedbackScore();
    }
 
+   var contestEnded = (data.endTime != null);
+
    // Determines the order of the questions, and displays them on the left
    var sortedQuestionIDs = getSortedQuestionIDs(questionsData);
    if (newInterface) {
@@ -1061,7 +1069,7 @@ function setupContest(data) {
    } else {
       fillListQuestions(sortedQuestionIDs, questionsData);
    }
-   updateUnlockedLevels(sortedQuestionIDs);
+   updateUnlockedLevels(sortedQuestionIDs, null, contestEnded);
 
    // Defines function to call if students try to close their browser or tab
    window.onbeforeunload = function() {
@@ -1076,10 +1084,9 @@ function setupContest(data) {
    // Displays the first question
    var questionData = questionsData[sortedQuestionIDs[0]];
    // We don't want to start the process of selecting a question, if the grading is going to start !
-   var noLoad = (data.endTime != null);
 
    if (!newInterface) {
-      window.selectQuestion(sortedQuestionIDs[0], false, noLoad);
+      window.selectQuestion(sortedQuestionIDs[0], false, contestEnded);
    }
 
    // Reloads previous answers to every question
@@ -1093,7 +1100,7 @@ function setupContest(data) {
       }
    }
    $('.buttonClose').show();
-   if (!noLoad || !fullFeedback) {
+   if (!contestEnded || !fullFeedback) {
       // Starts the timer
       TimeManager.init(
          data.timeUsed,
@@ -1105,8 +1112,10 @@ function setupContest(data) {
             closeContest("<b>" + t("time_is_up") + "</b>");
          }
       );
+   } else {
+      loadSolutionsHat();
    }
-   if (noLoad && newInterface) {
+   if (contestEnded && newInterface) {
       $('#questionListIntro').html('<p>'+t('check_score_detail')+'</p>');
       $('#header_time').html('');
    }
@@ -1639,6 +1648,8 @@ function finalCloseContest(message) {
          $("#divHeader").show();
 
          showScoresHat();
+         var sortedQuestionIDs = getSortedQuestionIDs(questionsData);
+         updateUnlockedLevels(sortedQuestionIDs, null, true);
       }
    });
 }
