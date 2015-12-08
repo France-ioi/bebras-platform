@@ -4,6 +4,10 @@
 require_once("../shared/common.php");
 require_once("commonAdmin.php");
 
+// To (re)compute team.nbContestants:
+// update team set nbContestants = 0;
+// insert into team (ID) select teamID from contestant on duplicate update nbContestants = nbContestants + 1;
+
 function computeRanks($db, $contestID)
 {  
    $query = "
@@ -19,14 +23,16 @@ function computeRanks($db, $contestID)
             SELECT 
                `contestant`.`ID`, 
                `contestant`.`firstName`,
-               `contestant`.`lastName`, 
+               `contestant`.`lastName`,
                `team`.`score`
             FROM `contestant` 
-            LEFT JOIN `team` ON (`contestant`.`teamID` = `team`.`ID`) 
-            LEFT JOIN `group` ON (`team`.`groupID` = `group`.`ID`)
+            JOIN `team` ON (`contestant`.`teamID` = `team`.`ID`) 
+            JOIN `group` ON (`team`.`groupID` = `group`.`ID`)
             WHERE 
                `team`.`participationType` = 'Official' AND 
-               `group`.`contestID` = :contestID
+               `group`.`contestID` = :contestID AND
+               `contestant`.`grade` = :grade AND
+               `team`.`nbContestants` = :nbContestants
             ORDER BY
             `team`.`score` DESC
          ) `contestant2`, 
@@ -42,7 +48,12 @@ function computeRanks($db, $contestID)
    ";
 
    $stmt = $db->prepare($query);
-   $stmt->execute(array(':contestID' => $contestID)); 
+   $maxContestants = 2;
+   for ($i = 1; $i<= $maxContestants; $i++) {
+      for ($grade = 4; $grade < 16; $grade++) {
+         $stmt->execute(array(':contestID' => $contestID, 'nbContestants' => $i, 'grade' => $grade)); 
+      }
+   }
 }
 
 function computeRanksSchool($db, $contestID)
