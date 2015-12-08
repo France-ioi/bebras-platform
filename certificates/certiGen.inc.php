@@ -5,7 +5,7 @@
 define('CERTIGEN_MAINDIR', 'pdf/');
 define('CERTIGEN_EXPORTDIR', 'export/');
 define('CERTIGEN_SECRET', 'Ba77H55V3kt7GuL');
-define('CERTIGEN_CONTESTS', '32, 33, 34, 35, 36,37');
+define('CERTIGEN_CONTESTS', '56');
 // 2013: define('CERTIGEN_CONTESTS', '27, 30, 28, 29');
 // 2012: define('CERTIGEN_CONTESTS', '6, 7, 8, 9')
 
@@ -26,26 +26,26 @@ function sanitize($string)
 class CertiGen
 {
    ///// Pdf locations /////
-   static function getSchoolOutput($schoolID)
+   static function getSchoolOutput($schoolID, $conf)
    {
       return $schoolID."/school-".$schoolID."-".md5($schoolID."-".CERTIGEN_SECRET);
    }
 
-   static function getSchoolOutputURL($schoolID)
+   static function getSchoolOutputURL($schoolID, $conf)
    {
       global $config;
-      return $config->certificates->webServiceUrl . "/" . CERTIGEN_EXPORTDIR . "/" . self::getSchoolOutput($schoolID) . ".pdf";
+      return $config->certificates->webServiceUrl . "/" . CERTIGEN_EXPORTDIR . '/'.$conf['folder'].'/' . self::getSchoolOutput($schoolID) . ".pdf";
    }
 
-   static function getGroupOutput($groupID, $schoolID)
+   static function getGroupOutput($groupID, $schoolID, $conf)
    {
       return $schoolID."/school-".$schoolID."-group-".$groupID."-".md5($schoolID."-".$groupID."-".CERTIGEN_SECRET);
    }
 
-   static function getGroupOutputURL($groupID, $schoolID)
+   static function getGroupOutputURL($groupID, $schoolID, $conf)
    {
       global $config;
-      return $config->certificates->webServiceUrl . "/" . CERTIGEN_EXPORTDIR . "/" . self::getGroupOutput($groupID, $schoolID) . ".pdf";
+      return $config->certificates->webServiceUrl . "/" . CERTIGEN_EXPORTDIR . '/'.$conf['folder'].'/' . self::getGroupOutput($groupID, $schoolID, $conf) . ".pdf";
    }
  
    ///// Generation queue ///// 
@@ -69,7 +69,7 @@ class CertiGen
 
    // Add a new request for the school in the queue
    // Will cancel every existing request
-   static public function queueAdd($schoolID)
+   static public function queueAdd($schoolID, $conf)
    {      
       global $db;
       // Cancel any current request
@@ -85,7 +85,7 @@ class CertiGen
          `team`.groupID = `group`.ID AND
          `group`.schoolID = :schoolID AND
          `team`.`participationType` = 'Official' AND
-         `group`.contestID IN (".CERTIGEN_CONTESTS.")
+         `group`.contestID IN (".implode(', ', $conf['contestIDs']).")
       ";
       $stmt = $db->prepare($query);
       $stmt->execute(array(':schoolID' => $schoolID));
@@ -280,7 +280,7 @@ class CertiGen
 // Retrieve schools / groups about the current user
 // We use a limit on the number of school
 // Mostly for admin : we won't show everything !!
-function getGroupsData()
+function getGroupsData($conf)
 {
    global $db;
    $query = "
@@ -298,7 +298,7 @@ function getGroupsData()
          `school`.`ID` = `school_user`.schoolID AND
          `school_user`.userID = :userID AND
          `team`.`participationType` = 'Official' AND
-         `group`.`contestID` IN (".CERTIGEN_CONTESTS.")
+         `group`.`contestID` IN (".implode(', ', $conf['contestIDs']).")
       GROUP BY `group`.ID
       ORDER BY schoolName ASC, groupName ASC
 
@@ -313,14 +313,14 @@ function getGroupsData()
          $aSchools[$row->schoolID] = (object)array(
             'id' => $row->schoolID,
             'name' => $row->schoolName,
-            'url' => CertiGen::getSchoolOutputURL($row->schoolID),
+            'url' => CertiGen::getSchoolOutputURL($row->schoolID, $conf),
             'groups' => array()
             );
       $aSchools[$row->schoolID]->groups[] = (object)array(
          'id' => $row->groupID,
          'name' => $row->groupName,                            
          'userName' => $row->userName,                            
-         'url' => CertiGen::getGroupOutputURL($row->groupID, $row->schoolID),
+         'url' => CertiGen::getGroupOutputURL($row->groupID, $row->schoolID, $conf),
          );
    }
    return $aSchools;

@@ -1,7 +1,9 @@
 <?php
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 
-require_once("../shared/common.php");
+$noSQL = true;
+
+require_once("config.php");
 require_once("certiGen.inc.php");
 
 ini_set('display_errors',1); 
@@ -11,42 +13,42 @@ function getExpRank($rank) {
    return ($rank == 1)?"ère":"e";
 }
 
-function genSchoolCertificates($schoolID) {
-   shell_exec("rm -rf ".CERTIGEN_EXPORTDIR."/".$schoolID);
-   mkdir(CERTIGEN_EXPORTDIR."/".$schoolID, $code = 0777, $recursive = true);
-   list($aGroups, $aContestants) = getGroupsAndContestants($schoolID);
+function genSchoolCertificates($schoolID, $conf) {
+   shell_exec("rm -rf ".CERTIGEN_EXPORTDIR."/".$conf['folder'].'/'.$schoolID);
+   mkdir(CERTIGEN_EXPORTDIR."/".$conf['folder'].'/'.$schoolID, $code = 0777, $recursive = true);
+   list($aGroups, $aContestants) = getGroupsAndContestants($schoolID, $conf);
    $nbStudents =  count($aContestants);
    if ($nbStudents == 0)
       return 0;
 
    foreach ($aContestants as $contestant) {
-      $contestant->Group->certificates .= getHtmlCertificate($contestant);
+      $contestant->Group->certificates .= getHtmlCertificate($contestant, $conf);
       $contestant->Group->contestants[] = $contestant;
    }
 
    $groupsHtml = "";
    foreach ($aGroups as $groupID => $group) {
-      $groupHtml = getGroupContestantsList($group, $schoolID);
+      $groupHtml = getGroupContestantsList($group, $schoolID, $conf);
       $groupHtml .= $group->certificates;
       $groupFullHtml = file_get_contents("school_template.html");
       $groupFullHtml = str_replace("{groups}", $groupHtml, $groupFullHtml);
       file_put_contents("certificates_group.html", $groupFullHtml);
-      $groupPdf = CERTIGEN_EXPORTDIR.'/'.CertiGen::getGroupOutput($groupID, $schoolID).'.pdf';
+      $groupPdf = CERTIGEN_EXPORTDIR.'/'.$conf['folder'].'/'.CertiGen::getGroupOutput($groupID, $schoolID, $conf).'.pdf';
       shell_exec("bash wkhtmltopdf.sh -O landscape -T 5 -B 5 certificates_group.html ".$groupPdf);
       $groupsHtml .= $groupHtml;
    }
 
-   $schoolHtml = file_get_contents("school_template.html");
+   $schoolHtml = file_get_contents($conf['school_template']);
    $schoolHtml = str_replace("{groups}", $groupsHtml, $schoolHtml);
 
 
    file_put_contents("certificates_school.html", $schoolHtml);
-   $outPdf = CERTIGEN_EXPORTDIR.'/'.CertiGen::getSchoolOutput($schoolID).'.pdf';
+   $outPdf = CERTIGEN_EXPORTDIR.'/'.$conf['folder'].'/'.CertiGen::getSchoolOutput($schoolID, $conf).'.pdf';
    shell_exec("bash wkhtmltopdf.sh -O landscape -T 5 -B 5 certificates_school.html ".$outPdf);
    return $nbStudents;
 }
 
-function getGroupsAndContestants($schoolID) {
+function getGroupsAndContestants($schoolID, $conf) {
    global $db;
 
    $aGroups = array();
@@ -79,7 +81,7 @@ function getGroupsAndContestants($schoolID) {
    }
 
    $aContestsData = array();
-   foreach (explode(",", CERTIGEN_CONTESTS) as $id) {
+   foreach ($conf['contestIDs'] as $id) {
       $aContestsData[$id] = (object)array();
    }
 
@@ -90,8 +92,8 @@ function getGroupsAndContestants($schoolID) {
    WHERE 
       `contestant`.teamID = `team`.ID AND
       `team`.groupID = `group`.ID AND
-      `team`.`participationType` = 'Official' AND
-      `group`.contestID IN (".CERTIGEN_CONTESTS.")  
+      `group`.`participationType` = 'Official' AND
+      `group`.contestID IN (".implode(', ', $conf['contestIDs']).")  
    GROUP BY `group`.contestID        
    ";
    $stmt = $db->prepare($query);
@@ -105,9 +107,9 @@ function getGroupsAndContestants($schoolID) {
    // Max scores
    $nbStudents = array();
    $query = "
-   SELECT  `contestID`, SUM(`maxScore`) + 50 as maxScore 
+   SELECT  `contestID`, SUM(`maxScore`) as maxScore 
    FROM  `contest_question` 
-   WHERE  `contestID` IN (".CERTIGEN_CONTESTS.")  
+   WHERE  `contestID` IN (".implode(', ', $conf['contestIDs']).")  
    GROUP BY  `contestID` 
    ";
    $stmt = $db->prepare($query);
@@ -126,8 +128,8 @@ function getGroupsAndContestants($schoolID) {
       `team`.groupID = `group`.ID AND
       `group`.contestID = `contest`.ID AND
       `group`.schoolID = :schoolID AND
-      `team`.`participationType` = 'Official' AND
-      `group`.contestID IN (".CERTIGEN_CONTESTS.")  
+      `group`.`participationType` = 'Official' AND
+      `group`.contestID IN (".implode(', ', $conf['contestIDs']).")  
    GROUP BY `group`.schoolID, `group`.contestID    
    ";
    $stmt = $db->prepare($query);
@@ -145,9 +147,11 @@ function getGroupsAndContestants($schoolID) {
       `group`.contestID,
       `contest`.level AS level,
 
-      `contestant`.ID AS idContestant,         
+      `contestant`.ID AS idContestant,
+      `contestant`.grade,       
       `contestant`.lastName,
       `contestant`.firstName,
+      `contestant`.algoreaCode,
       `contestant`.rank AS rank,
       `contestant`.schoolRank AS schoolRank,
       `team`.score AS score
@@ -157,8 +161,8 @@ function getGroupsAndContestants($schoolID) {
       `team`.groupID = `group`.ID AND
       `group`.contestID = `contest`.ID AND
       `group`.schoolID = :schoolID AND
-      `team`.`participationType` = 'Official' AND
-      `group`.contestID IN (".CERTIGEN_CONTESTS.")  
+      `group`.`participationType` = 'Official' AND
+      `group`.contestID IN (".implode(', ', $conf['contestIDs']).")  
    ORDER BY lastName, firstName        
    ";
    $stmt = $db->prepare($query);
@@ -177,11 +181,12 @@ function getGroupsAndContestants($schoolID) {
       }
       $aContestants[] = $row;
    }
+   var_export(array($aGroups, $aContestants));
    return array($aGroups, $aContestants);
 }
 
-function getGroupContestantsList($group, $schoolID) {
-   $html = file_get_contents("group_template.html");
+function getGroupContestantsList($group, $schoolID, $conf) {
+   $html = file_get_contents($conf['group_template']);
    $html = str_replace("{schoolName}", $group->schoolName, $html);
    $html = str_replace("{groupName}", $group->name, $html);
    $html = str_replace("{coordName}", $group->coordName, $html);
@@ -205,10 +210,11 @@ function setSampleContestantData($contestant) {
    $contestant->nbStudentsSchool = 20;
    $contestant->schoolName = "Lycée Maximilien Sorre, Cachan XXXXXXXXXXXXXXXX";
    $contestant->coordName = "M. Leluron";
+   $contestant->AlgoreaCode = null;
    return $contestant;
 }
 
-function getHtmlCertificate($contestant) {
+function getHtmlCertificate($contestant, $conf) {
    //$contestant = setSampleContestantData($contestant);
    $categoryNames = array(
       1 => "Niveau 6<sup>e</sup>-5<sup>e</sup>",
@@ -217,8 +223,27 @@ function getHtmlCertificate($contestant) {
       4 => "Niveau 1<sup>ère</sup>-Terminale",
    );
 
+   $gradeNames = array(
+      4 => "Niveau CM1",
+      5 => "Niveau CM2",
+      6 => "Niveau 6<sup>e</sup>",
+      7 => "Niveau 5<sup>e</sup>",
+      8 => "Niveau 4<sup>e</sup>",
+      9 => "Niveau 3<sup>e</sup>",
+      10 => "Niveau Seconde",
+      11 => "Niveau Première",
+      12 => "Niveau Terminale",
+      13 => "Niveau Seconde Pro.",
+      14 => "Niveau Première Pro.",
+      15 => "Niveau Terminale Pro.",
+   );
+
    $strRank = "";
+   $strAlgoreaCode = "";
    $strExtraLines = "";
+   if ($contestant->algoreaCode) {
+      $strAlgoreaCode = "Votre code Algoréa : ".$contestant->algoreaCode;
+   }
    if ($contestant->rank <= $contestant->nbStudents / 2) {
       $scoreSeparator = ",";
       $strRank = "la ".$contestant->rank.getExpRank($contestant->rank)." place sur ".$contestant->nbStudents;
@@ -248,7 +273,7 @@ function getHtmlCertificate($contestant) {
    else
       $title = "coordinatrice";
    $data = array(
-      "category" => $categoryNames[$contestant->level],
+      "category" => $gradeNames[$contestant->grade],
       "userName" => $contestant->userName,
       "score" => $contestant->score,
       "maxScore" => $contestant->maxScore,
@@ -260,7 +285,7 @@ function getHtmlCertificate($contestant) {
       "schoolCity" => $contestant->schoolCity         
    );
 
-   $html = file_get_contents("certificate_template.html");
+   $html = file_get_contents($conf["certificate_template"]);
    foreach ($data as $key => $value) {
       $html = str_replace("{".$key."}", $value, $html);
    }

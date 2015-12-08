@@ -4,6 +4,13 @@
 
 You must have both `export` and `log` in 777 mode.
 
+You must have:
+
+- bash
+- php
+- xvfb
+- wkhtmltopdf
+
 ## Usage
 
 The Certificate generation works the following way:
@@ -25,3 +32,4 @@ Logs are present in `/tmp/bgScript.PID.std(err|out)` where `PID` is the PID of t
 
 - change weird permissions
 - change stderr logs
+- change 
