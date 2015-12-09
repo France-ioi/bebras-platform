@@ -17,14 +17,14 @@ if (!isset($_REQUEST["action"])) {
 }
 header("Content-Type: application/json; charset=utf-8");
 
-$aSchools = getGroupsData();
+$aSchools = getGroupsData($config->certificates_confs[0]);
 if ($_REQUEST["action"] != "state") {
    if (!(isset($_REQUEST["schoolID"]) && in_array($_REQUEST["schoolID"], array_keys($aSchools)))) {
       echo "Etablissement invalide";
       exit;
    }
    if ($_REQUEST["action"] == "add")
-      CertiGen::queueAdd($_REQUEST["schoolID"]);
+      CertiGen::queueAdd($_REQUEST["schoolID"], $config->certificates_confs[0]);
    if ($_REQUEST["action"] == "cancel")
       CertiGen::queueCancel($_REQUEST["schoolID"]);
    // When the queue is modified we want to immediately return the state
