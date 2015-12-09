@@ -34,7 +34,7 @@ function genSchoolCertificates($schoolID, $conf) {
       $groupFullHtml = str_replace("{groups}", $groupHtml, $groupFullHtml);
       file_put_contents("certificates_group.html", $groupFullHtml);
       $groupPdf = CERTIGEN_EXPORTDIR.'/'.$conf['folder'].'/'.CertiGen::getGroupOutput($groupID, $schoolID, $conf).'.pdf';
-      shell_exec("bash wkhtmltopdf.sh -O landscape -T 5 -B 5 certificates_group.html ".$groupPdf);
+      shell_exec("wkhtmltopdf -O landscape -n -R 5 -L 5 -T 5 -B 5 -s A4 certificates_group.html ".$groupPdf);
       $groupsHtml .= $groupHtml;
    }
 
@@ -44,7 +44,8 @@ function genSchoolCertificates($schoolID, $conf) {
 
    file_put_contents("certificates_school.html", $schoolHtml);
    $outPdf = CERTIGEN_EXPORTDIR.'/'.$conf['folder'].'/'.CertiGen::getSchoolOutput($schoolID, $conf).'.pdf';
-   shell_exec("bash wkhtmltopdf.sh -O landscape -T 5 -B 5 certificates_school.html ".$outPdf);
+   // warning: requires wkhtmltopdf with qt patches
+   shell_exec("wkhtmltopdf -O landscape -n -R 5 -L 5 -T 5 -B 5 -s A4 certificates_school.html ".$outPdf);
    return $nbStudents;
 }
 
@@ -148,7 +149,8 @@ function getGroupsAndContestants($schoolID, $conf) {
       `contest`.level AS level,
 
       `contestant`.ID AS idContestant,
-      `contestant`.grade,       
+      `contestant`.grade,
+      `contestant`.genre,     
       `contestant`.lastName,
       `contestant`.firstName,
       `contestant`.algoreaCode,
@@ -181,7 +183,6 @@ function getGroupsAndContestants($schoolID, $conf) {
       }
       $aContestants[] = $row;
    }
-   var_export(array($aGroups, $aContestants));
    return array($aGroups, $aContestants);
 }
 
@@ -203,6 +204,7 @@ function setSampleContestantData($contestant) {
    $contestant->level = 4;
    $contestant->userName = "Albert Dupond";
    $contestant->score = 143;
+   $contestant->genre = 2;
    $contestant->maxScore = 176;
    $contestant->rank = 100000;
    $contestant->nbStudents = 44560;
@@ -224,6 +226,7 @@ function getHtmlCertificate($contestant, $conf) {
    );
 
    $gradeNames = array(
+      -1 => "Professeur",
       4 => "Niveau CM1",
       5 => "Niveau CM2",
       6 => "Niveau 6<sup>e</sup>",
@@ -242,7 +245,11 @@ function getHtmlCertificate($contestant, $conf) {
    $strAlgoreaCode = "";
    $strExtraLines = "";
    if ($contestant->algoreaCode) {
-      $strAlgoreaCode = "Votre code Algoréa : ".$contestant->algoreaCode;
+      $strAlgoreaCode = '<div style="height:0px; overflow:visible;">
+            Qualifié'.($contestant->genre == 1 ? 'e' : '')." pour pour le 1<sup>er</sup> tour du concours Algoréa !
+            <br/>
+            Validez votre qualification sur algorea.org avec le code : ".$contestant->algoreaCode."
+            </div>";
    }
    if ($contestant->rank <= $contestant->nbStudents / 2) {
       $scoreSeparator = ",";
@@ -279,6 +286,7 @@ function getHtmlCertificate($contestant, $conf) {
       "maxScore" => $contestant->maxScore,
       "scoreSeparator" => $scoreSeparator,
       "strRank" => $strRank,
+      "strAlgoreaCode" => $strAlgoreaCode,
       "date" => date("d/m/Y"),
       "coordinator" => $contestant->coordName.", ".$title,
       "schoolName" => $contestant->schoolName,

@@ -1,6 +1,8 @@
 <?php
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 
+require_once __DIR__.'/config.php';
+
 // Directories definitions
 define('CERTIGEN_MAINDIR', 'pdf/');
 define('CERTIGEN_EXPORTDIR', 'export/');
@@ -26,7 +28,7 @@ function sanitize($string)
 class CertiGen
 {
    ///// Pdf locations /////
-   static function getSchoolOutput($schoolID, $conf)
+   static function getSchoolOutput($schoolID)
    {
       return $schoolID."/school-".$schoolID."-".md5($schoolID."-".CERTIGEN_SECRET);
    }
@@ -37,7 +39,7 @@ class CertiGen
       return $config->certificates->webServiceUrl . "/" . CERTIGEN_EXPORTDIR . '/'.$conf['folder'].'/' . self::getSchoolOutput($schoolID) . ".pdf";
    }
 
-   static function getGroupOutput($groupID, $schoolID, $conf)
+   static function getGroupOutput($groupID, $schoolID)
    {
       return $schoolID."/school-".$schoolID."-group-".$groupID."-".md5($schoolID."-".$groupID."-".CERTIGEN_SECRET);
    }

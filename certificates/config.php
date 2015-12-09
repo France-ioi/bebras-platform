@@ -3,9 +3,9 @@
 require_once __DIR__.'/../config.php';
 require_once __DIR__.'/../shared/connect.php';
 
-$config->certificates = [];
+$config->certificates_confs = [];
 
-$config->certificates[0] = [
+$config->certificates_confs[0] = [
 	'logName' => 'Alkindi',
 	'school_template' => 'school_template.html',
 	'group_template' => "group_template.html",
@@ -15,7 +15,7 @@ $config->certificates[0] = [
 	'mysql_password' => $config->db->mysql->password,
 	'mysql_database' => $config->db->mysql->database,
 	'folder' => 'default',
-	'contestIDs' => [56],
+	'contestIDs' => [54],
 	'addAlgoreaCode' => true
 ];
 

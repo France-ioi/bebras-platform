@@ -10,7 +10,7 @@ ini_set('max_execution_time', -1);
 
 $db = null;
 
-foreach ($config->certificates as $thisConfig) {
+foreach ($config->certificates_confs as $thisConfig) {
 	echo "Processing config ".$thisConfig['logName']."\n";
 	$db = connectWithConfig($thisConfig);
 	// Get next request
