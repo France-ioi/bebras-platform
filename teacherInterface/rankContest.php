@@ -5,8 +5,7 @@ require_once("../shared/common.php");
 require_once("commonAdmin.php");
 
 // To (re)compute team.nbContestants:
-// update team set nbContestants = 0;
-// insert into team (ID) select teamID from contestant on duplicate update nbContestants = nbContestants + 1;
+// update team set nbContestants = 0; insert into team (ID) select teamID from contestant on duplicate key update nbContestants = nbContestants + 1;
 
 function computeRanks($db, $contestID)
 {  
@@ -76,10 +75,12 @@ function computeRanksSchool($db, $contestID)
           `team`.`score`,
           `group`.`schoolID`
       FROM `contestant`
-            LEFT JOIN `team` ON (`contestant`.`teamID` = `team`.`ID`)
-            LEFT JOIN `group` ON (`team`.`groupID` = `group`.`ID`)
+            JOIN `team` ON (`contestant`.`teamID` = `team`.`ID`)
+            JOIN `group` ON (`team`.`groupID` = `group`.`ID`)
       WHERE 
           `team`.`participationType` = 'Official' AND 
+          `contestant`.`grade` = :grade AND
+          `team`.`nbContestants` = :nbContestants AND
           `group`.`contestID` = :contestID
       ORDER BY `group`.`schoolID`, `team`.`score` DESC
    ) `contestant2`,
@@ -92,9 +93,14 @@ function computeRanksSchool($db, $contestID)
          ) r
     ) as `c2`
     SET `c1`.`schoolRank` = `c2`.`schoolRank` 
-    WHERE `c1`.`ID` = `c2`.`ID`
-";   $stmt = $db->prepare($query);
-   $stmt->execute(array(':contestID' => $contestID)); 
+    WHERE `c1`.`ID` = `c2`.`ID`;";   
+   $stmt = $db->prepare($query);
+   $maxContestants = 2;
+   for ($i = 1; $i<= $maxContestants; $i++) {
+      for ($grade = 4; $grade < 16; $grade++) {
+         $stmt->execute(array(':contestID' => $contestID, 'nbContestants' => $i, 'grade' => $grade)); 
+      }
+   }
 }
 
 function generateAlgoreaCodes($db, $contestID) {
@@ -143,7 +149,7 @@ $contestID = $_REQUEST["contestID"];
 
 computeRanks($db, $contestID);
 computeRanksSchool($db, $contestID);
-generateAlgoreaCodes($db, $contestID);
+//generateAlgoreaCodes($db, $contestID);
 unset($db);
 
 echo json_encode(array("success" => true));
