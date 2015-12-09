@@ -1,0 +1,1 @@
+ALTER TABLE `team` ADD `nbContestants` TINYINT(1) NOT NULL AFTER `participationType`;
