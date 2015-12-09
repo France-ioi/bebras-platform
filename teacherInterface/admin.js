@@ -2208,7 +2208,7 @@ function getDateFromSQLFormat(string) {
 
 function certiGenShow(data) {
    var schools = data;
-   if (!schools.length) {
+   if (!Object.keys(schools).length) {
       $("#certiGenList").html(t("no_school_with_certificates_to_print"));
    } else {
       $("#certiGenList").html("<ul></ul>");
