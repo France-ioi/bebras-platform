@@ -1653,6 +1653,15 @@ function getSelectMinutes(fieldId) {
    return html;
 }
 
+function getContestFromID(ID) {
+   for (var contestID in contests) {
+      if (contestID == ID) {
+         return contests[contestID];
+      }
+   }
+   return null;
+}
+
 function newForm(modelName, title, message) {
    var js = "";
    var html = "<h3>" + title + "</h3>" + message +
@@ -1685,6 +1694,12 @@ function newForm(modelName, title, message) {
             var optionsList = field.editoptions.value.split(";");
             for (var iOption = 0; iOption < optionsList.length; iOption++)  {
                var optionParts = optionsList[iOption].split(":");
+               if (fieldName == "contestID") {
+                  var contest = getContestFromID(optionParts[0]);
+                  if (contest.status == 'PreRanking') {
+                     continue;
+                  }
+               }
                optionValue = optionParts[0];
                optionName = optionParts[1];
                html += "<option value='" + optionValue + "'>" + optionName + "</option>";
