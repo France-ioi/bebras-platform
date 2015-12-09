@@ -9,7 +9,8 @@ You must have:
 - bash
 - php
 - xvfb
-- wkhtmltopdf
+- wkhtmltopdf (at least 12.2)
+- microsoft fonts (Debian package ttf-mscorefonts-installer)
 
 ## Usage
 
@@ -32,4 +33,3 @@ Logs are present in `/tmp/bgScript.PID.std(err|out)` where `PID` is the PID of t
 
 - change weird permissions
 - change stderr logs
-- change 
