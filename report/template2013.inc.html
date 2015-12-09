@@ -86,6 +86,12 @@ function displayCharts(src, dst)
    chart = new Highcharts.Chart(options);   
 }
 
+function setNbContestants(nbContestants) {
+   var noNbContestants = nbContestants == 1 ? 2 : 1;
+   $('.nbContestants'+nbContestants).show();
+   $('.nbContestants'+noNbContestants).hide();
+}
+
 
 $(function () {
    $("div[id^=ranks]").each(function(){
@@ -95,6 +101,9 @@ $(function () {
 
    $("#results").tabs();
    $("#results").show();
+   $("#nbContestantsTab").tabs();
+   $("#nbContestantsTab").show();
+   setNbContestants(1);
 });
 </script> 
 

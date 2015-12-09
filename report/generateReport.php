@@ -27,15 +27,30 @@ $contestsParams = array(
       array("contestID" => 37, "minScore" => 185, "grade" => null)
    ),
    2015 => array(
-      array("contestID" => 51, "minScore" => 70, "grade" => 6),
-      array("contestID" => 51, "minScore" => 73, "grade" => 7),
-      array("contestID" => 51, "minScore" => 80, "grade" => 8),
-      array("contestID" => 51, "minScore" => 80, "grade" => 9),
-      array("contestID" => 51, "minScore" => 85, "grade" => 10),
-      array("contestID" => 51, "minScore" => 90, "grade" => 11),
-      array("contestID" => 51, "minScore" => 95, "grade" => 12),
-      array("contestID" => 51, "minScore" => 70, "grade" => -3),
-      array("contestID" => 51, "minScore" => 95, "grade" => -4)
+      array("contestID" => 54, "minScore" => 20, "grade" => 4, "nbContestantsPerTeam" => 1),
+      array("contestID" => 54, "minScore" => 20, "grade" => 5, "nbContestantsPerTeam" => 1),
+      array("contestID" => 54, "minScore" => 20, "grade" => 6, "nbContestantsPerTeam" => 1),
+      array("contestID" => 54, "minScore" => 20, "grade" => 7, "nbContestantsPerTeam" => 1),
+      array("contestID" => 54, "minScore" => 20, "grade" => 8, "nbContestantsPerTeam" => 1),
+      array("contestID" => 54, "minScore" => 20, "grade" => 9, "nbContestantsPerTeam" => 1),
+      array("contestID" => 54, "minScore" => 20, "grade" => 10, "nbContestantsPerTeam" => 1),
+      array("contestID" => 54, "minScore" => 20, "grade" => 11, "nbContestantsPerTeam" => 1),
+      array("contestID" => 54, "minScore" => 20, "grade" => 12, "nbContestantsPerTeam" => 1),
+      array("contestID" => 54, "minScore" => 20, "grade" => 13, "nbContestantsPerTeam" => 1),
+      array("contestID" => 54, "minScore" => 20, "grade" => 14, "nbContestantsPerTeam" => 1),
+      array("contestID" => 54, "minScore" => 20, "grade" => 15, "nbContestantsPerTeam" => 1),
+      array("contestID" => 54, "minScore" => 20, "grade" => 4, "nbContestantsPerTeam" => 2),
+      array("contestID" => 54, "minScore" => 20, "grade" => 5, "nbContestantsPerTeam" => 2),
+      array("contestID" => 54, "minScore" => 20, "grade" => 6, "nbContestantsPerTeam" => 2),
+      array("contestID" => 54, "minScore" => 20, "grade" => 7, "nbContestantsPerTeam" => 2),
+      array("contestID" => 54, "minScore" => 20, "grade" => 8, "nbContestantsPerTeam" => 2),
+      array("contestID" => 54, "minScore" => 20, "grade" => 9, "nbContestantsPerTeam" => 2),
+      array("contestID" => 54, "minScore" => 20, "grade" => 10, "nbContestantsPerTeam" => 2),
+      array("contestID" => 54, "minScore" => 20, "grade" => 11, "nbContestantsPerTeam" => 2),
+      array("contestID" => 54, "minScore" => 20, "grade" => 12, "nbContestantsPerTeam" => 2),
+      array("contestID" => 54, "minScore" => 20, "grade" => 13, "nbContestantsPerTeam" => 2),
+      array("contestID" => 54, "minScore" => 20, "grade" => 14, "nbContestantsPerTeam" => 2),
+      array("contestID" => 54, "minScore" => 20, "grade" => 15, "nbContestantsPerTeam" => 2),
    )
 );
 
@@ -79,14 +94,22 @@ class ContestAnalysis
 
       $aContests = array();
       foreach ($contestsParams[$year] as $key => $contestData) {
-         $aContests[] = ContestAnalysis::display($contestData["minScore"], $contestData["contestID"], $contestData["grade"]);
+         $aContests[] = ContestAnalysis::display($contestData["minScore"], $contestData["contestID"], $contestData["grade"], $contestData["nbContestantsPerTeam"]);
       }
 
-      $s = "
+      $differenciateNbContestants = ($contestsParams[$year][0]["nbContestantsPerTeam"] != null);
+
+      $s = '';
+
+      if ($differenciateNbContestants) {
+         $s .= '<div id="nbContestantsTab"><ul><li id="nbContestants1"><a onclick="setNbContestants(1)" href="#null-1">Participations individuelles</a></li><li id="nbContestants2"><a onclick="setNbContestants(2)" href="#null-2">Participations en binômes</a></li></ul><div id="null-1" style="padding:0px;"></div><div id="null-2" style="padding:0px;"></div></div>';
+      }
+
+      $s .= "
       <div id='results'>
          <ul>";
       foreach($aContests as $Contest) {
-         $s .= "<li><a href='#tabs-".$Contest->ID."'>".$Contest->category."</a></li>";
+         $s .= "<li class='nbContestants".$Contest->nbContestantsPerTeam."' id='link-".$Contest->ID."'><a href='#tabs-".$Contest->ID."'>".$Contest->category."</a></li>";
       }
       $s .= "</ul>";
       foreach($aContests as $Contest) {
@@ -113,7 +136,10 @@ class ContestAnalysis
       foreach ($contestsParams[$year] as $key => $contestData) {
          $contestID = $contestData["contestID"];
          $condition = "`group`.`contestID` = ".$contestData["contestID"];
-         if ($contestData["grade"] != null) {
+         if ($contestData["grade"] != null and $contestData["nbContestantsPerTeam"] != null) {
+            $condition = "(".$condition." AND `contestant`.`grade` = ".$contestData["grade"]." AND `team`.`nbContestants` = ".$contestData["nbContestantsPerTeam"].")";
+         }
+         else if ($contestData["grade"] != null) {
             $condition = "(".$condition." AND `contestant`.`grade` = ".$contestData["grade"].")";
          }
          $conditions[] = $condition;
@@ -136,7 +162,7 @@ class ContestAnalysis
       return $row = $stmt->fetchObject();
    }
 
-   static function getContestantsCount($contestID, $grade = null)
+   static function getContestantsCount($contestID, $grade = null, $nbContestantsPerTeam= null)
    {
       global $db;
 
@@ -154,12 +180,16 @@ class ContestAnalysis
          $query .= " AND `contestant`.`grade` = :grade ";
          $params["grade"] = $grade;
       }
+      if ($nbContestantsPerTeam != null) {
+         $query .= " AND `team`.`nbContestants` = :nbContestants ";
+         $params["nbContestants"] = $nbContestantsPerTeam;
+      }
       $stmt = $db->prepare($query);
       $stmt->execute($params); 
       return $row = $stmt->fetchObject()->nbStudents;
    }
 
-   static function getContestGradeInfos($contestID, $grade = null)
+   static function getContestGradeInfos($contestID, $grade = null, $nbContestantsPerTeam= null)
    {
       global $db;
 
@@ -170,6 +200,8 @@ class ContestAnalysis
       $levels = array("", "6ème-5ème", "4ème-3ème", "Seconde", "Première-Terminale", "Seconde pro", "Première-Terminale pro");
       $row->category = $levels[$row->level];
       $gradeNames = array(
+         4 => "CM1",
+         5 => "CM2",
          6 => "6ème",
          7 => "5ème",
          8 => "4ème",
@@ -177,10 +209,17 @@ class ContestAnalysis
          10 => "Seconde",
          11 => "Première",
          12 => "Terminale",
+         13 => "Seconde pro.",
+         14 => "Première pro.",
+         15 => "Terminale pro.",
          -3 => "Pas encore au collège",
          -4 => "Autre"
       );
-      if ($grade != null) {
+      if ($grade != null && $nbContestantsPerTeam != null) {
+         $row->category = $gradeNames[$grade];//.' ('.($nbContestantsPerTeam > 1 ? 'participation en binôme' : 'participation individuelle').')';
+         $row->ID = $row->ID."-".$grade."-".$nbContestantsPerTeam;
+      }
+      elseif ($grade != null) {
          $row->category = $gradeNames[$grade];
          $row->ID = $row->ID."-".$grade;
       } else {
@@ -206,7 +245,7 @@ class ContestAnalysis
       return $row = $stmt->fetchObject()->maxScore;
    }
 
-   static function getRankings($contestID, $grade = null)
+   static function getRankings($contestID, $grade = null, $nbContestantsPerTeam= null)
    {
       global $db;
 
@@ -223,6 +262,10 @@ class ContestAnalysis
       if ($grade != null) {
          $query .= " AND `contestant`.`grade` = :grade ";
          $params["grade"] = $grade;
+      }
+      if ($nbContestantsPerTeam != null) {
+         $query .= " AND `team`.`nbContestants` = :nbContestants ";
+         $params["nbContestants"] = $nbContestantsPerTeam;
       }
 
       $query .= "
@@ -245,7 +288,7 @@ class ContestAnalysis
       return $rankings;
    }
 
-   static function getTop($minScore, $contestID, $grade = null)
+   static function getTop($minScore, $contestID, $grade = null, $nbContestantsPerTeam= null)
    {
       global $db;
 
@@ -255,7 +298,6 @@ class ContestAnalysis
          SELECT 
             `contestant`.firstName,
             `contestant`.lastName,
-            `contestant`.gradeRank,
             `contestant`.rank,
             `team`.score,
             `school`.name,
@@ -277,6 +319,10 @@ class ContestAnalysis
          $query .= " `contestant`.`grade` = :grade AND ";
          $params["grade"] = $grade;
       }
+      if ($nbContestantsPerTeam != null) {
+         $query .= " `team`.`nbContestants` = :nbContestants AND  ";
+         $params["nbContestants"] = $nbContestantsPerTeam;
+      }
 
       $query .= "`team`.groupID = `group`.ID AND            
             `team`.`participationType` = 'Official' AND
@@ -289,9 +335,6 @@ class ContestAnalysis
 
       $top = array();
       while($row = $stmt->fetchObject()) {
-         if ($grade != null) {
-            $row->rank = $row->gradeRank;
-         }
          if ($row->name == null) {
             $row->name = $row->name2;
             $row->city = $row->city2;
@@ -306,17 +349,20 @@ class ContestAnalysis
       return $top;
    }
 
-   static function display($minScoreTop, $contestID, $grade = null)
+   static function display($minScoreTop, $contestID, $grade = null, $nbContestantsPerTeam= null)
    {
-      $infos = self::getContestGradeInfos($contestID, $grade);
-      $maxScore = self::getMaxScore($contestID, $grade);
-      $nbStudents = self::getContestantsCount($contestID, $grade);
-      $aRankings = self::getRankings($contestID, $grade);
+      $infos = self::getContestGradeInfos($contestID, $grade, $nbContestantsPerTeam);
+      $maxScore = self::getMaxScore($contestID, $grade, $nbContestantsPerTeam);
+      $nbStudents = self::getContestantsCount($contestID, $grade, $nbContestantsPerTeam);
+      $aRankings = self::getRankings($contestID, $grade, $nbContestantsPerTeam);
 
-      $aTop = self::getTop($minScoreTop, $contestID, $grade);
+      $aTop = self::getTop($minScoreTop, $contestID, $grade, $nbContestantsPerTeam);
 
       $graphID = $contestID;
-      if ($grade != null) {
+      if ($grade != null && $nbContestantsPerTeam != null) {
+         $graphID .= "-".$grade."-".$nbContestantsPerTeam;
+      }
+      elseif ($grade != null) {
          $graphID .= "-".$grade;
       }
 
@@ -374,12 +420,12 @@ class ContestAnalysis
          </div>
          </td>
       </tr>";
-      return (object)array('ID'=>$infos->ID, 'category'=>$infos->category, 'content'=>$s);
+      return (object)array('ID'=>$infos->ID, 'category'=>$infos->category, 'content'=>$s, 'nbContestantsPerTeam' => $nbContestantsPerTeam);
    }
 }
 
 //ContestAnalysis::getReport("template2012.inc.html", "epreuve2012.html", 2012);
 //ContestAnalysis::getReport("template2013.inc.html", "resultats2013.php", 2013);
 //ContestAnalysis::getReport("template2013.inc.html", "resultats2014.php", 2014);
-ContestAnalysis::getReport("template2013.inc.html", "resultats2015_algorea.php", 2015);
+ContestAnalysis::getReport("template2013.inc.html", "../../castor-informatique.fr/resultats2015_tunisie.php", 2015);
 ?>
