@@ -78,3 +78,17 @@ function genAccessCode($db) {
       error_log("Error, code ".$code." is already used");
    }
 }
+
+function getTotalContestants($contestID, $grade, $nbContestants) {
+  global $db;
+  $stmt = $db->prepare('select count(*) from contestant
+    join team on team.ID = contestant.teamID
+    join `group` on `group`.ID = team.groupID
+    where
+    `group`.contestID = :contestID AND
+    `team`.nbContestants = :nbContestants AND
+    team.participationType = "Official" AND
+    contestant.grade = :grade;');
+  $stmt->execute(['contestID' => $contestID, 'grade' => $grade, 'nbContestants' => $nbContestants]);
+  return $stmt->fetchColumn();
+}

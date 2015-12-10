@@ -5,6 +5,7 @@ $noSQL = true;
 
 require_once("config.php");
 require_once("certiGen.inc.php");
+require_once __DIR__.'/../shared/common.php';
 
 ini_set('display_errors',1); 
 error_reporting(E_ALL);
@@ -87,23 +88,39 @@ function getGroupsAndContestants($schoolID, $conf) {
    }
 
    $nbStudents = array();
-   $query = "
-   SELECT `group`.contestID, COUNT(*) AS nbStudents
-   FROM `contestant`, `team`,  `group`
-   WHERE 
-      `contestant`.teamID = `team`.ID AND
-      `team`.groupID = `group`.ID AND
-      `group`.`participationType` = 'Official' AND
-      `group`.contestID IN (".implode(', ', $conf['contestIDs']).")  
-   GROUP BY `group`.contestID        
-   ";
-   $stmt = $db->prepare($query);
-   $stmt->execute(); 
-   while($row = $stmt->fetchObject())
-   {
-      $nbStudents[$row->contestID] = $row->nbStudents;
-      $aContestsData[$row->contestID] = new stdClass();
-      $aContestsData[$row->contestID]->nbStudents = $row->nbStudents;
+   if (!$conf['differenciateNbStudents']) {
+      $query = "
+      SELECT `group`.contestID, COUNT(*) AS nbStudents
+      FROM `contestant`, `team`,  `group`
+      WHERE 
+         `contestant`.teamID = `team`.ID AND
+         `team`.groupID = `group`.ID AND
+         `team`.`participationType` = 'Official' AND
+         `group`.contestID IN (".implode(', ', $conf['contestIDs']).")  
+      GROUP BY `group`.contestID        
+      ";
+      $stmt = $db->prepare($query);
+      $stmt->execute(); 
+      while($row = $stmt->fetchObject())
+      {
+         $nbStudents[$row->contestID] = $row->nbStudents;
+         $aContestsData[$row->contestID] = new stdClass();
+         $aContestsData[$row->contestID]->nbStudents = $row->nbStudents;
+      }
+   } else {
+      foreach($conf['contestIDs'] as $contestID) {
+         $aContestsData[$contestID] = new stdClass();
+         $aContestsData[$contestID]->nbStudents = [];
+         $nbStudents[$contestID] = [];
+         foreach ($conf['grades'] as $grade) {
+            $nbStudents[$contestID][$grade] = [];
+            $aContestsData[$contestID]->nbStudents[$grade] = [];
+            for ($i = 1; $i<= $conf['nbContestantsMax']; $i++) {
+               $nbStudents[$contestID][$grade][$i] = getTotalContestants($contestID, $grade, $i);
+               $aContestsData[$contestID]->nbStudents[$grade][$i] = $nbStudents[$contestID][$grade][$i];
+            }
+         }
+      }
    }
    // Max scores
    $nbStudents = array();
@@ -119,24 +136,52 @@ function getGroupsAndContestants($schoolID, $conf) {
       $aContestsData[$row->contestID]->maxScore = $row->maxScore;
    }
 
-   $query = "
-   SELECT
-      `group`.contestID,
-      COUNT(*) AS count
-   FROM `contestant`, `team`,  `group`, `contest`
-   WHERE 
-      `contestant`.teamID = `team`.ID AND
-      `team`.groupID = `group`.ID AND
-      `group`.contestID = `contest`.ID AND
-      `group`.schoolID = :schoolID AND
-      `group`.`participationType` = 'Official' AND
-      `group`.contestID IN (".implode(', ', $conf['contestIDs']).")  
-   GROUP BY `group`.schoolID, `group`.contestID    
-   ";
-   $stmt = $db->prepare($query);
-   $stmt->execute(array(':schoolID' => $schoolID));
-   while($row = $stmt->fetchObject()) {
-      $aContestsData[$row->contestID]->nbStudentsSchool = $row->count;
+   if (!$conf['differenciateNbStudents']) {
+      $query = "
+      SELECT
+         `group`.contestID,
+         COUNT(*) AS count
+      FROM `contestant`, `team`,  `group`, `contest`
+      WHERE 
+         `contestant`.teamID = `team`.ID AND
+         `team`.groupID = `group`.ID AND
+         `group`.contestID = `contest`.ID AND
+         `group`.schoolID = :schoolID AND
+         `team`.`participationType` = 'Official' AND
+         `group`.contestID IN (".implode(', ', $conf['contestIDs']).")  
+      GROUP BY `group`.schoolID, `group`.contestID    
+      ";
+      $stmt = $db->prepare($query);
+      $stmt->execute(array(':schoolID' => $schoolID));
+      while($row = $stmt->fetchObject()) {
+         $aContestsData[$row->contestID]->nbStudentsSchool = $row->count;
+      }
+   } else {
+      $query = "
+      SELECT
+         COUNT(*) AS count
+      FROM `contestant`, `team`,  `group`, `contest`
+      WHERE 
+         `contestant`.teamID = `team`.ID AND
+         `team`.groupID = `group`.ID AND
+         `group`.contestID = `contest`.ID AND
+         `group`.schoolID = :schoolID AND
+         `team`.nbContestants = :nbContestants AND
+         `contestant`.grade = :grade AND
+         `team`.`participationType` = 'Official' AND
+         `group`.contestID =:contestID  
+      ";
+      $stmt = $db->prepare($query);
+      foreach($conf['contestIDs'] as $contestID) { 
+         $aContestsData[$contestID]->nbStudentsSchool = [];
+         foreach ($conf['grades'] as $grade) {
+            $aContestsData[$contestID]->nbStudentsSchool[$grade] = [];
+            for ($i = 1; $i<= $conf['nbContestantsMax']; $i++) {
+               $stmt->execute(['contestID' => $contestID, 'schoolID' => $schoolID, 'nbContestants' => $i, 'grade' => $grade]);
+               $aContestsData[$contestID]->nbStudentsSchool[$grade][$i] = $stmt->fetchColumn();
+            }
+         }
+      }
    }
 
    // Contestants
@@ -156,6 +201,7 @@ function getGroupsAndContestants($schoolID, $conf) {
       `contestant`.algoreaCode,
       `contestant`.rank AS rank,
       `contestant`.schoolRank AS schoolRank,
+      `team`.nbContestants AS nbContestants,
       `team`.score AS score
    FROM `contestant`, `team`,  `group`, `contest`
    WHERE 
@@ -163,7 +209,7 @@ function getGroupsAndContestants($schoolID, $conf) {
       `team`.groupID = `group`.ID AND
       `group`.contestID = `contest`.ID AND
       `group`.schoolID = :schoolID AND
-      `group`.`participationType` = 'Official' AND
+      `team`.`participationType` = 'Official' AND
       `group`.contestID IN (".implode(', ', $conf['contestIDs']).")  
    ORDER BY lastName, firstName        
    ";
@@ -175,9 +221,14 @@ function getGroupsAndContestants($schoolID, $conf) {
       $row->schoolCity = $aGroups[$row->groupID]->schoolCity;
       $row->coordName = $aGroups[$row->groupID]->coordName;
       $row->Group = $aGroups[$row->groupID];
-      $row->nbStudents = $aContestsData[$row->contestID]->nbStudents;
+      if (!$conf['differenciateNbStudents']) {
+         $row->nbStudents = $aContestsData[$row->contestID]->nbStudents;
+         $row->nbStudentsSchool = $aContestsData[$row->contestID]->nbStudentsSchool;
+      } else {
+         $row->nbStudents = $aContestsData[$row->contestID]->nbStudents[$row->grade][$row->nbContestants];
+         $row->nbStudentsSchool = $aContestsData[$row->contestID]->nbStudentsSchool[$row->grade][$row->nbContestants];
+      }
       $row->maxScore = $aContestsData[$row->contestID]->maxScore;
-      $row->nbStudentsSchool = $aContestsData[$row->contestID]->nbStudentsSchool;
       if ($row->rank > $row->nbStudents) {
          echo "ERROR RANK {$row->rank} > {$row->nbStudents}\n";
       }
@@ -208,6 +259,7 @@ function setSampleContestantData($contestant) {
    $contestant->maxScore = 176;
    $contestant->rank = 100000;
    $contestant->nbStudents = 44560;
+   $contestant->nbContestants = 1;
    $contestant->schoolRank = 5;
    $contestant->nbStudentsSchool = 20;
    $contestant->schoolName = "Lycée Maximilien Sorre, Cachan XXXXXXXXXXXXXXXX";
@@ -279,8 +331,12 @@ function getHtmlCertificate($contestant, $conf) {
       $title = "coordinateur";
    else
       $title = "coordinatrice";
+   $category = $gradeNames[$contestant->grade];
+   if ($conf['differenciateNbStudents']) {
+      $category .= ' - '.($contestant->nbStudents == 2 ? 'binôme' : 'individuel');
+   }
    $data = array(
-      "category" => $gradeNames[$contestant->grade],
+      "category" => $category,
       "userName" => $contestant->userName,
       "score" => $contestant->score,
       "maxScore" => $contestant->maxScore,

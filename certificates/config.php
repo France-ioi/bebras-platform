@@ -16,7 +16,10 @@ $config->certificates_confs[0] = [
 	'mysql_database' => $config->db->mysql->database,
 	'folder' => 'default',
 	'contestIDs' => [54],
-	'addAlgoreaCode' => true
+	'addAlgoreaCode' => true,
+	'differenciateNbStudents' => true,
+	'grades' => [4,5,6,7,8,9,10,11,12,13,14,15],
+	'nbContestantsMax' => 2
 ];
 
 function connectWithConfig($thisConfig) {
