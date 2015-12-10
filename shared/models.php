@@ -271,6 +271,7 @@ $viewsModels = array(
          "genre" => array(),
          "grade" => array(),
          "score" => array("tableName" => "team"),
+         "nbContestants" => array("tableName" => "team"),
          "rank" => array(),
          "level" => array("tableName" => "contest"),
       ),

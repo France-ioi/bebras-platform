@@ -230,8 +230,8 @@ function initModels(isLogged) {
                         edittype: "select", editoptions: editYesNo,
                         stype: "select", searchoptions: searchYesNo
                        },
-            firstName: {label: t("contestant_firstName_label"), editable: true, edittype: "text", width:200},
-            lastName: {label: t("contestant_lastName_label"), editable: true, edittype: "text", width:200},
+            firstName: {label: t("contestant_firstName_label"), editable: true, edittype: "text", width:150},
+            lastName: {label: t("contestant_lastName_label"), editable: true, edittype: "text", width:150},
             genre: {label: t("contestant_genre_label"),
                editable: true, edittype: "select", editoptions:{ value:{"1": t("option_female"), "2": t("option_male")}},
                stype: "select", searchoptions:{ value:"_NOF_:" + t("option_no_filter") + ";1:" + t("option_female") + ";2:" + t("option_male")},
@@ -271,6 +271,15 @@ function initModels(isLogged) {
                },
                stype: "select", width:75},
             score: {label: t("contestant_score_label"), editable: false, width:75},
+            nbContestants: {label: t("contestant_nbContestants_label"), editable: false, width:60, editoptions:{
+               value:{
+                  "1": t("nbContestants_1"),
+                  "2": t("nbContestants_2"),
+               }}, searchoptions:{ value:"_NOF_:" + t("option_no_filter") +
+                  ";1:" + t("nbContestants_1") +
+                  ";2:" + t("nbContestants_2")
+               },
+               edittype: "select", stype: "select"},
             rank: {label: t("contestant_rank_label"), editable: false, width:150}
          }
       },
