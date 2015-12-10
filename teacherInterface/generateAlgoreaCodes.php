@@ -6,39 +6,18 @@ require_once("commonAdmin.php");
 
 function generateAlgoreaCodes($db, $contestID) {
    // retrieving awarded contestants through "award1" model
-   $modelName = 'award1';
-   $model = getViewModel($modelName);
-   $request = array(
-      "modelName" => $modelName,
-      "model" => $model,
-      "filters" => array()
-   );
-   foreach($model["fields"] as $fieldName => $field) {
-      $request["fields"][] = $fieldName;
-   }
-   $request["filters"] = array('awarded' => true, 'contestID' => $contestID);
-   if (!$_SESSION["isAdmin"]) {
-      $request["filters"]["userID"] = $_SESSION["userID"];
-   }
-
-   $result = selectRows($db, $request);
-   $awarded = $result['items'];
-
-   if (!count($awarded)) {
-      return;
-   }
-   // we hope that there will be no collision in a serie of generated codes
-   $query = "INSERT ignore INTO `contestant` (`ID`, `algoreaCode`) values ";
-   $first = true;
-   foreach($awarded as $contestant) {
-      if (!$first) {
-         $query = $query.', ';
-      }
-      $first = false;
-      $query = $query.'('.$contestant->ID.', \''.genAccessCode($db).'\')';
-   }
-   $query = $query.' on duplicate key update `algoreaCode` = values(`algoreaCode`)';
-   $db->exec($query);
+   $query = "update contestant
+      join team on contestant.teamID = team.ID
+      join `group` on `group`.ID = team.groupID
+      join award_threshold on award_threshold.nbContestants = team.nbContestants and award_threshold.contestID = :contestID and award_threshold.gradeID = contestant.grade and award_threshold.awardID = 1
+      set algoreaCode =  CONCAT(CONCAT('', FLOOR(RAND()*10000000)), CONCAT('', FLOOR(RAND()*10000000)))
+      where
+      group.contestID = :contestID and
+      team.participationType = 'Official' and
+      contestant.algoreaCode is null
+      and team.score >= award_threshold.minScore;";
+   $stmt = $db->prepare($query);
+   $stmt->execute(['contestID' => $contestID]);
 }
 
 if ((!isset($_SESSION["isAdmin"])) || (!$_SESSION["isAdmin"])) {
