@@ -242,9 +242,28 @@ function getGroupContestantsList($group, $schoolID, $conf) {
    $html = str_replace("{schoolName}", $group->schoolName, $html);
    $html = str_replace("{groupName}", $group->name, $html);
    $html = str_replace("{coordName}", $group->coordName, $html);
+   $gradeNames = array(
+      -1 => "Professeur",
+      4 => "CM1",
+      5 => "CM2",
+      6 => "6<sup>e</sup>",
+      7 => "5<sup>e</sup>",
+      8 => "4<sup>e</sup>",
+      9 => "3<sup>e</sup>",
+      11 => "Première",
+      12 => "Terminale",
+      10 => "Seconde",
+      13 => "Seconde Pro.",
+      14 => "Première Pro.",
+      15 => "Terminale Pro.",
+   );
+   $nbContestantsNames = array(
+      1 => "Individuelle",
+      2 => "En binôme"
+   );
    $list = "";
    foreach ($group->contestants as $contestant) {
-      $list .= "<tr><td>".$contestant->userName."</td><td>".$contestant->score."/".$contestant->maxScore."</td><td style='text-align:right'>".
+      $list .= "<tr><td>".$contestant->userName."</td><td>".$contestant->score."/".$contestant->maxScore."</td><td>".$gradeNames[$contestant->grade]."</td><td>".$nbContestantsNames[$contestant->nbContestants]."</td><td style='text-align:right'>".
          $contestant->rank." / ".$contestant->nbStudents."</td><td style='text-align:right'>".$contestant->schoolRank." / ".$contestant->nbStudentsSchool."</td></tr>\r\n";
    }
    $html = str_replace("{listContestants}", $list, $html);
@@ -297,8 +316,8 @@ function getHtmlCertificate($contestant, $conf) {
    $strAlgoreaCode = "";
    $strExtraLines = "";
    if ($contestant->algoreaCode) {
-      $strAlgoreaCode = '<div style="height:0px; overflow:visible;">
-            Qualifié'.($contestant->genre == 1 ? 'e' : '')." pour pour le 1<sup>er</sup> tour du concours Algoréa !
+      $strAlgoreaCode = '<div style="height:0px; overflow:visible;font-size:20.8px;">
+            Qualifié'.($contestant->genre == 1 ? 'e' : '')." pour pour le 1<sup>er</sup> tour du concours Algoréa.
             <br/>
             Validez votre qualification sur algorea.org avec le code : ".$contestant->algoreaCode."
             </div>";
