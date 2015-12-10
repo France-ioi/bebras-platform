@@ -255,7 +255,8 @@
       'forceOfficialEmailDomain' => $config->teacherInterface->forceOfficialEmailDomain,
       'contestPresentationURL' => $config->contestPresentationURL,
       'i18nResourcePath' => static_asset('/i18n/__lng__/__ns__.json'),
-      'customStringsName' => $config->customStringsName
+      'customStringsName' => $config->customStringsName,
+      'allowCertificates' => $config->certificates->allow
    ]) ?>;
    init();
 </script>

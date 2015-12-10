@@ -2200,7 +2200,9 @@ function getDateFromSQLFormat(string) {
 }
 
 function certiGenShow(data) {
-   return;
+   if (!window.config.allowCertificates) {
+      return;
+   }
    var schools = data;
    if (!Object.keys(schools).length) {
       $("#certiGenList").html(t("no_school_with_certificates_to_print"));
