@@ -202,10 +202,6 @@
          </div>
          <div id="tabs-awards">
             <div data-i18n="[html]awards_content_intro"></div>
-            <p data-i18n="[html]award2"></p>
-            <p><a id="linkExportAwards2" href="#" onclick="exportCSV('award2')" data-i18n="export_to_csv"></a><br/></p>
-            <table id="grid_award2"><tbody><tr><td/></tr></tbody></table>
-            <div id="pager_award2"></div> 
             <div data-i18n="[html]awards_content_detail"></div>
             <p><a id="linkExportAwards1" href="#" onclick="exportCSV('award1')" data-i18n="export_to_csv"></a>
             <table id="grid_award1"><tbody><tr><td/></tr></tbody></table>

@@ -211,19 +211,6 @@ function initModels(isLogged) {
             rank: {label: t("contestant_rank_label"), editable: false, search: false, width:100}
          }
       },
-      award2: {
-         tableName: "award2",
-         fields: {
-            schoolID: {label: t("contestant_school"), editable: false, search: false, width: 250, edittype: "select", editoptions: { value:getItemNames(schools)}},
-            contestID: {label: t("contestant_contestID_label"), editable: false, search: false, width: 300, edittype: "select", editoptions: { value:getItemNames(contests)}},
-            groupField: {label: t("contestant_name_label"), editable: false, search: false, width: 300},
-            firstName: {label: t("contestant_firstName_label"), editable: false, search: false, width:200},
-            lastName: {label: t("contestant_lastName_label"), editable: false, search: false, width:200},
-            genre: {label: t("contestant_genre_label"), editable: false, search: false, width: 120},
-            score: {label: t("contestant_score_label"), editable: false, search: false, width:100},
-            rank: {label: t("contestant_rank_label"), editable: false, search: false, width:100}
-         }
-      },
       contestant: {
          tableName: "contestant",
          fields: {
@@ -472,9 +459,7 @@ function initModels(isLogged) {
                stype: "select", searchoptions: searchYesNo,
                width: 100
             },
-            folder: {label: t("contest_folder_label"), editable: true, edittype: "text", width:350},
-            minAward1Rank: {label: t("contest_minAward1Rank_label"), editable: true, edittype: "text", width:120},
-            minAward2Rank: {label: t("contest_minAward2Rank_label"), editable: true, edittype: "text", width:120}
+            folder: {label: t("contest_folder_label"), editable: true, edittype: "text", width:350}
          }
       },
       question: {
@@ -650,7 +635,6 @@ function loadContestants() {
 
 function loadListAwards() {
    loadGrid("award1", "", 20, [20, 50, 200, 500], function() {}, true);
-   loadGrid("award2", "", 20, [20, 50, 200, 500], function() {}, true);
 }
 
 function loadSchoolSearch() {

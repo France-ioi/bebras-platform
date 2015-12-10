@@ -216,9 +216,9 @@ $viewsModels = array(
       'joins'     => array(
          "team" => array("srcTable" => "contestant", "srcField" => "teamID", "dstField" => "ID"),
          "group" => array("srcTable" => "team", "srcField" => "groupID", "dstField" => "ID"),
-         "contest" => array("srcTable" => "group", "srcField" => "contestID", "dstField" => "ID"),
          "user_user" => array("type" => "LEFT", "srcTable" => "group", "srcField" => "userID", "dstField" => "userID"),
-         "school" => array("srcTable" => "group", "srcField" => "schoolID", "dstField" => "ID")
+         "school" => array("srcTable" => "group", "srcField" => "schoolID", "dstField" => "ID"),
+         "award_threshold" => array("srcTable" => "team", "on" => "(team.nbContestants = award_threshold.nbContestants and group.contestID = award_threshold.contestID and contestant.grade = award_threshold.gradeID and award_threshold.awardID = 1)")
       ),
       'fields' => array(
          "schoolID" => array("tableName" => "group", "access" => array("write" => array(), "read" => array("user"))),
@@ -238,51 +238,9 @@ $viewsModels = array(
          "groupField" => $fieldGroupFilter,
          "score" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`score` = :[PREFIX_FIELD]score"),
          "schoolID" => array("joins" => array(), "condition" => "`[PREFIX]contestant`.`cached_schoolID` = :[PREFIX_FIELD]schoolID"),
-         "contestID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`contestID` = :[PREFIX_FIELD]contestID"),
          "userID" => array("joins" => array("user_user"), "condition" => "(`group`.`userID` = :[PREFIX_FIELD]userID OR (`[PREFIX]user_user`.`targetUserID` = :[PREFIX_FIELD]userID AND `[PREFIX]user_user`.`accessType` <> 'none'))"),
          "ownerUserID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`userID` = :[PREFIX_FIELD]ownerUserID"),
-         "awarded" => array("joins" => array("contest", 'team'), "ignoreValue" => true, "condition" => "(`[PREFIX]team`.`participationType` = 'Official' and `[PREFIX]contestant`.`rank` is not null and `[PREFIX]contest`.`minAward1Rank` is not null and `[PREFIX]contestant`.`rank` <= `[PREFIX]contest`.`minAward1Rank`)"),
-      ),
-      'orders' => array(
-         array('field' => 'name'),
-         array('field' => 'contestID'),
-         array('field' => 'groupField'),
-         array('field' => 'rank'),
-         array('field' => 'lastName'),
-         array('field' => 'firstName'),
-      )
-   ),
-   
-   'award2' => array(
-      'mainTable' => 'contestant',
-      'adminOnly' => false,
-      'joins'     => array(
-         "team" => array("srcTable" => "contestant", "srcField" => "teamID", "dstField" => "ID"),
-         "group" => array("srcTable" => "team", "srcField" => "groupID", "dstField" => "ID"),
-         "contest" => array("srcTable" => "group", "srcField" => "contestID", "dstField" => "ID"),
-         "user_user" => array("type" => "LEFT", "srcTable" => "group", "srcField" => "userID", "dstField" => "userID"),
-         "school" => array("srcTable" => "group", "srcField" => "schoolID", "dstField" => "ID")
-      ),
-      'fields' => array(
-         "schoolID" => array("tableName" => "group", "access" => array("write" => array(), "read" => array("user"))),
-         "contestID" => array("tableName" => "group", "access" => array("write" => array(), "read" => array("user"))),
-         "groupField" => $fieldGroup,
-         "firstName" => array(),
-         "lastName" => array(),
-         "genre" => array(),
-         "score" => array("tableName" => "team"),
-         "rank" => array(),
-         "country" => array("tableName" => "school"),
-         "city" => array("tableName" => "school"),
-         "name" => array("tableName" => "school")
-      ),
-      "filters" => array(
-         "groupField" => $fieldGroupFilter,
-         "score" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`score` = :[PREFIX_FIELD]score"),
-         "schoolID" => array("joins" => array(), "condition" => "`[PREFIX]contestant`.`cached_schoolID` = :[PREFIX_FIELD]schoolID"),
-         "userID" => array("joins" => array("user_user"), "condition" => "(`group`.`userID` = :[PREFIX_FIELD]userID OR (`[PREFIX]user_user`.`targetUserID` = :[PREFIX_FIELD]userID AND `[PREFIX]user_user`.`accessType` <> 'none'))"),
-         "ownerUserID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`userID` = :[PREFIX_FIELD]ownerUserID"),
-         "awarded" => array("joins" => array("contest", "team"), "ignoreValue" => true, "condition" => "(`[PREFIX]team`.`participationType` = 'Official' and `[PREFIX]contestant`.`rank` is not null and `[PREFIX]contest`.`minAward2Rank` is not null and `[PREFIX]contestant`.`rank` <= `[PREFIX]contest`.`minAward2Rank`)"),
+         "awarded" => array("joins" => array("group", 'team', 'award_threshold'), "ignoreValue" => true, "condition" => "(`[PREFIX]team`.`participationType` = 'Official' and `[PREFIX]contestant`.`rank` is not null and `[PREFIX]award_threshold`.`minScore` <= [PREFIX]team.score)"),
       ),
       'orders' => array(
          array('field' => 'name'),
