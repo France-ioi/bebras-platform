@@ -352,7 +352,7 @@ function getHtmlCertificate($contestant, $conf) {
       $title = "coordinatrice";
    $category = $gradeNames[$contestant->grade];
    if ($conf['differenciateNbStudents']) {
-      $category .= ' - '.($contestant->nbStudents == 2 ? 'binôme' : 'individuel');
+      $category .= ' - '.($contestant->nbContestants == 2 ? 'binôme' : 'individuel');
    }
    $data = array(
       "category" => $category,
