@@ -2210,7 +2210,7 @@ function certiGenShow(data) {
       $("#certiGenList").html("<ul></ul>");
    }
    $.each(schools, function(id, school) { 
-      var li = $("<li>" + t("certificates_school") + '"' + school.name + '"</li>');
+      var li = $("<li style='padding-top:30px;'>" + t("certificates_school") + '"' + school.name + '"</li>');
       if (school.state) {        
          // School title
          $(li).append(" (" + school.nbGroups + " " + t("certificates_groups") + ", " + school.nbStudents + " " + t("certificates_students") + ") : ");
@@ -2229,11 +2229,11 @@ function certiGenShow(data) {
          $(li).append("<p>" + req + "</p>");
          // Cancel generation
          if (school.state == 'WAITING' || school.state == 'RUNNING') {
-            $(li).append('<input type="button" value="' + t("certificates_cancel_generation") + '" onclick="certiGenCancel('+school.id+')">');
+            $(li).append('<input type="button" value="' + t("certificates_cancel_generation") + '" onclick="certiGenCancel(\''+school.id+'\')">');
          }
          // New generation
          else {
-            $(li).append('<input type="button" value="' + t("certificates_start_new_generation") + '" onclick="certiGenAdd('+school.id+')">');
+            $(li).append('<input type="button" value="' + t("certificates_start_new_generation") + '" onclick="certiGenAdd(\''+school.id+'\')">');
          }
          // List of pdfs
          if (school.state == 'FINISHED') {
@@ -2249,7 +2249,7 @@ function certiGenShow(data) {
       }
       else {
          $(li).append(" :");
-         $(li).append('<br/><input type="button" value="' + t("certificates_start_generation") + '" onclick="certiGenAdd('+school.id+')">');
+         $(li).append('<br/><input type="button" value="' + t("certificates_start_generation") + '" onclick="certiGenAdd(\''+school.id+'\')">');
       }
       $("#certiGenList > ul").append(li);
    });
