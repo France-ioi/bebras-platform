@@ -39,8 +39,6 @@ foreach ($config->certificates_confs as $thisConfig) {
 
 	if (!CertiGen::queueFinished($request->ID))
 	{
-	   cleanSchool($request->schoolID);       
 	   echo "Not finishing\n";
-	   exit(0);
 	}
 }

@@ -6,7 +6,7 @@ require_once __DIR__.'/../shared/connect.php';
 $config->certificates_confs = [];
 
 $config->certificates_confs[0] = [
-	'logName' => 'Alkindi',
+	'logName' => 'Castor',
 	'school_template' => 'school_template.html',
 	'group_template' => "group_template.html",
 	'certificate_template' => "certificate_template.html",
@@ -19,8 +19,42 @@ $config->certificates_confs[0] = [
 	'addAlgoreaCode' => true,
 	'differenciateNbStudents' => true,
 	'grades' => [4,5,6,7,8,9,10,11,12,13,14,15],
-	'nbContestantsMax' => 2
+	'nbContestantsMax' => 2,
+	'groupListGradeNames' => array(
+      -1 => "Professeur",
+      4 => "CM1",
+      5 => "CM2",
+      6 => "6<sup>e</sup>",
+      7 => "5<sup>e</sup>",
+      8 => "4<sup>e</sup>",
+      9 => "3<sup>e</sup>",
+      10 => "Seconde",
+      11 => "Première",
+      12 => "Terminale",
+      13 => "Seconde Pro.",
+      14 => "Première Pro.",
+      15 => "Terminale Pro.",
+   ),
+	'certifGradeNames' => array(
+      -1 => "Professeur",
+      4 => "Niveau CM1",
+      5 => "Niveau CM2",
+      6 => "Niveau 6<sup>e</sup>",
+      7 => "Niveau 5<sup>e</sup>",
+      8 => "Niveau 4<sup>e</sup>",
+      9 => "Niveau 3<sup>e</sup>",
+      10 => "Niveau Seconde",
+      11 => "Niveau Première",
+      12 => "Niveau Terminale",
+      13 => "Niveau Seconde Pro.",
+      14 => "Niveau Première Pro.",
+      15 => "Niveau Terminale Pro.",
+   )
 ];
+
+if (is_readable(__DIR__.'/config_local.php')) {
+   include_once __DIR__.'/config_local.php';
+}
 
 function connectWithConfig($thisConfig) {
 	// creating a $config object useable by connect_pdo in connect.php
