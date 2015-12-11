@@ -292,12 +292,15 @@ function getGroupsData($conf)
          `group`.`ID` AS `groupID`, 
          `group`.`name` AS `groupName`,
          CONCAT(`user`.firstName, ' ', `user`.lastName) AS userName
-      FROM `team`, `group`, `user`, `school`, `school_user`
-      WHERE 
-         `team`.groupID = `group`.ID AND
-         `group`.`userID` = `user`.`ID` AND
-         `group`.`schoolID` = `school`.`ID`  AND
-         `school`.`ID` = `school_user`.schoolID AND
+      FROM `team`
+      JOIN `group` ON `team`.groupID = `group`.ID
+      JOIN `user` ON `group`.userID = user.ID
+      JOIN `school` ON `group`.`schoolID` = `school`.`ID`
+      JOIN `school_user` ON `school`.`ID` = `school_user`.schoolID
+      LEFT JOIN `user_user` ON user_user.userID = `group`.userID
+      WHERE
+         ((`user_user`.`accessType` <> 'none' AND `user_user`.`targetUserID` = :userID) 
+            OR (`group`.`userID` = :userID)) AND
          `school_user`.userID = :userID AND
          `team`.`participationType` = 'Official' AND
          `group`.`contestID` IN (".implode(', ', $conf['contestIDs']).")
