@@ -62,6 +62,7 @@ $config->teacherInterface->baseUrl = 'http://coordinateur.castor-informatique.fr
 $config->certificates = (object) array();
 $config->certificates->webServiceUrl = 'http://castor-informatique.fr.localhost/certificates/';
 $config->certificates->allow = false;
+$config->certificates->confIndexForThisPlatform = 0; // index of the conf in certificates/ (you shouldn't need to change it)
 
 $config->timezone = ini_get('date.timezone');
 $config->defaultLanguage = 'fr';
