@@ -216,9 +216,10 @@ $viewsModels = array(
       'joins'     => array(
          "team" => array("srcTable" => "contestant", "srcField" => "teamID", "dstField" => "ID"),
          "group" => array("srcTable" => "team", "srcField" => "groupID", "dstField" => "ID"),
+         "contest" => array("srcTable" => "group", "srcField" => "contestID", "dstField" => "ID"),
          "user_user" => array("type" => "LEFT", "srcTable" => "group", "srcField" => "userID", "dstField" => "userID"),
          "school" => array("srcTable" => "group", "srcField" => "schoolID", "dstField" => "ID"),
-         "award_threshold" => array("srcTable" => "team", "on" => "(team.nbContestants = award_threshold.nbContestants and group.contestID = award_threshold.contestID and contestant.grade = award_threshold.gradeID and award_threshold.awardID = 1)")
+         "award_threshold" => array("srcTable" => "team", "on" => "(team.nbContestants = award_threshold.nbContestants and `group`.contestID = award_threshold.contestID and contestant.grade = award_threshold.gradeID and award_threshold.awardID = 1)")
       ),
       'fields' => array(
          "schoolID" => array("tableName" => "group", "access" => array("write" => array(), "read" => array("user"))),
