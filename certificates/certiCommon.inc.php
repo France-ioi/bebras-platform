@@ -288,7 +288,7 @@ function getHtmlCertificate($contestant, $conf) {
    $strExtraLines = "";
    if ($contestant->algoreaCode) {
       $strAlgoreaCode = '<div style="height:0px; overflow:visible;font-size:20.8px;">
-            Qualifié'.($contestant->genre == 1 ? 'e' : '')." pour pour le 1<sup>er</sup> tour du concours Algoréa.
+            Qualifié'.($contestant->genre == 1 ? 'e' : '')." pour le 1<sup>er</sup> tour du concours Algoréa.
             <br/>
             Validez votre qualification sur algorea.org avec le code : ".$contestant->algoreaCode."
             </div>";
