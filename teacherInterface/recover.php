@@ -79,7 +79,7 @@ if ($action == "sendMail") {
             'forceOfficialEmailDomain' => $config->teacherInterface->forceOfficialEmailDomain,
             'contestPresentationURL' => $config->contestPresentationURL,
             'i18nResourcePath' => static_asset('/i18n/__lng__/__ns__.json'),
-            'useCustomStrings' => $config->useCustomStrings
+            'customStringsName' => $config->customStringsName
          ]).";
       function getRegions() { return {} };
       </script>";
@@ -92,8 +92,8 @@ if ($action == "sendMail") {
             resGetPath: config.i18nResourcePath,
             fallbackNS: 'translation',
             ns: {
-               namespaces: config.useCustomStrings ? ['custom', 'translation', 'country' + config.countryCode] : ['translation', 'country' + config.countryCode],
-               defaultNs: config.useCustomStrings ? 'custom' : 'translation',
+               namespaces: config.customStringsName ? [config.customStringsName, 'translation', 'country' + config.countryCode] : ['translation', 'country' + config.countryCode],
+               defaultNs: config.customStringsName ? config.customStringsName : 'translation',
             },
             useDataAttrOptions: true
          }, function () {
