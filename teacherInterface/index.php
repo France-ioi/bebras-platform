@@ -190,7 +190,7 @@
             <button type="button" id="generateContest" data-i18n="contests_regenerate" onclick="genContest()"></button><br/>
             <button type="button" id="buttonGradeContest" data-i18n="contests_grade" onclick="gradeContest()"></button>
             <button type="button" id="buttonRankContest" data-i18n="contests_rank" onclick="rankContest()"></button>
-            <button type="button" id="buttonGenerateAlgoreaCodes" data-i18n="generate_algorea_codes" onclick="generateAlgoreaCodes()"></button>
+            <button style="display:none;" type="button" id="buttonGenerateAlgoreaCodes" data-i18n="generate_algorea_codes" onclick="generateAlgoreaCodes()"></button>
             <button type="button" id="buttonUnofficializeContest" data-i18n="contests_switch_to_unofficial" onclick="alert(t('admin.feature_not_available'))"></button><br/>
             <div id="gradeContestState"></div>
             <br/><br/>
@@ -203,7 +203,7 @@
          <div id="tabs-awards">
             <div data-i18n="[html]awards_content_intro"></div>
             <div data-i18n="[html]awards_content_detail"></div>
-            <p><a id="linkExportAwards1" href="#" onclick="exportCSV('award1')" data-i18n="export_to_csv"></a>
+            <p><a id="linkExportAwards1" href="#" onclick="exportCSV('award1')" data-i18n="export_to_csv"></a> <a style="display:none;" id="linkExportAlgoreaCodes" href="#" onclick="printAlgoreaCodes()" data-i18n="generate_algorea_codes"></a>
             <table id="grid_award1"><tbody><tr><td/></tr></tbody></table>
             <div id="pager_award1"></div>
           </div>
@@ -256,7 +256,8 @@
       'contestPresentationURL' => $config->contestPresentationURL,
       'i18nResourcePath' => static_asset('/i18n/__lng__/__ns__.json'),
       'customStringsName' => $config->customStringsName,
-      'allowCertificates' => $config->certificates->allow
+      'allowCertificates' => $config->certificates->allow,
+      'useAlgoreaCodes' => $config->teacherInterface->useAlgoreaCodes
    ]) ?>;
    init();
 </script>

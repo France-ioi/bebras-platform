@@ -2309,5 +2309,9 @@ function init() {
    if (typeof $.jgrid !== 'undefined') {
       $.jgrid.defaults = $.extend($.jgrid.defaults, { autoencode: true });
    }
+   if (window.config.useAlgoreaCodes) {
+      $('#linkExportAlgoreaCodes').show();
+      $('#buttonGenerateAlgoreaCodes').show();
+   }
    $('input[type=button]', this).attr('disabled', false);
 }
