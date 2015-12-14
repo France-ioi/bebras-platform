@@ -203,10 +203,14 @@ function initModels(isLogged) {
          fields: {
             schoolID: {label: t("contestant_school"), editable: false, search: false, width: 250, edittype: "select", editoptions: { value:getItemNames(schools)}},
             contestID: {label: t("contestant_contestID_label"), editable: false, search: false, width: 300, edittype: "select", editoptions: { value:getItemNames(contests)}},
-            groupField: {label: t("contestant_name_label"), editable: false, search: false, width: 300},
+            groupField: {label: t("contestant_name_label"), width: 300,
+               editable: false, edittype: groupStype, editoptions: groupEditOptions,
+               search: false },
             firstName: {label: t("contestant_firstName_label"), editable: false, search: false, width:200},
             lastName: {label: t("contestant_lastName_label"), editable: false, search: false, width:200},
-            genre: {label: t("contestant_genre_label"), editable: false, search: false, width: 120},
+            genre: {label: t("contestant_genre_label"),
+               editable: true, edittype: "select", editoptions:{ value:{"1": t("option_female"), "2": t("option_male")}},
+               search: false, width: 120},
             score: {label: t("contestant_score_label"), editable: false, search: false, width:100},
             rank: {label: t("contestant_rank_label"), editable: false, search: false, width:100}
          }
