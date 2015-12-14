@@ -29,15 +29,6 @@ if (!count($awarded)) {
    exit();
 }
 
-$levelStr = array(
-   1 => "6ème-5ème",
-   2 => "4ème-3ème",
-   3 => "Seconde",
-   4 => "Première-Terminale",
-   5 => "Seconde professionnelle",
-   6 => "Première-Terminale professionnelle",
-);
-
 ?>
 <!doctype html>
 <html lang="fr">
@@ -106,11 +97,12 @@ foreach($awarded as $contestant) {
       echo '<div class="page-break"></div>';
    }
    echo '<div class="label"><div class="labelContent">';
-   echo '<p class="title">Pré-sélection pour le premier tour du concours Algorea</p>';
+   echo '<p class="title">Qualification au 1<sup>er</sup> tour du concours Algorea</p>';
    echo '<p class="name">'.$contestant->firstName.' '.$contestant->lastName.'</p>';
    echo '<p class="schoolName">'.$contestant->name.'</p>'; // name of the school
-   echo '<p>code confidentiel: <span class="code">algorea-'.$contestant->algoreaCode.'</span></p>';
-   echo '<p class="small">Enregistrez-vous dés que possible avec ce code sur http://algorea.org</p>';
+   echo '<p>code confidentiel: <span class="code">'.$contestant->algoreaCode.'</span></p>';
+   echo '<p class="small">Enregistrez-vous dès que possible avec ce code sur http://algorea.org</p>';
+   echo '<p class="small">Date du concours : 1er au 7 février 2016</p>';
    echo '</div></div>';
    $nbLabelsOnPage += 1;
    if ($nbLabelsOnPage >= 18) {

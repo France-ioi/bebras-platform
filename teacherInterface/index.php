@@ -203,14 +203,13 @@
          <div id="tabs-awards">
             <div data-i18n="[html]awards_content_intro"></div>
             <div data-i18n="[html]awards_content_detail"></div>
-            <p><a id="linkExportAwards1" href="#" onclick="exportCSV('award1')" data-i18n="export_to_csv"></a> <a style="display:none;" id="linkExportAlgoreaCodes" href="#" onclick="printAlgoreaCodes()" data-i18n="generate_algorea_codes"></a>
+            <p style="display:none;text-align:center;" id="linkExportAlgoreaCodes" data-i18n="[html]generate_algorea_codes"></p>
+            <p><a id="linkExportAwards1" href="#" onclick="exportCSV('award1')" data-i18n="export_to_csv"></a></p>
             <table id="grid_award1"><tbody><tr><td/></tr></tbody></table>
             <div id="pager_award1"></div>
           </div>
       </div>
-   </div>
-   <div id="divError">
-      <b data-i18n="error_server_response"></b> <p style="float:right;"><a href="#" onclick="$('#divError').hide()">[<span data-i18n="error_close"></span>]</a></p><br/>
+   </d style="display:none;" id="linkExportAlgoreaCodes"se"></b> <p style="float:right;"><aihrpf="#" onclick="$('#divError').hide()">[<span data-i18n="error_close"></span>]</a></p><br/>
       <span id="contentError"></span>
    </div>
    <div id="divSchoolSearch"style="display:none" class="dialog">

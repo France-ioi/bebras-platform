@@ -73,7 +73,7 @@
     "contests_questions": "Questions des concours :",
     "contests_questions_add": "Ajouter une nouvelle question",
     "contests_questions_delete": "Supprimer la question sélectionnée",
-    "generate_algorea_codes": "Générer les codes Algoréa",
+    "generate_algorea_codes": "<button style=\"margin-bottom:10px;\" onclick=\"printAlgoreaCodes()\">Imprimer les codes de qualification à Algoréa</button><br>Les codes de qualification permettent aux élèves de participer de chez eux<br>si une séance n'est pas organisée en classe où qu'ils n'y sont pas présents.",
     "translations_languages": "Langues",
     "translations_add_new_language": "Ajouter une langue",
     "translations_translate": "Traduire",
