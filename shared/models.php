@@ -222,7 +222,7 @@ $viewsModels = array(
          "award_threshold" => array("srcTable" => "team", "on" => "(team.nbContestants = award_threshold.nbContestants and `group`.contestID = award_threshold.contestID and contestant.grade = award_threshold.gradeID and award_threshold.awardID = 1)")
       ),
       'fields' => array(
-         "schoolID" => array("tableName" => "group", "access" => array("write" => array(), "read" => array("user"))),
+         "schoolID" => array("tableName" => "group", "access" => array("write" => array(), "read" => array("user")), "groupBy" => "`contestant`.`ID`"),
          "contestID" => array("tableName" => "group", "access" => array("write" => array(), "read" => array("user"))),
          "groupField" => $fieldGroup,
          "firstName" => array(),
@@ -263,7 +263,7 @@ $viewsModels = array(
          "user_user" => array("type" => "LEFT", "srcTable" => "group", "srcField" => "userID", "dstField" => "userID"),
       ),
       "fields" => array(
-         "schoolID" => array("tableName" => "group", "access" => array("write" => array(), "read" => array("user"))),
+         "schoolID" => array("tableName" => "group", "access" => array("write" => array(), "read" => array("user")), "groupBy" => "`contestant`.`ID`"),
          "contestID" => array("tableName" => "group", "access" => array("write" => array(), "read" => array("user"))),
          "groupField" => $fieldGroup,
          "saniValid" => array(),
@@ -297,7 +297,7 @@ $viewsModels = array(
          "user_user" => array("type" => "LEFT", "srcTable" => "group", "srcField" => "userID", "dstField" => "userID"),
       ),
       "fields" => array(
-         "schoolID" => array("tableName" => "group", "access" => array("write" => array(), "read" => array("user"))),
+         "schoolID" => array("tableName" => "group", "access" => array("write" => array(), "read" => array("user")), "groupBy" => "`contestant`.`ID`"),
          "schoolName" => array("tableName" => "school", "fieldName" => "name"),
          "grade" => array("tableName" => "group"),
          "contestID" => array("tableName" => "group", "access" => array("write" => array(), "read" => array("user"))),
@@ -358,7 +358,7 @@ $viewsModels = array(
          "user" => array("srcTable" => "group", "srcField" => "userID", "dstField" => "ID")
       ),
       "fields" => array(
-         "schoolID" => array(),
+         "schoolID" => array("groupBy" => "`group`.`ID`"),
          "userLastName"  => array("fieldName" => "lastName", "tableName" => "user"),
          "userFirstName"  => array("fieldName" => "firstName", "tableName" => "user"),
          "contestID" => array(),
@@ -463,7 +463,7 @@ $viewsModels = array(
          "school_user_count" => array("srcTable" => "school", "srcField" => "ID", "dstTable" => "school_user", "dstField" => "schoolID", "type" => "LEFT")
       ),
       "fields" => array(
-         "name" => array(),
+         "name" => array("groupBy" => "`school`.`ID`"),
          "region" => array(),
          "address" => array(),
          "city" => array(),
@@ -596,7 +596,8 @@ $viewsModels = array(
       "fields" => array(
          "lastName" => array(
             "tableName" => "user",
-            "access" => array("write" => array(), "read" => array())
+            "access" => array("write" => array(), "read" => array()),
+            "groupBy" => "`user`.`ID`"
          ),
          "firstName" => array(
             "tableName" => "user",
