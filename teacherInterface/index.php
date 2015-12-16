@@ -11,7 +11,7 @@
 <?php stylesheet_tag('/admin.css'); ?>
 </head>
 <body>
-<form autocomplete="off">
+<form autocomplete="off" onsubmit="return false;">
    <div id="divHeader">
         <table style="width:100%"><tr>
             <td style="width:20%" data-i18n="[html]main_logo"></td>
