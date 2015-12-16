@@ -11,7 +11,7 @@
 <?php stylesheet_tag('/admin.css'); ?>
 </head>
 <body>
-<form autocomplete="off" onsubmit="return false;">
+<div autocomplete="off">
    <div id="divHeader">
         <table style="width:100%"><tr>
             <td style="width:20%" data-i18n="[html]main_logo"></td>
@@ -226,7 +226,7 @@
          <button type="button" data-i18n="cancel" onclick="endSearchSchool()"/>
       </p>
    </div>
-</form>
+</div>
 <?php
    global $config;
    $language = $config->defaultLanguage;
