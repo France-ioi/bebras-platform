@@ -7,7 +7,40 @@ require_once("commonAdmin.php");
 // To (re)compute team.nbContestants:
 // update team set nbContestants = 0; insert into team (ID) select teamID from contestant on duplicate key update nbContestants = nbContestants + 1;
 
-function computeRanks($db, $contestID)
+function computeNbContestants($db, $contestID, $maxContestants) {
+   $stmt = $db->prepare('update team
+            JOIN `group` ON (`team`.`groupID` = `group`.`ID`)
+            set nbContestants = 0
+            where `group`.contestID = :contestID;');
+   $stmt->execute(array('contestID' => $contestID));
+   $stmt = $db->prepare('insert into team (ID) 
+            select teamID from contestant
+            JOIN team as teamjoin on (teamjoin.ID = contestant.teamID)
+            JOIN `group` ON (`teamjoin`.`groupID` = `group`.`ID`)
+            WHERE `group`.contestID = :contestID
+            on duplicate key update team.nbContestants = LEAST(:maxContestants, team.nbContestants + 1);');
+   $stmt->execute(array('contestID' => $contestID, 'maxContestants' => $maxContestants));
+}
+
+function getContestInfos($db, $contestID) {
+   $stmt = $db->prepare('select ID, allowTeamsOfTwo, rankGrades, rankNbContestants from contest where ID = :contestID');
+   $stmt->execute(array('contestID' => $contestID));
+   $contestInfos = $stmt->fetch(PDO::FETCH_ASSOC);
+   // get grades if relevant
+   if ($contestInfos['rankGrades']) {
+      $stmt = $db->prepare('select distinct contestant.grade from contestant
+               JOIN team on (team.ID = contestant.teamID)
+               JOIN `group` ON (`team`.`groupID` = `group`.`ID`)
+               where 
+               `team`.participationType = \'Official\' and
+               `group`.contestID = :contestID;');
+      $stmt->execute(array('contestID' => $contestID));
+      $contestInfos['grades'] = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+   }
+   return $contestInfos;
+}
+
+function computeRanks($db, $contestInfos)
 {  
    $query = "
       UPDATE `contestant` as `c1`, 
@@ -29,9 +62,15 @@ function computeRanks($db, $contestID)
             JOIN `group` ON (`team`.`groupID` = `group`.`ID`)
             WHERE 
                `team`.`participationType` = 'Official' AND 
-               `group`.`contestID` = :contestID AND
-               `contestant`.`grade` = :grade AND
-               `team`.`nbContestants` = :nbContestants
+";
+   if ($contestInfos['rankGrades']) {
+      $query .= " `contestant`.`grade` = :grade AND ";
+   }
+   if ($contestInfos['rankNbContestants'] && $contestInfos['allowTeamsOfTwo']) {
+      $query .= " `team`.`nbContestants` = :nbContestants AND ";  
+   }
+   $query .= "
+            `group`.`contestID` = :contestID                
             ORDER BY
             `team`.`score` DESC
          ) `contestant2`, 
@@ -47,15 +86,30 @@ function computeRanks($db, $contestID)
    ";
 
    $stmt = $db->prepare($query);
-   $maxContestants = 2;
+   $maxContestants = 1;
+   if ($contestInfos['rankNbContestants'] && $contestInfos['allowTeamsOfTwo']) {
+      $maxContestants = 2;
+   }
    for ($i = 1; $i<= $maxContestants; $i++) {
-      for ($grade = 4; $grade < 16; $grade++) {
-         $stmt->execute(array(':contestID' => $contestID, 'nbContestants' => $i, 'grade' => $grade)); 
+      if ($contestInfos['rankGrades']) {
+         foreach ($contestInfos['grades'] as $grade) {
+            $values = array(':contestID' => $contestInfos['ID'], 'grade' => $grade);
+            if ($maxContestants != 1) {
+               $values['nbContestants'] = $i;
+            }
+            $stmt->execute($values);
+         }
+      } else {
+         $values = array(':contestID' => $contestInfos['ID']);
+         if ($maxContestants != 1) {
+            $values['nbContestants'] = $i;
+         }
+         $stmt->execute($values);
       }
    }
 }
 
-function computeRanksSchool($db, $contestID)
+function computeRanksSchool($db, $contestInfos)
 {
    $query = "
     UPDATE `contestant` as `c1`,
@@ -78,10 +132,14 @@ function computeRanksSchool($db, $contestID)
             JOIN `team` ON (`contestant`.`teamID` = `team`.`ID`)
             JOIN `group` ON (`team`.`groupID` = `group`.`ID`)
       WHERE 
-          `team`.`participationType` = 'Official' AND 
-          `contestant`.`grade` = :grade AND
-          `team`.`nbContestants` = :nbContestants AND
-          `group`.`contestID` = :contestID
+          `team`.`participationType` = 'Official' AND ";
+   if ($contestInfos['rankGrades']) {
+      $query .= " `contestant`.`grade` = :grade AND ";
+   }
+   if ($contestInfos['rankNbContestants'] && $contestInfos['allowTeamsOfTwo']) {
+      $query .= " `team`.`nbContestants` = :nbContestants AND ";  
+   }
+   $query .= " `group`.`contestID` = :contestID
       ORDER BY `group`.`schoolID`, `team`.`score` DESC
    ) `contestant2`,
    (
@@ -95,49 +153,27 @@ function computeRanksSchool($db, $contestID)
     SET `c1`.`schoolRank` = `c2`.`schoolRank` 
     WHERE `c1`.`ID` = `c2`.`ID`;";   
    $stmt = $db->prepare($query);
-   $maxContestants = 2;
+   $maxContestants = 1;
+   if ($contestInfos['rankNbContestants'] && $contestInfos['allowTeamsOfTwo']) {
+      $maxContestants = 2;
+   }
    for ($i = 1; $i<= $maxContestants; $i++) {
-      for ($grade = 4; $grade < 16; $grade++) {
-         $stmt->execute(array(':contestID' => $contestID, 'nbContestants' => $i, 'grade' => $grade)); 
+      if ($contestInfos['rankGrades']) {
+         foreach ($contestInfos['grades'] as $grade) {
+            $values = array(':contestID' => $contestInfos['ID'], 'grade' => $grade);
+            if ($maxContestants != 1) {
+               $values['nbContestants'] = $i;
+            }
+            $stmt->execute($values);
+         }
+      } else {
+         $values = array(':contestID' => $contestInfos['ID']);
+         if ($maxContestants != 1) {
+            $values['nbContestants'] = $i;
+         }
+         $stmt->execute($values);
       }
    }
-}
-
-function generateAlgoreaCodes($db, $contestID) {
-   // retrieving awarded contestants through "award1" model
-   $modelName = 'award1';
-   $model = getViewModel($modelName);
-   $request = array(
-      "modelName" => $modelName,
-      "model" => $model,
-      "filters" => array()
-   );
-   foreach($model["fields"] as $fieldName => $field) {
-      $request["fields"][] = $fieldName;
-   }
-   $request["filters"] = array('awarded' => null, 'contestID' => $contestID);
-   if (!$_SESSION["isAdmin"]) {
-      $request["filters"]["userID"] = $_SESSION["userID"];
-   }
-
-   $result = selectRows($db, $request);
-   $awarded = $result['items'];
-
-   if (!count($awarded)) {
-      return;
-   }
-   // we hope that there will be no collision in a serie of generated codes
-   $query = "INSERT ignore INTO `contestant` (`ID`, `algoreaCode`) values ";
-   $first = true;
-   foreach($awarded as $contestant) {
-      if (!$first) {
-         $query = $query.', ';
-      }
-      $first = false;
-      $query = $query.'('.$contestant->ID.', \''.genAccessCode($db).'\')';
-   }
-   $query = $query.' on duplicate key update `algoreaCode` = values(`algoreaCode`)';
-   $db->exec($query);
 }
 
 if ((!isset($_SESSION["isAdmin"])) || (!$_SESSION["isAdmin"])) {
@@ -147,11 +183,12 @@ if ((!isset($_SESSION["isAdmin"])) || (!$_SESSION["isAdmin"])) {
 
 $contestID = $_REQUEST["contestID"];
 
-computeRanks($db, $contestID);
-computeRanksSchool($db, $contestID);
-//generateAlgoreaCodes($db, $contestID);
+$contestInfos = getContestInfos($db, $contestID);
+if ($contestInfos['rankNbContestants'] && $contestInfos['allowTeamsOfTwo']) {
+   computeNbContestants($db, $contestID, 2);
+}
+computeRanks($db, $contestInfos);
+computeRanksSchool($db, $contestInfos);
 unset($db);
 
 echo json_encode(array("success" => true));
-
-?>
