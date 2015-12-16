@@ -309,6 +309,7 @@ $viewsModels = array(
          "genre" => array(),
          "grade" => array("tableName" => "grade", "fieldName" => "name"),
          "score" => array("tableName" => "team"),
+         "nbContestants" => array("tableName" => "team"),
          "rank" => array(),
          "algoreaCode" => array()
       ),
