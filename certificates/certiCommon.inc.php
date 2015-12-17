@@ -42,7 +42,6 @@ function genSchoolCertificates($schoolID, $conf) {
    $schoolHtml = file_get_contents($conf['school_template']);
    $schoolHtml = str_replace("{groups}", $groupsHtml, $schoolHtml);
 
-
    file_put_contents("certificates_school.html", $schoolHtml);
    $outPdf = CERTIGEN_EXPORTDIR.'/'.$conf['folder'].'/'.CertiGen::getSchoolOutput($schoolID, $conf).'.pdf';
    // warning: requires wkhtmltopdf with qt patches
@@ -81,14 +80,13 @@ function getGroupsAndContestants($schoolID, $conf) {
       $group->certificates = "";
       $aGroups[$group->ID] = $group;
    }
-
    $aContestsData = array();
    foreach ($conf['contestIDs'] as $id) {
       $aContestsData[$id] = (object)array();
    }
 
    $nbStudents = array();
-   if (!$conf['differenciateNbStudents']) {
+   if (!$conf['rankGrades']) {
       $query = "
       SELECT `group`.contestID, COUNT(*) AS nbStudents
       FROM `contestant`, `team`,  `group`
@@ -113,11 +111,16 @@ function getGroupsAndContestants($schoolID, $conf) {
          $aContestsData[$contestID]->nbStudents = [];
          $nbStudents[$contestID] = [];
          foreach ($conf['grades'] as $grade) {
-            $nbStudents[$contestID][$grade] = [];
-            $aContestsData[$contestID]->nbStudents[$grade] = [];
-            for ($i = 1; $i<= $conf['nbContestantsMax']; $i++) {
-               $nbStudents[$contestID][$grade][$i] = getTotalContestants($contestID, $grade, $i);
-               $aContestsData[$contestID]->nbStudents[$grade][$i] = $nbStudents[$contestID][$grade][$i];
+            if ($conf['rankNbContestants']) {
+               $nbStudents[$contestID][$grade] = [];
+               $aContestsData[$contestID]->nbStudents[$grade] = [];
+               for ($i = 1; $i<= $conf['nbContestantsMax']; $i++) {
+                  $nbStudents[$contestID][$grade][$i] = getTotalContestants($contestID, $grade, $i);
+                  $aContestsData[$contestID]->nbStudents[$grade][$i] = $nbStudents[$contestID][$grade][$i];
+               }
+            } else {
+               $nbStudents[$contestID][$grade] = getTotalContestants($contestID, $grade);
+               $aContestsData[$contestID]->nbStudents[$grade] = $nbStudents[$contestID][$grade];
             }
          }
       }
@@ -136,7 +139,7 @@ function getGroupsAndContestants($schoolID, $conf) {
       $aContestsData[$row->contestID]->maxScore = $row->maxScore;
    }
 
-   if (!$conf['differenciateNbStudents']) {
+   if (!$conf['rankGrades']) {
       $query = "
       SELECT
          `group`.contestID,
@@ -165,9 +168,11 @@ function getGroupsAndContestants($schoolID, $conf) {
          `contestant`.teamID = `team`.ID AND
          `team`.groupID = `group`.ID AND
          `group`.contestID = `contest`.ID AND
-         `group`.schoolID = :schoolID AND
-         `team`.nbContestants = :nbContestants AND
-         `contestant`.grade = :grade AND
+         `group`.schoolID = :schoolID AND ";
+      if ($conf['rankNbContestants']) {
+         $query .= '`team`.nbContestants = :nbContestants AND ';
+      }
+      $query .= "`contestant`.grade = :grade AND
          `team`.`participationType` = 'Official' AND
          `group`.contestID =:contestID  
       ";
@@ -175,10 +180,15 @@ function getGroupsAndContestants($schoolID, $conf) {
       foreach($conf['contestIDs'] as $contestID) { 
          $aContestsData[$contestID]->nbStudentsSchool = [];
          foreach ($conf['grades'] as $grade) {
-            $aContestsData[$contestID]->nbStudentsSchool[$grade] = [];
-            for ($i = 1; $i<= $conf['nbContestantsMax']; $i++) {
-               $stmt->execute(['contestID' => $contestID, 'schoolID' => $schoolID, 'nbContestants' => $i, 'grade' => $grade]);
-               $aContestsData[$contestID]->nbStudentsSchool[$grade][$i] = $stmt->fetchColumn();
+            if ($conf['rankNbContestants']) {
+               $aContestsData[$contestID]->nbStudentsSchool[$grade] = [];
+               for ($i = 1; $i<= $conf['nbContestantsMax']; $i++) {
+                  $stmt->execute(['contestID' => $contestID, 'schoolID' => $schoolID, 'nbContestants' => $i, 'grade' => $grade]);
+                  $aContestsData[$contestID]->nbStudentsSchool[$grade][$i] = $stmt->fetchColumn();
+               }
+            } else {
+               $stmt->execute(['contestID' => $contestID, 'schoolID' => $schoolID, 'grade' => $grade]);
+               $aContestsData[$contestID]->nbStudentsSchool[$grade] = $stmt->fetchColumn();
             }
          }
       }
@@ -221,12 +231,15 @@ function getGroupsAndContestants($schoolID, $conf) {
       $row->schoolCity = $aGroups[$row->groupID]->schoolCity;
       $row->coordName = $aGroups[$row->groupID]->coordName;
       $row->Group = $aGroups[$row->groupID];
-      if (!$conf['differenciateNbStudents']) {
+      if (!$conf['rankGrades']) {
          $row->nbStudents = $aContestsData[$row->contestID]->nbStudents;
          $row->nbStudentsSchool = $aContestsData[$row->contestID]->nbStudentsSchool;
-      } else {
+      } elseif ($conf['rankNbContestants']) {
          $row->nbStudents = $aContestsData[$row->contestID]->nbStudents[$row->grade][$row->nbContestants];
          $row->nbStudentsSchool = $aContestsData[$row->contestID]->nbStudentsSchool[$row->grade][$row->nbContestants];
+      } else {
+         $row->nbStudents = $aContestsData[$row->contestID]->nbStudents[$row->grade];
+         $row->nbStudentsSchool = $aContestsData[$row->contestID]->nbStudentsSchool[$row->grade];
       }
       $row->maxScore = $aContestsData[$row->contestID]->maxScore;
       if ($row->rank > $row->nbStudents) {
@@ -248,7 +261,11 @@ function getGroupContestantsList($group, $schoolID, $conf) {
    );
    $list = "";
    foreach ($group->contestants as $contestant) {
-      $list .= "<tr><td>".$contestant->userName."</td><td>".$contestant->score."/".$contestant->maxScore."</td><td>".$conf['groupListGradeNames'][$contestant->grade]."</td><td>".$nbContestantsNames[$contestant->nbContestants]."</td><td style='text-align:right'>".
+      $list .= "<tr><td>".$contestant->userName."</td><td>".$contestant->score."/".$contestant->maxScore."</td><td>".$conf['groupListGradeNames'][$contestant->grade]."</td>";
+      if ($conf['printNbContestants']) {
+         $list .= "<td>".$nbContestantsNames[$contestant->nbContestants]."</td>";
+      }
+      $list .= "<td style='text-align:right'>".
          $contestant->rank." / ".$contestant->nbStudents."</td><td style='text-align:right'>".$contestant->schoolRank." / ".$contestant->nbStudentsSchool."</td></tr>\r\n";
    }
    $html = str_replace("{listContestants}", $list, $html);
@@ -287,11 +304,7 @@ function getHtmlCertificate($contestant, $conf) {
    $strAlgoreaCode = "";
    $strExtraLines = "";
    if ($contestant->algoreaCode) {
-      $strAlgoreaCode = '<div style="height:0px; overflow:visible;font-size:20.8px;">
-            Qualifié'.($contestant->genre == 1 ? 'e' : '')." pour le 1<sup>er</sup> tour du concours Algoréa.
-            <br/>
-            Validez votre qualification sur algorea.org avec le code : ".$contestant->algoreaCode."
-            </div>";
+      $strAlgoreaCode = $conf['printCodeString']($contestant, $contestant->algoreaCode);
    }
    if ($contestant->rank <= $contestant->nbStudents / 2) {
       $scoreSeparator = ",";
@@ -322,7 +335,7 @@ function getHtmlCertificate($contestant, $conf) {
    else
       $title = "coordinatrice";
    $category = $gradeNames[$contestant->grade];
-   if ($conf['differenciateNbStudents']) {
+   if ($conf['printNbContestants']) {
       $category .= ' - '.($contestant->nbContestants == 2 ? 'binôme' : 'individuel');
    }
    $data = array(

@@ -17,7 +17,9 @@ $config->certificates_confs[0] = [
 	'folder' => 'default',
 	'contestIDs' => [54],
 	'addAlgoreaCode' => true,
-	'differenciateNbStudents' => true,
+   'printNbContestants' => true,
+   'rankNbContestants' => true,
+   'rankGrades' => true,
 	'grades' => [4,5,6,7,8,9,10,11,12,13,14,15],
 	'nbContestantsMax' => 2,
 	'groupListGradeNames' => array(
@@ -49,7 +51,14 @@ $config->certificates_confs[0] = [
       13 => "Niveau Seconde Pro.",
       14 => "Niveau Première Pro.",
       15 => "Niveau Terminale Pro.",
-   )
+   ),
+   'printCodeString' => function($contestant, $code) {
+      return '<div style="height:0px; overflow:visible;font-size:20.8px;">
+            Qualifié'.($contestant->genre == 1 ? 'e' : '')." pour le 1<sup>er</sup> tour du concours Algoréa.
+            <br/>
+            Validez votre qualification sur algorea.org avec le code : ".$code."
+            </div>";
+   }
 ];
 
 if (is_readable(__DIR__.'/config_local.php')) {

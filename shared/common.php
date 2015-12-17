@@ -79,16 +79,22 @@ function genAccessCode($db) {
    }
 }
 
-function getTotalContestants($contestID, $grade, $nbContestants) {
-  global $db;
-  $stmt = $db->prepare('select count(*) from contestant
-    join team on team.ID = contestant.teamID
-    join `group` on `group`.ID = team.groupID
-    where
-    `group`.contestID = :contestID AND
-    `team`.nbContestants = :nbContestants AND
-    team.participationType = "Official" AND
-    contestant.grade = :grade;');
-  $stmt->execute(['contestID' => $contestID, 'grade' => $grade, 'nbContestants' => $nbContestants]);
-  return $stmt->fetchColumn();
+function getTotalContestants($contestID, $grade, $nbContestants = null) {
+   global $db;
+   $params = ['contestID' => $contestID, 'grade' => $grade];
+   $query = 'select count(*) from contestant
+      join team on team.ID = contestant.teamID
+      join `group` on `group`.ID = team.groupID
+      where
+      `group`.contestID = :contestID AND ';
+      if ($nbContestants) {
+         $query .= '`team`.nbContestants = :nbContestants AND ';
+         $params['nbContestants'] = $nbContestants;
+      }
+      $query .= 'team.participationType = "Official" AND
+      contestant.grade = :grade;';
+   $stmt = $db->prepare($query);
+
+   $stmt->execute($params);
+   return $stmt->fetchColumn();
 }
