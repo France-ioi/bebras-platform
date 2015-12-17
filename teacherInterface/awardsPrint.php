@@ -8,6 +8,12 @@ if (!isset($_SESSION['userID'])) {
    exit();
 }
 
+$strings = json_decode(file_get_contents(__DIR__.'/i18n/'.$config->defaultLanguage.'/translation.json'), true);
+if ($config->customStringsName) {
+  $customStrings = json_decode(file_get_contents(__DIR__.'/i18n/'.$config->defaultLanguage.'/'.$config->customStringsName.'.json'), true);
+  $strings = array_merge($strings, $customStrings);
+}
+
 $model = getViewModel('award1');
 $request = array(
    "modelName" => 'award1',
@@ -97,12 +103,12 @@ foreach($awarded as $contestant) {
       echo '<div class="page-break"></div>';
    }
    echo '<div class="label"><div class="labelContent">';
-   echo '<p class="title">Qualification au 1<sup>er</sup> tour du concours Algorea</p>';
+   echo '<p class="title">'.$strings['award_print_first_line'].'</p>';
    echo '<p class="name">'.$contestant->firstName.' '.$contestant->lastName.'</p>';
    echo '<p class="schoolName">'.$contestant->name.'</p>'; // name of the school
    echo '<p>code confidentiel: <span class="code">'.$contestant->algoreaCode.'</span></p>';
-   echo '<p class="small">Enregistrez-vous dès que possible avec ce code sur http://algorea.org</p>';
-   echo '<p class="small">Date du concours : 1er au 7 février 2016</p>';
+   echo '<p class="small">'.$strings['award_print_second_line'].'</p>';
+   echo '<p class="small">'.$strings['award_print_third_line'].'</p>';
    echo '</div></div>';
    $nbLabelsOnPage += 1;
    if ($nbLabelsOnPage >= 18) {

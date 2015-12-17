@@ -362,5 +362,8 @@
     "notice_title_contest": "Concours Castor",
     "notice_title_training": "Concours Castor: entraînement",
     "nbContestants_1": "Individuel",
-    "nbContestants_2": "Binôme"
+    "nbContestants_2": "Binôme",
+    "award_print_first_line": "Qualification au 1<sup>er</sup> tour du concours Algorea",
+    "award_print_second_line": "Enregistrez-vous dès que possible avec ce code sur http://algorea.org",
+    "award_print_third_line": "Date du concours : 1er au 7 février 2016"
 }
