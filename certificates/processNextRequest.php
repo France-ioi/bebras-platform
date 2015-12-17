@@ -18,7 +18,7 @@ foreach ($config->certificates_confs as $thisConfig) {
 	if (!$request)
 	{
 	  echo "No request to process.\n";
-	  exit(0);
+	  continue;
 	}
 
 	// Let's process the school
