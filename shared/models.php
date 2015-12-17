@@ -311,7 +311,7 @@ $viewsModels = array(
          "score" => array("tableName" => "team"),
          "nbContestants" => array("tableName" => "team"),
          "rank" => array(),
-         "algoreaCode" => array()
+         "qualificationCode" => array("fieldName" => "algoreaCode")
       ),
       "filters" => array(
          "groupField" => $fieldGroupFilter,
