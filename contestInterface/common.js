@@ -1464,7 +1464,7 @@ function getPublicGroupsList(groups) {
       }
       if (nbGroupsInYear == 1 && arrGroups[0] && arrGroups[0][year]) {
          group = arrGroups[0][year];
-         thisYearStrGroup = "<td colspan=\"5\" style='width:100px;border:solid 1px black;text-align:center'>" +
+         thisYearStrGroup = "<td colspan=\"5\" style='width:500px;border:solid 1px black;text-align:center'>" +
                "<a href='#' onclick='checkGroupFromCode(\"CheckGroup\", \"" + group.code + "\", false, true)' data-i18n=\"[html]level_all_levels_name\"> " + t("level_all_levels_name") + "</a></td>";
       }
       strGroups = strGroups + thisYearStrGroup;
