@@ -1447,7 +1447,7 @@ function getPublicGroupsList(groups) {
    for (year = maxYear; years[year] === true; year--) {
       var nbGroupsInYear = 0;
       var thisYearStrGroup = '';
-      strGroups += "<tr class='groupRow'><td style='width:100px;border:solid 1px black'><b>Castor " + year + "</b></td>";
+      strGroups += "<tr class='groupRow'><td style='width:100px;border:solid 1px black'><b>" + year + "</b></td>";
       for (var iLevel = 0; iLevel < levels.length; iLevel++) {
          var level = levels[iLevel];
          group = undefined;
