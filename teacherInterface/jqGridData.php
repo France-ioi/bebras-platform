@@ -416,7 +416,7 @@ function deleteRecord($db, $modelName, $record, $roles) {
    //deleteRowDynamoDB($modelName, $record);
 }
 
-function selectRecords($db, $modelName, $recordID, $roles) {
+function selectRecords($db, $modelName, $recordID, $roles, $extraFilters = array()) {
    $model = getViewModel($modelName);
    $request = array(
       "modelName" => $modelName,
@@ -434,6 +434,9 @@ function selectRecords($db, $modelName, $recordID, $roles) {
       if ($modelName === "school") {
          $request["filters"]["accessUserID"] = $_SESSION["userID"];
       } else if ($modelName === "group") {
+         if (isset($extraFilters["schoolID"])) {
+            $request["filters"]["schoolID"] = $extraFilters["schoolID"];
+         }
          $request["filters"]["checkAccessUserID"] = $_SESSION["userID"];
          $request["filters"]["checkSchoolUserID"] = $_SESSION["userID"];
       } else if ($modelName === "contest") {
@@ -445,6 +448,19 @@ function selectRecords($db, $modelName, $recordID, $roles) {
       } else if ($modelName === "school_year") {
          $request["filters"]["userID"] = $_SESSION["userID"];
       } else if ($modelName === "school_search") {
+      } else if ($modelName === "contestant") {
+         if (isset($extraFilters["contestID"])) {
+            $request["filters"]["contestID"] = $extraFilters["contestID"];
+         }
+         if (isset($extraFilters["schoolID"])) {
+            $request["filters"]["schoolID"] = $extraFilters["schoolID"];
+         }
+         if (isset($extraFilters["groupID"])) {
+            $request["filters"]["groupID"] = $extraFilters["groupID"];
+         }
+         $request["filters"]["userID"] = $_SESSION["userID"];
+      } else if ($modelName === "user") {
+         $request["filters"]["recordID"] = $_SESSION["userID"];
       } else {
          return;
       }
@@ -621,7 +637,7 @@ if (isset($_REQUEST["oper"])) {
    } else if ($oper === 'del') {
       deleteRecord($db, $modelName, $record, $roles);
    } else if ($oper === "select") {
-      selectRecords($db, $modelName, "0", $roles);
+      selectRecords($db, $modelName, "0", $roles, $_REQUEST);
    } else if ($oper === "selectOne") {
       if ($_SESSION["isAdmin"]) {
          selectRecords($db, $modelName, $_REQUEST["recordID"], $roles);

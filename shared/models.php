@@ -16,7 +16,8 @@ $tablesModels = array (
          "algoreaCode" => array("type" => "string"),
          "saniValid" => array("type" => "int", "access" => array("write" => array("generator", "admin"), "read" => array("admin"))),
          "orig_firstName" => array("type" => "string"),
-         "orig_lastName" => array("type" => "string")
+         "orig_lastName" => array("type" => "string"),
+         "algoreaCode" => array("type" => "string")
       ),
       "hasHistory" => false
    ),
@@ -275,10 +276,16 @@ $viewsModels = array(
          "nbContestants" => array("tableName" => "team"),
          "rank" => array(),
          "level" => array("tableName" => "contest"),
+         "algoreaCode" => array(),
+         "schoolRank" => array(),
+         "userID" => array("tableName" => "group"),
+         "groupID" => array("tableName" => "team")
       ),
       "filters" => array(
          "groupField" => $fieldGroupFilter,
          "score" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`score` = :score"),
+         "contestID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`contestID` = :contestID"),
+         "groupID" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`groupID` = :groupID"),
          "schoolID" => array("joins" => array(), "condition" => "`[PREFIX]contestant`.`cached_schoolID` = :schoolID"),
          "userID" => array("joins" => array("user_user"), "condition" => "(`group`.`userID` = :userID OR (`[PREFIX]user_user`.`targetUserID` = :userID AND `[PREFIX]user_user`.`accessType` <> 'none'))"),
          "ownerUserID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`userID` = :[PREFIX_FIELD]ownerUserID"),
@@ -497,9 +504,13 @@ $viewsModels = array(
    "contest" => array(
       "mainTable" => "contest",
       "adminOnly" => true,
-      "joins" => array(),
+      "joins" => array(
+         "contest_question" => array("srcTable" => "contest", "srcField" => "ID", "dstField" => "contestID", "type" => "LEFT")
+      ),
       "fields" => array(
-         "name" => array(),
+         "name" => array(
+            "groupBy" => "`contest`.`ID`"
+         ),
          "level" => array(),
          "year" => array(),
          "status" => array(),
@@ -511,7 +522,12 @@ $viewsModels = array(
          "nextQuestionAuto" =>  array(),
          "folder" => array(),
          "minAward1Rank" => array(),
-         "minAward2Rank" => array()
+         "minAward2Rank" => array(),
+         "maxScore" => array(
+            "type" => "int",
+            "tableName" => "contest_question",
+            "sql" => "SUM(`contest_question`.`maxScore`) + `contest`.`bonusScore`",
+            "groupBy" => "`contest`.`ID`")
       ),
       "filters" => array(
          "statusNotHidden" => array(
@@ -615,6 +631,11 @@ $viewsModels = array(
             "tableName" => "user_user_source",
             "fieldName" => "accessType",
             "access" => array("write" => array("admin"), "read" => array("admin", "user"))
+         ),
+         "gender" => array(
+            "tableName" => "user",
+            "access" => array("write" => array(), "read" => array()),
+            "groupBy" => "`user`.`ID`"
          )
       ),
       "filters" => array(
