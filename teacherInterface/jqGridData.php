@@ -437,6 +437,9 @@ function selectRecords($db, $modelName, $recordID, $roles, $extraFilters = array
          if (isset($extraFilters["schoolID"])) {
             $request["filters"]["schoolID"] = $extraFilters["schoolID"];
          }
+         if (isset($extraFilters["groupID"])) {
+            $request["filters"]["recordID"] = $extraFilters["groupID"];
+         }
          $request["filters"]["checkAccessUserID"] = $_SESSION["userID"];
          $request["filters"]["checkSchoolUserID"] = $_SESSION["userID"];
       } else if ($modelName === "contest") {
