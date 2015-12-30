@@ -36,7 +36,9 @@ $tablesModels = array (
          "nextQuestionAuto" =>  array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "folder" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "minAward1Rank" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
-         "minAward2Rank" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin")))
+         "minAward2Rank" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "rankGrades" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "rankNbContestants" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
       )
    ),
    "contest_question" => array(
@@ -279,7 +281,7 @@ $viewsModels = array(
          "algoreaCode" => array(),
          "schoolRank" => array(),
          "userID" => array("tableName" => "group"),
-         "groupID" => array("tableName" => "team")
+         "groupID" => array("tableName" => "team"),
       ),
       "filters" => array(
          "groupField" => $fieldGroupFilter,
@@ -523,6 +525,8 @@ $viewsModels = array(
          "folder" => array(),
          "minAward1Rank" => array(),
          "minAward2Rank" => array(),
+         "rankGrades" => array(),
+         "rankNbContestants" => array(),
          "maxScore" => array(
             "type" => "int",
             "tableName" => "contest_question",
