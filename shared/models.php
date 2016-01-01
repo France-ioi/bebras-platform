@@ -285,6 +285,7 @@ $viewsModels = array(
       ),
       "filters" => array(
          "groupField" => $fieldGroupFilter,
+         "official" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`participationType` = 'Official'", 'ignoreValue' => true),
          "score" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`score` = :score"),
          "contestID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`contestID` = :contestID"),
          "groupID" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`groupID` = :groupID"),
@@ -381,7 +382,8 @@ $viewsModels = array(
          "nbTeamsEffective" => array(),
          "nbStudentsEffective" => array(),
          "nbStudents" => array(),
-         "userID" => array("fieldName" => "userID", "tableName" => "group")
+         "userID" => array("fieldName" => "userID", "tableName" => "group"),
+         "contestStatus" => array("fieldName" => "status", "tableName" => "contest")
 //         "accessUserID" => array("fieldName" => "targetUserID", "tableName" => "user_user")
       ),
       "filters" => array(

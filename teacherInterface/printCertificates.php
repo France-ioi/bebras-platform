@@ -149,6 +149,7 @@
             var today = new Date().toJSON().slice(0,10);
             for (var groupID in contestantPerGroup) {
                var group = allData.group[groupID];
+               var contest = allData.contest[group.contestID];
                var user = allData.user[group.userID];
                var coordName = i18n.t('user_gender_'+(user.gender == 1 ? 'female' : 'male'));
                coordName += ' '+user.firstName+' '+user.lastName;
@@ -209,6 +210,8 @@
                      name: diploma.lastName+' '+diploma.firstName,
                      scoreRank: i18n.t('diploma_score', scoreRankContext),
                      qualificationCode: qualificationCode,
+                     context: 'test',
+                     contestYear: contest.year,
                      interpolation: {prefix: '__', suffix: '__'}
                   });
                }
@@ -242,7 +245,7 @@
          }
 
          function init() {
-            var params = {};
+            var params = {participationType: 'Official'};
             var contestID = getParameterByName('contestID');
             if (!contestID) return;
             var schoolID = getParameterByName('schoolID');
