@@ -7,17 +7,23 @@
    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
    <title data-i18n="page_title"></title>
    <?php 
-      stylesheet_tag('/bower_components/jqgrid/css/ui.jqgrid.css');
       stylesheet_tag('/admin.css');
       script_tag('/bower_components/json3/lib/json3.min.js');
       // jquery 1.9 is required for IE6+ compatibility.
       script_tag('/bower_components/jquery/jquery.min.js');
+      script_tag('/bower_components/jquery-ui/jquery-ui.min.js'); // for $.datepicker.formatDate
       script_tag('/bower_components/i18next/i18next.min.js');
       script_tag('/config.js.php');
    ?>
       <style>
+         @import url(https://fonts.googleapis.com/css?family=Varela+Round); /* needed for Alkindi... TODO: find a better system */
          @media print{@page {size: a4 landscape}}
          @media print{.dontprint { display: none; }}
+         .bigmessage {
+            text-align:center;
+            font-size:22pt;
+            color:red;
+         }
          body {
             font-family: arial;
             color: #4A5785;
@@ -130,6 +136,11 @@
             return i == 1 ? '1ère' : i+'e';
          }
 
+         function dateFormat(d) {
+            // TODO: adapt to English, using moment.js?
+            return $.datepicker.formatDate("dd/mm/yy", d);
+         }
+
          function displayDiplomas() {
             var contestantPerGroup = fillDataDiplomas();
             var tableHeader = "<table class=\"bordered\"><tr>" +
@@ -145,8 +156,8 @@
                "<td>"+i18n.t('contestant_contestID_label')+"</td>" +
                "<tr>";
 
-            var s = "<p class=\"dontprint\">Une fois les images chargées, vous pouvez <button onclick=\"window.print()\">imprimer</button></p>";
-            var today = new Date().toJSON().slice(0,10);
+            var s = "<p class=\"dontprint bigmessage\">Une fois les images chargées, vous pouvez <button onclick=\"window.print()\">imprimer</button></p><p class=\"dontprint bigmessage\"><strong>Attention:</strong> vous devez imprimer en A4, orientation paysage, sans en-tête ni pied de page.</p>";
+            var today = dateFormat(new Date());
             for (var groupID in contestantPerGroup) {
                var group = allData.group[groupID];
                var contest = allData.contest[group.contestID];
@@ -185,7 +196,8 @@
                      rankOrdinal: toOrdinal(diploma.rank),
                      schoolRankOrdinal: toOrdinal(diploma.schoolRank),
                      maxRank: diploma.contestParticipants,
-                     maxSchoolRank: diploma.schoolParticipants
+                     maxSchoolRank: diploma.schoolParticipants,
+                     name: diploma.lastName+' '+diploma.firstName
                   };
                   if (diploma.rank <= diploma.contestParticipants / 2) {
                      if (diploma.schoolRank <= diploma.schoolParticipants / 2) {
@@ -196,24 +208,25 @@
                   } else if (diploma.schoolRank <= diploma.schoolParticipants / 2) {
                      scoreRankContext.context = 'schoolRank';
                   }
-                  var qualificationCode = '';
-                  if (diploma.algoreaCode) {
-                     var context = (diploma.genre == '1' ? 'female' : 'male');
-                     qualificationCode = i18n.t('diploma_code', {code: diploma.algoreaCode, context: context});
-                  }
-                  s += i18n.t('diploma_template', {
+                  translateParameters = {
                      coordName: coordName,
                      date: today,
                      schoolName: allData.school[group.schoolID].name,
                      schoolCity: allData.school[group.schoolID].city,
                      levelNbContestants: levelNbContestants,
-                     name: diploma.lastName+' '+diploma.firstName,
                      scoreRank: i18n.t('diploma_score', scoreRankContext),
-                     qualificationCode: qualificationCode,
-                     context: 'test',
                      contestYear: contest.year,
+                     name: diploma.lastName+' '+diploma.firstName,
                      interpolation: {prefix: '__', suffix: '__'}
-                  });
+                  };
+                  var qualificationCode = '';
+                  if (diploma.algoreaCode) {
+                     var context = (diploma.genre == '1' ? 'female' : 'male');
+                     qualificationCode = i18n.t('diploma_code', {code: diploma.algoreaCode, context: context});
+                     translateParameters.context = 'withQualificationCode';
+                  }
+                  translateParameters.qualificationCode = qualificationCode;
+                  s += i18n.t('diploma_template', translateParameters);
                }
             }
             $('body').html(s);
@@ -256,6 +269,7 @@
             if (groupID) {
                params['groupID'] = groupID;
             }
+            params['official'] = true;
             loadAllData(params);
          }
 

@@ -461,6 +461,9 @@ function selectRecords($db, $modelName, $recordID, $roles, $extraFilters = array
          if (isset($extraFilters["groupID"])) {
             $request["filters"]["groupID"] = $extraFilters["groupID"];
          }
+         if (isset($extraFilters["official"])) {
+            $request["filters"]["official"] = true;
+         }
          $request["filters"]["userID"] = $_SESSION["userID"];
       } else if ($modelName === "user") {
          $request["filters"]["recordID"] = $_SESSION["userID"];
