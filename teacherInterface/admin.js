@@ -1806,7 +1806,7 @@ function printGroupCertificates() {
       jqAlert(t("group_print_certificates_impossible"));
       return;
    }
-   window.open("printCertificates.php?schoolID="+group.schoolID+"&contestID="+group.contestID+"&groupID=" + groupID, "printGroup" + groupID, 'width=700,height=600,menubar=yes');
+   window.open("printCertificates.php?schoolID="+group.schoolID+"&contestID="+group.contestID+"&groupID=" + groupID, "printGroup" + groupID, 'width=700,height=600,menubar=yes,status=yes,toolbar=yes,scrollbars=yes,resizable=yes');
 }
 
 function printSchoolCertificates(contestID) {
@@ -1815,7 +1815,7 @@ function printSchoolCertificates(contestID) {
       jqAlert(t("warning_no_school_selected"));
       return false;
    }
-   window.open("printCertificates.php?schoolID="+schoolID+"&contestID="+contestID, "printSchool" + schoolID, 'width=700,height=600,menubar=yes');
+   window.open("printCertificates.php?schoolID="+schoolID+"&contestID="+contestID, "printSchool" + schoolID, 'width=700,height=600,menubar=yes,status=yes,toolbar=yes,scrollbars=yes,resizable=yes');
    return false;
 }
 
