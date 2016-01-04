@@ -139,7 +139,9 @@ function getGroupsColModel() {
          password: {label: t("group_password_label"), width: 100},
          nbTeamsEffective: {label: t("group_nbTeamsEffective_label"), width: 100},
          nbStudentsEffective: {label: t("group_nbStudentsEffective_label"), width: 100},
-         nbStudents: {label: t("group_nbStudents_label"), longLabel: t("group_nbStudents_long_label"), editable: true, required: true, edittype: "text", subtype:"positiveint", width: 100, comment: t("group_nbStudents_comment")}
+         nbStudents: {label: t("group_nbStudents_label"), longLabel: t("group_nbStudents_long_label"), editable: true, required: true, edittype: "text", subtype:"positiveint", width: 100, comment: t("group_nbStudents_comment")},
+         userID: {hidden: true, visible: false, hiddenlg: true},
+         contestStatus: {hidden: true, visible: false, hiddenlg: true},
       }
    };
    return model;
@@ -540,6 +542,9 @@ function jqGridModel(modelName) {
    var res = [];
    for (var fieldName in fields) {
       var field = fields[fieldName];
+      if (field.hidden) {
+         continue;
+      }
       var jqGridField = {
          name: fieldName,
          index: fieldName,
@@ -888,11 +893,6 @@ function continueLogUser() {
       loadListAwards();
    }
    initDeleteButton("group");
-
-   if (state === 'normal') {
-      certiGenUpdate();
-      setInterval(certiGenUpdate, 60 * 1000);
-   }
 }
 
 function logUser(user) {
@@ -1037,6 +1037,29 @@ function getItemNames(items, withUnselect) {
 function loadContests() {
    return loadData("contest", function(items) {
       contests = items;
+      if (!window.config.allowCertificates) {
+         $('#buttonPrintCertificates_group').hide();
+         $('#school_print_certificates_help').hide();
+         $('#school_print_certificates_title').hide();
+         return;
+      }
+      var contestList = '<ul>';
+      var nbContests = 0;
+      for (var contestID in contests) {
+         var contest = contests[contestID];
+         if (contest.status == 'PreRanking') {
+            nbContests += 1;
+            contestList += '<li><button onclick="printSchoolCertificates(\''+contest.ID+'\')">'+contest.name+'</button></li>';
+         }
+      }
+      contestList += "</ul>";
+      if (nbContests == 0) {
+         $('#buttonPrintCertificates_group').hide();
+         $('#school_print_certificates_help').hide();
+         $('#school_print_certificates_title').hide();
+      } else {
+         $('#school_print_certificates_contests').html(contestList);
+      }
    }
    );
 }
@@ -1287,13 +1310,15 @@ function gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questio
       }
       
       scores[i] = {};
+      // in some cases, score cannot be computed because the answer is invalid, so we have this default score
+      // that will output "NULL" in the database
+      scores[i].score = '';
       scores[i].questionID = teamQuestion.questionID;
       scores[i].teamID = teamQuestion.teamID;
       scores[i].answer = teamQuestion.answer;
       scores[i].contestID = curContestID;
       scores[i].groupID = curGroupID;
       scores[i].usesRandomSeed = usesRandomSeed;
-      
       // No answer
       if (teamQuestion.answer == '') {
          scores[i].score = parseInt(curGradingData.noAnswerScore);
@@ -1753,7 +1778,7 @@ function loadOneRecord(tableName, recordID, callback) {
 function editGroup() {
    var groupID = jQuery("#grid_group").jqGrid('getGridParam','selrow');
    if (groupID === null) {
-      jqAlert(t("no_group_selected"));
+      jqAlert(t("warning_no_group_selected"));
       return;
    }
    if (isAdmin()) {
@@ -1770,10 +1795,34 @@ function editGroup() {
    }
 }
 
+function printGroupCertificates() {
+   var groupID = jQuery("#grid_group").jqGrid('getGridParam','selrow');
+   if (groupID === null) {
+      jqAlert(t("warning_no_group_selected"));
+      return;
+   }
+   var group = groups[groupID];
+   if (group.participationType != 'Official' || group.contestStatus != 'PreRanking') {
+      jqAlert(t("group_print_certificates_impossible"));
+      return;
+   }
+   window.open("printCertificates.php?schoolID="+group.schoolID+"&contestID="+group.contestID+"&groupID=" + groupID, "printGroup" + groupID, 'width=700,height=600');
+}
+
+function printSchoolCertificates(contestID) {
+   var schoolID = jQuery("#grid_school").jqGrid('getGridParam','selrow');
+   if (schoolID === null) {
+      jqAlert(t("warning_no_school_selected"));
+      return false;
+   }
+   window.open("printCertificates.php?schoolID="+schoolID+"&contestID="+contestID, "printSchool" + schoolID, 'width=700,height=600');
+   return false;
+}
+
 function printGroup() {
    var groupID = jQuery("#grid_group").jqGrid('getGridParam','selrow');
    if (groupID === null) {
-      jqAlert(t("no_group_selected"));
+      jqAlert(t("warning_no_group_selected"));
       return;
    }
    window.open("notice.php?groupID=" + groupID, "printGroup" + groupID, 'width=700,height=600');
@@ -2201,80 +2250,6 @@ Number.prototype.pad = function(size){
 function getDateFromSQLFormat(string) {
   var d = new Date(Date.parse(string));
     return d.getDate().pad() + "/" + (d.getMonth() + 1).pad() + "/" + d.getFullYear() + " à " + d.getHours().pad() + "h" + d.getMinutes().pad(); 
-}
-
-function certiGenShow(data) {
-   if (!window.config.allowCertificates) {
-      return;
-   }
-   var schools = data;
-   if (!Object.keys(schools).length) {
-      $("#certiGenList").html(t("no_school_with_certificates_to_print"));
-   } else {
-      $("#certiGenList").html("<ul></ul>");
-   }
-   $.each(schools, function(id, school) { 
-      var li = $("<li style='padding-top:30px;'>" + t("certificates_school") + '"' + school.name + '"</li>');
-      if (school.state) {        
-         // School title
-         $(li).append(" (" + school.nbGroups + " " + t("certificates_groups") + ", " + school.nbStudents + " " + t("certificates_students") + ") : ");
-         // Last request
-         var req = t("certificate_generation_status_1") + getDateFromSQLFormat(school.requestDate) + t("certificate_generation_status_2") + " ";
-         if (school.state == 'WAITING')
-             req += t("certificate_status_waiting_1") + school.waitTime + t("certificate_status_waiting_2"); 
-         if (school.state == 'RUNNING')
-             req += t("certificate_status_running_1") + getDateFromSQLFormat(school.startDate) + t("certificate_status_running_2") + school.waitTime + t("certificate_status_running_3");
-         if (school.state == 'CANCELED')
-             req += t("certificate_status_cancelled");
-         if (school.state == 'STOPPED')
-             req += t("certificate_status_stopped");
-         if (school.state == 'FINISHED')
-             req += t("certificate_status_finished") + getDateFromSQLFormat(school.endDate);
-         $(li).append("<p>" + req + "</p>");
-         // Cancel generation
-         if (school.state == 'WAITING' || school.state == 'RUNNING') {
-            $(li).append('<input type="button" value="' + t("certificates_cancel_generation") + '" onclick="certiGenCancel(\''+school.id+'\')">');
-         }
-         // New generation
-         else {
-            $(li).append('<input type="button" value="' + t("certificates_start_new_generation") + '" onclick="certiGenAdd(\''+school.id+'\')">');
-         }
-         // List of pdfs
-         if (school.state == 'FINISHED') {
-             $(li).append("<p>" + t("certificates_download") + "</p>");
-             var list = $("<ul></ul>");
-             $(list).append('<li><a href="'+school.url+'" target="_blank">' + t("certificates_full_school") + '</a><br/>&nbsp;</li>');
-             for (var i = 0; i < school.groups.length; i++) {
-                 var group = school.groups[i];
-                 $(list).append('<li><a href="' + group.url + '" target="_blank">' + t("certificates_for_group") + ' "' + group.name + '" (' + t("certificates_user") + ' ' + group.userName + ')</a><br/></li>');
-             }
-             $(li).append(list);
-         }   
-      }
-      else {
-         $(li).append(" :");
-         $(li).append('<br/><input type="button" value="' + t("certificates_start_generation") + '" onclick="certiGenAdd(\''+school.id+'\')">');
-      }
-      $("#certiGenList > ul").append(li);
-   });
-}
-
-function certiGenUpdate() {
-   $.post('apiCerti.php', {action:"state"}, function(schools) {
-       certiGenShow(schools);
-   }, "json");
-}
-
-function certiGenAdd(schoolID) {
-   $.post('apiCerti.php', {action:"add", schoolID:schoolID}, function(schools) {
-       certiGenShow(schools);
-   }, "json");
-}
-
-function certiGenCancel(schoolID) {
-   $.post('apiCerti.php', {action:"cancel", schoolID:schoolID}, function(schools) {
-       certiGenShow(schools);
-   }, "json");
 }
 
 function printAlgoreaCodes() {

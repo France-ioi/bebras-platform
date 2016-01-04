@@ -121,9 +121,12 @@
                <button type="button" id="buttonDeleteSelected_school" data-i18n="schools_delete"></button><br/><br/>
                <button type="button" id="buttonComputeCoords_school" style="display:none" data-i18n="schools_recompute_coords"></button><br/>
                <div id="computeCoordsLog"></div>
+               <h3 id="school_print_certificates_title" data-i18n="school_print_certificates_title"></h3>
+               <p id="school_print_certificates_help" data-i18n="school_print_certificates_help"></p>
+               <div id="school_print_certificates_contests"></div>
             </div>
             </p>   
-            <p data-i18n="colleagues">
+            <p data-i18n="[html]colleagues">
             </p>
             <p>
             <table id="grid_colleagues"><tbody><tr><td/></tr></tbody></table>
@@ -138,9 +141,12 @@
             <button type="button" data-i18n="groups_create" onclick="newGroup()"></button>
             <button type="button" id="buttonEditSelected_group" data-i18n="groups_edit_selected" onclick="editGroup()"></button>
             <button type="button" id="buttonDeleteSelected_group" data-i18n="groups_delete_selected"></button><br/>
+            <span data-i18n="[html]group_print_certificates_help"></span>
             <!--<button type="button"" id="buttonGradeGroup" data-i18n="group_grade" onclick="gradeGroup()"></button>
             <div id="gradeGroupState"></div>-->
-
+            <h3 id="group_print_certificates_title" data-i18n="group_print_certificates_title"></h3>
+            <p id="group_print_certificates_help" data-i18n="group_print_certificates_help"></p>
+            <button type="button" id="buttonPrintCertificates_group" onclick="printGroupCertificates()" data-i18n="group_print_certificates"></button>
             <h3 data-i18n="groups_sheet_title"></h3>
             <p data-i18n="[html]groups_sheet_intro">
             </p>
@@ -170,8 +176,6 @@
          </div>
          <div id="tabs-certificates">
             <p data-i18n="[html]certificates_intro"></p>
-            <div id="certiGenList">
-            </div>
          </div>
          <div id="tabs-questions">
             <table id="grid_question"><tbody><tr><td/></tr></tbody></table>
@@ -253,6 +257,7 @@
       'infoEmail' => $config->email->sInfoAddress,
       'forceOfficialEmailDomain' => $config->teacherInterface->forceOfficialEmailDomain,
       'contestPresentationURL' => $config->contestPresentationURL,
+      'contestURL' => $config->contestInterface->baseUrl,
       'i18nResourcePath' => static_asset('/i18n/__lng__/__ns__.json'),
       'customStringsName' => $config->customStringsName,
       'allowCertificates' => $config->certificates->allow,
