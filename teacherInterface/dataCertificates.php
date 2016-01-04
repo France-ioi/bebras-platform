@@ -42,12 +42,10 @@ $query = "SELECT count(*) AS `totalContestants`, `contestant`.`grade`, `team`.`n
    "LEFT JOIN `user_user` ON (`group`.`userID` = `user_user`.`userID`) ".
    "WHERE `group`.`schoolID` = :schoolID ".
    "AND `team`.`participationType` = 'Official' ".
-   "AND `group`.`contestID` = :contestID ".
-   "AND (`group`.`userID` = :userID OR (`user_user`.`targetUserID` = :userID AND `user_user`.`accessType` <> 'none')) ";
+   "AND `group`.`contestID` = :contestID ";
 
    
-$data = array("userID" => $_SESSION["userID"],
-   "contestID"  => $_REQUEST["contestID"],
+$data = array("contestID"  => $_REQUEST["contestID"],
    "schoolID" => $_REQUEST["schoolID"]);
 
 $query .= $groupBy;
