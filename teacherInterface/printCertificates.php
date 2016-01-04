@@ -63,18 +63,35 @@
          function getTotalContestants(params, callback) {
             return $.post("dataCertificates.php", params,
                function(data) {
+                  var contest = allData.contest[params.contestID];
                   var countContestants = {};
-                  allData["schoolContestants"] = countContestants;
                   for (var iResult in data.perSchool) {
                      var result = data.perSchool[iResult];
-                     countContestants[result.grade + "_" + result.nbContestants] = result.totalContestants;
+                     if (contest.rankGrades == '1' && contest.rankNbContestants == '1') {
+                        countContestants[result.grade + "_" + result.nbContestants] = result.totalContestants;
+                     } else if (contest.rankGrades == '1') {
+                        countContestants[result.grade] = result.totalContestants;
+                     } else if (contest.rankNbContestants == '1') {
+                        countContestants[result.nbContestants] = result.totalContestants;
+                     } else {
+                        countContestants = result.totalContestants;
+                     }
                   }
-                  var countContestants = {};
-                  allData["contestContestants"] = countContestants;
-                  for (var iResult in data.perContest) {
-                     var result = data.perContest[iResult];
-                     countContestants[result.grade + "_" + result.nbContestants] = result.totalContestants;
-                  }                  
+                  allData["schoolContestants"] = countContestants;
+                  countContestants = {};
+                  for (iResult in data.perContest) {
+                     result = data.perContest[iResult];
+                     if (contest.rankGrades == '1' && contest.rankNbContestants == '1') {
+                        countContestants[result.grade + "_" + result.nbContestants] = result.totalContestants;
+                     } else if (contest.rankGrades == '1') {
+                        countContestants[result.grade] = result.totalContestants;
+                     } else if (contest.rankNbContestants == '1') {
+                        countContestants[result.nbContestants] = result.totalContestants;
+                     } else {
+                        countContestants = result.totalContestants;
+                     }
+                  }
+                  allData["contestContestants"] = countContestants;              
                   callback();
                }, "json"
             );
@@ -101,8 +118,9 @@
             allData.users = users;
          };
 
-         function fillDataDiplomas() {
+         function fillDataDiplomas(params) {
             var contestantPerGroup = {}
+            var contest = allData.contest[params.contestID];
             for (var contestantID in allData.contestant) {
                var contestant = allData.contestant[contestantID];
                var groupID = contestant.groupID;
@@ -124,8 +142,19 @@
                diplomaContestant.contest = allData.contest[contestant.contestID];
                diplomaContestant.user = allData.users[contestant.userID];
                diplomaContestant.school = allData.school[contestant.schoolID];
-               diplomaContestant.schoolParticipants = allData.schoolContestants[contestant.grade + "_" + contestant.nbContestants];
-               diplomaContestant.contestParticipants = allData.contestContestants[contestant.grade + "_" + contestant.nbContestants];
+               if (contest.rankGrades == '1' && contest.rankNbContestants == '1') {
+                  diplomaContestant.schoolParticipants = allData.schoolContestants[contestant.grade + "_" + contestant.nbContestants];
+                  diplomaContestant.contestParticipants = allData.contestContestants[contestant.grade + "_" + contestant.nbContestants];
+               } else if (contest.rankGrades == '1') {
+                  diplomaContestant.schoolParticipants = allData.schoolContestants[contestant.grade];
+                  diplomaContestant.contestParticipants = allData.contestContestants[contestant.grade];
+               } else if (contest.rankNbContestants == '1') {
+                  diplomaContestant.schoolParticipants = allData.schoolContestants[contestant.nbContestants];
+                  diplomaContestant.contestParticipants = allData.contestContestants[contestant.nbContestants];
+               } else {
+                  diplomaContestant.schoolParticipants = allData.schoolContestants;
+                  diplomaContestant.contestParticipants = allData.contestContestants;
+               }
                contestantPerGroup[groupID].push(diplomaContestant);
             }
             return contestantPerGroup;
@@ -141,8 +170,8 @@
             return $.datepicker.formatDate("dd/mm/yy", d);
          }
 
-         function displayDiplomas() {
-            var contestantPerGroup = fillDataDiplomas();
+         function displayDiplomas(params) {
+            var contestantPerGroup = fillDataDiplomas(params);
             var tableHeader = "<table class=\"bordered\"><tr>" +
                "<td>"+i18n.t('contestant_lastName_label')+"</td>" +
                "<td>"+i18n.t('contestant_firstName_label')+"</td>" +
@@ -241,7 +270,7 @@
                            mergeUsers();
                            loadData("contest", function() {
                               getTotalContestants(params, function() {
-                                 displayDiplomas();
+                                 displayDiplomas(params);
                               });
                            }, params);
                         });
