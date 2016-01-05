@@ -338,6 +338,7 @@
     "spread_castor_successful_email": "The recommendation message has been sent. Thank you for your help!",
     "contest_question_options_label": "Options",
     "awards_title": "Awards",
+    "awards_loginID_label": "Login",
     "option_preranking_contest": "Pre-Ranking",
     "group_grade": "Evaluate selected group",
     "confirm_group_operation": "Are you sure you want to do this now? (Do not do this while the contest is running!)",

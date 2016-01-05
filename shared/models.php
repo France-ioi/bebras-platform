@@ -2,6 +2,15 @@
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 
 $tablesModels = array (
+   "algorea_registration" => array(
+      "autoincrementID" => true,
+      "fields" => array(
+         "code" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user"))),
+         "contestantID" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user"))),
+         "franceioiID" => array("type" => "int", "access" => array("write" => array("user"), "read" => array("user")))
+      ),
+      "hasHistory" => false
+   ),
    "contestant" => array(
       "autoincrementID" => false,
       "fields" => array(
@@ -222,7 +231,8 @@ $viewsModels = array(
          "contest" => array("srcTable" => "group", "srcField" => "contestID", "dstField" => "ID"),
          "user_user" => array("type" => "LEFT", "srcTable" => "group", "srcField" => "userID", "dstField" => "userID"),
          "school" => array("srcTable" => "group", "srcField" => "schoolID", "dstField" => "ID"),
-         "award_threshold" => array("srcTable" => "team", "on" => "(team.nbContestants = award_threshold.nbContestants and `group`.contestID = award_threshold.contestID and contestant.grade = award_threshold.gradeID and award_threshold.awardID = 1)")
+         "award_threshold" => array("srcTable" => "team", "on" => "(team.nbContestants = award_threshold.nbContestants and `group`.contestID = award_threshold.contestID and contestant.grade = award_threshold.gradeID and award_threshold.awardID = 1)"),
+         "algorea_registration" => array("type" => "LEFT", "srcTable" => "contestant", "srcField" => "ID", "dstField" => "contestantID"),
       ),
       'fields' => array(
          "schoolID" => array("tableName" => "group", "access" => array("write" => array(), "read" => array("user")), "groupBy" => "`contestant`.`ID`"),
@@ -236,7 +246,8 @@ $viewsModels = array(
          "country" => array("tableName" => "school"),
          "city" => array("tableName" => "school"),
          "name" => array("tableName" => "school"),
-         "algoreaCode" => array()
+         "algoreaCode" => array(),
+         "franceioiID" => array("tableName" => "algorea_registration")
       ),
       "filters" => array(
          "groupField" => $fieldGroupFilter,
@@ -244,7 +255,7 @@ $viewsModels = array(
          "schoolID" => array("joins" => array(), "condition" => "`[PREFIX]contestant`.`cached_schoolID` = :[PREFIX_FIELD]schoolID"),
          "userID" => array("joins" => array("user_user"), "condition" => "(`group`.`userID` = :[PREFIX_FIELD]userID OR (`[PREFIX]user_user`.`targetUserID` = :[PREFIX_FIELD]userID AND `[PREFIX]user_user`.`accessType` <> 'none'))"),
          "ownerUserID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`userID` = :[PREFIX_FIELD]ownerUserID"),
-         "awarded" => array("joins" => array("group", 'team', 'award_threshold'), "ignoreValue" => true, "condition" => "(`[PREFIX]team`.`participationType` = 'Official' and `[PREFIX]contestant`.`rank` is not null and `[PREFIX]award_threshold`.`minScore` <= [PREFIX]team.score)"),
+         "awarded" => array("joins" => array("group", 'team', 'award_threshold'), "ignoreValue" => true, "condition" => "(`[PREFIX]team`.`participationType` = 'Official' and `[PREFIX]contestant`.`rank` is not null and `[PREFIX]award_threshold`.`minScore` <= [PREFIX]team.score)")
       ),
       'orders' => array(
          array('field' => 'name'),

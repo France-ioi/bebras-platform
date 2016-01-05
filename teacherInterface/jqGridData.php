@@ -518,7 +518,7 @@ function selectRecordsForJQGrid($db, $modelName, $params, $roles) {
    }
    $request["filters"] = $filters;
 
-   if ($modelName == 'award1' || $modelName == 'award2') {
+   if ($modelName == 'award1') {
       $request['filters']['awarded'] = true;
       $request['orders'] = $model['orders'];
    }
@@ -533,6 +533,12 @@ function selectRecordsForJQGrid($db, $modelName, $params, $roles) {
       explicitCSVRequest($request);
    }
    $result = selectRows($db, $request);
+
+   // TODO: document
+   if (function_exists('customJqGridDataFilter')) {
+      customJqGridDataFilter($result, $request);
+   }
+
    $limits = $result["limits"];
    if ($format === "xml") {
       displayRowsAsXml($result["items"], $model, $limits["page"], $limits["nbPages"], $result["nbTotalItems"]);

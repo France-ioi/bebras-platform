@@ -214,7 +214,12 @@ function initModels(isLogged) {
                editable: true, edittype: "select", editoptions:{ value:{"1": t("option_female"), "2": t("option_male")}},
                search: false, width: 120},
             score: {label: t("contestant_score_label"), editable: false, search: false, width:100},
-            rank: {label: t("contestant_rank_label"), editable: false, search: false, width:100}
+            rank: {label: t("contestant_rank_label"), editable: false, search: false, width:100},
+            country: {hidden: true, visible: false, hiddenlg: true},
+            city: {hidden: true, visible: false, hiddenlg: true},
+            name: {hidden: true, visible: false, hiddenlg: true},
+            algoreaCode: {hidden: true, visible: false, hiddenlg: true},
+            loginID: {label: t("awards_loginID_label"), editable: false, search: false, width:130}
          }
       },
       contestant: {
@@ -532,6 +537,9 @@ function jqGridNames(modelName) {
    var fields = models[modelName].fields;
    var names = [];
    for (var fieldName in fields) {
+      if (!fields[fieldName].label) {
+         fields[fieldName].label = '';
+      }
       names.push(fields[fieldName].label);
    }
    return names;
@@ -542,9 +550,6 @@ function jqGridModel(modelName) {
    var res = [];
    for (var fieldName in fields) {
       var field = fields[fieldName];
-      if (field.hidden) {
-         continue;
-      }
       var jqGridField = {
          name: fieldName,
          index: fieldName,
@@ -560,6 +565,11 @@ function jqGridModel(modelName) {
       };
       if (field.edittype === "select") {
          jqGridField.formatter = "select";
+      }
+      if (field.hidden) {
+         jqGridField.hidden = true;
+         jqGridField.visible= false;
+         jqGridField.hiddenlg= true;
       }
       res.push(jqGridField);
    }
