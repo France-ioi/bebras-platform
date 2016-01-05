@@ -191,7 +191,7 @@
                var group = allData.group[groupID];
                var contest = allData.contest[group.contestID];
                var user = allData.user[group.userID];
-               var coordName = i18n.t('user_gender_'+(user.gender == 1 ? 'female' : 'male'));
+               var coordName = i18n.t('user_gender_'+(user.gender == 'F' ? 'female' : 'male'));
                coordName += ' '+user.firstName+' '+user.lastName;
                s += "<div style=\"page-break-after:always\"><center>";
                s += i18n.t('diploma_group_title', {schoolName: allData.school[group.schoolID].name, groupName: group.name, coordName: coordName, interpolation: {prefix: '__', suffix: '__'}});
