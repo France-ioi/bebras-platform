@@ -211,6 +211,9 @@
             <p><a id="linkExportAwards1" href="#" onclick="exportCSV('award1')" data-i18n="export_to_csv"></a></p>
             <table id="grid_award1"><tbody><tr><td/></tr></tbody></table>
             <div id="pager_award1"></div>
+            <h3 id="custom_award_title"></h3>
+            <div id="custom_award_help"></div>
+            <div id="custom_award_data"></div>
           </div>
       </div>
    </d style="display:none;" id="linkExportAlgoreaCodes"se"></b> <p style="float:right;"><aihrpf="#" onclick="$('#divError').hide()">[<span data-i18n="error_close"></span>]</a></p><br/>

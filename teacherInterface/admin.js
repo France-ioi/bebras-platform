@@ -219,7 +219,7 @@ function initModels(isLogged) {
             city: {hidden: true, visible: false, hiddenlg: true},
             name: {hidden: true, visible: false, hiddenlg: true},
             algoreaCode: {hidden: true, visible: false, hiddenlg: true},
-            loginID: {label: t("awards_loginID_label"), editable: false, search: false, width:130}
+            loginID: {label: t("awards_loginID_label"), editable: false, search: false, width:130, sortable: false}
          }
       },
       contestant: {
@@ -566,6 +566,9 @@ function jqGridModel(modelName) {
       if (field.edittype === "select") {
          jqGridField.formatter = "select";
       }
+      if (typeof field.sortable !== 'undefined') {
+         jqGridField.sortable = field.sortable;
+      }
       if (field.hidden) {
          jqGridField.hidden = true;
          jqGridField.visible= false;
@@ -657,12 +660,40 @@ function loadGrid(modelName, sortName, rowNum, rowList, onSelectRow, withToolbar
   }
 }
 
+function loadCustomAwards() {
+   $.post("nextContestData.php", {}, function(res) {
+      if (!res.success) return;
+      var data = res.data;
+      $('#custom_award_title').html(data.title);
+      $('#custom_award_help').html(data.help);
+      var table = '<table class="ui-common-table" style="border-spacing:0px 0px;"><thead><tr class="ui-jqgrid-labels">';
+      var iCol, iRow;
+      for (iCol = 0 ; iCol < data.colNames.length; iCol++) {
+         table += '<th style="width: '+data.colNames[iCol].width+'; border: 1px solid gray;">';
+         table += data.colNames[iCol].name;
+         table += '</th>'
+      }
+      table +="</tr></thead><tbody>";
+      for (rowID in data.colData) {
+         var row = data.colData[rowID];
+         table += '<tr style="border: 1px solid gray;">';
+         for (iCol = 0 ; iCol < data.colNames.length; iCol++) {
+            table += '<td style="border: 1px solid gray;">'+row[iCol]+'</td>'
+         }
+         table += '</tr>';
+      }
+      table += '</tbody></table>';
+      $('#custom_award_data').html(table);
+   }, 'json');
+}
+
 function loadContestants() {
    loadGrid("contestant", "", 20, [20, 50, 200, 500], function() {}, true);
 }
 
 function loadListAwards() {
    loadGrid("award1", "", 20, [20, 50, 200, 500], function() {}, true);
+   loadCustomAwards();
 }
 
 function loadSchoolSearch() {
