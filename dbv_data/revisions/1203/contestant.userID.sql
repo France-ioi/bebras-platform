@@ -1,0 +1,2 @@
+ALTER TABLE `contestant` ADD `userID` BIGINT(20) NULL DEFAULT NULL AFTER `teamID`;
+ALTER TABLE `history_contestant` ADD `userID` BIGINT(20) NULL DEFAULT NULL AFTER `teamID`;

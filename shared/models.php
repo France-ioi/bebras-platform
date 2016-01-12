@@ -19,6 +19,7 @@ $tablesModels = array (
          "genre" => array("type" => "int", "access" => array("write" => array("user"), "read" => array("user"))),
          "grade" => array("type" => "int", "access" => array("write" => array("user"), "read" => array("user"))),
          "teamID" => array("type" => "int"),
+         "userID" => array("type" => "int"),
          "cached_schoolID" => array("type" => "int"),
          "rank" => array("type" => "int"),
          "schoolRank" => array("type" => "int"),
@@ -36,6 +37,7 @@ $tablesModels = array (
          "name" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "level" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "year" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "category" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "status" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "nbMinutes" =>  array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "bonusScore" =>  array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
@@ -266,7 +268,7 @@ $viewsModels = array(
          array('field' => 'firstName'),
       )
    ),
-   
+
    "contestant" => array(
       "mainTable" => "contestant",
       "adminOnly" => false,
