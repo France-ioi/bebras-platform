@@ -207,6 +207,10 @@
          <div id="tabs-awards">
             <div data-i18n="[html]awards_content_intro"></div>
             <div data-i18n="[html]awards_content_detail"></div>
+            <div>
+               <p id="noPersonalCode" data-i18n="[html]awards_personal_code_nocode"></p>
+               <p id="withPersonalCode" data-i18n="[html]awards_personal_code_withcode"></p>
+            </div>
             <p style="display:none;text-align:center;" id="linkExportAlgoreaCodes" data-i18n="[html]generate_algorea_codes"></p>
             <p><a id="linkExportAwards1" href="#" onclick="exportCSV('award1')" data-i18n="export_to_csv"></a></p>
             <table id="grid_award1"><tbody><tr><td/></tr></tbody></table>

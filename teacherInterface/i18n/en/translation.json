@@ -372,5 +372,7 @@
     "diploma_score_rankSchoolRank": "TODO",
     "group_print_certificates": "TODO",
     "group_print_certificates_help": "TODO",
-    "school_print_certificates": "TODO"
+    "school_print_certificates": "TODO",
+    "awards_personal_code_nocode": "",
+    "awards_personal_code_withcode": ""
 }
