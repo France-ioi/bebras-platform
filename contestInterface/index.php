@@ -38,7 +38,7 @@
          <span id="loadPublicGroups" style="color:red" data-i18n="tab_public_loading"></span>
          <div id="contentPublicGroups" style="display:none;width:800px">
             <p><b data-i18n="[html]tab_public_contests_info"></b></p>
-            <p data-i18n="tab_public_contests_score_explanation"></p>
+            <p data-i18n="[html]tab_public_contests_score_explanation"></p>
             <div id="listPublicGroups">
             </div>
             <p data-i18n="[html]tab_public_contests_organization"></p>

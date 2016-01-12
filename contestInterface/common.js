@@ -1424,7 +1424,8 @@ window.relogin = function() {
 function getPublicGroupsList(groups) {
    var arrGroups = {};
    var years = {};
-   var year, group;
+   var categories = {};
+   var year, group,category;
    var maxYear = 0;
    for (var iGroup = 0 ; iGroup < groups.length ; iGroup ++) {
       group = groups[iGroup];
@@ -1432,8 +1433,12 @@ function getPublicGroupsList(groups) {
          arrGroups[group.level] = {};
       }
       year = group.year % 10000;
-      arrGroups[group.level][year] = group;
+      arrGroups[group.level][group.category] = group;
       years[year] = true;
+      if (!categories[year]) {
+        categories[year] = [];
+      }
+      categories[year][group.category] = true;
       maxYear = Math.max(maxYear, year);
    }
    var levels = [
@@ -1445,30 +1450,32 @@ function getPublicGroupsList(groups) {
    ];
    var strGroups = "<table style='border:solid 1px black' cellspacing=0 cellpadding=5>";
    for (year = maxYear; years[year] === true; year--) {
-      var nbGroupsInYear = 0;
-      var thisYearStrGroup = '';
-      strGroups += "<tr class='groupRow'><td style='width:100px;border:solid 1px black'><b>" + year + "</b></td>";
-      for (var iLevel = 0; iLevel < levels.length; iLevel++) {
-         var level = levels[iLevel];
-         group = undefined;
-         if (arrGroups[level.id]) {
-            group = arrGroups[level.id][year];
+      for (category in categories[year]) {
+         var nbGroupsInCategory = 0;
+         var thisCategoryStrGroup = '';
+         strGroups += "<tr class='groupRow'><td style='width:100px;border:solid 1px black;text-align:center'><b>" + category + "</b></td>";
+         for (var iLevel = 0; iLevel < levels.length; iLevel++) {
+            var level = levels[iLevel];
+            group = undefined;
+            if (arrGroups[level.id]) {
+               group = arrGroups[level.id][category];
+            }
+            if (group) {
+               thisCategoryStrGroup += "<td style='width:100px;border:solid 1px black;text-align:center'>" +
+                  "<a href='#' onclick='checkGroupFromCode(\"CheckGroup\", \"" + group.code + "\", false, true)' data-i18n=\"[html]"+level.i18name+"\"> " + level.name + "</a></td>";
+                  nbGroupsInCategory = nbGroupsInCategory + 1;
+            } else {
+               thisCategoryStrGroup += "<td width=20%></td>";
+            }
          }
-         if (group) {
-            thisYearStrGroup += "<td style='width:100px;border:solid 1px black;text-align:center'>" +
-               "<a href='#' onclick='checkGroupFromCode(\"CheckGroup\", \"" + group.code + "\", false, true)' data-i18n=\"[html]"+level.i18name+"\"> " + level.name + "</a></td>";
-               nbGroupsInYear = nbGroupsInYear + 1;
-         } else {
-            thisYearStrGroup += "<td width=20%></td>";
+         if (nbGroupsInCategory == 1 && arrGroups[0] && arrGroups[0][category]) {
+            group = arrGroups[0][category];
+            thisCategoryStrGroup = "<td colspan=\"5\" style='width:500px;border:solid 1px black;text-align:center'>" +
+                  "<a href='#' onclick='checkGroupFromCode(\"CheckGroup\", \"" + group.code + "\", false, true)' data-i18n=\"[html]level_all_levels_name\"> " + t("level_all_levels_name") + "</a></td>";
          }
+         strGroups = strGroups + thisCategoryStrGroup;
+         strGroups += "</tr>";
       }
-      if (nbGroupsInYear == 1 && arrGroups[0] && arrGroups[0][year]) {
-         group = arrGroups[0][year];
-         thisYearStrGroup = "<td colspan=\"5\" style='width:500px;border:solid 1px black;text-align:center'>" +
-               "<a href='#' onclick='checkGroupFromCode(\"CheckGroup\", \"" + group.code + "\", false, true)' data-i18n=\"[html]level_all_levels_name\"> " + t("level_all_levels_name") + "</a></td>";
-      }
-      strGroups = strGroups + thisYearStrGroup;
-      strGroups += "</tr>";
    }
    strGroups += "</table>";
    return strGroups;
