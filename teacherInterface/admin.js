@@ -936,9 +936,33 @@ function continueLogUser() {
    initDeleteButton("group");
 }
 
+function getPersonalCode() {
+   $.post('personalQualificationCode.php', {}, function(data) {
+      if (!data.code) {
+         $('#withPersonalCode').hide();
+      } else {
+         $('#personalCode').html(data.code);
+         $('#noPersonalCode').hide();
+      }
+   }, 'json');
+}
+
+function generatePersonalCode() {
+    $.post('personalQualificationCode.php', {create: true}, function(data) {
+      if (!data.code) {
+         $('#withPersonalCode').hide();
+      } else {
+         $('#personalCode').html(data.code);
+         $('#noPersonalCode').hide();
+         $('#withPersonalCode').show();
+      }
+   }, 'json');
+}
+
 function logUser(user) {
    loggedUser = user;
    loadUser(user);
+   getPersonalCode();
    loadSchools().done(function() {
       loadContests().done(function() {
          if (isAdmin()) {
