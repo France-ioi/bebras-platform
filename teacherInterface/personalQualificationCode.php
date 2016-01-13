@@ -71,8 +71,10 @@ function createPersonalCode() {
 		die("Error, cannot find public group for current contest!");
 	}
 	$teamID = getRandomID();
-	$stmt = $db->prepare('insert into contestant (firstName, lastName, genre, teamID, userID, algoreaCode) values (:firstName, :lastName, :genre, :teamID, :userID, :code);');
+	$contestantID = getRandomID();
+	$stmt = $db->prepare('insert into contestant (ID, firstName, lastName, genre, teamID, userID, algoreaCode) values (:ID, :firstName, :lastName, :genre, :teamID, :userID, :code);');
 	$stmt->execute([
+		'ID' => $contestantID,
 		'firstName' => $user['firstName'],
 		'lastName' => $user['lastName'],
 		'genre' => $genre,
