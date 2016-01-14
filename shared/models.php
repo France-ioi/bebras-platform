@@ -4,6 +4,7 @@
 $tablesModels = array (
    "algorea_registration" => array(
       "autoincrementID" => true,
+      "hasHistory" => false,
       "fields" => array(
          "code" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user"))),
          "contestantID" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user"))),
@@ -66,6 +67,7 @@ $tablesModels = array (
    ),
    "grade" => array(
       "autoincrementID" => false,
+      "hasHistory" => false,
       "fields" => array(
          "name" => array("type" => "string", "access" => array("write" => array(), "read" => array()))
       )

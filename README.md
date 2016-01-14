@@ -33,11 +33,11 @@ Update browser detection library (_WARNING_: run with same user as web server):
 
 Make the directories `logs/` and `contestInterface/contests/` writable by PHP.
 
-Run `php commonFramework/modelsManager/triggers.php`.
-
 Get Bower dependencies: run `bower install` in both `contestInterface` and `teacherInterface`.
 
-Note that before going into production, you must remove by hand the triggers in team and group (TODO: automate).
+### Triggers
+
+The database can optionally contain triggers writing in the different `*_history` tables. To install them, run `php commonFramework/modelsManager/triggers.php`. Note that before going into production, you must remove by hand the triggers in `team`, `group` and `question`.
 
 ### Additions
 
