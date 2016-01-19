@@ -20,7 +20,7 @@
     "jquery-ui": "~1.11",
     "pem-platform": "France-ioi/pem-platform",
     "i18next": "~1.10.2",
-    "jqgrid": "*",
+    "jqgrid": "5.0.1",
     "jQuery-ajaxTransport-XDomainRequest": "~1.0",
     "json3": "~3.3",
     "jquery-base64": "https://github.com/carlo/jquery-base64.git"
