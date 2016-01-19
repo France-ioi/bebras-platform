@@ -678,7 +678,7 @@ function loadCustomAwards() {
          var row = data.colData[rowID];
          table += '<tr style="border: 1px solid gray;">';
          for (iCol = 0 ; iCol < data.colNames.length; iCol++) {
-            table += '<td style="border: 1px solid gray;">'+row[iCol]+'</td>'
+            table += '<td style="border: 1px solid gray;'+data.colNames[iCol].style+'">'+row[iCol]+'</td>'
          }
          table += '</tr>';
       }
