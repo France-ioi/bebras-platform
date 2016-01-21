@@ -194,7 +194,7 @@
             <button type="button" id="generateContest" data-i18n="contests_regenerate" onclick="genContest()"></button><br/>
             <button type="button" id="buttonGradeContest" data-i18n="contests_grade" onclick="gradeContest()"></button>
             <button type="button" id="buttonRankContest" data-i18n="contests_rank" onclick="rankContest()"></button>
-            <button style="display:none;" type="button" id="buttonGenerateAlgoreaCodes" data-i18n="generate_algorea_codes" onclick="generateAlgoreaCodes()"></button>
+            <!--<button style="display:none;" type="button" id="buttonGenerateAlgoreaCodes" data-i18n="generate_algorea_codes" onclick="generateAlgoreaCodes()"></button>-->
             <button type="button" id="buttonUnofficializeContest" data-i18n="contests_switch_to_unofficial" onclick="alert(t('admin.feature_not_available'))"></button><br/>
             <div id="gradeContestState"></div>
             <br/><br/>

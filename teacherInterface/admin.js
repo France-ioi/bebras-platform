@@ -895,7 +895,10 @@ function continueLogUser() {
       $("#linkExportUsers").show();
       $("#linkExportSchools").show();
       $("#buttonComputeCoords_school").show().click(function(){
-          computeCoordsSchools();
+         computeCoordsSchools();
+      });
+      $("#buttonDeleteSelected_school").click(function() {
+         jqAlert(t('admin_cannot_delete_school'));
       });
    } else {
       //if (loggedUser.allowMultipleSchools === "1") {
@@ -1778,12 +1781,16 @@ function newForm(modelName, title, message) {
          html += "<option value='0'>" + t("select") + "</option>";
          var optionValue, optionName;
          if (typeof field.editoptions.value === "string") {
+            if (modelName == "group" && fieldName == "contestID" && !field.editoptions.value) {
+               jqAlert(t("contest_needed_for_group"));
+               return;
+            }
             var optionsList = field.editoptions.value.split(";");
             for (var iOption = 0; iOption < optionsList.length; iOption++)  {
                var optionParts = optionsList[iOption].split(":");
                if (fieldName == "contestID") {
                   var contest = getContestFromID(optionParts[0]);
-                  if (contest.status == 'PreRanking') {
+                  if (contest && contest.status == 'PreRanking') {
                      continue;
                   }
                }

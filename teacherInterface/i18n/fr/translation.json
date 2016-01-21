@@ -385,5 +385,7 @@
     "group_print_certificates_help": "Vous pouvez impimer ici les diplômes pour un groupe particulier sélectionné dans la liste. L'ensemble des diplômes d'un établissement peut être imprimé dans l'onglet « Établissements ».",
     "school_print_certificates_title": "Imprimer les diplômes",
     "school_print_certificates_help": "Vous pouvez imprimer les diplômes pour l'ensemble d'un établissement sélectionné dans la liste ci-dessus, ce pour les concours listés ci-dessous. Vous pouvez également les imprimer groupe par groupe dans l'onglet « Groupes ».",
-    "group_print_certificates_impossible": "Vous pouvez imprimer de diplômes uniquement pour les concours officiels qui viennent de se terminer."
+    "group_print_certificates_impossible": "Vous pouvez imprimer de diplômes uniquement pour les concours officiels qui viennent de se terminer.",
+    "contest_needed_for_group": "Vous devez créer au moins un concours avant de créer un groupe",
+    "admin_cannot_delete_school": "Les administrateurs ne peuvent pas supprimer d'établissement"
 }
