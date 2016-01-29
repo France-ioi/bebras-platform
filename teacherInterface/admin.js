@@ -970,9 +970,7 @@ function logUser(user) {
       loadContests().done(function() {
          if (isAdmin()) {
             loadQuestions().done(function() {
-               loadGroups().always(function() {
-                  continueLogUser();
-               });
+               continueLogUser();
             });
          } else {
             loadGroups().done(function() {
