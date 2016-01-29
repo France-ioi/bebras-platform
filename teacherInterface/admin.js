@@ -969,8 +969,8 @@ function logUser(user) {
    loadSchools().done(function() {
       loadContests().done(function() {
          if (isAdmin()) {
-            loadGroups().done(function() {
-               loadQuestions().done(function() {
+            loadQuestions().done(function() {
+               loadGroups().always(function() {
                   continueLogUser();
                });
             });
