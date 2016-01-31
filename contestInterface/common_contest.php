@@ -2,31 +2,11 @@
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 
 function createTeamFromUserCode($db, $password) {
-   // comment for algorea mode
-   return (object)array("success" => false, "message" => "Mot de passe invalide");
-   // transform "algorea-foo" into "foo"
-   if (strlen($password) > 8) {
-      $password = substr($password, strlen($password) - 8, 8);
-      return commonLoginTeam($db, $password);
-   }
-   $stmt = $db->prepare("SELECT `ID` FROM `algorea_registration` WHERE `code` = ?");
-   $stmt->execute(array($password));
-   $row = $stmt->fetchObject();
-   if (!$row) {
-      $stmt = $db->prepare("SELECT `ID` FROM `contestant` WHERE `algoreaCode` = ?");
-      $stmt->execute(array($password));
-      $row = $stmt->fetchObject();
-      if (!$row) {
-         return (object)array("success" => false, "message" => "Mot de passe invalide");
-      }
-   }
-   $_SESSION["userCode"] = $password;
-   if (!openGroup($db, "usr432144", false)) { // TODO: do not hardcode this
-      return (object)array("success" => false, "message" => "Cette épreuve est actuellement fermée.");
+   // use custom function to fetch code from algorea_registration or anywhere else
+   if (function_exists('customCreateTeamFromUserCode')) {
+      return customCreateTeamFromUserCode($db, $password);
    } else {
-      // TODO: openGroup should return an object...
-      unset($db);
-      exit;
+      return (object)array("success" => false, "message" => "Mot de passe invalide");
    }
 }
 

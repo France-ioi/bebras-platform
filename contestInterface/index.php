@@ -48,7 +48,7 @@
    <div id="tab-school">
 <!--      <p>Pour <b>voir votre score détaillé</b> si vous avez participé au concours 2012, cliquez sur "Continuer le concours" et saisissez votre code personnel fourni au début de l'épreuve. Vous aurez aussi accès aux réponses et à une <b>correction détaillée</b> en dessous de chaque question.</p>
       <h3>Vous démarrez un concours en classe, pour la première fois ?</h3>-->
-      <p data-i18n="tab_start_contest_enter_code"><br />
+      <p data-i18n="[html]tab_start_contest_enter_code"><br />
          <div id="divInput">
             <input id="groupCode" type="text"/>
                &nbsp;&nbsp;&nbsp;<button type="button" id="buttonCheckGroup" onclick="checkGroup()" data-i18n="tab_start_contest_start_button"></button>
