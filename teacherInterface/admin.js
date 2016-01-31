@@ -2349,7 +2349,13 @@ function init() {
          '{"contestPresentationURL": "' + config.contestPresentationURL + '"}');
       $("title").i18n();
       $("body").i18n();
+      if (config.maintenanceUntil) {
+         $("#main_screen").html(t('maintenance_until', {end: config.maintenanceUntil}));
+      }
    });
+   if (config.maintenanceUntil) {
+      return;
+   }
    isLogged();
    window.domains = [];
    $.getJSON('regions/' + config.countryCode + '/domains.json', function(data) {

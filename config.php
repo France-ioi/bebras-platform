@@ -5,6 +5,9 @@
 
 global $config;
 $config = (object) array();
+
+$config->maintenanceUntil = null; // maintenance end time (null if no maintenance)
+
 $config->db = (object) array();
 $config->db->use = 'mysql';
 $config->db->dynamoSessions = false;

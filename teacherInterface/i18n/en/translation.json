@@ -360,6 +360,7 @@
     "main_logo": "<img src=\"images/castor_small.png\"/>",
     "nbContestants_1": "Individual",
     "nbContestants_2": "Pair",
+    "maintenance_until": "Sorry, this site is unavailble until __end__ for maintenance.",
     "award_print_first_line": "TODO",
     "award_print_second_line": "TODO",
     "award_print_third_line": "TODO",

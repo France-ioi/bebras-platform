@@ -260,6 +260,7 @@
 <script>
    window.config = <?= json_encode([
       'defaultLanguage' => $language,
+      'maintenanceUntil' => $config->maintenanceUntil,
       'countryCode' => $countryCode,
       'infoEmail' => $config->email->sInfoAddress,
       'forceOfficialEmailDomain' => $config->teacherInterface->forceOfficialEmailDomain,
