@@ -5,7 +5,7 @@
     "general_start_contest": "Commencer un concours<br/>en classe",
     "general_public_contests": "S'entraîner à la maison<br/>Consulter les annales",
     "general_view_results": "Continuer le concours<br/>&nbsp;",
-    "tab_start_contest_enter_code": "Entrez :<ul><li>soit le code de votre groupe, fourni par votre enseignant si vous êtes en classe,<li>soit votre code de qualification à Algoréa, si vous participez de chez vous.</ul>",
+    "tab_start_contest_enter_code": "Entrez le code de votre groupe, fourni par votre enseignant : ",
     "tab_start_contest_start_button": "Je commence le concours",
     "tab_public_contests_info": "<b>Testez-vous sur l'un des concours des années précédentes :</b>",
     "tab_public_contests_score_explanation": "Vous pouvez accéder aux anciens concours Castor ainsi qu'au premier tour du concours Algoréa, auquel se qualifient désormais les 10% meilleurs du concours Castor de l'année précédente (Ex: Castor 2014 en Novembre, 1<sup>er</sup> tour Algoréa 2015 en Février).<br/><br/>Les solutions vous seront fournies lorsque le temps sera écoulé ou que vous aurez cliqué sur <strong>quitter le concours</strong>.",
