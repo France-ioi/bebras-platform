@@ -388,5 +388,6 @@
     "group_print_certificates_impossible": "Vous pouvez imprimer de diplômes uniquement pour les concours officiels qui viennent de se terminer.",
     "contest_needed_for_group": "Vous devez créer au moins un concours avant de créer un groupe",
     "admin_cannot_delete_school": "Les administrateurs ne peuvent pas supprimer d'établissement",
+    "admin_cannot_create_group": "Les administrateurs ne peuvent pas créer de groupe",
     "maintenance_until": "Désolé, ce site en indisponible pour cause de maintenance jusqu'à __end__."
 }

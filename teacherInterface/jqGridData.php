@@ -135,7 +135,7 @@ function checkRequestGroup($db, &$request, &$record, $operation, &$roles) {
    if (!$_SESSION["isAdmin"]) {
       $record["userID"] = $_SESSION["userID"];
    } else {
-      die("You cannot create groups as Administrator");
+      die(json_encode(['success' => false, 'error' => "You cannot create groups as Administrator"]));
    }
 
    // Filters

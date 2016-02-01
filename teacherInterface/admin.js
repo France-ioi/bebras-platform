@@ -1228,6 +1228,10 @@ function objectHasProperties(object) {
 }
 
 function newGroup() {
+   if (isAdmin()) {
+      jqAlert(t('admin_cannot_create_group'));
+      return;
+   }
    if (!objectHasProperties(schools)) {
       jqAlert(t("school_not_provided"));
       return;
