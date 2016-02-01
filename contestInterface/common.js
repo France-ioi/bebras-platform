@@ -2438,7 +2438,7 @@ function getParameterByName(name) {
 $(document).on('ready', function() {
    var teamParam = getParameterByName('team');
    if (teamParam !== '') {
-      window.checkGroupFromCode("CheckGroup", teamParam, false, false)
+      window.checkGroupFromCode("CheckGroup", teamParam, false, false);
    } else {
       init();
    }
