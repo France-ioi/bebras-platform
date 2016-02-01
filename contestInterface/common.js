@@ -41,6 +41,16 @@ var logToConsole = function(logStr) {
   }
 };
 
+window.unlockAllLevels = function() {
+   var sortedQuestionIDs = getSortedQuestionIDs(questionsData);
+   for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
+      var questionKey = questionsData[sortedQuestionIDs[iQuestionID]].key;
+      questionUnlockedLevels[questionKey] = 3;
+      $("#place_" + questionKey).hide();
+      $("#row_" + questionKey).show();
+   }
+}
+
 var nbErrorsSent = 0;
 var logError = function(error, errormsg) {
   var logStr;
