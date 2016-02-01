@@ -58,7 +58,7 @@
       <div id="recoverGroup" style="display:none;">
          <p data-i18n="[html]group_session_expired_recover"></p>
          <input id="recoverGroupPass" type="password"/>
-         &nbsp;&nbsp;&nbsp;<button type="button" id="buttonRecoverGroup" onclick="recoverGroup()" data-i18n="submitPass"></buton>
+         &nbsp;&nbsp;&nbsp;<button type="button" id="buttonRecoverGroup" onclick="recoverGroup()" data-i18n="submitPass"></button>
          <br><span id="recoverGroupResult" style="color:red"></span>
          <p data-i8n="[html]others_retry"></p>
       </div>
