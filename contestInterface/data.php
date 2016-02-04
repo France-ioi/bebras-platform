@@ -156,8 +156,10 @@ function createTeam($db, $contestants) {
       echo json_encode(array("success" => false, "message" => "Groupe fermé"));
       return;
    }
-   if (isset($_SESSION["userCode"])) {
+   if (isset($_SESSION["userCode"]) && isset($_SESSION["userCodeGroupID"]) && $_SESSION["userCodeGroupID"] == $_SESSION["groupID"]) {
       $password = $_SESSION["userCode"];
+      unset($_SESSION["userCode"]);
+      unset($_SESSION["userCodeGroupID"]);
    } else {
       $password = genAccessCode($db);
    }
@@ -184,9 +186,6 @@ function createTeam($db, $contestants) {
 
    $_SESSION["teamID"] = $teamID;
    $_SESSION["teamPassword"] = $password;
-   if (isset($_SESSION["userCode"])) {
-      unset($_SESSION["userCode"]);
-   }
    foreach ($contestants as $contestant) {
       if (!isset($contestant["grade"])) {
          $contestant["grade"] = -2;
