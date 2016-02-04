@@ -87,6 +87,11 @@ function openGroup($db, $password, $getTeams) {
    $_SESSION["fullFeedback"] = $fullFeedback;
    $_SESSION["nextQuestionAuto"] = $nextQuestionAuto;
    $_SESSION["groupClosed"] = (($nbMinutesElapsed > 60) && (!$isPublic));
+   // We don't want $_SESSION['userCode'] in the session at this point
+   if (isset($_SESSION["userCode"])) {
+      unset($_SESSION["userCode"]);
+      unset($_SESSION["userCodeGroupID"]);
+   }
    echo json_encode((object)array(
       "success" => true,
       "groupID" => $groupID,
@@ -156,6 +161,8 @@ function createTeam($db, $contestants) {
       echo json_encode(array("success" => false, "message" => "Groupe fermé"));
       return;
    }
+   // $_SESSION['userCode'] is set by optional password handling function,
+   // see comments of createTeamFromUserCode in common_contest.php.
    if (isset($_SESSION["userCode"]) && isset($_SESSION["userCodeGroupID"]) && $_SESSION["userCodeGroupID"] == $_SESSION["groupID"]) {
       $password = $_SESSION["userCode"];
       unset($_SESSION["userCode"]);

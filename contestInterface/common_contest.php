@@ -2,7 +2,13 @@
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 
 function createTeamFromUserCode($db, $password) {
-   // use custom function to fetch code from algorea_registration or anywhere else
+   // Use a custom function to fetch code from algorea_registration or anywhere else. You can
+   // create it in config_local.php.
+   // The function can set two $_SESSION variables: userCode and userCodeGroupID.
+   //   - userCode can be set to $password and will be used as team.password for the created team
+   //   - userCodeGroupID is the group.ID in which the teams will be created. It's best to
+   //       use openGroup() in your function for that, it will set $_SESSION correctly. Note
+   //       that you must set $_SESSION['userCode'] after calling openGroup()
    if (function_exists('customCreateTeamFromUserCode')) {
       return customCreateTeamFromUserCode($db, $password);
    } else {
