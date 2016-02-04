@@ -184,6 +184,9 @@ function createTeam($db, $contestants) {
 
    $_SESSION["teamID"] = $teamID;
    $_SESSION["teamPassword"] = $password;
+   if (isset($_SESSION["userCode"])) {
+      unset($_SESSION["userCode"]);
+   }
    foreach ($contestants as $contestant) {
       if (!isset($contestant["grade"])) {
          $contestant["grade"] = -2;
