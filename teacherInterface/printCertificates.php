@@ -170,6 +170,20 @@
             return $.datepicker.formatDate("dd/mm/yy", d);
          }
 
+         function getStrings(params) {
+            var contest = allData.contest[params.contestID];
+            if (!contest) {
+               return;
+            }
+            var stringsName = contest.certificateStringsName;
+            if (stringsName) {
+               window.i18nconfig.ns.defaultNs = stringsName;
+               window.i18nconfig.ns.namespaces = [stringsName, 'translation'];
+            }
+            i18n.init(window.i18nconfig, function () {
+              displayDiplomas(params);
+            });   
+         }
          function displayDiplomas(params) {
             var contestantPerGroup = fillDataDiplomas(params);
             var tableHeader = "<table class=\"bordered\"><tr>" +
@@ -270,7 +284,7 @@
                            mergeUsers();
                            loadData("contest", function() {
                               getTotalContestants(params, function() {
-                                 displayDiplomas(params);
+                                 getStrings(params);
                               });
                            }, params);
                         });
@@ -301,8 +315,7 @@
             params['official'] = true;
             loadAllData(params);
          }
-
-         i18n.init(<?= json_encode([
+         window.i18nconfig = <?= json_encode([
            'lng' => $config->defaultLanguage,
            'fallbackLng' => [$config->defaultLanguage],
            'fallbackNS' => 'translation',
@@ -312,9 +325,8 @@
            ],
            'getAsync' => true,
            'resGetPath' => static_asset('/i18n/__lng__/__ns__.json')
-         ]); ?>, function () {
-           init();
-         });
+         ]); ?>;
+         init();
       </script>
    </head>
    <body>

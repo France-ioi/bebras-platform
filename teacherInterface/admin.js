@@ -141,7 +141,7 @@ function getGroupsColModel() {
          nbStudentsEffective: {label: t("group_nbStudentsEffective_label"), width: 100},
          nbStudents: {label: t("group_nbStudents_label"), longLabel: t("group_nbStudents_long_label"), editable: true, required: true, edittype: "text", subtype:"positiveint", width: 100, comment: t("group_nbStudents_comment")},
          userID: {hidden: true, visible: false, hiddenlg: true},
-         contestStatus: {hidden: true, visible: false, hiddenlg: true},
+         contestPrintCertificates: {hidden: true, visible: false, hiddenlg: true},
       }
    };
    return model;
@@ -1113,7 +1113,7 @@ function loadContests() {
       var nbContests = 0;
       for (var contestID in contests) {
          var contest = contests[contestID];
-         if (contest.status == 'PreRanking') {
+         if (contest.printCertificates == 1) {
             nbContests += 1;
             contestList += '<li><button onclick="printSchoolCertificates(\''+contest.ID+'\')">'+contest.name+'</button></li>';
          }
@@ -1876,7 +1876,7 @@ function printGroupCertificates() {
       return;
    }
    var group = groups[groupID];
-   if (group.participationType != 'Official' || group.contestStatus != 'PreRanking') {
+   if (group.participationType != 'Official' || group.contestPrintCertificates != 1) {
       jqAlert(t("group_print_certificates_impossible"));
       return;
    }

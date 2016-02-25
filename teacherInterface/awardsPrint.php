@@ -23,7 +23,7 @@ $request = array(
 foreach($model["fields"] as $fieldName => $field) {
    $request["fields"][] = $fieldName;
 }
-$request["filters"] = array('awarded' => true);
+$request["filters"] = array('awarded' => true, 'printable' => true);
 if (!$_SESSION["isAdmin"]) {
    $request["filters"]["userID"] = $_SESSION["userID"];
 }

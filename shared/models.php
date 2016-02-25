@@ -51,6 +51,9 @@ $tablesModels = array (
          "minAward2Rank" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "rankGrades" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "rankNbContestants" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "printCertificates" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "showResults" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "certificateStringsName" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
       )
    ),
    "contest_question" => array(
@@ -251,11 +254,12 @@ $viewsModels = array(
          "city" => array("tableName" => "school"),
          "name" => array("tableName" => "school"),
          "algoreaCode" => array(),
-         "franceioiID" => array("tableName" => "algorea_registration")
+         "franceioiID" => array("tableName" => "algorea_registration"),
       ),
       "filters" => array(
          "groupField" => $fieldGroupFilter,
          "score" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`score` = :[PREFIX_FIELD]score"),
+         "printable" => array("joins" => array("contest"), "condition" => "`[PREFIX]contest`.`showResults` = 1", "ignoreValue" => true),
          "schoolID" => array("joins" => array(), "condition" => "`[PREFIX]contestant`.`cached_schoolID` = :[PREFIX_FIELD]schoolID"),
          "userID" => array("joins" => array("user_user"), "condition" => "(`group`.`userID` = :[PREFIX_FIELD]userID OR (`[PREFIX]user_user`.`targetUserID` = :[PREFIX_FIELD]userID AND `[PREFIX]user_user`.`accessType` <> 'none'))"),
          "ownerUserID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`userID` = :[PREFIX_FIELD]ownerUserID"),
@@ -398,7 +402,7 @@ $viewsModels = array(
          "nbStudentsEffective" => array(),
          "nbStudents" => array(),
          "userID" => array("fieldName" => "userID", "tableName" => "group"),
-         "contestStatus" => array("fieldName" => "status", "tableName" => "contest")
+         "contestPrintCertificates" => array("fieldName" => "printCertificates", "tableName" => "contest")
 //         "accessUserID" => array("fieldName" => "targetUserID", "tableName" => "user_user")
       ),
       "filters" => array(
@@ -548,7 +552,10 @@ $viewsModels = array(
             "type" => "int",
             "tableName" => "contest_question",
             "sql" => "SUM(`contest_question`.`maxScore`) + `contest`.`bonusScore`",
-            "groupBy" => "`contest`.`ID`")
+            "groupBy" => "`contest`.`ID`"),
+         "showResults" => array(),
+         "printCertificates" => array(),
+         "certificateStringsName" => array()
       ),
       "filters" => array(
          "statusNotHidden" => array(
