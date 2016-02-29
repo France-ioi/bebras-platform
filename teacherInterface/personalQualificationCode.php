@@ -38,13 +38,6 @@ function generateRandomCode() {
    }
 }
 
-function getPreRankingContestID() {
-	global $db;
-	$stmt = $db->prepare('select ID from contest where status = \'PreRanking\';');
-	$stmt->execute();
-	return $stmt->fetchColumn();
-}
-
 function getPublicGroupID($contestID) {
 	global $db;
 	$stmt = $db->prepare('select ID from `group` where contestID = :contestID and isPublic=1;');
@@ -53,7 +46,7 @@ function getPublicGroupID($contestID) {
 }
 
 function createPersonalCode() {
-	global $db;
+	global $db, $config;
 	$code = generateRandomCode();
 	$stmt = $db->prepare('select firstName, lastName, gender from user where ID = :userID;');
 	$stmt->execute(['userID' => $_SESSION['userID']]);
@@ -62,12 +55,12 @@ function createPersonalCode() {
 		die("Error, cannot find user ID ".$_SESSION['userID']."!");
 	}
 	$genre = $user['gender'] == 'F' ? 1 : 2;
-	$contestID = getPreRankingContestID();
+	$contestID = $config->teacherInterface->teacherPersonalCodeContestID;
 	if (!$contestID) {
 		die("Error, cannot find current contest!");
 	}
 	$groupID = getPublicGroupID($contestID);
-	if (!$contestID) {
+	if (!$groupID) {
 		die("Error, cannot find public group for current contest!");
 	}
 	$teamID = getRandomID();

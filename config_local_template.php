@@ -42,6 +42,8 @@ $config->teacherInterface->genericPasswordMd5 = '';
 $config->teacherInterface->generationMode = 'local';
 $config->teacherInterface->sContestGenerationPath = '/../contestInterface/contests/'; // *MUST* be relative!
 $config->teacherInterface->forceOfficialEmailDomain = false;
+ // indicate the ID of the contest for which password will be automatically generated for teachers
+$config->teacherInterface->teacherPersonalCodeContestID = 0;
 
 // URLs
 $config->teacherInterface->baseUrl = 'http://coordinateur.castor-informatique.fr/';

@@ -62,6 +62,7 @@ $config->teacherInterface->forceOfficialEmailDomain = false;
 $config->teacherInterface->useAlgoreaCodes = false; // change if your award is an acess code for another contest
 // Point teacherInterface->baseUrl to an URL serving the teacherInterface directory.
 $config->teacherInterface->baseUrl = 'http://coordinateur.castor-informatique.fr';
+$config->teacherInterface->teacherPersonalCodeContestID = 0;
 
 $config->certificates = (object) array();
 $config->certificates->webServiceUrl = 'http://castor-informatique.fr.localhost/certificates/';
