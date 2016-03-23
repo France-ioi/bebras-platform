@@ -123,7 +123,7 @@ function reloginTeam($db, $password, $teamID) {
    } else if ($row->status == "Closed" || $row->status == "PreRanking") {
       echo json_encode(array("success" => false, "message" => "Concours fermé"));      
    } else {
-      $stmt = $db->prepare("SELECT `password` FROM `team` WHERE `ID` = ? AND `groupID` = ?");
+      $stmt = $db->prepare("SELECT `password`, `nbMinutes` FROM `team` WHERE `ID` = ? AND `groupID` = ?");
       $stmt->execute(array($teamID, $_SESSION["groupID"]));
       $row = $stmt->fetchObject();
       if (!$row) {
@@ -131,7 +131,7 @@ function reloginTeam($db, $password, $teamID) {
       } else {
          if ($config->db->use == 'dynamoDB') {
             try {
-               $teamDynamoDB = $tinyOrm->get('team', array('ID', 'groupID'), array('ID' => $teamID));
+               $teamDynamoDB = $tinyOrm->get('team', array('ID', 'groupID', 'nbMinutes'), array('ID' => $teamID));
             } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
                error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
                error_log('DynamoDB error retrieving: '.$teamID);
@@ -142,6 +142,7 @@ function reloginTeam($db, $password, $teamID) {
          }
          $_SESSION["teamID"] = $teamID;
          $_SESSION["teamPassword"] = $row->password;
+         $_SESSION["nbMinutes"] = intval($row->nbMinutes);
          return true;
       }
    }
@@ -171,14 +172,15 @@ function createTeam($db, $contestants) {
       $password = genAccessCode($db);
    }
    $teamID = getRandomID();
-   $stmt = $db->prepare("INSERT INTO `team` (`ID`, `groupID`, `password`) VALUES (?, ?, ?)");
-   $stmt->execute(array($teamID, $_SESSION["groupID"], $password));
+   $stmt = $db->prepare("INSERT INTO `team` (`ID`, `groupID`, `password`, `nbMinutes`) VALUES (?, ?, ?, ?)");
+   $stmt->execute(array($teamID, $_SESSION["groupID"], $password, $_SESSION["nbMinutes"]));
    if ($config->db->use == 'dynamoDB') {
       try {
          $tinyOrm->insert('team', array(
             'ID'       => $teamID,
             'groupID'  => $_SESSION["groupID"],
             'password' => $password,
+            'nbMinutes' => $_SESSION["nbMinutes"]
          ));
       } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
          error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());

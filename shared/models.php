@@ -151,6 +151,7 @@ $tablesModels = array (
          "password" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "startTime" => array("type" => "date", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "endTime" => array("type" => "date"),
+         "nbMinutes" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "score" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "participationType" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user")))
       ),

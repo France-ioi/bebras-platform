@@ -2,13 +2,10 @@
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 // means that connect.php won't make any sql connection if in dynamoDB mode
 $noSQL = true;
-//$noSessions = true;
+$noSessions = true;
 use Aws\DynamoDb\Exception;
 require_once("../shared/connect.php");
-include_once("../shared/common.php");
 require_once("../shared/tinyORM.php");
-
-initSession();
 
 $tinyOrm = new tinyOrm();
 $testMode = $config->db->testMode;
@@ -32,7 +29,7 @@ function handleAnswers($db, $tinyOrm) {
    $teamID = $_POST["teamID"];
    $teamPassword = $_POST["teamPassword"];
    try {
-      $rows = $tinyOrm->select('team', array('password', 'startTime'), array('ID' => $teamID));
+      $rows = $tinyOrm->select('team', array('password', 'startTime', 'nbMinutes'), array('ID' => $teamID));
   } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
       error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
       error_log('DynamoDB error trying to get record: teamID: '.$teamID);
@@ -48,7 +45,7 @@ function handleAnswers($db, $tinyOrm) {
    $curTime = time();
    $startTime = new DateTime($row['startTime']);
    $startTime = intval($startTime->format('U'));
-   $nbMinutes = $_SESSION["nbMinutes"];
+   $nbMinutes = intval($row['nbMinutes']);
    // We leave 2 extra minutes to handle network lag. The interface already prevents trying to answer after the end.
    if ((($curTime - $startTime) > ((intval($nbMinutes) + 2) * 60)) && !$testMode) { 
       echo json_encode(array("success" => false, 'error' => 'invalid', "message" => "La réponse a été envoyée après la fin de l'épreuve"));
