@@ -5,12 +5,8 @@ use Aws\DynamoDb\SessionHandler;
 require_once 'LoggedPDO.php';
 require_once __DIR__.'/../config.php';
 
-ini_set('session.gc_maxlifetime', 3000);
-
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
-
-
+ini_set('session.gc_maxlifetime', $config->contestInterface->sessionLength);
+session_set_cookie_params($config->contestInterface->sessionLength);
 
 function connect_pdo($config) {
    // computing timezone difference with gmt:

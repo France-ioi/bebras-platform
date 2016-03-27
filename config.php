@@ -47,6 +47,7 @@ $config->contestInterface = (object) array();
 $config->contestInterface->baseUrl = 'http://concours.castor-informatique.fr';
 $config->contestInterface->sAbsoluteStaticPathNoS3 = 'http://concours.castor-informatique.fr';
 $config->contestInterface->sAssetsStaticPathNoS3 = 'http://concours.castor-informatique.fr';
+$config->contestInterface->sessionLength = 3600;
 
 $config->teacherInterface = (object) array();
 $config->teacherInterface->sHotlineNumber = '';

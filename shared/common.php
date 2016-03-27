@@ -24,7 +24,7 @@ function initSession() {
    session_start();
    if (!isset($_SESSION['CREATED'])) {
        $_SESSION['CREATED'] = time();
-   } else if (time() - $_SESSION['CREATED'] > 3600) {
+   } else if (time() - $_SESSION['CREATED'] > $config->contestInterface->sessionLength) {
       restartSession();
    }
 }
