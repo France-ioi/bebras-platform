@@ -17,6 +17,7 @@ if (get_magic_quotes_gpc()) {
 mb_internal_encoding("UTF-8");
 
 function initSession() {
+   global $config;
    session_name('contest2');
    if (isset($_POST["SID"]) && $_POST["SID"] != "") {
       session_id($_POST["SID"]);
