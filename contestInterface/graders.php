@@ -15,7 +15,7 @@ if (!isset($_SESSION["teamID"])) {
 }
 
 $teamID = $_SESSION["teamID"];
-$query = "SELECT `contest`.`ID` as `ID`, `contest`.`folder` as `folder`, `contest`.`contestMode` as `contestMode`, `contest`.`fullFeedback` as `fullFeedback` FROM `team` JOIN `group` ON (`team`.`groupID` = `group`.`ID`) JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `team`.`ID` = ?";
+$query = "SELECT `contest`.`ID` as `ID`, `contest`.`folder` as `folder`, `contest`.`bContestMode` as `contestMode`, `contest`.`fullFeedback` as `fullFeedback` FROM `team` JOIN `group` ON (`team`.`groupID` = `group`.`ID`) JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `team`.`ID` = ?";
 $stmt = $db->prepare($query);
 $stmt->execute(array($teamID));
 if (!($row = $stmt->fetchObject())) {
