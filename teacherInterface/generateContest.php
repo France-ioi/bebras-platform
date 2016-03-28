@@ -235,7 +235,7 @@ if (!isset($_REQUEST['tasks'])) {
 if (isset($_REQUEST['tasks']) && $_REQUEST['tasks']) {
    $tasks = json_decode($_REQUEST['tasks'], true);
    emptyContestDir($contestFolder);
-   generateContest($tasks, $contestID, $contestFolder, isset($_REQUEST['fullFeedback']) ? $_REQUEST['fullFeedback'] : false, isset($_REQUEST['status']) ? $_REQUEST['status'] : 'RunningContest');
+   generateContest($tasks, $contestID, $contestFolder, isset($_REQUEST['fullFeedback']) ? $_REQUEST['fullFeedback'] : false, $_REQUEST['contestTime'], $_REQUEST['bContestMode']);
 }
 
 function contestAddContent($contestFolder, $content, &$listParts, &$buffer, &$numPart, $isLast) {
@@ -260,7 +260,7 @@ function removeFonts($images) {
    return $imagesToPreload;
 }
 
-function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = false, $status = 'RunningContest') {
+function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = false, $contestTime = 'present', $bContestMode = true) {
    global $mode, $contestLocalDir, $config;
    if ($status == 'RunningContest' || $status == 'FutureContest') {
       $generateSolutions = false;

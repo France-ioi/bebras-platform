@@ -1,0 +1,1 @@
+ALTER TABLE `team_question` CHANGE `answer` `answer` TEXT;

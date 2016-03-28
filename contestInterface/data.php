@@ -37,18 +37,18 @@ function getGroupTeams($db, $groupID) {
 }
 
 function openGroup($db, $password, $getTeams) {
-   $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, NOW()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`status` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
+   $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, NOW()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`contestTime`, `contest`.`bHidden`, `contest`.`bContestMode`, `contest`.`bOpen` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
    $stmt = $db->prepare($query);
    $stmt->execute(array($password));
    $row = $stmt->fetchObject();
    if (!$row) {
       return false;
    }
-   if ($row->status == "FutureContest") {
+   if ($row->contestTime == "future") {
       echo json_encode((object)array("success" => false, "message" => "Le concours de ce groupe n'est pas encore ouvert."));
       return true;
    }
-   if ($row->status == "Closed" || $row->status == 'PreRanking') {
+   if (!$row->bOpen) {
       echo json_encode((object)array("success" => false, "message" => "Le concours de ce groupe n'est pas disponible actuellement."));
       return true;
    }
@@ -56,7 +56,6 @@ function openGroup($db, $password, $getTeams) {
    $schoolID = $row->schoolID;
    $contestID = $row->contestID;
    $contestFolder = $row->folder;
-   $contestStatus = $row->status;
    $name = $row->name;
    $nbMinutes = $row->nbMinutes;
    $bonusScore = $row->bonusScore;
@@ -79,7 +78,7 @@ function openGroup($db, $password, $getTeams) {
    $_SESSION["schoolID"] = $schoolID;
    $_SESSION["contestID"] = $contestID;
    $_SESSION["contestFolder"] = $contestFolder;
-   $_SESSION["contestStatus"] = $contestStatus;
+   $_SESSION["contestMode"] = $row->contestMode;
    $_SESSION["nbMinutes"] = $nbMinutes;
    $_SESSION["bonusScore"] = $bonusScore;
    $_SESSION["allowTeamsOfTwo"] = $allowTeamsOfTwo;
@@ -97,7 +96,7 @@ function openGroup($db, $password, $getTeams) {
       "groupID" => $groupID,
       "contestID" => $contestID, 
       "contestFolder" => $contestFolder, 
-      "contestStatus" => $contestStatus, 
+      "contestMode" => $row->contestMode, 
       "name" => $name,
       "teams" => $teams,
       "nbMinutes" => $nbMinutes,

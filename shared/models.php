@@ -39,7 +39,10 @@ $tablesModels = array (
          "level" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "year" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "category" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
-         "status" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "bHidden" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "bContestMode" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "bOpen" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "contestTime" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "nbMinutes" =>  array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "bonusScore" =>  array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "allowTeamsOfTwo" =>  array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
@@ -537,7 +540,10 @@ $viewsModels = array(
          ),
          "level" => array(),
          "year" => array(),
-         "status" => array(),
+         "bHidden" => array(),
+         "bContestMode" => array(),
+         "bOpen" => array(),
+         "contestTime" => array(),
          "nbMinutes" =>  array(),
          "bonusScore" =>  array(),
          "allowTeamsOfTwo" =>  array(),
@@ -561,7 +567,7 @@ $viewsModels = array(
       "filters" => array(
          "statusNotHidden" => array(
             "joins" => array(),
-            "condition" => "(`[PREFIX]contest`.`status` <> 'Hidden')",
+            "condition" => "(`[PREFIX]contest`.`bHidden` != 1)",
             "ignoreValue" => true
           )
       )

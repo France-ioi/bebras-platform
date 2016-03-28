@@ -3,7 +3,7 @@
 
 var contestID;
 var contestFolder;
-var contestStatus;
+var contestMode;
 var fullFeedback;
 var nextQuestionAuto;
 var newInterface;
@@ -1461,6 +1461,9 @@ function getPublicGroupsList(groups) {
    var strGroups = "<table style='border:solid 1px black' cellspacing=0 cellpadding=5>";
    for (year = maxYear; years[year] === true; year--) {
       for (category in categories[year]) {
+         if (!categories[year].hasOwnProperty(category)) {
+            continue;
+         }
          var nbGroupsInCategory = 0;
          var thisCategoryStrGroup = '';
          strGroups += "<tr class='groupRow'><td style='width:100px;border:solid 1px black;text-align:center'><b>" + category + "</b></td>";
@@ -1497,7 +1500,7 @@ function initContestData(data) {
    fullFeedback = parseInt(data.fullFeedback);
    nextQuestionAuto = parseInt(data.nextQuestionAuto);
    newInterface = !!parseInt(data.newInterface);
-   contestStatus = data.contestStatus;
+   contestMode = data.contestMode;
    TimeManager.setTotalTime(data.nbMinutes * 60);
    if (newInterface) {
       $("#question-iframe-container").addClass("newInterfaceIframeContainer");
@@ -1654,7 +1657,7 @@ function finalCloseContest(message) {
       function() {}, "json"
    ).always(function() {
       window.onbeforeunload = function(){};
-      if (contestStatus === "RunningContest") {
+      if (contestMode) {
          $("#divClosedPleaseWait").hide();
          $("#divClosedMessage").html(message);
          var listAnswers = [];

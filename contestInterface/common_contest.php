@@ -18,7 +18,7 @@ function createTeamFromUserCode($db, $password) {
 
 function commonLoginTeam($db, $password) {
    global $tinyOrm, $config;
-   $stmt = $db->prepare("SELECT `team`.`ID` as `teamID`, `group`.`ID` as `groupID`, `group`.`contestID`, `group`.`name`, `team`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`fullFeedback`, `contest`.`folder`, `contest`.`status`, `group`.`schoolID`, `team`.`endTime` FROM `team` JOIN `group` ON (`team`.`groupID` = `group`.`ID`) JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `team`.`password` = ?");
+   $stmt = $db->prepare("SELECT `team`.`ID` as `teamID`, `group`.`ID` as `groupID`, `group`.`contestID`, `group`.`name`, `team`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`fullFeedback`, `contest`.`folder`, `contest`.`bOpen`, `contest`.`bHidden`, `contest`.`bContestMode`, `contest`.`contestTime`, `group`.`schoolID`, `team`.`endTime` FROM `team` JOIN `group` ON (`team`.`groupID` = `group`.`ID`) JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `team`.`password` = ?");
    $stmt->execute(array($password));
    $row = $stmt->fetchObject();
    if (!$row) {
@@ -36,14 +36,16 @@ function commonLoginTeam($db, $password) {
          return (object)array("success" => false, "message" => "enregistrement différent entre MySQL et DynamoDB!");
       }
    }
-   if ($row->status == "Closed") {
+   if (!$row->bOpen) {
       return (object)array("success" => false, "message" => "Le concours lié à votre participation est actuellement fermé. Il réouvrira bientôt.");
    }
-   if ($row->endTime && $row->status == 'RunningContest') {
+   if ($row->endTime && $row->contestTime == 'present') {
       $stmt = $db->prepare("UPDATE `team` SET `endTime` = NULL WHERE `team`.`password` = ?");
       $stmt->execute(array($password));
    }
    $_SESSION["contestID"] = $row->contestID;
+   $_SESSION["contestTime"] = $row->contestTime;
+   $_SESSION["bContestMode"] = $row->bContestMode;
    $_SESSION["teamID"] = $row->teamID;
    $_SESSION["teamPassword"] = $password;
    $_SESSION["groupID"] = $row->groupID;
@@ -54,13 +56,11 @@ function commonLoginTeam($db, $password) {
    $_SESSION["newInterface"] = $row->newInterface;
    $_SESSION["fullFeedback"] = $row->fullFeedback;
    $_SESSION["contestFolder"] = $row->folder;
-   $_SESSION["contestStatus"] = $row->status;
    return (object)array(
       "success" => true,
       "name" => $row->name,
       "contestID" => $row->contestID,
       "contestFolder" => $row->folder,
-      "contestStatus" => $row->status,
       "nbMinutes" => $row->nbMinutes,
       "bonusScore" => $row->bonusScore,
       "allowTeamsOfTwo" => $row->allowTeamsOfTwo,

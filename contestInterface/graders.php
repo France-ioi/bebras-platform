@@ -15,7 +15,7 @@ if (!isset($_SESSION["teamID"])) {
 }
 
 $teamID = $_SESSION["teamID"];
-$query = "SELECT `contest`.`ID` as `ID`, `contest`.`folder` as `folder`, `contest`.`status` as `status`, `contest`.`fullFeedback` as `fullFeedback` FROM `team` JOIN `group` ON (`team`.`groupID` = `group`.`ID`) JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `team`.`ID` = ?";
+$query = "SELECT `contest`.`ID` as `ID`, `contest`.`folder` as `folder`, `contest`.`contestMode` as `contestMode`, `contest`.`fullFeedback` as `fullFeedback` FROM `team` JOIN `group` ON (`team`.`groupID` = `group`.`ID`) JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `team`.`ID` = ?";
 $stmt = $db->prepare($query);
 $stmt->execute(array($teamID));
 if (!($row = $stmt->fetchObject())) {
@@ -26,7 +26,7 @@ if (!($row = $stmt->fetchObject())) {
    exit;
 }
 
-if ($row->fullFeedback == 0 && (!isset($_SESSION["closed"]) || $row->status == 'RunningContest' || $row->status == 'FutureContest')) {
+if ($row->fullFeedback == 0 && (!isset($_SESSION["closed"]) || $row->contestMode == 1)) {
    echo json_encode(array(
       'status' => 'fail',
       'reason' => 'Participation officielle sans score en direct, évaluation impossible'

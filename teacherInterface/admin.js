@@ -435,19 +435,40 @@ function initModels(isLogged) {
                stype: "select"
             },
             year: {label: t("contest_year_label"), editable: true, edittype: "text", subtype:"int", width: 100},
-            status: {label: t("contest_status_label"), editable: true, edittype: "select", width: 100,
-               editoptions:{
+            bHidden: {
+               label: t("contest_hidden_label"),
+               editable: true,
+               edittype: "select", editoptions: editYesNo,
+               stype: "select", searchoptions: searchYesNo,
+               width: 100
+            },
+            bContestMode: {
+               label: t("contest_contestMode_label"),
+               editable: true,
+               edittype: "select", editoptions: editYesNo,
+               stype: "select", searchoptions: searchYesNo,
+               width: 100
+            },
+            bOpen: {
+               label: t("contest_open_label"),
+               editable: true,
+               edittype: "select", editoptions: editYesNo,
+               stype: "select", searchoptions: searchYesNo,
+               width: 100
+            },
+            contestTime: {
+              label: t("contest_contestMode_label"),
+               editable: true,
+               edittype: "select",
+               editoptions: {
                   value:{
-                     "FutureContest": t("option_future_contest"),
-                     "RunningContest": t("option_running_contest"),
-                     "PreRanking": t("option_preranking_contest"),
-                     "PastContest": t("option_past_contest"),
-                     "Other": t("option_other_contest"),
-                     "Closed": t("option_closed_contest"),
-                     "Hidden": t("option_hidden_contest")
+                     "past": t("option_past_contest"),
+                     "present": t("option_present_contest"),
+                     "future": t("option_future_contest")
                    }
                },
-               search: false
+               search: false,
+               width: 100
             },
             nbMinutes: {label: t("contest_nbMinutes_label"), editable: true, edittype: "text", subtype:"int", width: 100},
             bonusScore: {label: t("contest_bonusScore_label"), editable: true, edittype: "text", subtype:"int", width: 100},
@@ -1626,7 +1647,7 @@ function genContest() {
    tasks = []; // Reinit
    loadContests().done(function() {
       // Retrieve the tasks' list
-      $.post("generateContest.php", {contestID: contestID, contestFolder: contests[contestID].folder}, function(data) {
+      $.post("generateContest.php", {contestID: contestID, contestFolder: contests[contestID].folder, contestTime: contests[contestID].contestTime, bContestMode: contests[contestID].bContestMode}, function(data) {
          // Generate each tasks
          genTasks(data.questionsUrl, 0);
       }, 'json');
@@ -1683,7 +1704,7 @@ function genTasks(questionsUrl, curIndex)
       
       tasks = JSON.stringify(tasks);
       // XXX: status is needed only because of https://github.com/aws/aws-sdk-php/
-      $.post("generateContest.php", { contestID: contestID, contestFolder: contests[contestID].folder, 'tasks': tasks, fullFeedback: contests[contestID].fullFeedback, status: contests[contestID].status}, function(data) {
+      $.post("generateContest.php", { contestID: contestID, contestFolder: contests[contestID].folder, 'tasks': tasks, fullFeedback: contests[contestID].fullFeedback, contestTime: contests[contestID].contestTime, bContestMode: contests[contestID].bContestMode}, function(data) {
          if (data.success) {
             jqAlert(t("contest_generated"));
          } else {
@@ -1792,7 +1813,8 @@ function newForm(modelName, title, message) {
                var optionParts = optionsList[iOption].split(":");
                if (fieldName == "contestID") {
                   var contest = getContestFromID(optionParts[0]);
-                  if (contest && contest.status == 'PreRanking') {
+                  // can we add a group to a contest? not to past ones
+                  if (contest && contest.contestTime == 'past') {
                      continue;
                   }
                }
@@ -2073,7 +2095,7 @@ function validateForm(modelName) {
          return;
       }
       var contest = contests[item.contestID];
-      if ((contest.status != "RunningContest") && (contest.status != "FutureContest") && (contest.status != "PreRanking")) {
+      if (contest.bContestMode != 1) {
          if (item.participationType == "Official") {
             alert(t("official_contests_restricted"));
             return;
