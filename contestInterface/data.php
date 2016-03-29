@@ -8,7 +8,7 @@ include_once("common_contest.php");
 function loadPublicGroups($db) {
    restartSession();
    $stmt = $db->prepare("SELECT `group`.`name`, `group`.`code`, `contest`.`year`, `contest`.`category`, `contest`.`level` ".
-      "FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `isPublic` = 1 AND `contest`.`status` <> 'Hidden'");
+      "FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `isPublic` = 1 AND `contest`.`status` <> 'Hidden' and `contest`.`status` <> 'RunningContest';");
    $stmt->execute(array());
    $groups = array();
    while ($row = $stmt->fetchObject()) {
