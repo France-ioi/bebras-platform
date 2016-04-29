@@ -1403,7 +1403,7 @@ function gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questio
       }
       else {
          try {
-            if (teamQuestion.answer.length > 2000) {
+            if (teamQuestion.answer.length > 200000) {
                scores[i].score = 0;
                console.log('Answer too long scored 0 : questionID='+teamQuestion.questionID+' teamID='+teamQuestion.teamID);
             }
