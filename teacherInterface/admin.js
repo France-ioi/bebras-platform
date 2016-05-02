@@ -12,7 +12,7 @@ var filterSchoolID = "0";
 var filterGroupID = "0";
 var tasks = [];
 var generating = false;
-var gradePackSize = 100;
+var gradePackSize = 20;
 var curGradingData = null;
 var curGradingBebras = null;
 var curGradingScoreCache = {};
@@ -1363,11 +1363,7 @@ function gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questio
    
    var scores = {};
    var i = 0;
-   function gradeCallbackFactory(scores, i) {
-      return function(score) {
-         scores[i].score = score;
-      };
-   }
+   var answersToGrade = {};
    for (var curTeamQuestion = curPackIndex; curTeamQuestion < packEndIndex; curTeamQuestion++) {
       var teamQuestion = curGradingData.teamQuestions[curTeamQuestion];
 
@@ -1385,7 +1381,9 @@ function gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questio
       scores[i].score = '';
       scores[i].questionID = teamQuestion.questionID;
       scores[i].teamID = teamQuestion.teamID;
-      scores[i].answer = teamQuestion.answer;
+      if (teamQuestion.answer.length < 100) {
+         scores[i].answer = teamQuestion.answer;
+      }
       scores[i].contestID = curContestID;
       scores[i].groupID = curGroupID;
       scores[i].usesRandomSeed = usesRandomSeed;
@@ -1408,7 +1406,7 @@ function gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questio
                console.log('Answer too long scored 0 : questionID='+teamQuestion.questionID+' teamID='+teamQuestion.teamID);
             }
             else {
-               task.gradeAnswer($.trim(teamQuestion.answer), null, gradeCallbackFactory(scores, i));
+               answersToGrade[i] = $.trim(teamQuestion.answer);
             }
          }
          catch (e) {
@@ -1433,7 +1431,27 @@ function gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questio
       return;
    }
    
-   // Send the computed scores to the platform
+   gradeOneAnswer(task, answersToGrade, 0, scores, function() {
+      gradeQuestionPackEnd(task, curContestID, curGroupID, questionKeys, questionFolders, curIndex, curPackIndex, scores, selectorState);
+   });
+}
+
+function gradeOneAnswer(task, answers, i, scores, finalCallback) {
+   answer = answers[i];
+   if (!answer) {
+      finalCallback();
+      return;
+   }
+   task.gradeAnswer(answer, null, function(score) {
+      scores[i].score = score;
+      setTimeout(function() {
+         gradeOneAnswer(task, answers, i+1, scores, finalCallback);
+      },0);
+   });
+}
+
+function gradeQuestionPackEnd(task, curContestID, curGroupID, questionKeys, questionFolders, curIndex, curPackIndex, scores, selectorState) {
+      // Send the computed scores to the platform
    $.post('scores.php', { scores: scores, questionKey: curGradingData.questionKey, groupMode: (typeof curGroupID !== 'undefined') },function(data) {
       if (data.status !== 'success') {
          jqAlert('Something went wrong while sending those scores : '+JSON.stringify(scores));

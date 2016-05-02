@@ -1,6 +1,9 @@
 <?php 
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 
+//echo json_encode((object)array("status" => 'success'));
+//exit();
+
 require_once("../shared/common.php");
 require_once("commonAdmin.php");
 
@@ -41,6 +44,7 @@ if ($groupID) {
       echo json_encode((object)array("status" => 'error', "message" => "Le groupe n'existe pas ou vous n'y avez pas accès (grader.php)"));
       exit;
    }
+   $stmt->closeCursor();
 } else {
    // Check contest existance
    $query = "SELECT `ID`, `folder`, `year` FROM `contest` WHERE `ID` = ?";
@@ -51,6 +55,7 @@ if ($groupID) {
       echo json_encode((object)array("status" => 'error', "message" => "Le concours n'existe pas"));
       exit;
    }
+   $stmt->closeCursor();
 }
 
 $teamQuestionTable = getTeamQuestionTableForGrading();
@@ -61,6 +66,7 @@ foreach ($_POST['scores'] as $scoreInfos) {
       echo json_encode((object)array("status" => 'error', "message" => "Le groupe ou le concours n'est pas le même entre les enregistrements"));
       exit;
    }
+   if ($scoreInfos['score'] == '') {$scoreInfos['score']= null;}
    if ($contestID) {
       $query = "
       UPDATE `team`
@@ -68,17 +74,16 @@ foreach ($_POST['scores'] as $scoreInfos) {
       JOIN `group` ON (`team`.`groupID` = `group`.`ID`)
       SET `".$teamQuestionTable."`.`score` = ?
       WHERE `group`.`contestID` = ?
-      AND `".$teamQuestionTable."`.`questionID`= ?
-      AND `".$teamQuestionTable."`.`answer` = ?
-      ";
-      $args = array($scoreInfos['score'], $scoreInfos['contestID'], $scoreInfos['questionID'], $scoreInfos['answer']);
-      if ($scoreInfos['usesRandomSeed'] == "true") {
+      AND `".$teamQuestionTable."`.`questionID`= ?";
+      $args = array($scoreInfos['score'], $scoreInfos['contestID'], $scoreInfos['questionID']);
+      if ($scoreInfos['usesRandomSeed'] == "true" || !$scoreInfos['answer']) {
          $query .= " AND `team`.`ID` = ?";
          $args[] = $scoreInfos['teamID'];
+      } else {
+         $query .= "AND `".$teamQuestionTable."`.`answer` = ?";
+         $args[] = $scoreInfos['answer'];
       }
-      if (!$stmtUpdate) {
-         $stmtUpdate = $db->prepare($query);
-      }
+      $stmtUpdate = $db->prepare($query);
    } else {
       $query = "
          UPDATE `team`
