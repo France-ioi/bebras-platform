@@ -1437,9 +1437,13 @@ function gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questio
 }
 
 function gradeOneAnswer(task, answers, i, scores, finalCallback) {
+   if (!scores[i]) {
+      finalCallback();
+      return;
+   }
    answer = answers[i];
    if (!answer) {
-      finalCallback();
+      gradeOneAnswer(task, answers, i+1, scores, finalCallback);
       return;
    }
    task.gradeAnswer(answer, null, function(score) {
