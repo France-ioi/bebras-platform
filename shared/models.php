@@ -7,10 +7,20 @@ $tablesModels = array (
       "hasHistory" => false,
       "fields" => array(
          "code" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user"))),
-         "contestantID" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user"))),
+         "contestantID" => array("type" => "int", "access" => array("write" => array("user"), "read" => array("user"))),
          "franceioiID" => array("type" => "int", "access" => array("write" => array("user"), "read" => array("user")))
       ),
-      "hasHistory" => false
+   ),
+   "award_threshold" => array(
+      "autoincrementID" => true,
+      "hasHistory" => false,
+      "fields" => array(
+         "contestantID" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("user"))),
+         "gradeID" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("user"))),
+         "awardID" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("user"))),
+         "nbContestants" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("user"))),
+         "minScore" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("user")))
+      ),
    ),
    "contestant" => array(
       "autoincrementID" => false,
@@ -261,7 +271,7 @@ $viewsModels = array(
          "groupField" => $fieldGroupFilter,
          "score" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`score` = :[PREFIX_FIELD]score"),
          "printable" => array("joins" => array("contest"), "condition" => "`[PREFIX]contest`.`showResults` = 1", "ignoreValue" => true),
-         "schoolID" => array("joins" => array(), "condition" => "`[PREFIX]contestant`.`cached_schoolID` = :[PREFIX_FIELD]schoolID"),
+         "schoolID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`schoolID` = :[PREFIX_FIELD]schoolID"),
          "userID" => array("joins" => array("user_user"), "condition" => "(`group`.`userID` = :[PREFIX_FIELD]userID OR (`[PREFIX]user_user`.`targetUserID` = :[PREFIX_FIELD]userID AND `[PREFIX]user_user`.`accessType` <> 'none'))"),
          "ownerUserID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`userID` = :[PREFIX_FIELD]ownerUserID"),
          "awarded" => array("joins" => array("group", 'team', 'award_threshold'), "ignoreValue" => true, "condition" => "(`[PREFIX]team`.`participationType` = 'Official' and `[PREFIX]contestant`.`rank` is not null and `[PREFIX]award_threshold`.`minScore` <= [PREFIX]team.score)")
@@ -274,6 +284,26 @@ $viewsModels = array(
          array('field' => 'lastName'),
          array('field' => 'firstName'),
       )
+   ),
+
+   'award_threshold' => array(
+      'mainTable' => 'award_threshold',
+      'adminOnly' => false,
+      'joins'     => array(
+         "group" => array("srcTable" => "award_threshold", "srcField" => "contestID", "dstTable" => 'group', "dstField" => "contestID"),
+      ),
+      'fields' => array(
+         "contestID" => array(),
+         "gradeID" => array(),
+         "awardID" => array(),
+         "nbContestants" => array(),
+         "awardID" => array(),
+         "minScore" => array(),
+      ),
+      "filters" => array(
+         "groupID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`ID` = :groupID"),
+         "contestID" => array("condition" => "`[PREFIX]award_threshold`.`contestID` = :contestID")
+      ),
    ),
 
    "contestant" => array(
@@ -309,7 +339,7 @@ $viewsModels = array(
          "score" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`score` = :score"),
          "contestID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`contestID` = :contestID"),
          "groupID" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`groupID` = :groupID"),
-         "schoolID" => array("joins" => array(), "condition" => "`[PREFIX]contestant`.`cached_schoolID` = :schoolID"),
+         "schoolID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`schoolID` = :schoolID"),
          "userID" => array("joins" => array("user_user"), "condition" => "(`group`.`userID` = :userID OR (`[PREFIX]user_user`.`targetUserID` = :userID AND `[PREFIX]user_user`.`accessType` <> 'none'))"),
          "ownerUserID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`userID` = :[PREFIX_FIELD]ownerUserID"),
       ),
@@ -346,7 +376,7 @@ $viewsModels = array(
       "filters" => array(
          "groupField" => $fieldGroupFilter,
          "score" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`score` = :score"),
-         "schoolID" => array("joins" => array(), "condition" => "`[PREFIX]contestant`.`cached_schoolID` = :schoolID"),
+         "schoolID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`schoolID` = :schoolID"),
          "userID" => array("joins" => array("user_user"), "condition" => "(`group`.`userID` = :userID OR (`[PREFIX]user_user`.`targetUserID` = :userID AND `[PREFIX]user_user`.`accessType` <> 'none'))"),
          "ownerUserID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`userID` = :[PREFIX_FIELD]ownerUserID"),
       ),
