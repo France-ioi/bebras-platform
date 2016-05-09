@@ -1,0 +1,2 @@
+ALTER TABLE `contest` ADD `printCodes` TINYINT(1) NOT NULL DEFAULT '0' AFTER `printCertificates`;
+ALTER TABLE `history_contest` ADD `printCodes` TINYINT(1) NOT NULL DEFAULT '0' AFTER `printCertificates`;

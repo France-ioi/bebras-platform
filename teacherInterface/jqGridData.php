@@ -528,7 +528,7 @@ function selectRecordsForJQGrid($db, $modelName, $params, $roles) {
 
    if ($modelName == 'award1') {
       $request['filters']['awarded'] = true;
-      $request['filters']['printable'] = true;
+      $request['filters']['showable'] = true;
       $request['orders'] = $model['orders'];
    }
 

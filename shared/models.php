@@ -63,6 +63,7 @@ $tablesModels = array (
          "rankNbContestants" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "printCertificates" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "showResults" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "printCodes" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "certificateStringsName" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
       )
    ),
@@ -270,7 +271,8 @@ $viewsModels = array(
       "filters" => array(
          "groupField" => $fieldGroupFilter,
          "score" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`score` = :[PREFIX_FIELD]score"),
-         "printable" => array("joins" => array("contest"), "condition" => "`[PREFIX]contest`.`showResults` = 1", "ignoreValue" => true),
+         "printable" => array("joins" => array("contest"), "condition" => "`[PREFIX]contest`.`printCodes` = 1", "ignoreValue" => true),
+         "showable" => array("joins" => array("contest"), "condition" => "`[PREFIX]contest`.`showResults` = 1", "ignoreValue" => true),
          "schoolID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`schoolID` = :[PREFIX_FIELD]schoolID"),
          "userID" => array("joins" => array("user_user"), "condition" => "(`group`.`userID` = :[PREFIX_FIELD]userID OR (`[PREFIX]user_user`.`targetUserID` = :[PREFIX_FIELD]userID AND `[PREFIX]user_user`.`accessType` <> 'none'))"),
          "ownerUserID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`userID` = :[PREFIX_FIELD]ownerUserID"),
@@ -586,7 +588,8 @@ $viewsModels = array(
             "groupBy" => "`contest`.`ID`"),
          "showResults" => array(),
          "printCertificates" => array(),
-         "certificateStringsName" => array()
+         "certificateStringsName" => array(),
+         "printCodes" => array(),
       ),
       "filters" => array(
          "statusNotHidden" => array(
