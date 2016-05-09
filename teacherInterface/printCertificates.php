@@ -60,6 +60,17 @@
             );
          };
 
+         var thresholdsByGrade = {};
+         function getThresholds() {
+            for (var iThreshold in allData.award_threshold) {
+               threshold = allData.award_threshold[iThreshold];
+               if (!thresholdsByGrade[threshold.gradeID]) {
+                  thresholdsByGrade[threshold.gradeID] = {};
+               }
+               thresholdsByGrade[threshold.gradeID][threshold.nbContestants] = threshold.minScore;
+            } 
+         }
+
          function getTotalContestants(params, callback) {
             return $.post("dataCertificates.php", params,
                function(data) {
@@ -142,6 +153,13 @@
                diplomaContestant.contest = allData.contest[contestant.contestID];
                diplomaContestant.user = allData.users[contestant.userID];
                diplomaContestant.school = allData.school[contestant.schoolID];
+               if (thresholdsByGrade[contestant.grade] && thresholdsByGrade[contestant.grade][contestant.nbContestants]) {
+                  if (diplomaContestant.score >= thresholdsByGrade[contestant.grade][contestant.nbContestants]) {
+                     diplomaContestant.qualified = true;
+                  } else {
+                     diplomaContestant.qualified = false;
+                  }
+               }
                if (contest.rankGrades == '1' && contest.rankNbContestants == '1') {
                   diplomaContestant.schoolParticipants = allData.schoolContestants[contestant.grade + "_" + contestant.nbContestants];
                   diplomaContestant.contestParticipants = allData.contestContestants[contestant.grade + "_" + contestant.nbContestants];
@@ -213,12 +231,20 @@
                var iDiploma, diploma;
                for (iDiploma in contestantPerGroup[groupID]) {
                   diploma = contestantPerGroup[groupID][iDiploma];
+                  qualificationStr = '';
+                  if (diploma.algoreaCode) {
+                     qualificationStr = diploma.algoreaCode;
+                  } else if (diploma.qualified === true) {
+                     qualificationStr = i18n.t('option_yes');
+                  } else if (diploma.qualified === false) {
+                     qualificationStr = i18n.t('option_no');
+                  }
                   s += "<tr>" +
                      "<td>" + diploma.lastName + "</td>" +
                      "<td>" + diploma.firstName + "</td>" +
                      "<td>" + diploma.genre + "</td>" +
                      "<td>" + i18n.t('grade_'+diploma.grade) + "</td>" +
-                     "<td>" + (diploma.algoreaCode ? diploma.algoreaCode : '') + "</td>" +
+                     "<td>" + qualificationStr + "</td>" +
                      "<td>" + i18n.t('nbContestants_'+diploma.nbContestants) + "</td>" +
                      "<td>" + diploma.score + "/" + diploma.contest.maxScore + "</td>" +
                      "<td>" + diploma.rank + "/" + diploma.contestParticipants + "</td>" +
@@ -229,7 +255,7 @@
                s += "</table></center></div>";
                for (iDiploma in contestantPerGroup[groupID]) {
                   diploma = contestantPerGroup[groupID][iDiploma];
-                  var levelNbContestants = i18n.t('grade_'+diploma.grade);
+                  var levelNbContestants = 'Catégorie '+i18n.t('grade_'+diploma.grade);
                   if (allData.contest[group.contestID].rankNbContestants == '1') {
                      levelNbContestants += " - " + i18n.t('nbContestants_'+diploma.nbContestants);
                   }
@@ -240,7 +266,8 @@
                      schoolRankOrdinal: toOrdinal(diploma.schoolRank),
                      maxRank: diploma.contestParticipants,
                      maxSchoolRank: diploma.schoolParticipants,
-                     name: diploma.lastName+' '+diploma.firstName
+                     name: diploma.lastName+' '+diploma.firstName,
+                     grade: i18n.t("grade_"+diploma.grade)
                   };
                   if (diploma.rank <= diploma.contestParticipants / 2) {
                      if (diploma.schoolRank <= diploma.schoolParticipants / 2) {
@@ -263,9 +290,12 @@
                      interpolation: {prefix: '__', suffix: '__'}
                   };
                   var qualificationCode = '';
+                  var context = (diploma.genre == '1' ? 'female' : 'male');
                   if (diploma.algoreaCode) {
-                     var context = (diploma.genre == '1' ? 'female' : 'male');
                      qualificationCode = i18n.t('diploma_code', {code: diploma.algoreaCode, context: context});
+                     translateParameters.context = 'withQualificationCode';
+                  } else if (diploma.qualified === true) {
+                     qualificationCode = i18n.t('diploma_code', {context: context});
                      translateParameters.context = 'withQualificationCode';
                   }
                   translateParameters.qualificationCode = qualificationCode;
@@ -282,10 +312,13 @@
                      loadData("colleagues", function() {
                         loadData("user", function() {
                            mergeUsers();
-                           loadData("contest", function() {
-                              getTotalContestants(params, function() {
-                                 getStrings(params);
-                              });
+                           loadData("award_threshold", function() {
+                              getThresholds();
+                              loadData("contest", function() {
+                                 getTotalContestants(params, function() {
+                                    getStrings(params);
+                                 });
+                              }, params);
                            }, params);
                         });
                      });
