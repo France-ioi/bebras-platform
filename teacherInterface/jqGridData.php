@@ -440,6 +440,9 @@ function selectRecords($db, $modelName, $recordID, $roles, $extraFilters = array
          if (isset($extraFilters["groupID"])) {
             $request["filters"]["recordID"] = $extraFilters["groupID"];
          }
+         if (isset($extraFilters["contestID"])) {
+            $request["filters"]["contestID"] = $extraFilters["contestID"];
+         }
          $request["filters"]["checkAccessUserID"] = $_SESSION["userID"];
          $request["filters"]["checkSchoolUserID"] = $_SESSION["userID"];
       } else if ($modelName === "contest") {
@@ -467,7 +470,12 @@ function selectRecords($db, $modelName, $recordID, $roles, $extraFilters = array
          $request["filters"]["userID"] = $_SESSION["userID"];
       } else if ($modelName === "user") {
          $request["filters"]["recordID"] = $_SESSION["userID"];
+      } else if ($modelName === "award_threshold") {
+         if (isset($extraFilters["contestID"])) {
+            $request["filters"]["contestID"] = $extraFilters["contestID"];
+         }
       } else {
+         echo json_encode(array("success" => false, "message" => 'unknown model name: '.$modelName));
          return;
       }
    }
