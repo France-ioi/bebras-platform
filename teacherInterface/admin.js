@@ -941,11 +941,20 @@ function continueLogUser() {
 
 function getPersonalCode() {
    $.post('personalQualificationCode.php', {}, function(data) {
-      if (!data.code) {
-         $('#withPersonalCode').hide();
-      } else {
-         $('#personalCode').html(data.code);
+      if (!data.success) {
          $('#noPersonalCode').hide();
+         $('#withPersonalCode').hide();
+         console.error(data.error);
+      } else {
+         if (data.code === false) {
+            $('#noPersonalCode').hide();
+            $('#withPersonalCode').hide();
+         } else if (!data.code){
+            $('#withPersonalCode').hide();
+         } else {
+            $('#personalCode').html(data.code);
+            $('#noPersonalCode').hide();
+         }
       }
    }, 'json');
 }

@@ -5,14 +5,14 @@ require_once("commonAdmin.php");
 require_once("../commonFramework/modelsManager/modelsTools.inc.php");
 
 if (!isset($_SESSION['userID'])) {
-   echo "Votre session a expiré, veuillez vous reconnecter.";
+   die(json_encode(array('success' => false, 'error' => "Votre session a expiré, veuillez vous reconnecter.")));
    exit();
 }
 
-function getPersonalCode() {
+function getPersonalCode($contestID) {
 	global $db;
-	$stmt = $db->prepare('select algoreaCode from contestant where userID = :userID;');
-	$stmt->execute(['userID' => $_SESSION['userID']]);
+	$stmt = $db->prepare('select algoreaCode from contestant join team on team.ID = contestant.teamID join `group` on `group`.ID = team.groupID where contestant.userID = :userID and `group`.contestID = :contestID;');
+	$stmt->execute(['userID' => $_SESSION['userID'], 'contestID' => $contestID]);
 	return $stmt->fetchColumn();
 }
 
@@ -45,23 +45,19 @@ function getPublicGroupID($contestID) {
 	return $stmt->fetchColumn();
 }
 
-function createPersonalCode() {
+function createPersonalCode($contestID) {
 	global $db, $config;
 	$code = generateRandomCode();
 	$stmt = $db->prepare('select firstName, lastName, gender from user where ID = :userID;');
 	$stmt->execute(['userID' => $_SESSION['userID']]);
 	$user = $stmt->fetch();
 	if (!$user) {
-		die("Error, cannot find user ID ".$_SESSION['userID']."!");
+		die(json_encode(array('success' => false, 'error' => "Error, cannot find user ID ".$_SESSION['userID']."!")));
 	}
 	$genre = $user['gender'] == 'F' ? 1 : 2;
-	$contestID = $config->teacherInterface->teacherPersonalCodeContestID;
-	if (!$contestID) {
-		die("Error, cannot find current contest!");
-	}
 	$groupID = getPublicGroupID($contestID);
 	if (!$groupID) {
-		die("Error, cannot find public group for current contest!");
+		die(json_encode(array('success' => false, 'error' => "Error, cannot find public group for current contest!")));
 	}
 	$teamID = getRandomID();
 	$contestantID = getRandomID();
@@ -85,8 +81,12 @@ function createPersonalCode() {
 	return $code;
 }
 
-$personalCode = getPersonalCode();
-if (isset($_POST['create']) && !$personalCode) {
-	$personalCode = createPersonalCode();
+$contestID = $config->teacherInterface->teacherPersonalCodeContestID;
+if (!$contestID) {
+	die(json_encode(array('success' => true, 'code' => false)));
 }
-echo json_encode(array('code' => $personalCode));
+$personalCode = getPersonalCode($contestID);
+if (isset($_POST['create']) && !$personalCode) {
+	$personalCode = createPersonalCode($contestID);
+}
+echo json_encode(array('success' => true, 'code' => $personalCode));
