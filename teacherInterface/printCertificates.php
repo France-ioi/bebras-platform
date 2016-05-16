@@ -67,7 +67,7 @@
                if (!thresholdsByGrade[threshold.gradeID]) {
                   thresholdsByGrade[threshold.gradeID] = {};
                }
-               thresholdsByGrade[threshold.gradeID][threshold.nbContestants] = threshold.minScore;
+               thresholdsByGrade[threshold.gradeID][threshold.nbContestants] = parseInt(threshold.minScore);
             } 
          }
 
@@ -145,7 +145,7 @@
                   grade: contestant.grade,
                   algoreaCode: contestant.algoreaCode,
                   nbContestants: contestant.nbContestants,
-                  score: contestant.score,
+                  score: parseInt(contestant.score),
                   rank: contestant.rank,
                   schoolRank: contestant.schoolRank,
                   level: contestant.level
