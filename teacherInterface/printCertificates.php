@@ -255,7 +255,7 @@
                s += "</table></center></div>";
                for (iDiploma in contestantPerGroup[groupID]) {
                   diploma = contestantPerGroup[groupID][iDiploma];
-                  var levelNbContestants = 'Catégorie '+i18n.t('grade_'+diploma.grade);
+                  var levelNbContestants = i18n.t('translations_category_label')+' '+i18n.t('grade_'+diploma.grade);
                   if (allData.contest[group.contestID].rankNbContestants == '1') {
                      levelNbContestants += " - " + i18n.t('nbContestants_'+diploma.nbContestants);
                   }
