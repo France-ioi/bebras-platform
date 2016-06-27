@@ -65,6 +65,8 @@ $tablesModels = array (
          "showResults" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "printCodes" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "certificateStringsName" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "startDate" => array("type" => "date", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "endDate" => array("type" => "date", "access" => array("write" => array("admin"), "read" => array("admin"))),
       )
    ),
    "contest_question" => array(
