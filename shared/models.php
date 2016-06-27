@@ -50,6 +50,7 @@ $tablesModels = array (
          "year" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "category" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "status" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "visibility" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "nbMinutes" =>  array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "bonusScore" =>  array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "allowTeamsOfTwo" =>  array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
