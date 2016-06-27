@@ -51,6 +51,7 @@ $tablesModels = array (
          "category" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "status" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "visibility" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "ranked" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "nbMinutes" =>  array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "bonusScore" =>  array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "allowTeamsOfTwo" =>  array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
@@ -447,9 +448,7 @@ $viewsModels = array(
          ),
          "checkOfficial" => array(
             "joins" => array("contest"),
-            "condition" => "((`[PREFIX]contest`.`status` = 'FutureContest') OR ".
-                            "(`[PREFIX]contest`.`status` = 'RunningContest') OR ".
-                            "(`[PREFIX]contest`.`status` = 'PreRanking') OR ".
+            "condition" => "((`[PREFIX]contest`.`ranked` = 'NotRanked') OR ".
                             "(`[PREFIX]group`.`participationType` = 'Unofficial'))",
             "ignoreValue" => true
          ),
