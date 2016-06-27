@@ -442,7 +442,7 @@ $viewsModels = array(
       "filters" => array(
          "statusNotHidden" => array(
             "joins" => array("contest"),
-            "condition" => "(`[PREFIX]contest`.`status` <> 'Hidden')",
+            "condition" => "(`[PREFIX]contest`.`visibility` <> 'Hidden')",
             "ignoreValue" => true
          ),
          "checkOfficial" => array(
