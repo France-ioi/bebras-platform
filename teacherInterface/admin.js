@@ -2421,6 +2421,6 @@ function init() {
       $('#buttonGenerateAlgoreaCodes').show();
    }
    $('input[type=button]', this).attr('disabled', false);
-    
-   checkForSessionTimeout();
+
+    setTimeout(checkForSessionTimeout, 10000);
 }
