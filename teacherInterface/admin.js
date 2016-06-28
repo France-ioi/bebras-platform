@@ -2364,8 +2364,8 @@ function printAlgoreaCodes() {
 function checkForSessionTimeout() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
-        if (xhttp.readyState == 4 && xhttp.status == 200) {            
-            if (xhttp.responseText[0] == "1") {
+        if (xhttp.readyState == 4) {
+            if ( xhttp.status == 200 && xhttp.responseText[0] == "1" ) {
                 setTimeout(checkForSessionTimeout, 10000);
             }
             else {
