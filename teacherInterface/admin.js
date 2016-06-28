@@ -2361,9 +2361,21 @@ function printAlgoreaCodes() {
    window.open('awardsPrint.php', "printAlgoreaCodes", 'width=700,height=600');
 }
 
-function checkForSessionTimout() {
-    jqAlert(t("session_timeout"));
-    setTimeout(checkForSessionTimout, 10000)
+function checkForSessionTimeout() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {            
+            if (xhttp.responseText[0] == "1") {
+                setTimeout(checkForSessionTimeout, 10000);
+            }
+            else {
+                jqAlert(t("session_timeout"));
+            }
+        }
+    };
+    xhttp.open("GET", "sessionCheck.php", true);
+    xhttp.send();
+
 }
 
 function init() {
@@ -2409,5 +2421,6 @@ function init() {
       $('#buttonGenerateAlgoreaCodes').show();
    }
    $('input[type=button]', this).attr('disabled', false);
+    
    checkForSessionTimeout();
 }
