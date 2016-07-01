@@ -2110,6 +2110,12 @@ function validateForm(modelName) {
             return;
          }
       }
+
+      if ((contest.status == "RunningContest") && (contest.status == "FutureContest" && item.participationType == "Official") {
+         if (true /* TODO: if stating time beyond contest end time */) {
+            jqAlert(t("warning_contest_will_be_over"));
+         }
+      }
    }
    $("#edit_form_error").html("");
    $("#buttonValidate_" + modelName).attr("disabled", true);
