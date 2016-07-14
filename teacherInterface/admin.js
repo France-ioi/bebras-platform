@@ -2161,7 +2161,6 @@ function endEditForm(modelName, recordID, item) {
    }
    $("#edit_form").hide();
    $("#main_screen").show();   
-   $("#headerWarning").show();
 }
 
 function newSchool() {
