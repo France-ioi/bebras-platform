@@ -2167,7 +2167,6 @@ function endEditForm(modelName, recordID, item) {
    }
    $("#edit_form").hide();
    $("#main_screen").show();   
-   $("#headerWarning").show();
 }
 
 function newSchool() {
@@ -2367,6 +2366,23 @@ function printAlgoreaCodes() {
    window.open('awardsPrint.php', "printAlgoreaCodes", 'width=700,height=600');
 }
 
+function checkForSessionTimeout() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4) {
+            if ( xhttp.status == 200 && xhttp.responseText[0] == "1" ) {
+                setTimeout(checkForSessionTimeout, 10000);
+            }
+            else {
+                jqAlert(t("session_timeout"));
+            }
+        }
+    };
+    xhttp.open("GET", "sessionCheck.php", true);
+    xhttp.send();
+
+}
+
 function init() {
    initErrorHandler();
    i18n.init({
@@ -2410,4 +2426,6 @@ function init() {
       $('#buttonGenerateAlgoreaCodes').show();
    }
    $('input[type=button]', this).attr('disabled', false);
+
+    setTimeout(checkForSessionTimeout, 10000);
 }
