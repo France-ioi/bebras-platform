@@ -434,7 +434,7 @@ function initModels(isLogged) {
                      },
                stype: "select"
             },
-            year: {label: t("contest_year_label"), editable: true, edittype: "text", subtype:"int", width: 100},
+            year: {label: t("contest_year_label"), editable: true, edittype: "text", subtype:"int", width: 40},
 /*            status: {label: t("contest_status_label"), editable: true, edittype: "select", width: 100,
                editoptions:{
                   value:{
@@ -449,7 +449,7 @@ function initModels(isLogged) {
                },
                search: false
             },*/
-            status: {label: t("contest_status_label"), editable: true, edittype: "select", width: 100,
+            status: {label: t("contest_status_label"), editable: true, edittype: "select", width: 70,
                editoptions:{
                   value:{
                      "Open": t("option_open_contest"),
@@ -458,7 +458,7 @@ function initModels(isLogged) {
                },
                search: false
             },
-            visibility: {label: t("contest_vibility_label"), editable: true, edittype: "select", width: 100,
+            visibility: {label: t("contest_vibility_label"), editable: true, edittype: "select", width: 70,
                editoptions:{
                   value:{
                      "Hidden": t("option_hidden_contest"),
@@ -466,7 +466,17 @@ function initModels(isLogged) {
                    }
                },
                search: false
+            },
+            ranked: {label: t("contest_ranked_label"), editable: true, edittype: "select", width: 70,
+               editoptions:{
+                  value:{
+                     "NotRanked": t("option_notranked_contest"),
+                     "Ranked": t("option_ranked_contest"),
+                   }
+               },
+               search: false
             },             
+
             beginDate: {label: t("contest_begin_date_label"), editable: true, edittype: "text", width: 100},
             endDate: {label: t("contest_end_date_label"), editable: true, edittype: "text", width: 100},             
             nbMinutes: {label: t("contest_nbMinutes_label"), editable: true, edittype: "text", subtype:"int", width: 100},
@@ -2124,7 +2134,7 @@ function validateForm(modelName) {
          return;
       }
       var contest = contests[item.contestID];
-      if ((contest.status != "RunningContest") && (contest.status != "FutureContest") && (contest.status != "PreRanking")) {
+      if ((contest.ranked != "Ranked")) {
          if (item.participationType == "Official") {
             alert(t("official_contests_restricted"));
             return;
