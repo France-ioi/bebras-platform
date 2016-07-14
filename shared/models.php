@@ -451,6 +451,7 @@ $viewsModels = array(
          "checkOfficial" => array(
             "joins" => array("contest"),
             "condition" => "((`[PREFIX]contest`.`ranked` = 'NotRanked') OR ".
+            // "condition" => "((`[PREFIX]contest`.`status` = 'Open') OR ".
                             "(`[PREFIX]group`.`participationType` = 'Unofficial'))",
             "ignoreValue" => true
          ),

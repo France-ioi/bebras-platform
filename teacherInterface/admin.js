@@ -435,7 +435,7 @@ function initModels(isLogged) {
                stype: "select"
             },
             year: {label: t("contest_year_label"), editable: true, edittype: "text", subtype:"int", width: 100},
-            status: {label: t("contest_status_label"), editable: true, edittype: "select", width: 100,
+/*            status: {label: t("contest_status_label"), editable: true, edittype: "select", width: 100,
                editoptions:{
                   value:{
                      "FutureContest": t("option_future_contest"),
@@ -448,7 +448,27 @@ function initModels(isLogged) {
                    }
                },
                search: false
+            },*/
+            status: {label: t("contest_status_label"), editable: true, edittype: "select", width: 100,
+               editoptions:{
+                  value:{
+                     "Open": t("option_open_contest"),
+                     "Closed": t("option_closed_contest"),
+                   }
+               },
+               search: false
             },
+            visibility: {label: t("contest_vibility_label"), editable: true, edittype: "select", width: 100,
+               editoptions:{
+                  value:{
+                     "Hidden": t("option_hidden_contest"),
+                     "Visible": t("option_visible_contest"),
+                   }
+               },
+               search: false
+            },             
+            beginDate: {label: t("contest_begin_date_label"), editable: true, edittype: "text", width: 100},
+            endDate: {label: t("contest_end_date_label"), editable: true, edittype: "text", width: 100},             
             nbMinutes: {label: t("contest_nbMinutes_label"), editable: true, edittype: "text", subtype:"int", width: 100},
             bonusScore: {label: t("contest_bonusScore_label"), editable: true, edittype: "text", subtype:"int", width: 100},
             allowTeamsOfTwo: {
