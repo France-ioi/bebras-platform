@@ -6,3 +6,5 @@ UPDATE `contest` SET `startDate` = NOW() - INTERVAL 2 YEAR, `endDate` = NOW() WH
 UPDATE `contest` SET `visibilty` = 'Visible' WHERE `status` != 'Hidden';
 
 ALTER TABLE  `contest` CHANGE  `status`  `status` ENUM(  'Open',  'Closed' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT  'Open';
+
+UPDATE `contest` SET `status` = 'Open';
