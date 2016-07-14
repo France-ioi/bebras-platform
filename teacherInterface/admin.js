@@ -2133,17 +2133,35 @@ function validateForm(modelName) {
       if (!item.schoolID) {
          return;
       }
+
+      /* Converts a string of the form "2018-07-14 16:53:28" or
+       * "19/07/2016" to date (forgetting about the time) */
+      function toDate(dateStr, sep, rev) {
+         var dateOnly = dateStr.split(" ")[0];
+         var parts = dateOnly.split(sep);
+         if (rev) {
+             return new Date(parts[0], parts[1] - 1, parts[2]);
+         }
+         return new Date(parts[2], parts[1] - 1, parts[0]);
+      }
+       
       var contest = contests[item.contestID];
-      if ((contest.ranked != "Ranked")) {
-         if (item.participationType == "Official") {
-            alert(t("official_contests_restricted"));
+
+      var contestBeginDate = toDate(contest.startDate, "-", true);
+      var contestEndDate = toDate(contest.endDate, "-", true);
+      var date = toDate($("#group_expectedStartTime_date").val(), "/", false);
+      var today = new Date();
+
+      if (contest.ranked == "Ranked" && item.participationType == "Official") {
+         if (today > contestEndDate) {
+            jqAlert(t("official_contests_restricted"));
             return;
          }
       }
 
-      if (((contest.status == "RunningContest") || (contest.status == "FutureContest")) && (item.participationType == "Official")) {
-         if (true /* TODO: if stating time beyond contest end time */) {
-            jqAlert(t("warning_contest_will_be_over"));
+      if (item.participationType == "Official") {
+         if (date < contestBeginDate || date > contestEndDate) {
+            jqAlert(t("warning_contest_outside_official_date"));
          }
       }
    }
