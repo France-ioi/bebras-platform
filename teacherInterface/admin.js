@@ -247,6 +247,8 @@ function initModels(isLogged) {
                editable: true, edittype: "select", editoptions:{ value:{"1": t("option_female"), "2": t("option_male")}},
                stype: "select", searchoptions:{ value:"_NOF_:" + t("option_no_filter") + ";1:" + t("option_female") + ";2:" + t("option_male")},
                width: 75},
+            email: {label: t("contestant_email_label"), editable: true, edittype: "text", width:150},
+            zipCode: {label: t("contestant_zipCode_label"), editable: true, edittype: "text", width:150},
             //contestants: {label: "Équipe", editable: false, width:300},
             grade: {label: "Classe", editable: true, edittype: "select", width: 100, required: true, editoptions:{
                value:{
@@ -530,6 +532,12 @@ function initModels(isLogged) {
    if (isLogged) {
       models.group = getGroupsColModel();
       models.contest_question = getContestQuestionsColModel();
+   }
+   if (config.fields_contestants_to_remove) {
+      for (var i=0; i<config.fields_contestants_to_remove.length;i++) {
+         var fieldName = config.fields_contestants_to_remove[i];
+         delete(models.contestant.fields[fieldName]);
+      }
    }
 }
 

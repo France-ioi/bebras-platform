@@ -134,6 +134,8 @@
     "contestant_firstName_label": "Prénom",
     "contestant_lastName_label": "Nom",
     "contestant_genre_label": "Genre",
+    "contestant_email_label": "E-mail",
+    "contestant_zipCode_label": "Code postal",
     "contestant_grade_label": "Classe",
     "contestant_qualificationCode_label": "Code Algoréa",
     "contestant_nbContestants_label": "Type",

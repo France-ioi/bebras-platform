@@ -28,6 +28,8 @@ $tablesModels = array (
          "firstName" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user"))),
          "lastName" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user"))),
          "genre" => array("type" => "int", "access" => array("write" => array("user"), "read" => array("user"))),
+         "email" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user"))),
+         "zipCode" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user"))),
          "grade" => array("type" => "int", "access" => array("write" => array("user"), "read" => array("user"))),
          "teamID" => array("type" => "int"),
          "userID" => array("type" => "int"),
@@ -325,6 +327,8 @@ $viewsModels = array(
          "firstName" => array(),
          "lastName" => array(),
          "genre" => array(),
+         "email" => array(),
+         "zipCode" => array(),
          "grade" => array(),
          "score" => array("tableName" => "team"),
          "nbContestants" => array("tableName" => "team"),
@@ -369,6 +373,8 @@ $viewsModels = array(
          "firstName" => array(),
          "lastName" => array(),
          "genre" => array(),
+         "email" => array(),
+         "zipCode" => array(),
          "grade" => array("tableName" => "grade", "fieldName" => "name"),
          "score" => array("tableName" => "team"),
          "nbContestants" => array("tableName" => "team"),
@@ -712,5 +718,9 @@ $viewsModels = array(
       )
    ),   
 );
+
+foreach ($config->fields_contestants_to_remove as $field) {
+   unset($viewsModels['contestant']['fields'][$field]);
+}
 
 ?>

@@ -1362,20 +1362,34 @@ window.validateLoginForm = function() {
    var contestants = {};
    for (var iContestant = 1; iContestant <= nbContestants; iContestant++) {
       var contestant = {
-         "lastName" : $("#lastName" + iContestant).val(),
-         "firstName" : $("#firstName" + iContestant).val(),
+         "lastName" : $.trim($("#lastName" + iContestant).val()),
+         "firstName" : $.trim($("#firstName" + iContestant).val()),
          "genre" : $("input[name='genre" + iContestant + "']:checked").val(),
-         "grade" : $("#grade" + iContestant).val()
+         "grade" : $("#grade" + iContestant).val(),
+         "email" : $.trim($("#email" + iContestant).val()),
+         "zipCode" : $.trim($("#zipCode" + iContestant).val())
       };
       contestants[iContestant] = contestant;
-      if ($.trim(contestant.lastName) === "") {
+      if (fields_contestants_to_remove) {
+         for (var i=0; i<fields_contestants_to_remove.length;i++) {
+            var fieldName = fields_contestants_to_remove[i];
+            delete(contestant[fieldName]);
+         }
+      }
+      if (contestant.lastName === "") {
          $("#LoginResult").html(t("lastname_missing"));
          return;
-      } else if ($.trim(contestant.firstName) === "") {
+      } else if (contestant.firstName === "") {
          $("#LoginResult").html(t("firstname_missing"));
          return;
-      } else if ($.trim(contestant.genre) === "") {
+      } else if (contestant.genre === "") {
          $("#LoginResult").html(t("genre_missing"));
+         return;
+      } else if (contestant.email === "") {
+         $("#LoginResult").html(t("email_missing"));
+         return;
+      } else if (contestant.zipCode === "") {
+         $("#LoginResult").html(t("zipCode_missing"));
          return;
       } else if (contestant.grade === "") {
          $("#LoginResult").html(t("grade_missing"));

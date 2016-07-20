@@ -254,7 +254,6 @@
    script_tag('/bower_components/jqgrid/js/minified/jquery.jqGrid.min.js');
    script_tag('/bower_components/jqgrid/js/i18n/grid.locale-' . $language . '.js');
    script_tag('/regions/' . strtoupper($countryCode) . '/regions.js');
-   script_tag('/config.js.php');
    script_tag('/admin.js');
 ?>
 <script>
@@ -269,7 +268,8 @@
       'i18nResourcePath' => static_asset('/i18n/__lng__/__ns__.json'),
       'customStringsName' => $config->customStringsName,
       'allowCertificates' => $config->certificates->allow,
-      'useAlgoreaCodes' => $config->teacherInterface->useAlgoreaCodes
+      'useAlgoreaCodes' => $config->teacherInterface->useAlgoreaCodes,
+      'fields_contestants_to_remove' => $config->fields_contestants_to_remove
    ]) ?>;
    init();
 </script>

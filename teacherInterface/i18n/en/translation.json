@@ -131,6 +131,8 @@
     "contestant_firstName_label": "First name",
     "contestant_lastName_label": "Last name",
     "contestant_genre_label": "Gender",
+    "contestant_email_label": "Email",
+    "contestant_email_zipCode": "Zip code",
     "option_female": "Girl",
     "option_male": "Boy",
     "contestant_score_label": "Score",
