@@ -66,6 +66,10 @@ $tablesModels = array (
          "printCertificates" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "showResults" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "printCodes" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "askEmail" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "askZip" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "askGrade" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "askGenre" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "certificateStringsName" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
       )
    ),
@@ -327,12 +331,12 @@ $viewsModels = array(
          "firstName" => array(),
          "lastName" => array(),
          "genre" => array(),
-         "email" => array(),
-         "zipCode" => array(),
          "grade" => array(),
          "score" => array("tableName" => "team"),
          "nbContestants" => array("tableName" => "team"),
          "rank" => array(),
+         "email" => array(),
+         "zipCode" => array(),
          "level" => array("tableName" => "contest"),
          "algoreaCode" => array(),
          "schoolRank" => array(),
@@ -373,13 +377,13 @@ $viewsModels = array(
          "firstName" => array(),
          "lastName" => array(),
          "genre" => array(),
-         "email" => array(),
-         "zipCode" => array(),
          "grade" => array("tableName" => "grade", "fieldName" => "name"),
          "score" => array("tableName" => "team"),
          "nbContestants" => array("tableName" => "team"),
          "rank" => array(),
-         "qualificationCode" => array("fieldName" => "algoreaCode")
+         "qualificationCode" => array("fieldName" => "algoreaCode"),
+         "email" => array(),
+         "zipCode" => array(),
       ),
       "filters" => array(
          "groupField" => $fieldGroupFilter,
@@ -583,6 +587,10 @@ $viewsModels = array(
          "fullFeedback" =>  array(),
          "nextQuestionAuto" =>  array(),
          "folder" => array(),
+         "askEmail" => array(),
+         "askZip" => array(),
+         "askGrade" => array(),
+         "askGenre" => array(),
          "minAward1Rank" => array(),
          "minAward2Rank" => array(),
          "rankGrades" => array(),
@@ -718,9 +726,5 @@ $viewsModels = array(
       )
    ),   
 );
-
-foreach ($config->fields_contestants_to_remove as $field) {
-   unset($viewsModels['contestant']['fields'][$field]);
-}
 
 ?>

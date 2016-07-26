@@ -1296,6 +1296,30 @@ window.setNbContestants = function(nb) {
    $("#divCheckNbContestants").hide();
 };
 
+var fieldsHidden = {};
+
+var hideLoginFields = function(postData) {
+   var contestFieldMapping = {
+      askEmail: 'email',
+      askGrade: 'grade',
+      askZip: 'zipCode',
+      askGenre: 'genre'
+   }
+   for (var contestFieldName in contestFieldMapping) {
+      var loginFieldName = contestFieldMapping[contestFieldName];
+      if (postData[contestFieldName]) {
+         fieldsHidden[loginFieldName] = false;
+         $('#login-input-'+loginFieldName+'-1').show();
+         $('#login-input-'+loginFieldName+'-2').show();
+      } else {
+         fieldsHidden[loginFieldName] = true;
+         console.error('hiding login-input-'+loginFieldName+'-1');
+         $('#login-input-'+loginFieldName+'-1').hide();
+         $('#login-input-'+loginFieldName+'-2').hide();
+      }
+   }
+}
+
 /*
  * Checks if a group is valid and loads information about the group and corresponding contest,
  * curStep: indicates which step of the login process the students are currently at :
@@ -1337,10 +1361,11 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic) {
                }
             }
             $("#div" + curStep).hide();
+            hideLoginFields(data);
             if (curStep === "CheckGroup") {
                if (isPublic) {
                   window.setNbContestants(1);
-                  createTeam([{ lastName: "Anonymous", firstName: "Anonymous", genre: 2}]);
+                  createTeam([{ lastName: "Anonymous", firstName: "Anonymous", genre: 2, email: null, zipCode: null}]);
                } else if (data.allowTeamsOfTwo == 1) {
                   $("#divCheckNbContestants").show();
                } else {
@@ -1370,28 +1395,22 @@ window.validateLoginForm = function() {
          "zipCode" : $.trim($("#zipCode" + iContestant).val())
       };
       contestants[iContestant] = contestant;
-      if (fields_contestants_to_remove) {
-         for (var i=0; i<fields_contestants_to_remove.length;i++) {
-            var fieldName = fields_contestants_to_remove[i];
-            delete(contestant[fieldName]);
-         }
-      }
-      if (contestant.lastName === "") {
+      if (!contestant.lastName && !fieldsHidden.lastName) {
          $("#LoginResult").html(t("lastname_missing"));
          return;
-      } else if (contestant.firstName === "") {
+      } else if (!contestant.firstName && !fieldsHidden.firstName) {
          $("#LoginResult").html(t("firstname_missing"));
          return;
-      } else if (contestant.genre === "") {
+      } else if (!contestant.genre && !fieldsHidden.genre) {
          $("#LoginResult").html(t("genre_missing"));
          return;
-      } else if (contestant.email === "") {
+      } else if (!contestant.email && !fieldsHidden.email) {
          $("#LoginResult").html(t("email_missing"));
          return;
-      } else if (contestant.zipCode === "") {
+      } else if (!contestant.zipCode === "" && !fieldsHidden.zipCode) {
          $("#LoginResult").html(t("zipCode_missing"));
          return;
-      } else if (contestant.grade === "") {
+      } else if (!contestant.grade && !fieldsHidden.grade) {
          $("#LoginResult").html(t("grade_missing"));
          return;
       }

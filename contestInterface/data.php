@@ -37,7 +37,7 @@ function getGroupTeams($db, $groupID) {
 }
 
 function openGroup($db, $password, $getTeams) {
-   $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, NOW()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`status` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
+   $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, NOW()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`status`, `contest`.`askEmail`, `contest`.`askZip`, `contest`.`askGenre`, `contest`.`askGrade` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
    $stmt = $db->prepare($query);
    $stmt->execute(array($password));
    $row = $stmt->fetchObject();
@@ -107,6 +107,10 @@ function openGroup($db, $password, $getTeams) {
       "fullFeedback" => $fullFeedback,
       'bRecovered' => $row->bRecovered,
       "nbMinutesElapsed" => $nbMinutesElapsed,
+      "askEmail" => !!intval($row->askEmail),
+      "askZip" => !!intval($row->askZip),
+      "askGenre" => !!intval($row->askGenre),
+      "askGrade" => !!intval($row->askGrade),
       "isPublic" => $isPublic));
    return true;
 }
@@ -202,9 +206,9 @@ function createTeam($db, $contestants) {
       list($contestant["firstName"], $contestant["lastName"], $saniValid, $trash) = 
          DataSanitizer::formatUserNames($contestant["firstName"], $contestant["lastName"]);
       $stmt = $db->prepare("
-         INSERT INTO `contestant` (`ID`, `lastName`, `firstName`, `genre`, `grade`, `teamID`, `cached_schoolID`, `saniValid`) 
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-      $stmt->execute(array(getRandomID(), $contestant["lastName"], $contestant["firstName"], $contestant["genre"], $contestant["grade"], $teamID, $_SESSION["schoolID"], $saniValid));
+         INSERT INTO `contestant` (`ID`, `lastName`, `firstName`, `genre`, `grade`, `teamID`, `cached_schoolID`, `saniValid`, `email`, `zipCode`) 
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+      $stmt->execute(array(getRandomID(), $contestant["lastName"], $contestant["firstName"], $contestant["genre"], $contestant["grade"], $teamID, $_SESSION["schoolID"], $saniValid, $contestant["email"], $contestant["zipCode"]));
    }
    echo json_encode((object)array("success" => true, "teamID" => $teamID, "password" => $password));
 }

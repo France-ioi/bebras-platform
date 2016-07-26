@@ -22,8 +22,6 @@ $config->db->mysql->password = 'castor';
 $config->db->mysql->user = 'castor';
 $config->db->mysql->logged = false;
 
-$config->fields_contestants_to_remove = ['email', 'zipCode'];
-
 // Emails
 $config->email = (object) array();
 $config->email->sFileStoringSentMails = 'logs/mails.txt';

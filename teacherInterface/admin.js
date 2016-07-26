@@ -247,8 +247,6 @@ function initModels(isLogged) {
                editable: true, edittype: "select", editoptions:{ value:{"1": t("option_female"), "2": t("option_male")}},
                stype: "select", searchoptions:{ value:"_NOF_:" + t("option_no_filter") + ";1:" + t("option_female") + ";2:" + t("option_male")},
                width: 75},
-            email: {label: t("contestant_email_label"), editable: true, edittype: "text", width:150},
-            zipCode: {label: t("contestant_zipCode_label"), editable: true, edittype: "text", width:150},
             //contestants: {label: "Équipe", editable: false, width:300},
             grade: {label: "Classe", editable: true, edittype: "select", width: 100, required: true, editoptions:{
                value:{
@@ -293,7 +291,9 @@ function initModels(isLogged) {
                   ";2:" + t("nbContestants_2")
                },
                edittype: "select", stype: "select"},
-            rank: {label: t("contestant_rank_label"), editable: false, width:150}
+            rank: {label: t("contestant_rank_label"), editable: false, width:150},
+            email: {label: t("contestant_email_label"), editable: true, edittype: "text", width:150},
+            zipCode: {label: t("contestant_zipCode_label"), editable: true, edittype: "text", width:150}
          }
       },
       school: {
@@ -481,7 +481,35 @@ function initModels(isLogged) {
                stype: "select", searchoptions: searchYesNo,
                width: 100
             },
-            folder: {label: t("contest_folder_label"), editable: true, edittype: "text", width:350}
+            folder: {label: t("contest_folder_label"), editable: true, edittype: "text", width:350},
+            askEmail: {
+               label: t("contest_askEmail_label"),
+               editable: true,
+               edittype: "select", editoptions: editYesNo,
+               stype: "select", searchoptions: searchYesNo,
+               width: 100
+            },
+            askZip: {
+               label: t("contest_askZip_label"),
+               editable: true,
+               edittype: "select", editoptions: editYesNo,
+               stype: "select", searchoptions: searchYesNo,
+               width: 100
+            },
+            askGrade: {
+               label: t("contest_askGrade_label"),
+               editable: true,
+               edittype: "select", editoptions: editYesNo,
+               stype: "select", searchoptions: searchYesNo,
+               width: 100
+            },
+            askGenre: {
+               label: t("contest_askGenre_label"),
+               editable: true,
+               edittype: "select", editoptions: editYesNo,
+               stype: "select", searchoptions: searchYesNo,
+               width: 100
+            },
          }
       },
       question: {
@@ -532,12 +560,6 @@ function initModels(isLogged) {
    if (isLogged) {
       models.group = getGroupsColModel();
       models.contest_question = getContestQuestionsColModel();
-   }
-   if (config.fields_contestants_to_remove) {
-      for (var i=0; i<config.fields_contestants_to_remove.length;i++) {
-         var fieldName = config.fields_contestants_to_remove[i];
-         delete(models.contestant.fields[fieldName]);
-      }
    }
 }
 

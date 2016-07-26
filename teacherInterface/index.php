@@ -269,7 +269,6 @@
       'customStringsName' => $config->customStringsName,
       'allowCertificates' => $config->certificates->allow,
       'useAlgoreaCodes' => $config->teacherInterface->useAlgoreaCodes,
-      'fields_contestants_to_remove' => $config->fields_contestants_to_remove
    ]) ?>;
    init();
 </script>
