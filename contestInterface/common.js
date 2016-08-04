@@ -87,6 +87,10 @@ window.onerror = function () {
 
 window.logError = logError;
 
+var updateContestName = function(contestName) {
+  $('#headerH1').html(contestName);
+  $('title').html(contestName);
+};
 
 /**
  * Old IE versions does not implement the Array.indexOf function
@@ -1527,6 +1531,7 @@ function getPublicGroupsList(groups) {
 function initContestData(data) {
    contestID = data.contestID;
    contestFolder = data.contestFolder;
+   updateContestName(data.contestName);
    fullFeedback = parseInt(data.fullFeedback);
    nextQuestionAuto = parseInt(data.nextQuestionAuto);
    newInterface = !!parseInt(data.newInterface);

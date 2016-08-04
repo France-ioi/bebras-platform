@@ -37,7 +37,7 @@ function getGroupTeams($db, $groupID) {
 }
 
 function openGroup($db, $password, $getTeams) {
-   $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, NOW()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`status`, `contest`.`askEmail`, `contest`.`askZip`, `contest`.`askGenre`, `contest`.`askGrade` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
+   $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, NOW()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`status`, `contest`.`askEmail`, `contest`.`askZip`, `contest`.`askGenre`, `contest`.`askGrade`, `contest`.`name` as `contestName` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
    $stmt = $db->prepare($query);
    $stmt->execute(array($password));
    $row = $stmt->fetchObject();
@@ -76,6 +76,7 @@ function openGroup($db, $password, $getTeams) {
       $teams = "";
    }
    $_SESSION["groupID"] = $groupID;
+   $_SESSION["contestName"] = $row->contestName;
    $_SESSION["schoolID"] = $schoolID;
    $_SESSION["contestID"] = $contestID;
    $_SESSION["contestFolder"] = $contestFolder;
@@ -96,6 +97,7 @@ function openGroup($db, $password, $getTeams) {
       "success" => true,
       "groupID" => $groupID,
       "contestID" => $contestID, 
+      "contestName" => $row->contestName, 
       "contestFolder" => $contestFolder, 
       "contestStatus" => $contestStatus, 
       "name" => $name,
@@ -287,6 +289,7 @@ function loadSession() {
       "fullFeedback" => $_SESSION["fullFeedback"],
       "contestID" => $_SESSION["contestID"],
       "contestFolder" => $_SESSION["contestFolder"],
+      "contestName" => $_SESSION["contestName"],
       "contestStatus" => $_SESSION["contestStatus"],
       "SID" => session_id()));
    return;
