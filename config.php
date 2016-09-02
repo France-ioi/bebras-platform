@@ -56,6 +56,7 @@ $config->teacherInterface->sAssetsStaticPath = 'http://castor.pem.dev/contestInt
 $config->teacherInterface->sAbsoluteStaticPath = 'http://coordinateur.castor-informatique.fr/';
 $config->teacherInterface->genericPasswordMd5 = '';
 $config->teacherInterface->countryCode = 'FR';
+$config->teacherInterface->domainCountryCode = 'FR';
 $config->teacherInterface->generationMode = 'local';
 $config->teacherInterface->sAbsoluteStaticPathOldIE = 'http://coordinateur.castor-informatique.fr/';
 $config->teacherInterface->sContestGenerationPath = '/../contestInterface/contests/'; // *MUST* be relative!
