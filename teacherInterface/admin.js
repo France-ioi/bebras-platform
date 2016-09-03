@@ -2423,7 +2423,7 @@ function init() {
    }
    isLogged();
    window.domains = [];
-   $.getJSON('regions/' + config.countryCode + '/domains.json', function(data) {
+   $.getJSON('regions/' + config.domainCountryCode + '/domains.json', function(data) {
       window.domains = data.domains;
    });
    if (typeof $.jgrid !== 'undefined') {

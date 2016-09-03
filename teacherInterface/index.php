@@ -242,6 +242,7 @@
    global $config;
    $language = $config->defaultLanguage;
    $countryCode = $config->teacherInterface->countryCode;
+   $domainCountryCode = $config->teacherInterface->domainCountryCode;
    // JSON3 shim for IE6-9 compatibility.
    script_tag('/bower_components/json3/lib/json3.min.js');
    // jquery 1.9 is required for IE6+ compatibility.
@@ -261,6 +262,7 @@
       'defaultLanguage' => $language,
       'maintenanceUntil' => $config->maintenanceUntil,
       'countryCode' => $countryCode,
+      'domainCountryCode' => $domainCountryCode,
       'infoEmail' => $config->email->sInfoAddress,
       'forceOfficialEmailDomain' => $config->teacherInterface->forceOfficialEmailDomain,
       'contestPresentationURL' => $config->contestPresentationURL,
