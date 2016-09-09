@@ -1,21 +1,21 @@
 SET autocommit=0;
 START TRANSACTION;
 
-INSERT INTO `contest` (`ID`, `name`, `level`, `year`, `status`, `nbMinutes`, `folder`) VALUES
-  (1, 'Castor 2011, niveau 6e/5e', 1, 2011, 2, 45, '2011_6_5_axafas'),
-  (2, 'Castor 2011, niveau 4e/3e', 2, 2011, 2, 45, '2011_4_3_bswxt'),
-  (3, 'Castor 2011, niveau 2de', 3, 2011, 2, 45, '2011_2_sptbkxr'),
-  (4, 'Castor 2011, niveau 1re/Tle', 4, 2011, 2, 45, '2011_1_0_psxtybcr'),
-  (6, 'Castor 2012, niveau 6e/5e', 1, 2012, 0, 45, '2012_6_5_faskfjb'),
-  (7, 'Castor 2012, niveau 4e/3e', 2, 2012, 0, 45, '2012_4_3_aftnasktj'),
-  (8, 'Castor 2012, niveau 2de', 3, 2012, 0, 45, '2012_2_saffstbb'),
-  (9, 'Castor 2012, niveau 1re/Tle', 4, 2012, 0, 45, '2012_1_0_asftan'),
-  (16, 'Entraînement 2012, niveau 6e/5e', 1, 102012, 2, 45, '2012_6_5_atrpstwk'),
-  (17, 'Entraînement 2012, niveau 4e/3e', 2, 102012, 2, 45, '2012_4_3_qwastask'),
-  (18, 'Entraînement 2012, niveau 2de', 3, 102012, 2, 45, '2012_2_sastak'),
-  (19, 'Entraînement 2012, niveau 1re/Tle', 4, 102012, 2, 45, '2012_1_0_srijair'),
-  (20, 'Entraînement 2012, tous les sujets', 0, 102012, 2, 60, '2012_all_saftrqthj'),
-  (21, 'Entraînement 2011, tous les sujets', 0, 102011, 2, 60, '2011_all_atskjaktb');
+INSERT INTO `contest` (`ID`, `name`, `level`, `year`, `status`, `nbMinutes`, `folder`, `category`) VALUES
+  (1, 'Castor 2011, niveau 6e/5e', 1, 2011, 2, 45, '2011_6_5_axafas', 'Castor 2011'),
+  (2, 'Castor 2011, niveau 4e/3e', 2, 2011, 2, 45, '2011_4_3_bswxt', 'Castor 2011'),
+  (3, 'Castor 2011, niveau 2de', 3, 2011, 2, 45, '2011_2_sptbkxr', 'Castor 2011'),
+  (4, 'Castor 2011, niveau 1re/Tle', 4, 2011, 2, 45, '2011_1_0_psxtybcr', 'Castor 2011'),
+  (6, 'Castor 2012, niveau 6e/5e', 1, 2012, 0, 45, '2012_6_5_faskfjb', 'Castor 2011'),
+  (7, 'Castor 2012, niveau 4e/3e', 2, 2012, 0, 45, '2012_4_3_aftnasktj', 'Castor 2011'),
+  (8, 'Castor 2012, niveau 2de', 3, 2012, 0, 45, '2012_2_saffstbb', 'Castor 2011'),
+  (9, 'Castor 2012, niveau 1re/Tle', 4, 2012, 0, 45, '2012_1_0_asftan', 'Castor 2011'),
+  (16, 'Entraînement 2012, niveau 6e/5e', 1, 102012, 2, 45, '2012_6_5_atrpstwk', 'Castor 2012'),
+  (17, 'Entraînement 2012, niveau 4e/3e', 2, 102012, 2, 45, '2012_4_3_qwastask', 'Castor 2012'),
+  (18, 'Entraînement 2012, niveau 2de', 3, 102012, 2, 45, '2012_2_sastak', 'Castor 2012'),
+  (19, 'Entraînement 2012, niveau 1re/Tle', 4, 102012, 2, 45, '2012_1_0_srijair', 'Castor 2012'),
+  (20, 'Entraînement 2012, tous les sujets', 0, 102012, 2, 60, '2012_all_saftrqthj', 'Castor 2012'),
+  (21, 'Entraînement 2012, tous les sujets', 0, 102011, 2, 60, '2011_all_atskjaktb', 'Castor 2012');
 
 INSERT INTO `contest_question` (`ID`, `contestID`, `questionID`, `minScore`, `maxScore`, `order`) VALUES
   (3, 1, 24, -2, 6, 0),
