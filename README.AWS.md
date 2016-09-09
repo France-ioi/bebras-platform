@@ -44,9 +44,6 @@ Also, enable Static Website Hosting.
 Before generating a contest, you also need to:
    - set `teacherInterface->sAbsoluteStaticPath` in `config_local.php` to the absolute
      path of your bucket (without the final `contest/` directory)
-   - regenerate your `contestInterface/index_*.html` files. For this you can call
-     `contestInterface/generateIndexes.php`.
-
 
 ## CloudFront (advised)
 
