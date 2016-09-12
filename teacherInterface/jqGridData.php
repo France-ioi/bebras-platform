@@ -42,8 +42,8 @@ function sendValidationEmail($emailType, $sEmail, $sSalt) {
    }
    $coordinatorFolder = $config->teacherInterface->sCoordinatorFolder;
    $link = $coordinatorFolder."/validateEmail.php?".$emailType."=".urlencode($sEmail)."&check=".urlencode($sSalt);
-   $sBody = "Bonjour,\r\n\r\nPour valider votre inscription en tant que coordinateur pour le concours Castor, ouvrez le lien suivant dans votre navigateur  : \r\n\r\n".$link."\r\n\r\nN'hésitez pas à nous contacter si vous rencontrez des difficultés.\r\n\r\nCordialement,\r\n-- \r\nL'équipe du Castor Informatique";
-   $sTitle = "Castor Informatique : validation d'inscription";
+   $sBody = sprintf($config->validationMailBody, $link);
+   $sTitle = $config->validationMailTitle;
    sendMail($sEmail, $sTitle, $sBody, $config->email->sEmailSender, $config->email->sEmailInsriptionBCC);
 }
 

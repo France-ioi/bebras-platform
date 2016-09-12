@@ -243,6 +243,7 @@
     "password_min_length_2": " characters",
     "password_min_length_1": "The password should have at least ",
     "one_email_required": "You will need at least one email address, if possible an academic email.",
+    "okMail_required": "You must agree to receive mail from the contest organization to subscribe.",
     "officialEmail_readonly": "You can't change your primary email once it has been confirmed",
     "warning": "Warning",
     "start_time_invalid": "Invalid starting date",

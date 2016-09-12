@@ -78,6 +78,9 @@ $config->contestOfficialURL = '';
 $config->contestBackupURL = '';
 $config->customStringsName = null; // see README
 
+$config->validationMailBody = "Bonjour,\r\n\r\nPour valider votre inscription en tant que coordinateur pour le concours Castor, ouvrez le lien suivant dans votre navigateur  : \r\n\r\n%s\r\n\r\nN'hésitez pas à nous contacter si vous rencontrez des difficultés.\r\n\r\nCordialement,\r\n-- \r\nL'équipe du Castor Informatique";
+$config->validationMailTitle = "Castor Informatique : validation d'inscription";
+
 if (is_readable(__DIR__.'/config_local.php')) {
    include_once __DIR__.'/config_local.php';
 }

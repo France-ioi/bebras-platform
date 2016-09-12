@@ -252,6 +252,7 @@
     "password_min_length_2": " caractères",
     "password_min_length_1": "Le mot de passe doit contenir au moins ",
     "one_email_required": "Vous devez fournir au moins une adresse électronique, si possible une adresse académique.",
+    "okMail_required": "Vous devez accepter de recevoir des mails de la part des organisateurs du concours pour pouvoir vous inscrire.",
     "officialEmail_readonly": "Impossible de changer d'adresse académique une fois celle-ci confirmée",
     "warning": "Avertissement",
     "start_time_invalid": "Heure de départ invalide",

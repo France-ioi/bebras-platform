@@ -1890,6 +1890,10 @@ function newForm(modelName, title, message) {
       html += "<br/></td></tr>";
    }
    html += "</table>";
+   if (modelName == 'user_create') {
+      html += '<input type="checkbox" id="users_okMail">';
+      html += 'J\'accepte de recevoir occasionnellement des emails d\'informations de la part des organisateurs du concours.<br/><br/>';
+   }
    html += "<input id='buttonValidate_" + modelName + "' type='button' value='OK' onclick='validateForm(\"" + modelName + "\")' />";
    html += "<input id='buttonCancel_" + modelName + "' type='button' value='Annuler' onclick='endEditForm(\"" + modelName + "\", 0 , {})' />";
    html += "<div id='edit_form_error' style='color:red'></div>";
@@ -2021,6 +2025,11 @@ function checkUser(user, isCreate) {
       if ((loggedUser.officialEmailValidated == "1") && (user.officialEmail != loggedUser.officialEmail)) {
          $("#edit_form_error").html(t("officialEmail_readonly"));
          return false;
+      }
+   } else {
+      if (!$('#users_okMail').prop('checked')) {
+         $("#edit_form_error").html(t("okMail_required"));
+         return false;  
       }
    }
    return true;
