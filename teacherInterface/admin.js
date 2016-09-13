@@ -2513,6 +2513,6 @@ function init() {
       $('#buttonGenerateAlgoreaCodes').show();
    }
    $('input[type=button]', this).attr('disabled', false);
-
-    setTimeout(checkForSessionTimeout, 10000);
+    
+   checkForSessionTimeout();
 }
