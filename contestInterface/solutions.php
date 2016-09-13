@@ -13,6 +13,10 @@ if (!isset($_SESSION["closed"])) {
    echo json_encode(array('success' => false, 'message' => 'contest is not over (solutions)!'));
    exit;
 }
+if (!isset($_SESSION["contestShowSolutions"])) {
+   echo json_encode(array('success' => false, 'message' => 'solutions non disponibles pour ce concours'));
+   exit;
+}
 $teamID = $_SESSION["teamID"];
 $query = "SELECT `contest`.`ID`, `contest`.`folder`, `team`.score FROM `team` LEFT JOIN `group` ON (`team`.`groupID` = `group`.`ID`) LEFT JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `team`.`ID` = ?";
 $stmt = $db->prepare($query);

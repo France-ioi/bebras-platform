@@ -1,1 +1,2 @@
-ALTER TABLE  `contest` ADD  `ranked`  ENUM( 'NotRanked',  'Ranked' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT  'NotRanked'  AFTER `status`;
+ALTER TABLE  `contest` ADD  `closedToOfficialGroups` TINYINT(1) NOT NULL DEFAULT 1 AFTER `status`;
+ALTER TABLE  `history_contest` ADD  `closedToOfficialGroups` TINYINT(1) NOT NULL DEFAULT 1 AFTER `status`;

@@ -18,7 +18,7 @@ function createTeamFromUserCode($db, $password) {
 
 function commonLoginTeam($db, $password) {
    global $tinyOrm, $config;
-   $stmt = $db->prepare("SELECT `team`.`ID` as `teamID`, `group`.`ID` as `groupID`, `group`.`contestID`, `group`.`name`, `team`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`fullFeedback`, `contest`.`folder`, `contest`.`name` as `contestName`, `contest`.`status`, `group`.`schoolID`, `team`.`endTime` FROM `team` JOIN `group` ON (`team`.`groupID` = `group`.`ID`) JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `team`.`password` = ?");
+   $stmt = $db->prepare("SELECT `team`.`ID` as `teamID`, `group`.`ID` as `groupID`, `group`.`contestID`, `group`.`name`, `team`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`fullFeedback`, `contest`.`folder`, `contest`.`name` as `contestName`, `contest`.`open`, `contest`.`showSolutions`, `content`.`visibility`, `group`.`schoolID`, `team`.`endTime` FROM `team` JOIN `group` ON (`team`.`groupID` = `group`.`ID`) JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `team`.`password` = ?");
    $stmt->execute(array($password));
    $row = $stmt->fetchObject();
    if (!$row) {
@@ -36,10 +36,10 @@ function commonLoginTeam($db, $password) {
          return (object)array("success" => false, "message" => "enregistrement différent entre MySQL et DynamoDB!");
       }
    }
-   if ($row->status == "Closed") {
+   if ($row->open == "Closed") {
       return (object)array("success" => false, "message" => "Le concours lié à votre participation est actuellement fermé. Il réouvrira bientôt.");
    }
-   if ($row->endTime && $row->status == 'RunningContest') {
+   if ($row->endTime && $row->open == 'Open') {
       $stmt = $db->prepare("UPDATE `team` SET `endTime` = NULL WHERE `team`.`password` = ?");
       $stmt->execute(array($password));
    }
@@ -56,14 +56,18 @@ function commonLoginTeam($db, $password) {
    $_SESSION["newInterface"] = $row->newInterface;
    $_SESSION["fullFeedback"] = $row->fullFeedback;
    $_SESSION["contestFolder"] = $row->folder;
-   $_SESSION["contestStatus"] = $row->status;
+   $_SESSION["contestOpen"] = $row->open;
+   $_SESSION["contestShowSolutions"] = $row->showSolutions;
+   $_SESSION["contestVisibility"] = $row->visibility;
    return (object)array(
       "success" => true,
       "name" => $row->name,
       "contestID" => $row->contestID,
       "contestName" => $row->contestName,
       "contestFolder" => $row->folder,
-      "contestStatus" => $row->status,
+      "contestOpen" => $row->open,
+      "contestShowSolutions" => $row->showSolutions,
+      "contestVisibility" => $row->visibility,
       "nbMinutes" => $row->nbMinutes,
       "bonusScore" => $row->bonusScore,
       "allowTeamsOfTwo" => $row->allowTeamsOfTwo,

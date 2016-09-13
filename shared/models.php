@@ -51,9 +51,11 @@ $tablesModels = array (
          "level" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "year" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "category" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
-         "status" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
-         "visibility" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
-         "ranked" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "status" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "open" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "visibility" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "closedToOfficialGroups" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "showSolutions" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "nbMinutes" =>  array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "bonusScore" =>  array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "allowTeamsOfTwo" =>  array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
@@ -460,7 +462,7 @@ $viewsModels = array(
          ),
          "checkOfficial" => array(
             "joins" => array("contest"),
-            "condition" => "((`[PREFIX]contest`.`ranked` = 'NotRanked') OR ".
+            "condition" => "((`[PREFIX]contest`.`closedToOfficialGroups` = 1) OR ".
             // "condition" => "((`[PREFIX]contest`.`status` = 'Open') OR ".
                             "(`[PREFIX]group`.`participationType` = 'Unofficial'))",
             "ignoreValue" => true
@@ -583,8 +585,10 @@ $viewsModels = array(
          "level" => array(),
          "year" => array(),
          "status" => array(),
+         "open" => array(),
          "visibility" => array(),
-         "ranked" => array(),
+         "closedToOfficialGroups" => array(),
+         "showSolutions" => array(),
          "startDate" => array(),
          "endDate" => array(),
          "nbMinutes" =>  array(),
@@ -615,7 +619,7 @@ $viewsModels = array(
       "filters" => array(
          "statusNotHidden" => array(
             "joins" => array(),
-            "condition" => "(`[PREFIX]contest`.`status` <> 'Hidden')",
+            "condition" => "(`[PREFIX]contest`.`visibility` <> 'Hidden')",
             "ignoreValue" => true
           )
       )

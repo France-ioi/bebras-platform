@@ -3,7 +3,9 @@
 
 var contestID;
 var contestFolder;
-var contestStatus;
+var contestVisibility;
+var contestShowSolutions;
+var contestOpen;
 var fullFeedback;
 var nextQuestionAuto;
 var newInterface;
@@ -1535,7 +1537,9 @@ function initContestData(data) {
    fullFeedback = parseInt(data.fullFeedback);
    nextQuestionAuto = parseInt(data.nextQuestionAuto);
    newInterface = !!parseInt(data.newInterface);
-   contestStatus = data.contestStatus;
+   contestOpen = data.contestOpen;
+   contestVisibility = data.contestVisibility;
+   contestShowSolutions = data.contestShowSolutions;
    TimeManager.setTotalTime(data.nbMinutes * 60);
    if (newInterface) {
       $("#question-iframe-container").addClass("newInterfaceIframeContainer");
@@ -1692,7 +1696,7 @@ function finalCloseContest(message) {
       function() {}, "json"
    ).always(function() {
       window.onbeforeunload = function(){};
-      if (contestStatus === "RunningContest") {
+      if (!contestShowSolutions) {
          $("#divClosedPleaseWait").hide();
          $("#divClosedMessage").html(message);
          var listAnswers = [];
