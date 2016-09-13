@@ -52,6 +52,8 @@ $tablesModels = array (
          "year" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "category" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "status" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "visibility" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "ranked" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "nbMinutes" =>  array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "bonusScore" =>  array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "allowTeamsOfTwo" =>  array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
@@ -71,6 +73,8 @@ $tablesModels = array (
          "askGrade" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "askGenre" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "certificateStringsName" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "startDate" => array("type" => "date", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "endDate" => array("type" => "date", "access" => array("write" => array("admin"), "read" => array("admin"))),
       )
    ),
    "contest_question" => array(
@@ -451,14 +455,13 @@ $viewsModels = array(
       "filters" => array(
          "statusNotHidden" => array(
             "joins" => array("contest"),
-            "condition" => "(`[PREFIX]contest`.`status` <> 'Hidden')",
+            "condition" => "(`[PREFIX]contest`.`visibility` <> 'Hidden')",
             "ignoreValue" => true
          ),
          "checkOfficial" => array(
             "joins" => array("contest"),
-            "condition" => "((`[PREFIX]contest`.`status` = 'FutureContest') OR ".
-                            "(`[PREFIX]contest`.`status` = 'RunningContest') OR ".
-                            "(`[PREFIX]contest`.`status` = 'PreRanking') OR ".
+            "condition" => "((`[PREFIX]contest`.`ranked` = 'NotRanked') OR ".
+            // "condition" => "((`[PREFIX]contest`.`status` = 'Open') OR ".
                             "(`[PREFIX]group`.`participationType` = 'Unofficial'))",
             "ignoreValue" => true
          ),
@@ -580,6 +583,10 @@ $viewsModels = array(
          "level" => array(),
          "year" => array(),
          "status" => array(),
+         "visibility" => array(),
+         "ranked" => array(),
+         "startDate" => array(),
+         "endDate" => array(),
          "nbMinutes" =>  array(),
          "bonusScore" =>  array(),
          "allowTeamsOfTwo" =>  array(),
