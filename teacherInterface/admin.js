@@ -2453,11 +2453,6 @@ function printAlgoreaCodes() {
    window.open('awardsPrint.php', "printAlgoreaCodes", 'width=700,height=600');
 }
 
-function checkForSessionTimout() {
-    jqAlert(t("session_timeout"));
-    setTimeout(checkForSessionTimout, 10000)
-}
-
 function init() {
    initErrorHandler();
    i18n.init({
@@ -2501,5 +2496,4 @@ function init() {
       $('#buttonGenerateAlgoreaCodes').show();
    }
    $('input[type=button]', this).attr('disabled', false);
-   checkForSessionTimeout();
 }
