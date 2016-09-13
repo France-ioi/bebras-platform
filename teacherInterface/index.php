@@ -68,7 +68,7 @@
          <span data-i18n="login"></span>
          <div id="divInput">
          <span data-i18n="login_email"></span> <input id="email" type="text"><br/>
-         <span data-i18n="login_password"></span> <input id="password" type="password"><br/>
+         <span data-i18n="login_password"></span> <input id="password" type="password" onkeypress="if (event.keyCode == 13) {login();  return false;}"><br/>
          <button type="button" data-i18n="login_connexion" id="buttonLogin" onclick="login()"></button><br />
          </div>
          <div id="login_error" style="color:red"></div>
