@@ -2182,21 +2182,26 @@ function validateForm(modelName) {
       }
        
       var contest = contests[item.contestID];
-
-      var contestBeginDate = toDate(contest.startDate, "-", true);
-      var contestEndDate = toDate(contest.endDate, "-", true);
+      var contestBeginDate = null;
+      if (contest.startDate) {
+         contestBeginDate = toDate(contest.startDate, "-", true);  
+      }
+      var contestEndDate = null;
+      if (contest.endDate) {
+         contestEndDate = toDate(contest.endDate, "-", true);
+      }
       var date = toDate($("#group_expectedStartTime_date").val(), "/", false);
       var today = new Date();
 
       if (contest.ranked == "Ranked" && item.participationType == "Official") {
-         if (today > contestEndDate) {
+         if (contestEndDate && today > contestEndDate) {
             jqAlert(t("official_contests_restricted"));
             return;
          }
       }
 
       if (item.participationType == "Official") {
-         if (date < contestBeginDate || date > contestEndDate) {
+         if ((contestBeginDate && date < contestBeginDate) || (contestEndDate && date > contestEndDate)) {
             jqAlert(t("warning_contest_outside_official_date"));
          }
       }
