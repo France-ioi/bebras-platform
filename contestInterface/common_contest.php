@@ -18,7 +18,7 @@ function createTeamFromUserCode($db, $password) {
 
 function commonLoginTeam($db, $password) {
    global $tinyOrm, $config;
-   $stmt = $db->prepare("SELECT `team`.`ID` as `teamID`, `group`.`ID` as `groupID`, `group`.`contestID`, `group`.`name`, `team`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`fullFeedback`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, `contest`.`folder`, `contest`.`name` as `contestName`, `contest`.`open`, `contest`.`showSolutions`, `content`.`visibility`, `group`.`schoolID`, `team`.`endTime` FROM `team` JOIN `group` ON (`team`.`groupID` = `group`.`ID`) JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `team`.`password` = ?");
+   $stmt = $db->prepare("SELECT `team`.`ID` as `teamID`, `group`.`ID` as `groupID`, `group`.`contestID`, `group`.`name`, `team`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`fullFeedback`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, `contest`.`folder`, `contest`.`name` as `contestName`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`visibility`, `group`.`schoolID`, `team`.`endTime` FROM `team` JOIN `group` ON (`team`.`groupID` = `group`.`ID`) JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `team`.`password` = ?");
    $stmt->execute(array($password));
    $row = $stmt->fetchObject();
    if (!$row) {
