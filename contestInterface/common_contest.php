@@ -18,7 +18,7 @@ function createTeamFromUserCode($db, $password) {
 
 function commonLoginTeam($db, $password) {
    global $tinyOrm, $config;
-   $stmt = $db->prepare("SELECT `team`.`ID` as `teamID`, `group`.`ID` as `groupID`, `group`.`contestID`, `group`.`name`, `team`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`fullFeedback`, `contest`.`folder`, `contest`.`name` as `contestName`, `contest`.`status`, `group`.`schoolID`, `team`.`endTime` FROM `team` JOIN `group` ON (`team`.`groupID` = `group`.`ID`) JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `team`.`password` = ?");
+   $stmt = $db->prepare("SELECT `team`.`ID` as `teamID`, `group`.`ID` as `groupID`, `group`.`contestID`, `group`.`name`, `team`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`fullFeedback`, `contest`.`nbUnlockedTasksInitial`, `contest`.`folder`, `contest`.`name` as `contestName`, `contest`.`status`, `group`.`schoolID`, `team`.`endTime` FROM `team` JOIN `group` ON (`team`.`groupID` = `group`.`ID`) JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `team`.`password` = ?");
    $stmt->execute(array($password));
    $row = $stmt->fetchObject();
    if (!$row) {
@@ -55,6 +55,7 @@ function commonLoginTeam($db, $password) {
    $_SESSION["allowTeamsOfTwo"] = $row->allowTeamsOfTwo;
    $_SESSION["newInterface"] = $row->newInterface;
    $_SESSION["fullFeedback"] = $row->fullFeedback;
+   $_SESSION["nbUnlockedTasksInitial"] = $row->nbUnlockedTasksInitial;
    $_SESSION["contestFolder"] = $row->folder;
    $_SESSION["contestStatus"] = $row->status;
    return (object)array(
@@ -69,6 +70,7 @@ function commonLoginTeam($db, $password) {
       "allowTeamsOfTwo" => $row->allowTeamsOfTwo,
       "newInterface" => $row->newInterface,
       "fullFeedback" => $row->fullFeedback,
+	  "nbUnlockedTasksInitial" => $row->nbUnlockedTasksInitial,
       "teamID" => $row->teamID,
       );
 }

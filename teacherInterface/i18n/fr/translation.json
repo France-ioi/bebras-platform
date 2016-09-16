@@ -357,6 +357,7 @@
     "confirm_group_operation": "Êtes-vous certain de vouloir faire cette opération maintenant ? (Ne pas faire en plein concours)",
     "select_group": "Vous devez sélectionner un groupe",
     "contest_nextQuestionAuto_label": "Question suivante auto",
+    "contest_nbUnlockedTasksInitial_label": "Questions débloquées",
     "user_awardPrintingDate_label": "Impression Algoréa",
     "error_close": "Fermer",
     "codes_computed": "Codes générés",

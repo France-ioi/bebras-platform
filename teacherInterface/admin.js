@@ -481,6 +481,7 @@ function initModels(isLogged) {
                stype: "select", searchoptions: searchYesNo,
                width: 100
             },
+            nbUnlockedTasksInitial: {label: t("contest_nbUnlockedTasksInitial_label"), editable: true, edittype: "text", subtype:"int", width: 100},
             folder: {label: t("contest_folder_label"), editable: true, edittype: "text", width:350},
             askEmail: {
                label: t("contest_askEmail_label"),

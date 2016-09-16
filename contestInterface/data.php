@@ -37,7 +37,7 @@ function getGroupTeams($db, $groupID) {
 }
 
 function openGroup($db, $password, $getTeams) {
-   $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, NOW()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`status`, `contest`.`askEmail`, `contest`.`askZip`, `contest`.`askGenre`, `contest`.`askGrade`, `contest`.`name` as `contestName` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
+   $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, NOW()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`nbUnlockedTasksInitial`, `contest`.`folder`, `contest`.`status`, `contest`.`askEmail`, `contest`.`askZip`, `contest`.`askGenre`, `contest`.`askGrade`, `contest`.`name` as `contestName` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
    $stmt = $db->prepare($query);
    $stmt->execute(array($password));
    $row = $stmt->fetchObject();
@@ -64,6 +64,7 @@ function openGroup($db, $password, $getTeams) {
    $newInterface = $row->newInterface;
    $fullFeedback = $row->fullFeedback;
    $nextQuestionAuto = $row->nextQuestionAuto;
+   $nbUnlockedTasksInitial = $row->nbUnlockedTasksInitial;
    $isPublic = $row->isPublic;
    if ($row->startTime === null) {
       $nbMinutesElapsed = 0;
@@ -87,6 +88,7 @@ function openGroup($db, $password, $getTeams) {
    $_SESSION["newInterface"] = $newInterface;
    $_SESSION["fullFeedback"] = $fullFeedback;
    $_SESSION["nextQuestionAuto"] = $nextQuestionAuto;
+   $_SESSION["nbUnlockedTasksInitial"] = $nbUnlockedTasksInitial;
    $_SESSION["groupClosed"] = (($nbMinutesElapsed > 60) && (!$isPublic));
    // We don't want $_SESSION['userCode'] in the session at this point
    if (isset($_SESSION["userCode"])) {
@@ -107,6 +109,7 @@ function openGroup($db, $password, $getTeams) {
       "allowTeamsOfTwo" => $allowTeamsOfTwo,
       "newInterface" => $newInterface,
       "fullFeedback" => $fullFeedback,
+      "nbUnlockedTasksInitial" => $nbUnlockedTasksInitial,
       'bRecovered' => $row->bRecovered,
       "nbMinutesElapsed" => $nbMinutesElapsed,
       "askEmail" => !!intval($row->askEmail),
@@ -231,7 +234,6 @@ function loadContestData($db) {
          error_log('DynamoDB error updating team for teamID: '.$teamID);
       }
    }
-
    $questionsData = getQuestions($db, $_SESSION["contestID"]);
    //$stmt = $db->prepare("SELECT `questionID`, `answer` FROM `team_question` WHERE `teamID` = ?");
    //$stmt->execute(array($teamID));
@@ -287,6 +289,7 @@ function loadSession() {
       "allowTeamsOfTwo" => $_SESSION["allowTeamsOfTwo"],
       "newInterface" => $_SESSION["newInterface"],
       "fullFeedback" => $_SESSION["fullFeedback"],
+      "nbUnlockedTasksInitial" => $_SESSION["nbUnlockedTasksInitial"],
       "contestID" => $_SESSION["contestID"],
       "contestFolder" => $_SESSION["contestFolder"],
       "contestName" => $_SESSION["contestName"],

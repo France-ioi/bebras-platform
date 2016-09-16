@@ -6,6 +6,7 @@ var contestFolder;
 var contestStatus;
 var fullFeedback;
 var nextQuestionAuto;
+var nbUnlockedTasksInitial;
 var newInterface;
 var solutionsLoaded;
 var teamID = 0;
@@ -990,10 +991,7 @@ function updateUnlockedLevels(sortedQuestionIDs, updatedQuestionKey, contestEnde
       return;
    }
    var epsilon = 0.001;
-   var nbTasksUnlocked = [5, 0, 0];
-   if (sortedQuestionIDs.length <= 10) {
-      nbTasksUnlocked[0] = 4;
-   }
+   var nbTasksUnlocked = [nbUnlockedTasksInitial, 0, 0];
    var prevQuestionUnlockedLevels = {};
    var iQuestionID, questionKey;
    for (iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
@@ -1534,6 +1532,7 @@ function initContestData(data) {
    updateContestName(data.contestName);
    fullFeedback = parseInt(data.fullFeedback);
    nextQuestionAuto = parseInt(data.nextQuestionAuto);
+   nbUnlockedTasksInitial = parseInt(data.nbUnlockedTasksInitial);
    newInterface = !!parseInt(data.newInterface);
    contestStatus = data.contestStatus;
    TimeManager.setTotalTime(data.nbMinutes * 60);

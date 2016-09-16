@@ -1,0 +1,2 @@
+ALTER TABLE `contest` ADD `nbUnlockedTasksInitial` INT NOT NULL DEFAULT '4' AFTER `nextQuestionAuto`;
+ALTER TABLE `history_contest` ADD `nbUnlockedTasksInitial` INT NOT NULL DEFAULT '4' AFTER `nextQuestionAuto`;

@@ -351,6 +351,7 @@
     "confirm_group_operation": "Are you sure you want to do this now? (Do not do this while the contest is running!)",
     "select_group": "You need to select a group",
     "contest_nextQuestionAuto_label": "Auto-move to next question",
+    "contest_nbUnlockedTasksInitial_label": "Unlocked questions",
     "user_awardPrintingDate_label": "Algorea printing",
     "error_close": "Close",
     "codes_computed": "Codes computed",
