@@ -126,6 +126,7 @@
        <option value="15" data-i18n="grade_12_pro"></option>
        <option value="-4" data-i18n="grade_-4">Autre</option>
    </select> </p>
+   <p id="login-input-studentId-1"> <span data-i18n="[html]login_input_studentId"></span> <input id="studentId1" type="text" autocomplete="off"></input></p>
    <div id="contestant2" style="display:none">
       <p><b data-i18n="login_teammate"></b></p>
       <p id="login-input-firstName-2"><span data-i18n="[html]login_input_firstname"></span> <input id="firstName2" type="text" autocomplete="off"></input></p>
@@ -155,6 +156,7 @@
        <option value="15" data-i18n="grade_12_pro"></option>
        <option value="-4" data-i18n="grade_-4">Autre</option>
       </select> </p>
+      <p id="login-input-studentId-2"><span data-i18n="[html]login_input_studentId"></span> <input id="studentId2" type="text" autocomplete="off"></input></p>
    </div>
    <p><button type="button" id="buttonLogin" onclick="validateLoginForm()" data-i18n="login_start_contest"></button><span id="LoginResult" style="color:red"></span></p>
 </div>

@@ -39,21 +39,60 @@ function restartSession() {
    $_SESSION['CREATED'] = time();  // update creation time
 }
 
-function getQuestions($db, $contestID) {
+function pickSubset($questionsData, $subsetSize, $contestID, $teamID) {
+   $questionsSubset = array();
+   $questions = array();
+   foreach ($questionsData as $ID => $row) {
+	  if (!isset($questions[$row->order])) {
+		  $questions[$row->order] = array();
+	  }
+	  $questions[$row->order][] = $row;
+   }
+   // Ad-hoc system that selects 4 questions per group. There could be a json field in contest that describes for each
+   // randGroup, the number of elements picked for this randGroup.
+   $randomSeed = intval(substr($teamID, -8)) + intval(substr($contestID, -8));
+   $curRand = $randomSeed;
+   foreach ($questions as $orderGroup => $list) {
+	   if (count($list) <= $subsetSize) {
+		   foreach ($list as $row) {
+			   $questionsSubset[$row->ID] = $row;
+		   }
+	   } else {
+		   for ($pick = 0; $pick < $subsetSize; $pick++) {
+			   if ($curRand < 10000) {
+				   $curRand += $randomSeed;
+			   }
+			   $choice = $curRand % count($list);
+			   $row = $list[$choice];
+			   array_splice($list, $choice, 1);
+			   $questionsSubset[$row->ID] = $row;
+			   $curRand = round($curRand / count($list));
+		   }
+	   }
+   }
+   return $questionsSubset;
+}
+
+function getQuestions($db, $contestID, $subsetsSize = 0, $teamID = 0) {
    $stmt = $db->prepare("SELECT `question`.`ID`, `question`.`key`, `question`.`folder`, `question`.`name`, `contest_question`.`minScore`, `contest_question`.`noAnswerScore`, `contest_question`.`maxScore`, `contest_question`.`options`, `question`.`answerType`, `contest_question`.`order` FROM `contest_question` LEFT JOIN `question` ON (`contest_question`.`questionID` = `question`.`ID`) WHERE `contest_question`.`contestID` = ?");
    $stmt->execute(array($contestID));
    $questionsData = array();
+   $i = 0;
    while ($row = $stmt->fetchObject()) {
-      $questionsData[$row->ID] = $row;
-      $questionsData[$row->ID]->options = json_decode(html_entity_decode($row->options));
+      $row->options = json_decode(html_entity_decode($row->options));
       // php must be compiled with mysqlnd to fetch values with their real type
       // see http://stackoverflow.com/questions/1197005/how-to-get-numeric-types-from-mysql-using-pdo
       // Warning: AWS has mysqlnd, so it might act differently than on test
       // machines without it.
       // To make things a bit safe:
-      $questionsData[$row->ID]->maxScore = intval($row->maxScore);
-      $questionsData[$row->ID]->minScore = intval($row->minScore);
-      $questionsData[$row->ID]->noAnswerScore = intval($row->noAnswerScore);
+      $row->maxScore = intval($row->maxScore);
+      $row->minScore = intval($row->minScore);
+      $row->noAnswerScore = intval($row->noAnswerScore);
+	  $row->order = intval($row->order);
+	  $questionsData[$row->ID] = $row;
+   }
+   if ($subsetsSize != 0) {
+	   return pickSubset($questionsData, $subsetsSize, $contestID, $teamID);
    }
    return $questionsData;
 }

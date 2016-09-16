@@ -37,7 +37,7 @@ function getGroupTeams($db, $groupID) {
 }
 
 function openGroup($db, $password, $getTeams) {
-   $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, NOW()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`visibility`, `contest`.`askEmail`, `contest`.`askZip`, `contest`.`askGenre`, `contest`.`askGrade`, `contest`.`name` as `contestName` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
+   $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, NOW()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`visibility`, `contest`.`askEmail`, `contest`.`askZip`, `contest`.`askGenre`, `contest`.`askGrade`, `contest`.`name` as `contestName` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
    $stmt = $db->prepare($query);
    $stmt->execute(array($password));
    $row = $stmt->fetchObject();
@@ -62,6 +62,8 @@ function openGroup($db, $password, $getTeams) {
    $newInterface = $row->newInterface;
    $fullFeedback = $row->fullFeedback;
    $nextQuestionAuto = $row->nextQuestionAuto;
+   $nbUnlockedTasksInitial = $row->nbUnlockedTasksInitial;
+   $subsetsSize = $row->subsetsSize;
    $isPublic = $row->isPublic;
    if ($row->startTime === null) {
       $nbMinutesElapsed = 0;
@@ -87,6 +89,8 @@ function openGroup($db, $password, $getTeams) {
    $_SESSION["newInterface"] = $newInterface;
    $_SESSION["fullFeedback"] = $fullFeedback;
    $_SESSION["nextQuestionAuto"] = $nextQuestionAuto;
+   $_SESSION["nbUnlockedTasksInitial"] = $nbUnlockedTasksInitial;
+   $_SESSION["subsetsSize"] = $subsetsSize;
    $_SESSION["groupClosed"] = (($nbMinutesElapsed > 60) && (!$isPublic));
    // We don't want $_SESSION['userCode'] in the session at this point
    if (isset($_SESSION["userCode"])) {
@@ -109,12 +113,15 @@ function openGroup($db, $password, $getTeams) {
       "allowTeamsOfTwo" => $allowTeamsOfTwo,
       "newInterface" => $newInterface,
       "fullFeedback" => $fullFeedback,
+      "nbUnlockedTasksInitial" => $nbUnlockedTasksInitial,
+      "subsetsSize" => $subsetsSize,
       'bRecovered' => $row->bRecovered,
       "nbMinutesElapsed" => $nbMinutesElapsed,
       "askEmail" => !!intval($row->askEmail),
       "askZip" => !!intval($row->askZip),
       "askGenre" => !!intval($row->askGenre),
       "askGrade" => !!intval($row->askGrade),
+      "askStudentId" => !!intval($row->askStudentId),
       "isPublic" => $isPublic));
    return true;
 }
@@ -207,12 +214,18 @@ function createTeam($db, $contestants) {
       if (!isset($contestant["grade"])) {
          $contestant["grade"] = -2;
       }
+      if (!isset($contestant["genre"])) {
+         $contestant["genre"] = 0;
+      }
+      if (!isset($contestant["studentId"])) {
+         $contestant["studentId"] = "";
+      }
       list($contestant["firstName"], $contestant["lastName"], $saniValid, $trash) = 
          DataSanitizer::formatUserNames($contestant["firstName"], $contestant["lastName"]);
       $stmt = $db->prepare("
-         INSERT INTO `contestant` (`ID`, `lastName`, `firstName`, `genre`, `grade`, `teamID`, `cached_schoolID`, `saniValid`, `email`, `zipCode`) 
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-      $stmt->execute(array(getRandomID(), $contestant["lastName"], $contestant["firstName"], $contestant["genre"], $contestant["grade"], $teamID, $_SESSION["schoolID"], $saniValid, $contestant["email"], $contestant["zipCode"]));
+         INSERT INTO `contestant` (`ID`, `lastName`, `firstName`, `genre`, `grade`, `studentId`, `teamID`, `cached_schoolID`, `saniValid`, `email`, `zipCode`)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+      $stmt->execute(array(getRandomID(), $contestant["lastName"], $contestant["firstName"], $contestant["genre"], $contestant["grade"], $contestant["studentId"], $teamID, $_SESSION["schoolID"], $saniValid, $contestant["email"], $contestant["zipCode"]));
    }
    echo json_encode((object)array("success" => true, "teamID" => $teamID, "password" => $password));
 }
@@ -233,8 +246,7 @@ function loadContestData($db) {
          error_log('DynamoDB error updating team for teamID: '.$teamID);
       }
    }
-
-   $questionsData = getQuestions($db, $_SESSION["contestID"]);
+   $questionsData = getQuestions($db, $_SESSION["contestID"], $_SESSION["subsetsSize"], $teamID);
    //$stmt = $db->prepare("SELECT `questionID`, `answer` FROM `team_question` WHERE `teamID` = ?");
    //$stmt->execute(array($teamID));
    try {
@@ -289,6 +301,8 @@ function loadSession() {
       "allowTeamsOfTwo" => $_SESSION["allowTeamsOfTwo"],
       "newInterface" => $_SESSION["newInterface"],
       "fullFeedback" => $_SESSION["fullFeedback"],
+      "nbUnlockedTasksInitial" => $_SESSION["nbUnlockedTasksInitial"],
+      "subsetsSize" => $_SESSION["subsetsSize"],
       "contestID" => $_SESSION["contestID"],
       "contestFolder" => $_SESSION["contestFolder"],
       "contestName" => $_SESSION["contestName"],
