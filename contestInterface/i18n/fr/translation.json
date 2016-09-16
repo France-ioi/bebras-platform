@@ -33,7 +33,7 @@
     "login_input_lastname": "Entrez votre <b>nom de famille</b> :",
     "login_input_email": "Entrez votre <b>adresse e-mail</b> :",
     "login_input_zipCode": "Entrez votre <b>code postal</b> :",
-    "login_input_studentId": "Entrez votre <b>identifiant étudiant</b> :",
+    "login_input_studentId": "Entrez votre <b>numéro étudiant</b> :",
     "login_ask_gender": "Êtes-vous :",
     "login_female": "Une fille",
     "login_male": "Un garçon",
