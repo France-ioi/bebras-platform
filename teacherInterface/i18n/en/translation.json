@@ -352,6 +352,7 @@
     "select_group": "You need to select a group",
     "contest_nextQuestionAuto_label": "Auto-move to next question",
     "contest_nbUnlockedTasksInitial_label": "Unlocked questions",
+    "contest_subsetsSize_label": "Subsets size",
     "user_awardPrintingDate_label": "Algorea printing",
     "error_close": "Close",
     "codes_computed": "Codes computed",

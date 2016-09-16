@@ -358,6 +358,7 @@
     "select_group": "Vous devez sélectionner un groupe",
     "contest_nextQuestionAuto_label": "Question suivante auto",
     "contest_nbUnlockedTasksInitial_label": "Questions débloquées",
+    "contest_subsetsSize_label": "Taille sous-ensemble",
     "user_awardPrintingDate_label": "Impression Algoréa",
     "error_close": "Fermer",
     "codes_computed": "Codes générés",
