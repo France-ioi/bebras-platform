@@ -1304,6 +1304,7 @@ var hideLoginFields = function(postData) {
    var contestFieldMapping = {
       askEmail: 'email',
       askGrade: 'grade',
+      askStudentId: 'studentId',
       askZip: 'zipCode',
       askGenre: 'genre'
    }
@@ -1394,7 +1395,8 @@ window.validateLoginForm = function() {
          "genre" : $("input[name='genre" + iContestant + "']:checked").val(),
          "grade" : $("#grade" + iContestant).val(),
          "email" : $.trim($("#email" + iContestant).val()),
-         "zipCode" : $.trim($("#zipCode" + iContestant).val())
+         "zipCode" : $.trim($("#zipCode" + iContestant).val()),
+         "studentId" : $.trim($("#studentId" + iContestant).val())
       };
       contestants[iContestant] = contestant;
       if (!contestant.lastName && !fieldsHidden.lastName) {
@@ -1411,6 +1413,9 @@ window.validateLoginForm = function() {
          return;
       } else if (!contestant.zipCode === "" && !fieldsHidden.zipCode) {
          $("#LoginResult").html(t("zipCode_missing"));
+         return;
+      } else if (!contestant.studentId && !fieldsHidden.studentId) {
+         $("#LoginResult").html(t("studentId_missing"));
          return;
       } else if (!contestant.grade && !fieldsHidden.grade) {
          $("#LoginResult").html(t("grade_missing"));

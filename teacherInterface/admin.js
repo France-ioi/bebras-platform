@@ -505,6 +505,13 @@ function initModels(isLogged) {
                stype: "select", searchoptions: searchYesNo,
                width: 100
             },
+            askStudentId: {
+               label: t("contest_askStudentId_label"),
+               editable: true,
+               edittype: "select", editoptions: editYesNo,
+               stype: "select", searchoptions: searchYesNo,
+               width: 100
+            },
             askGenre: {
                label: t("contest_askGenre_label"),
                editable: true,
