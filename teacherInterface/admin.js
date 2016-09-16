@@ -436,7 +436,7 @@ function initModels(isLogged) {
                      },
                stype: "select"
             },
-            year: {label: t("contest_year_label"), editable: true, edittype: "text", subtype:"int", width: 100},
+            year: {label: t("contest_year_label"), editable: true, edittype: "text", subtype:"int", width: 40},
             status: {label: t("contest_status_label"), editable: true, edittype: "select", width: 100,
                editoptions:{
                   value:{
@@ -451,6 +451,33 @@ function initModels(isLogged) {
                },
                search: false
             },
+            open: {label: t("contest_open_label"), editable: true, edittype: "select", width: 70,
+               editoptions:{
+                  value:{
+                     "Open": t("option_open_contest"),
+                     "Closed": t("option_closed_contest"),
+                   }
+               },
+               search: false
+            },
+            visibility: {label: t("contest_visibility_label"), editable: true, edittype: "select", width: 70,
+               editoptions:{
+                  value:{
+                     "Hidden": t("option_hidden_contest"),
+                     "Visible": t("option_visible_contest"),
+                   }
+               },
+               search: false
+            },
+            closedToOfficialGroups: {label: t("contest_closedToOfficialGroups_label"), editable: true, edittype: "select", width: 70,
+               editoptions: editYesNo,
+               search: false
+            },             
+            showSolutions: {label: t("contest_showSolutions_label"), editable: true, edittype: "select", width: 60, editoptions: editYesNo},
+            beginDate: {label: t("contest_begin_date_label"), formatter:'date', formatoptions:{ srcformat:'Y-m-d H:i:s', newformat:'d/m/Y H:i'},
+            editable:true, edittype: "datetime", width: 100},
+            endDate: {label: t("contest_end_date_label"), formatter:'date', formatoptions:{ srcformat:'Y-m-d H:i:s', newformat:'d/m/Y H:i'},
+            editable:true, edittype: "datetime", width: 100},             
             nbMinutes: {label: t("contest_nbMinutes_label"), editable: true, edittype: "text", subtype:"int", width: 100},
             bonusScore: {label: t("contest_bonusScore_label"), editable: true, edittype: "text", subtype:"int", width: 100},
             allowTeamsOfTwo: {
@@ -2151,11 +2178,40 @@ function validateForm(modelName) {
       if (!item.schoolID) {
          return;
       }
+
+      /* Converts a string of the form "2018-07-14 16:53:28" or
+       * "19/07/2016" to date (forgetting about the time) */
+      function toDate(dateStr, sep, rev) {
+         var dateOnly = dateStr.split(" ")[0];
+         var parts = dateOnly.split(sep);
+         if (rev) {
+             return new Date(parts[0], parts[1] - 1, parts[2]);
+         }
+         return new Date(parts[2], parts[1] - 1, parts[0]);
+      }
+       
       var contest = contests[item.contestID];
-      if ((contest.status != "RunningContest") && (contest.status != "FutureContest") && (contest.status != "PreRanking")) {
-         if (item.participationType == "Official") {
-            alert(t("official_contests_restricted"));
+      var contestBeginDate = null;
+      if (contest.startDate) {
+         contestBeginDate = toDate(contest.startDate, "-", true);  
+      }
+      var contestEndDate = null;
+      if (contest.endDate) {
+         contestEndDate = toDate(contest.endDate, "-", true);
+      }
+      var date = toDate($("#group_expectedStartTime_date").val(), "/", false);
+      var today = new Date();
+
+      if (contest.ranked == "Ranked" && item.participationType == "Official") {
+         if (contestEndDate && today > contestEndDate) {
+            jqAlert(t("official_contests_restricted"));
             return;
+         }
+      }
+
+      if (item.participationType == "Official") {
+         if ((contestBeginDate && date < contestBeginDate) || (contestEndDate && date > contestEndDate)) {
+            jqAlert(t("warning_contest_outside_official_date"));
          }
       }
    }
@@ -2209,7 +2265,6 @@ function endEditForm(modelName, recordID, item) {
    }
    $("#edit_form").hide();
    $("#main_screen").show();   
-   $("#headerWarning").show();
 }
 
 function newSchool() {
