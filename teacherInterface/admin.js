@@ -494,6 +494,7 @@ function initModels(isLogged) {
                stype: "select", searchoptions: searchYesNo,
                width: 100
             },
+            customIntro: {label: t("contest_customIntro_label"), editable: true, edittype: "text", width:350},
             fullFeedback: {
                label: t("contest_fullFeedback_label"),
                editable: true,

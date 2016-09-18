@@ -10,6 +10,7 @@ var fullFeedback;
 var nextQuestionAuto;
 var nbUnlockedTasksInitial;
 var newInterface;
+var customIntro;
 var solutionsLoaded;
 var teamID = 0;
 var teamPassword = "";
@@ -1080,6 +1081,9 @@ function setupContest(data) {
    var sortedQuestionIDs = getSortedQuestionIDs(questionsData);
    if (newInterface) {
       fillListQuestionsNew(sortedQuestionIDs, questionsData);
+      if (customIntro != null) {
+         $("#questionListIntro").html(customIntro);
+      }
    } else {
       fillListQuestions(sortedQuestionIDs, questionsData);
    }
@@ -1541,6 +1545,7 @@ function initContestData(data) {
    nextQuestionAuto = parseInt(data.nextQuestionAuto);
    nbUnlockedTasksInitial = parseInt(data.nbUnlockedTasksInitial);
    newInterface = !!parseInt(data.newInterface);
+   customIntro = $("<textarea/>").html(data.customIntro).text();
    contestOpen = data.contestOpen;
    contestVisibility = data.contestVisibility;
    contestShowSolutions = data.contestShowSolutions;

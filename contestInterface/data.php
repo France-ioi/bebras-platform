@@ -37,7 +37,7 @@ function getGroupTeams($db, $groupID) {
 }
 
 function openGroup($db, $password, $getTeams) {
-   $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, NOW()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`visibility`, `contest`.`askEmail`, `contest`.`askZip`, `contest`.`askGenre`, `contest`.`askGrade`, `contest`.`askStudentId`, `contest`.`name` as `contestName` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
+   $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, NOW()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`visibility`, `contest`.`askEmail`, `contest`.`askZip`, `contest`.`askGenre`, `contest`.`askGrade`, `contest`.`askStudentId`, `contest`.`name` as `contestName` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
    $stmt = $db->prepare($query);
    $stmt->execute(array($password));
    $row = $stmt->fetchObject();
@@ -60,6 +60,7 @@ function openGroup($db, $password, $getTeams) {
    $bonusScore = $row->bonusScore;
    $allowTeamsOfTwo = $row->allowTeamsOfTwo;
    $newInterface = $row->newInterface;
+   $customIntro = $row->customIntro;
    $fullFeedback = $row->fullFeedback;
    $nextQuestionAuto = $row->nextQuestionAuto;
    $nbUnlockedTasksInitial = $row->nbUnlockedTasksInitial;
@@ -87,6 +88,7 @@ function openGroup($db, $password, $getTeams) {
    $_SESSION["bonusScore"] = $bonusScore;
    $_SESSION["allowTeamsOfTwo"] = $allowTeamsOfTwo;
    $_SESSION["newInterface"] = $newInterface;
+   $_SESSION["customIntro"] = $customIntro;
    $_SESSION["fullFeedback"] = $fullFeedback;
    $_SESSION["nextQuestionAuto"] = $nextQuestionAuto;
    $_SESSION["nbUnlockedTasksInitial"] = $nbUnlockedTasksInitial;
@@ -112,6 +114,7 @@ function openGroup($db, $password, $getTeams) {
       "bonusScore" => $bonusScore,
       "allowTeamsOfTwo" => $allowTeamsOfTwo,
       "newInterface" => $newInterface,
+      "customIntro" => $customIntro,
       "fullFeedback" => $fullFeedback,
       "nbUnlockedTasksInitial" => $nbUnlockedTasksInitial,
       "subsetsSize" => $subsetsSize,
@@ -300,6 +303,7 @@ function loadSession() {
       "bonusScore" => $_SESSION["bonusScore"],
       "allowTeamsOfTwo" => $_SESSION["allowTeamsOfTwo"],
       "newInterface" => $_SESSION["newInterface"],
+      "customIntro" => $_SESSION["customIntro"],
       "fullFeedback" => $_SESSION["fullFeedback"],
       "nbUnlockedTasksInitial" => $_SESSION["nbUnlockedTasksInitial"],
       "subsetsSize" => $_SESSION["subsetsSize"],

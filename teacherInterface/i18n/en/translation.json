@@ -314,6 +314,7 @@
     "login_teacher_wannabe_admin": "If you are a teacher, would you like to become a contest organizer in your school?",
     "contest_allowTeamsOfTwo_label": "Teams of two",
     "contest_newInterface_label": "New interface",
+    "contest_customIntro_label": "Custom intro",
     "contest_bonusScore_label": "Bonus score",
     "contest_question_noAnswerScore_label": "No answer score",
     "expectedStartTime_long_label": "Expected contest start time",
