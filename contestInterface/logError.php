@@ -13,11 +13,7 @@ $questionKey = isset($_POST["questionKey"]) ? $_POST["questionKey"] : null;
 
 $errormsg = $_POST['errormsg'];
 
-$bc = new BrowscapPHP\Browscap();
-
-$browser = $bc->getBrowser();
-
-$browserStr = $browser->browser.' '.$browser->version.' ('.$browser->platform.')';
+$browserStr = 'Unknown-tmp';
 
 $stmt = $db->prepare('insert into error_log (date, teamID, message, browser, questionKey) values (NOW(), :teamID, :errormsg, :browserStr, :questionKey);');
 $stmt->execute(['teamID' => $teamID, 'errormsg' => $errormsg, 'browserStr' => $browserStr, 'questionKey' => $questionKey]);

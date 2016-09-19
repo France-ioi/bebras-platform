@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "40fae047b20c9d8c34741d9512d29bfc",
-    "content-hash": "f01fca761591ed6ffdbffe80fe2beef7",
+    "hash": "e318d01d85a4bae7f694eab06bcd7a44",
+    "content-hash": "599bb34ebbea739853ff42f54448b392",
     "packages": [
         {
             "name": "France-ioi/pem-task-compiler",
@@ -110,77 +110,6 @@
                 "sdk"
             ],
             "time": "2015-11-24 01:59:29"
-        },
-        {
-            "name": "browscap/browscap-php",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/browscap/browscap-php.git",
-                "reference": "812ccd428c2e07287682ff8c659088a7ad0e1182"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/browscap/browscap-php/zipball/812ccd428c2e07287682ff8c659088a7ad0e1182",
-                "reference": "812ccd428c2e07287682ff8c659088a7ad0e1182",
-                "shasum": ""
-            },
-            "require": {
-                "mimmi20/file-loader": "~2.0",
-                "mimmi20/wurflcache": "~1.3",
-                "monolog/monolog": "1.*",
-                "php": ">=5.5.0",
-                "symfony/console": "~2.6",
-                "symfony/filesystem": "*",
-                "symfony/finder": "~2.6"
-            },
-            "require-dev": {
-                "fabpot/php-cs-fixer": "*",
-                "mikey179/vfsstream": "dev-master",
-                "phly/changelog-generator": "^2.1",
-                "phpunit/phpunit": "*",
-                "squizlabs/php_codesniffer": "2.*"
-            },
-            "suggest": {
-                "browscap/browscap": "to update the source file without downloading, for PHP 5.4+",
-                "ext-curl": "to use curl requests to get the ini file"
-            },
-            "bin": [
-                "bin/browscap-php"
-            ],
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "BrowscapPHP\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jonathan Stoppani",
-                    "email": "jonathan.stoppani@gmail.com"
-                },
-                {
-                    "name": "Thomas Mueller",
-                    "email": "t_mueller_stolzenhain@yahoo.de"
-                },
-                {
-                    "name": "James Titcumb",
-                    "email": "james@asgrim.com"
-                }
-            ],
-            "description": "Standalone replacement for php's native get_browser() function",
-            "homepage": "https://github.com/browscap/browscap-php",
-            "keywords": [
-                "browser",
-                "capabilities",
-                "get_browser",
-                "user agent"
-            ],
-            "time": "2015-11-24 17:24:45"
         },
         {
             "name": "doctrine/cache",
@@ -979,8 +908,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "france-ioi/pem-task-compiler": 20,
-        "browscap/browscap-php": 20
+        "france-ioi/pem-task-compiler": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
