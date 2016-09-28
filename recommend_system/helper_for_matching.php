@@ -1115,7 +1115,7 @@ function isAlreadyCoordinateur($email) {
 
 function addRecommendation($userID, $email) {
    return "INSERT INTO ̀recommendatioǹ (userID, email, date)
-      VALUES (:userID, :email, NOW())
+      VALUES (:userID, :email, UTC_TIMESTAMP())
      ";
 }
 

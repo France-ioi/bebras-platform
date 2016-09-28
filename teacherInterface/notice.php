@@ -3,6 +3,7 @@
 
 require_once("../shared/common.php");
 require_once("commonAdmin.php");
+require_once('./config.php');
 
 if ($config->customStringsName) {
    $translations = json_decode(file_get_contents('i18n/fr/translation.json'), true);
@@ -82,6 +83,11 @@ if (count($aGroups) == 0) {
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<?php
+   script_tag('/bower_components/jquery/jquery.min.js');
+   script_tag('/bower_components/jquery-ui/jquery-ui.min.js');
+   script_tag('/admin.js');
+?>;
 <title>Impression de la notice</title>
 <style>
    * {
@@ -151,7 +157,7 @@ Groupe <b>
       if ($datetime == "") {
          echo "à une date indéterminée";
       } else {
-         echo "le <b>".date("d/m/Y à H:i", $datetime)."</b>";
+         echo "le <b><script>document.write(utcDateFormatter('".$row->expectedStartTime."'));</script></b>";
       }
    }
 ?>

@@ -5,7 +5,7 @@ require_once("../shared/common.php");
 require_once("commonAdmin.php");
 
 function saveLoginDate($db, $userID) {
-   $query = "UPDATE `user` SET `lastLoginDate` = NOW() WHERE `ID` = ?";
+   $query = "UPDATE `user` SET `lastLoginDate` = UTC_TIMESTAMP() WHERE `ID` = ?";
    $stmt = $db->prepare($query);
    $stmt->execute(array($userID));
 }

@@ -19,6 +19,6 @@ $browser = $bc->getBrowser();
 
 $browserStr = $browser->browser.' '.$browser->version.' ('.$browser->platform.')';
 
-$stmt = $db->prepare('insert into error_log (date, teamID, message, browser, questionKey) values (NOW(), :teamID, :errormsg, :browserStr, :questionKey);');
+$stmt = $db->prepare('insert into error_log (date, teamID, message, browser, questionKey) values (UTC_TIMESTAMP(), :teamID, :errormsg, :browserStr, :questionKey);');
 $stmt->execute(['teamID' => $teamID, 'errormsg' => $errormsg, 'browserStr' => $browserStr, 'questionKey' => $questionKey]);
 echo json_encode(['success' => true]);

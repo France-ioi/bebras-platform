@@ -37,7 +37,7 @@ function getGroupTeams($db, $groupID) {
 }
 
 function openGroup($db, $password, $getTeams) {
-   $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, NOW()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`visibility`, `contest`.`askEmail`, `contest`.`askZip`, `contest`.`askGenre`, `contest`.`askGrade`, `contest`.`askStudentId`, `contest`.`name` as `contestName` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
+   $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, UTC_TIMESTAMP()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`visibility`, `contest`.`askEmail`, `contest`.`askZip`, `contest`.`askGenre`, `contest`.`askGrade`, `contest`.`askStudentId`, `contest`.`name` as `contestName` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
    $stmt = $db->prepare($query);
    $stmt->execute(array($password));
    $row = $stmt->fetchObject();
@@ -206,7 +206,7 @@ function createTeam($db, $contestants) {
       }
    }
 
-   $stmt = $db->prepare("UPDATE `group` SET `startTime` = NOW() WHERE `group`.`ID` = ? AND `startTime` IS NULL");
+   $stmt = $db->prepare("UPDATE `group` SET `startTime` = UTC_TIMESTAMP() WHERE `group`.`ID` = ? AND `startTime` IS NULL");
    $stmt->execute(array($_SESSION["groupID"]));
    $stmt = $db->prepare("UPDATE `group` SET `nbTeamsEffective` = `nbTeamsEffective` + 1, `nbStudentsEffective` = `nbStudentsEffective` + ? WHERE `ID` = ?");
    $stmt->execute(array(count($contestants), $_SESSION["groupID"]));
@@ -236,7 +236,7 @@ function createTeam($db, $contestants) {
 function loadContestData($db) {
    global $tinyOrm, $config;
    $teamID = $_SESSION["teamID"];
-   $stmt = $db->prepare("UPDATE `team` SET `startTime` = NOW() WHERE `ID` = :teamID AND `startTime` IS NULL");
+   $stmt = $db->prepare("UPDATE `team` SET `startTime` = UTC_TIMESTAMP() WHERE `ID` = :teamID AND `startTime` IS NULL");
    $stmt->execute(array("teamID" => $teamID));
    if ($config->db->use == 'dynamoDB') {
       $stmt = $db->prepare("SELECT `startTime` FROM `team` WHERE `ID` = :teamID");
@@ -274,7 +274,7 @@ function loadContestData($db) {
          $scores[$row['questionID']] = $row['ffScore'];
       }
    }
-   $stmt = $db->prepare("SELECT TIME_TO_SEC(TIMEDIFF(NOW(), `team`.`startTime`)) as `timeUsed`, `endTime` FROM `team` WHERE `ID` = ?");
+   $stmt = $db->prepare("SELECT TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), `team`.`startTime`)) as `timeUsed`, `endTime` FROM `team` WHERE `ID` = ?");
    $stmt->execute(array($teamID));
    $row = $stmt->fetchObject();
    $_SESSION["startTime"] = time() - intval($row->timeUsed);
@@ -286,7 +286,7 @@ function loadContestData($db) {
 
 function closeContest($db) {
    $teamID = $_SESSION["teamID"];
-   $stmtUpdate = $db->prepare("UPDATE `team` SET `endTime` = NOW() WHERE `ID` = ? AND `endTime` is NULL");
+   $stmtUpdate = $db->prepare("UPDATE `team` SET `endTime` = UTC_TIMESTAMP() WHERE `ID` = ? AND `endTime` is NULL");
    $stmtUpdate->execute(array($teamID));
    $_SESSION["closed"] = true;
    $stmt = $db->prepare("SELECT `endTime` FROM `team` WHERE `ID` = ?");
@@ -336,7 +336,7 @@ function recoverGroup($db) {
    $stmtUpdate = $db->prepare("UPDATE `group` SET `code` = ?, `password` = ?, `bRecovered`=1 WHERE `ID` = ?;");
    $stmtUpdate->execute(array('#'.$_POST['groupCode'], '#'.$row->password, $row->ID));
    $groupID = getRandomID();
-   $stmtInsert = $db->prepare("INSERT INTO `group` (`ID`, `startTime`, `bRecovered`, `contestID`, `expectedStartTime`, `name`, `userID`, `gradeDetail`, `grade`, `schoolID`, `nbStudents`, `nbTeamsEffective`, `nbStudentsEffective`, `noticePrinted`, `isPublic`, `participationType`, `password`, `code`) values (:groupID, NOW(), 1, :contestID, NOW(), :name, :userID, :gradeDetail, :grade, :schoolID, :nbStudents, 0, 0, 0, :isPublic, :participationType, :password, :code);");
+   $stmtInsert = $db->prepare("INSERT INTO `group` (`ID`, `startTime`, `bRecovered`, `contestID`, `expectedStartTime`, `name`, `userID`, `gradeDetail`, `grade`, `schoolID`, `nbStudents`, `nbTeamsEffective`, `nbStudentsEffective`, `noticePrinted`, `isPublic`, `participationType`, `password`, `code`) values (:groupID, UTC_TIMESTAMP(), 1, :contestID, UTC_TIMESTAMP(), :name, :userID, :gradeDetail, :grade, :schoolID, :nbStudents, 0, 0, 0, :isPublic, :participationType, :password, :code);");
    $stmtInsert->execute(array(
       'groupID' => $groupID,
       'contestID' => $row->contestID,
@@ -360,7 +360,7 @@ function recoverGroup($db) {
 
 function getRemainingTime($db) {
    if (isset($_SESSION["nbMinutes"]) && isset($_POST['teamID'])) {
-      $stmt = $db->prepare("SELECT TIME_TO_SEC(TIMEDIFF(NOW(), `team`.`startTime`)) as `timeUsed` FROM `team` WHERE `ID` = ?");
+      $stmt = $db->prepare("SELECT TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), `team`.`startTime`)) as `timeUsed` FROM `team` WHERE `ID` = ?");
       $stmt->execute(array($_POST['teamID']));
       $row = $stmt->fetchObject();
       if (!$row) {

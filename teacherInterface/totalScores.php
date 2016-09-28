@@ -20,7 +20,7 @@ $groupID = isset($_REQUEST['groupID']) ? $_REQUEST['groupID'] : null;
 $bonusScore = null;
 $stmt = null;
 
-$query = "UPDATE `team` SET `endTime` = NOW() WHERE `endTime` IS NULL AND TIME_TO_SEC(TIMEDIFF(NOW(), `team`.`startTime`)) > 3600";
+$query = "UPDATE `team` SET `endTime` = UTC_TIMESTAMP() WHERE `endTime` IS NULL AND TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), `team`.`startTime`)) > 3600";
 $stmt = $db->prepare($query);
 $stmt->execute(array());
 

@@ -232,7 +232,8 @@ function checkRequestUser($db, &$request, &$record, $operation, &$roles) {
          error_log($message);
          return false;
       }
-      $record["registrationDate"] = date('Y-m-d H:i:s');
+      $curTimeDB = new DateTime(null, new DateTimeZone("UTC"));
+      $record["registrationDate"] = $curTimeDB->format('Y-m-d H:i:s');
    }
    $userOk = checkUser($record);
    if ($userOk !== true) {
