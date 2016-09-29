@@ -70,7 +70,7 @@ function dateToDisplay(d) {
 }
 
 function utcDateFormatter(cellValue) {
-   if ((cellValue == undefined) || (cellValue == "0000-00-00 00:00:00")) {
+   if ((cellValue == undefined) || (cellValue == "0000-00-00 00:00:00") || (cellValue == "")) {
       return "";
    }
    var localDate = toDate(cellValue, "-", true, true);
@@ -78,6 +78,9 @@ function utcDateFormatter(cellValue) {
 }
 
 function localDateToUtc(cellValue, options, rowOject) {
+   if (cellValue == "") {
+      return "";
+   }
    var d = toDate(cellValue, "/", false, true);
    var res = d.toISOString().slice(0,16).split("T").join(" ");
    return res;
