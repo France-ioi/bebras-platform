@@ -1983,7 +1983,7 @@ function newForm(modelName, title, message) {
                var optionParts = optionsList[iOption].split(":");
                if (fieldName == "contestID") {
                   var contest = getContestFromID(optionParts[0]);
-                  if (contest && contest.status == 'PreRanking') {
+                  if (contest && contest.visibility == 'Hidden') {
                      continue;
                   }
                }
@@ -2292,7 +2292,7 @@ function validateForm(modelName) {
       }
       if ((contestStartDate && date < contestStartDate) ||
           (contestEndDate && date > contestEndDate)) {
-         jqAlert(t("warning_contest_outside_official_date"));
+         jqAlert(t("warning_contest_outside_official_date") + "(" + utcDateFormatter(contest.startDate) + " - " + utcDateFormatter(contest.endDate) + ")");
          return;
       }
    }
