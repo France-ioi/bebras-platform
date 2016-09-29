@@ -2117,9 +2117,10 @@ function editForm(modelName, title, item) {
          $("#" + modelName + "_" + fieldName).val(item[fieldName]);
       } else {
          if ((item[fieldName]) && (item[fieldName].length > 0)) {
-            var parts = item[fieldName].split(' ');
+            var localDate = utcDateFormatter(item[fieldName]);
+            var parts = localDate.split(' ');
 
-            $("#" + modelName + "_" + fieldName + "_date").val(getDateFromSQL(parts[0]));
+            $("#" + modelName + "_" + fieldName + "_date").val(parts[0]);
             var timeParts = parts[1].split(':');
             $("#" + modelName + "_" + fieldName + "_hours").val(parseInt(timeParts[0]));
             $("#" + modelName + "_" + fieldName + "_minutes").val(parseInt(timeParts[1]));
@@ -2215,7 +2216,6 @@ function validateForm(modelName) {
       item[fieldName] = $("#" + modelName + "_" + fieldName).val();
       if (field.edittype === "datetime") {
          var date = $("#" + modelName + "_" + fieldName + "_date").val();
-         date = getSQLFromDate(date);
          var hours = $("#" + modelName + "_" + fieldName + "_hours").val();
          if (!hours) {
             hours = "00";
@@ -2228,7 +2228,8 @@ function validateForm(modelName) {
             jqAlert(t("start_time_invalid"));
             return;
          }
-         item[fieldName] = date + " " + hours + ":" + minutes;
+         var fullDate = date + " " + hours + ":" + minutes;
+         item[fieldName] = localDateToUtc(fullDate);
       } else if (field.edittype === "ac-email") {
          if ($("#" + modelName + "_" + fieldName + "_domain").val() === "undefined") {
             if (item[fieldName] !== "") {
