@@ -2276,11 +2276,11 @@ function validateForm(modelName) {
        
       var contest = contests[item.contestID];
       var contestStartDate = null;
-      if (contest.startDate) {
+      if ((contest.startDate != null) && (contest.startDate != "0000-00-00 00:00:00")) {
          contestStartDate = toDate(contest.startDate, "-", true, true);
       }
       var contestEndDate = null;
-      if (contest.endDate) {
+      if ((contest.endDate != null) && (contest.endDate != "0000-00-00 00:00:00")) {
          contestEndDate = toDate(contest.endDate, "-", true, true);
       }
       var strDate = $("#group_expectedStartTime_date").val() + " " + $("#group_expectedStartTime_hours").val() + ":" + $("#group_expectedStartTime_minutes").val();
@@ -2290,7 +2290,8 @@ function validateForm(modelName) {
          jqAlert(t("official_contests_restricted"));
          return;
       }
-      if ((contestStartDate && date < contestStartDate) || (contestEndDate && date > contestEndDate)) {
+      if ((contestStartDate && date < contestStartDate) ||
+          (contestEndDate && date > contestEndDate)) {
          jqAlert(t("warning_contest_outside_official_date"));
          return;
       }
