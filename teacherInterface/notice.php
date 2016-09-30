@@ -221,7 +221,7 @@ Ce code est très important car il sert en cas de panne d'ordinateur ou autre in
 		 for ($i = 2; $i <= 4; $i++) {
 			 $property = "contestBackupURL".$i;
 			 if (isset($config->$property) && ($config->$property != '')) {
-				 $strBackup .= ", <a href='".$config->$property."'>".$config->$property.$i."</a>";
+				 $strBackup .= ", <a href='".$config->$property."'>".$config->$property."</a>";
 			 }
 		 }
 		 echo $strBackup;
