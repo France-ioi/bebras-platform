@@ -217,7 +217,14 @@ Ce code est très important car il sert en cas de panne d'ordinateur ou autre in
       }
       echo $config->email->sInfoAddress;   
       if ($config->contestBackupURL != '') {
-         echo "<br/><b>Si le site ne répond plus du tout</b>, essayez <a href='".$config->contestBackupURL."'>".$config->contestBackupURL."</a>";
+         $strBackup = "<br/><br/><b>Si le site ne fonctionne pas</b>, essayez <a href='".$config->contestBackupURL."'>".$config->contestBackupURL."</a>";
+		 for ($i = 2; $i <= 4; $i++) {
+			 $property = "contestBackupURL".$i;
+			 if (isset($config->$property) && ($config->$property != '')) {
+				 $strBackup .= ", <a href='".$config->$property."'>".$config->$property.$i."</a>";
+			 }
+		 }
+		 echo $strBackup;
       }
    ?>
 </div>
