@@ -53,7 +53,7 @@ window.unlockAllLevels = function() {
       $("#place_" + questionKey).hide();
       $("#row_" + questionKey).show();
    }
-}
+};
 
 var nbErrorsSent = 0;
 var logError = function(error, errormsg) {
@@ -1313,7 +1313,7 @@ var hideLoginFields = function(postData) {
       askStudentId: 'studentId',
       askZip: 'zipCode',
       askGenre: 'genre'
-   }
+   };
    for (var contestFieldName in contestFieldMapping) {
       var loginFieldName = contestFieldMapping[contestFieldName];
       if (postData[contestFieldName]) {
@@ -1322,12 +1322,11 @@ var hideLoginFields = function(postData) {
          $('#login-input-'+loginFieldName+'-2').show();
       } else {
          fieldsHidden[loginFieldName] = true;
-         console.error('hiding login-input-'+loginFieldName+'-1');
          $('#login-input-'+loginFieldName+'-1').hide();
          $('#login-input-'+loginFieldName+'-2').hide();
       }
    }
-}
+};
 
 /*
  * Checks if a group is valid and loads information about the group and corresponding contest,
@@ -1417,7 +1416,7 @@ window.validateLoginForm = function() {
       } else if (!contestant.email && !fieldsHidden.email) {
          $("#LoginResult").html(t("email_missing"));
          return;
-      } else if (!contestant.zipCode === "" && !fieldsHidden.zipCode) {
+      } else if (!contestant.zipCode && !fieldsHidden.zipCode) {
          $("#LoginResult").html(t("zipCode_missing"));
          return;
       } else if (!contestant.studentId && !fieldsHidden.studentId) {
@@ -2188,6 +2187,9 @@ function loadSolutionsHat() {
             $.get(data.solutionsUrl, function(content) {
                $('#divSolutionsContent').html(content);
                loadSolutions(data);
+            }).fail(function() {
+              logError('a problem occured while fetching the solutions, please report to the administrators.');
+              $("#divQuestions").show();
             });
          }
       }

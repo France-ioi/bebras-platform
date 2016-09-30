@@ -71,6 +71,7 @@ if ($config->teacherInterface->generationMode == 'local') {
        'Bucket' => $config->aws->bucketName,
        'Key'    => 'contests/'.$contestFolder.'/contest_'.$contestID.'_graders.html'
    ));
+   $graders = $graders['Body'].''; // need to cast to string
 } else {
    $gradersUrl = $config->teacherInterface->sAbsoluteStaticPath.'/contests/'.$contestFolder.'/contest_'.$contestID.'_graders.html';
 }
