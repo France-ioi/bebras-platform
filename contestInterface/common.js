@@ -2187,6 +2187,9 @@ function loadSolutionsHat() {
             $.get(data.solutionsUrl, function(content) {
                $('#divSolutionsContent').html(content);
                loadSolutions(data);
+            }).fail(function() {
+              logError('a problem occured while fetching the solutions, please report to the administrators.');
+              $("#divQuestions").show();
             });
          }
       }
