@@ -100,7 +100,7 @@ function reconnectSession($db) {
    $teamID = $_SESSION["teamID"];
    error_log("reconnexion de session acceptée ".json_encode($_REQUEST));
    // TODO: factoriser ce qui suit (copier-collé issu de data.php)
-   $stmt = $db->prepare("SELECT TIME_TO_SEC(TIMEDIFF(NOW(), `team`.`startTime`)) as `timeUsed`, `endTime`, UNIX_TIMESTAMP() as `timeNow` FROM `team` WHERE `ID` = ?");
+   $stmt = $db->prepare("SELECT TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), `team`.`startTime`)) as `timeUsed`, `endTime`, UNIX_TIMESTAMP() as `timeNow` FROM `team` WHERE `ID` = ?");
    $stmt->execute(array($teamID));
    $row = $stmt->fetchObject();
    $_SESSION["startTime"] = $row->timeNow - intval($row->timeUsed);

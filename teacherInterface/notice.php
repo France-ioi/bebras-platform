@@ -3,6 +3,7 @@
 
 require_once("../shared/common.php");
 require_once("commonAdmin.php");
+require_once('./config.php');
 
 if ($config->customStringsName) {
    $translations = json_decode(file_get_contents('i18n/fr/translation.json'), true);
@@ -82,6 +83,11 @@ if (count($aGroups) == 0) {
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<?php
+   script_tag('/bower_components/jquery/jquery.min.js');
+   script_tag('/bower_components/jquery-ui/jquery-ui.min.js');
+   script_tag('/admin.js');
+?>;
 <title>Impression de la notice</title>
 <style>
    * {
@@ -151,7 +157,7 @@ Groupe <b>
       if ($datetime == "") {
          echo "à une date indéterminée";
       } else {
-         echo "le <b>".date("d/m/Y à H:i", $datetime)."</b>";
+         echo "le <b><script>document.write(utcDateFormatter('".$row->expectedStartTime."'));</script></b>";
       }
    }
 ?>
@@ -211,7 +217,14 @@ Ce code est très important car il sert en cas de panne d'ordinateur ou autre in
       }
       echo $config->email->sInfoAddress;   
       if ($config->contestBackupURL != '') {
-         echo "<br/><b>Si le site ne répond plus du tout</b>, essayez <a href='".$config->contestBackupURL."'>".$config->contestBackupURL."</a>";
+         $strBackup = "<br/><br/><b>Si le site ne fonctionne pas</b>, essayez <a href='".$config->contestBackupURL."'>".$config->contestBackupURL."</a>";
+		 for ($i = 2; $i <= 4; $i++) {
+			 $property = "contestBackupURL".$i;
+			 if (isset($config->$property) && ($config->$property != '')) {
+				 $strBackup .= ", <a href='".$config->$property."'>".$config->$property."</a>";
+			 }
+		 }
+		 echo $strBackup;
       }
    ?>
 </div>

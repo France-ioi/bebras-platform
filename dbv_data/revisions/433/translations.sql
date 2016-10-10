@@ -315,7 +315,7 @@ INSERT INTO `translations` (`ID`, `languageID`, `category`, `key`, `translation`
 (291, 1, 'admin_js', 'participationType_comment', 'Créez un groupe ''hors classement'' pour vous tester vous-mêmes ou vos collègues sans apparaître dans le classement officiel.&lt;br/&gt;'),
 (292, 1, 'admin_js', 'participationType_official', 'Officiel'),
 (293, 1, 'admin_js', 'participationType_unofficial', 'Hors classement'),
-(294, 1, 'admin_js', 'expectedStartTime_label', 'Date &lt;br/&gt;de passage'),
+(294, 1, 'admin_js', 'expectedStartTime_label', 'Date de passage'),
 (295, 1, 'admin_js', 'participationType_long_label', 'Date de passage'),
 (296, 1, 'admin_js', 'expectedStartTime_comment', 'À fournir à titre indicatif uniquement, mais notez qu''on ne peut commencer à participer dans un groupe que dans une fenêtre de 30mn après sa première utilisation.'),
 (297, 1, 'admin_js', 'group_name_label', 'Nom'),

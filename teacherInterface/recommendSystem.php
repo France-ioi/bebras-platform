@@ -104,7 +104,7 @@ function saveRecommendation($userID, $email) {
    global $db;
    $query = "
       INSERT INTO `recommend_user` (userID, email, date)
-      VALUES (:userID, :email, NOW())
+      VALUES (:userID, :email, UTC_TIMESTAMP())
      ";
    $stmt = $db->prepare($query);
    $stmt->execute(array(':userID' => $userID, ':email' => $email));

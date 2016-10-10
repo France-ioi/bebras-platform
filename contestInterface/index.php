@@ -333,9 +333,13 @@
 </script>
 <!--[if IE 6]>
 <script>
-window.ieMode = true;
 window.sAbsoluteStaticPath = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathOldIE.'/') ?>;
 window.contestsRoot = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathOldIE.'/contests') ?>;
+</script>
+<![endif]-->
+<!--[if lte IE 9]>
+<script>
+window.ieMode = true;
 </script>
 <![endif]-->
 <div style="height:400px">

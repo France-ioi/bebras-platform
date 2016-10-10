@@ -1,4 +1,4 @@
-/* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
+/* Copyright (c) 2012-2016 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 
 // TODO: avoid using undefined as a value, use null instead.
 
@@ -37,6 +37,50 @@ function inArray(arr, value) {
     }
     
     return -1;
+}
+
+
+/* Converts a string of the form "2018-07-14 16:53:28" or
+ * "19/07/2016" to date (forgetting about the time) */
+function toDate(dateStr, sep, fromServer) {
+   var dateOnly = dateStr.split(" ")[0];
+   var timeParts = dateStr.split(" ")[1].split(":");
+   var parts = dateOnly.split(sep);
+   if (fromServer) {
+      return new Date(Date.UTC(parts[0], parts[1] - 1, parts[2], timeParts[0], timeParts[1]));
+   }
+   return new Date(parts[2], parts[1] - 1, parts[0], timeParts[0], timeParts[1]);
+}
+
+function dateToDisplay(d) {
+   var date = $.datepicker.formatDate("dd/mm/yy", d) 
+   var h = d.getHours();
+   h = (h < 10) ? ("0" + h) : h ;
+
+   var m = d.getMinutes();
+   m = (m < 10) ? ("0" + m) : m ;
+
+   var s = d.getSeconds();
+   s = (s < 10) ? ("0" + s) : s ;
+
+   return date + " " + h + ":" + m + ":" + s;
+}
+
+function utcDateFormatter(cellValue) {
+   if ((cellValue == undefined) || (cellValue == "0000-00-00 00:00:00") || (cellValue == "")) {
+      return "";
+   }
+   var localDate = toDate(cellValue, "-", true, true);
+   return dateToDisplay(localDate);
+}
+
+function localDateToUtc(cellValue, options, rowOject) {
+   if (cellValue == "") {
+      return "";
+   }
+   var d = toDate(cellValue, "/", false, true);
+   var res = d.toISOString().slice(0,16).split("T").join(" ");
+   return res;
 }
 
 function isAdmin() {
@@ -130,9 +174,17 @@ function getGroupsColModel() {
                "15": t("grade_12_pro")
             }}},
          participationType: {label: t("participationType_label"), longLabel: t("participationType_long_label"), editable: true, required: true, edittype: "select", width: 100, editoptions:{ value:{"Official": t("participationType_official"), "Unofficial": t("participationType_unofficial")}}, comment: t("participationType_comment")},
-         expectedStartTime: {label: t("expectedStartTime_label"), longLabel: t("expectedStartTime_long_label"),
-            formatter:'date', formatoptions:{ srcformat:'Y-m-d H:i:s', newformat:'d/m/Y H:i'},
-            editable:true, edittype: "datetime", width: 150, comment:t("expectedStartTime_comment")},
+         expectedStartTime: {
+            label: t("expectedStartTime_label") + "<br/>(" + jstz.determine().name() + ")",
+            longLabel: t("expectedStartTime_long_label"),
+            formatter: utcDateFormatter,
+            beforeSave: localDateToUtc,
+            editable:true,
+            edittype: "datetime",
+            width: 150,
+            required: true,
+            comment: t("expectedStartTime_comment")
+         },
          name: {label: t("group_name_label"), longLabel: t("group_name_long_label"), editable: true, edittype: "text", width: 200, required: true, comment: t("group_name_comment")},
 /*         gradeDetail: {label: "Préciser", editable: true, edittype: "text", width: 200, required: false, comment: "Information qui nous aidera à estimer la diffusion du concours dans les différentes filières et niveaux éducatifs"},*/
          code: {label: t("group_code_label"), width: 100},
@@ -359,8 +411,17 @@ function initModels(isLogged) {
             alternativeEmail: {label: t("user_alternativeEmail_label"), editable: true, edittype: "text", width: 200},
             validated: {label: t("user_validated_label"), editable: true, edittype: "select", width: 60, editoptions: editYesNo},
             allowMultipleSchools: {label: t("user_allowMultipleSchools_label"), editable: true, edittype: "select", width: 90, editoptions: editYesNo, stype: "select", searchoptions: searchYesNo},
-            registrationDate: {label: t("user_registrationDate_label"), editable: false, width: 170},
-            lastLoginDate: {label: t("user_lastLoginDate_label"), editable: false, width: 170},
+            registrationDate: {
+               label: t("user_registrationDate_label"),
+               formatter: utcDateFormatter,
+               editable: false,
+               width: 170
+            },
+            lastLoginDate: {
+               label: t("user_lastLoginDate_label"),
+               formatter: utcDateFormatter,
+               editable: false,
+            width: 170},
             awardPrintingDate: {label: t("user_awardPrintingDate_label"), editable: false, width: 170},
             isAdmin: {label: t("user_isAdmin_label"), editable: true, edittype: "select", width: 60, editoptions: editYesNo, stype: "select", searchoptions: searchYesNo},
             comment: {label: t("user_comment_label"), editable: true, edittype: "textarea", width: 450, editoptions:{rows:"8",cols:"40"}}
@@ -406,7 +467,13 @@ function initModels(isLogged) {
                stype: groupStype, searchoptions: groupSearchOptions},
             contestants: {label: t("team_view_contestants_label"), editable: false, width: 500},
             password: {label: t("team_view_password_label"), editable: false, width: 100, search: false},
-            startTime: {label: t("team_view_startTime_label"), editable: false, width: 180, search: false},
+            startTime: {
+               label: t("team_view_startTime_label") + "<br/>(" + jstz.determine().name() + ")",
+               editable: false,
+               formatter: utcDateFormatter,
+               width: 180,
+               search: false
+            },
             score: {label: t("team_view_score_label"), editable: false, width: 100, search: false},
             participationType: {label: t("participationType_label"), longLabel: t("participationType_long_label"), editable: false, required: false, edittype: "select", width: 130, editoptions:{ value:{"Official": t("participationType_official"), "Unofficial": t("participationType_unofficial")}}, comment: t("participationType_comment")},
          }
@@ -474,10 +541,20 @@ function initModels(isLogged) {
                search: false
             },             
             showSolutions: {label: t("contest_showSolutions_label"), editable: true, edittype: "select", width: 60, editoptions: editYesNo},
-            beginDate: {label: t("contest_begin_date_label"), formatter:'date', formatoptions:{ srcformat:'Y-m-d H:i:s', newformat:'d/m/Y H:i'},
-            editable:true, edittype: "datetime", width: 100},
-            endDate: {label: t("contest_end_date_label"), formatter:'date', formatoptions:{ srcformat:'Y-m-d H:i:s', newformat:'d/m/Y H:i'},
-            editable:true, edittype: "datetime", width: 100},             
+            startDate: {
+               label: t("contest_begin_date_label") + "<br/>(" + jstz.determine().name() + ")",
+               formatter: utcDateFormatter,
+               beforeSave: localDateToUtc,
+               editable:true,
+               width: 120
+            },
+            endDate: {
+               label: t("contest_end_date_label") + "<br/>(" + jstz.determine().name() + ")",
+               formatter: utcDateFormatter,
+               beforeSave: localDateToUtc,
+               editable:true,
+               width: 120                 
+            },
             nbMinutes: {label: t("contest_nbMinutes_label"), editable: true, edittype: "text", subtype:"int", width: 100},
             bonusScore: {label: t("contest_bonusScore_label"), editable: true, edittype: "text", subtype:"int", width: 100},
             allowTeamsOfTwo: {
@@ -625,6 +702,7 @@ function jqGridModel(modelName) {
          edittype: field.edittype,
          editoptions: field.editoptions,
          formatter: field.formatter,
+         unformat: field.unformat,
          formatoptions: field.formatoptions,
          searchoptions: field.searchoptions,
          stype: field.stype,
@@ -725,7 +803,19 @@ function loadGrid(modelName, sortName, rowNum, rowList, onSelectRow, withToolbar
   if (withToolbar) {
      $("#grid_" + modelName).jqGrid('filterToolbar', {autosearch:true, searchOnEnter:true});
   }
-}
+  $.extend(true, $.jgrid.inlineEdit, {
+            beforeSaveRow: function (options, rowid) {
+                var modelName = this.id.split("_")[1];
+                $(this).find('input').each(function () {
+                    var field = models[modelName].fields[this.name];
+                    if (field.beforeSave) {
+                       $(this).val(field.beforeSave($(this).val()));
+                    }
+                });
+                return true;
+            }
+        });
+   }
 
 function loadCustomAwards() {
    $.post("nextContestData.php", {}, function(res) {
@@ -1868,7 +1958,7 @@ function newForm(modelName, title, message) {
          html += field.label;
       }
       if (field.required) {
-         html += "<sup alt='" + t("mandatory_field") + "'>*</sup>";
+         html += "<sup title='" + t("mandatory_field") + "'>*</sup>";
       }
       html += "&nbsp;:</b></td><td style='width:350px'>";
       var fieldId = modelName + "_" + fieldName;
@@ -1890,7 +1980,7 @@ function newForm(modelName, title, message) {
                var optionParts = optionsList[iOption].split(":");
                if (fieldName == "contestID") {
                   var contest = getContestFromID(optionParts[0]);
-                  if (contest && contest.status == 'PreRanking') {
+                  if (contest && contest.visibility == 'Hidden') {
                      continue;
                   }
                }
@@ -1918,6 +2008,7 @@ function newForm(modelName, title, message) {
          html += "<input id='" + fieldId + "_date' type='text' /> ";
          html += " à ";
          html += getSelectHours(fieldId) + ":" + getSelectMinutes(fieldId);
+         html += "<br/>" + t("expectedStartTime_timeZone") + "<b>" + jstz.determine().name() + "</b>";
          js += "$('#" + fieldId + "_date').datepicker({ dateFormat: 'dd/mm/yy' });";
       }
       html += "</td><td style='width:500px;text-align:justify'>";
@@ -2023,9 +2114,10 @@ function editForm(modelName, title, item) {
          $("#" + modelName + "_" + fieldName).val(item[fieldName]);
       } else {
          if ((item[fieldName]) && (item[fieldName].length > 0)) {
-            var parts = item[fieldName].split(' ');
+            var localDate = utcDateFormatter(item[fieldName]);
+            var parts = localDate.split(' ');
 
-            $("#" + modelName + "_" + fieldName + "_date").val(getDateFromSQL(parts[0]));
+            $("#" + modelName + "_" + fieldName + "_date").val(parts[0]);
             var timeParts = parts[1].split(':');
             $("#" + modelName + "_" + fieldName + "_hours").val(parseInt(timeParts[0]));
             $("#" + modelName + "_" + fieldName + "_minutes").val(parseInt(timeParts[1]));
@@ -2121,7 +2213,6 @@ function validateForm(modelName) {
       item[fieldName] = $("#" + modelName + "_" + fieldName).val();
       if (field.edittype === "datetime") {
          var date = $("#" + modelName + "_" + fieldName + "_date").val();
-         date = getSQLFromDate(date);
          var hours = $("#" + modelName + "_" + fieldName + "_hours").val();
          if (!hours) {
             hours = "00";
@@ -2134,7 +2225,8 @@ function validateForm(modelName) {
             jqAlert(t("start_time_invalid"));
             return;
          }
-         item[fieldName] = date + " " + hours + ":" + minutes;
+         var fullDate = date + " " + hours + ":" + minutes;
+         item[fieldName] = localDateToUtc(fullDate);
       } else if (field.edittype === "ac-email") {
          if ($("#" + modelName + "_" + fieldName + "_domain").val() === "undefined") {
             if (item[fieldName] !== "") {
@@ -2179,41 +2271,27 @@ function validateForm(modelName) {
       if (!item.schoolID) {
          return;
       }
-
-      /* Converts a string of the form "2018-07-14 16:53:28" or
-       * "19/07/2016" to date (forgetting about the time) */
-      function toDate(dateStr, sep, rev) {
-         var dateOnly = dateStr.split(" ")[0];
-         var parts = dateOnly.split(sep);
-         if (rev) {
-             return new Date(parts[0], parts[1] - 1, parts[2]);
-         }
-         return new Date(parts[2], parts[1] - 1, parts[0]);
-      }
        
       var contest = contests[item.contestID];
-      var contestBeginDate = null;
-      if (contest.startDate) {
-         contestBeginDate = toDate(contest.startDate, "-", true);  
+      var contestStartDate = null;
+      if ((contest.startDate != null) && (contest.startDate != "0000-00-00 00:00:00")) {
+         contestStartDate = toDate(contest.startDate, "-", true, true);
       }
       var contestEndDate = null;
-      if (contest.endDate) {
-         contestEndDate = toDate(contest.endDate, "-", true);
+      if ((contest.endDate != null) && (contest.endDate != "0000-00-00 00:00:00")) {
+         contestEndDate = toDate(contest.endDate, "-", true, true);
       }
-      var date = toDate($("#group_expectedStartTime_date").val(), "/", false);
-      var today = new Date();
+      var strDate = $("#group_expectedStartTime_date").val() + " " + $("#group_expectedStartTime_hours").val() + ":" + $("#group_expectedStartTime_minutes").val();
+      var date = toDate(strDate, "/", false, false);
 
-      if (contest.ranked == "Ranked" && item.participationType == "Official") {
-         if (contestEndDate && today > contestEndDate) {
-            jqAlert(t("official_contests_restricted"));
-            return;
-         }
+      if ((item.participationType == "Official") && (parseInt(contest.closedToOfficialGroups) == 1)) {
+         jqAlert(t("official_contests_restricted"));
+         return;
       }
-
-      if (item.participationType == "Official") {
-         if ((contestBeginDate && date < contestBeginDate) || (contestEndDate && date > contestEndDate)) {
-            jqAlert(t("warning_contest_outside_official_date"));
-         }
+      if ((contestStartDate && date < contestStartDate) ||
+          (contestEndDate && date > contestEndDate)) {
+         jqAlert(t("warning_contest_outside_official_date") + "(" + utcDateFormatter(contest.startDate) + " - " + utcDateFormatter(contest.endDate) + ")");
+         return;
       }
    }
    $("#edit_form_error").html("");
