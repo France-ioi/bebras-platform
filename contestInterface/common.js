@@ -769,6 +769,7 @@ var TimeManager = {
    interval: null,
    prevTime: null,
    synchronizing: false,
+   syncCounter: 0,  // counter used to limit number of pending getRemainingTime requests
 
    setTotalTime: function(totalTime) {
       this.totalTime = totalTime;
@@ -786,6 +787,7 @@ var TimeManager = {
          this.prevTime = this.timeStart;
          this.updateTime();
          this.interval = setInterval(this.updateTime, 1000);
+         this.minuteInterval = setInterval(this.minuteIntervalHandler.bind(this), 60000);
       } else {
          $(".chrono").hide();
       }
@@ -813,6 +815,11 @@ var TimeManager = {
    },
 
    syncWithServer: function() {
+      if (this.syncCounter >= 1) {
+         //console.log('ignored spurious call to syncWithServer');
+         return;
+      }
+      this.syncCounter += 1;
       TimeManager.synchronizing = true;
       $(".minutes").html('');
       $(".seconds").html('synchro...');
@@ -836,6 +843,10 @@ var TimeManager = {
       });
    },
 
+   minuteIntervalHandler: function() {
+      this.syncCounter = 0;
+   },
+
    updateTime: function() {
       if (TimeManager.endTime || TimeManager.synchronizing) {
          return;
@@ -856,6 +867,7 @@ var TimeManager = {
       $(".seconds").html(Utils.pad2(seconds));
       if (remainingTime <= 0) {
          clearInterval(this.interval);
+         clearInterval(this.minuteInterval);
          TimeManager.endTimeCallback();
       }
    },
