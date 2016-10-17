@@ -808,7 +808,7 @@ function loadGrid(modelName, sortName, rowNum, rowList, onSelectRow, withToolbar
                 var modelName = this.id.split("_")[1];
                 $(this).find('input').each(function () {
                     var field = models[modelName].fields[this.name];
-                    if (field.beforeSave) {
+                    if (field != undefined && field.beforeSave) {
                        $(this).val(field.beforeSave($(this).val()));
                     }
                 });
