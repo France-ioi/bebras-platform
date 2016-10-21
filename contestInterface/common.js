@@ -1557,9 +1557,9 @@ function initContestData(data) {
    nbUnlockedTasksInitial = parseInt(data.nbUnlockedTasksInitial);
    newInterface = !!parseInt(data.newInterface);
    customIntro = $("<textarea/>").html(data.customIntro).text();
-   contestOpen = data.contestOpen;
+   contestOpen = !!parseInt(data.contestOpen);
    contestVisibility = data.contestVisibility;
-   contestShowSolutions = data.contestShowSolutions;
+   contestShowSolutions = !!parseInt(data.contestShowSolutions);
    TimeManager.setTotalTime(data.nbMinutes * 60);
    if (newInterface) {
       $("#question-iframe-container").addClass("newInterfaceIframeContainer");

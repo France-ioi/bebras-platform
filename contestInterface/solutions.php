@@ -18,7 +18,7 @@ if (!isset($_SESSION["closed"])) {
    echo json_encode(array('success' => false, 'message' => 'contest is not over (solutions)!'));
    exit;
 }
-if (!isset($_SESSION["contestShowSolutions"])) {
+if (!isset($_SESSION["contestShowSolutions"]) || !intval($_SESSION["contestShowSolutions"])) {
    echo json_encode(array('success' => false, 'message' => 'solutions non disponibles pour ce concours'));
    exit;
 }

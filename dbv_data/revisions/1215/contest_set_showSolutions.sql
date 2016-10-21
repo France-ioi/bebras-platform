@@ -1,0 +1,1 @@
+update contest set showSolutions = 1 where `status` = 'PastContest';

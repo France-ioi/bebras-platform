@@ -20,9 +20,10 @@ $questionKey = $_REQUEST['questionKey'];
 $contestFolder = null;
 $contestYear = null;
 
-$query = "UPDATE `team` SET `endTime` = UTC_TIMESTAMP() WHERE `endTime` IS NULL AND TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), `team`.`startTime`)) > 3600";
-$stmt = $db->prepare($query);
-$stmt->execute(array());
+// Commented it as I don't think it can do any good...
+// $query = "UPDATE `team` SET `endTime` = UTC_TIMESTAMP() WHERE `endTime` IS NULL AND TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), `team`.`startTime`)) > 3600";
+// $stmt = $db->prepare($query);
+// $stmt->execute(array());
 
 if ($contestID != null) {
    // Check contest existance
@@ -37,18 +38,22 @@ if ($contestID != null) {
    $contestFolder = $row->folder;
    $contestYear = $row->year;
 } else {
-   // Check contest existance
-   $query = "SELECT `group`.`ID`, `contest`.`ID` as `contestID`, `contest`.`folder` as `folder`, `contest`.`year` as `year` FROM `group` JOIN `contest` on `group`.`contestID` = `contest`.`ID` WHERE `group`.`ID` = ?";
+   // Check group existance
+   $query = "SELECT `group`.`ID`, `contest`.`ID` as `contestID`, `contest`.`folder` as `folder`, `contest`.`year` as `year`, `contest`.`showSolutions` FROM `group` JOIN `contest` on `group`.`contestID` = `contest`.`ID` WHERE `group`.`ID` = ?";
    $args = array($groupID);
    if (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"]) {
-      $query = "SELECT `group`.`ID`, `contest`.`ID` as `contestID`, `contest`.`folder` FROM `group` JOIN `contest` on `group`.`contestID` = `contest`.`ID` LEFT JOIN `user_user` on `group`.`userID` = `user_user`.`userID` WHERE `group`.`ID` = ? and ((`user_user`.`accessType` = 'write' AND `user_user`.`targetUserID` = ?) OR (`group`.`userID` = ?))";
+      $query = "SELECT `group`.`ID`, `contest`.`ID` as `contestID`, `contest`.`folder`, `contest`.`showSolutions` FROM `group` JOIN `contest` on `group`.`contestID` = `contest`.`ID` LEFT JOIN `user_user` on `group`.`userID` = `user_user`.`userID` WHERE `group`.`ID` = ? and ((`user_user`.`accessType` = 'write' AND `user_user`.`targetUserID` = ?) OR (`group`.`userID` = ?))";
       $args = array($groupID, $_SESSION['userID'], $_SESSION['userID']);
    }
    $stmt = $db->prepare($query);
    $stmt->execute($args);
    $row = $stmt->fetchObject();
    if (!$row) {
-      echo json_encode((object)array("status" => 'error', "message" => "Le groupe n'existe pas ou vous n'y avez pas accès (grader.php)"));
+      echo json_encode((object)array("status" => 'error', "message" => "Le groupe n'existe pas ou vous n'y avez pas accès"));
+      exit;
+   }
+   if (!intval($row->showSolutions) && (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"])) {
+      echo json_encode((object)array("status" => 'error', "message" => "Vous ne pouvez pas évaluer les soumissions d'un groupe correspondant à un concours en cours."));
       exit;
    }
    $contestFolder = $row->folder;

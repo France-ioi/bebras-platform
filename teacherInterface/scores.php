@@ -31,21 +31,29 @@ if (isset($_POST['scores'][0]['groupID'])) {
    $groupID = $_POST['scores'][0]['groupID'];
 }
 if ($groupID) {
-   $query = "SELECT `group`.`ID`, `contest`.`ID` as `contestID`, `contest`.`folder` as `folder`, `contest`.`year` as `year` FROM `group` JOIN `contest` on `group`.`contestID` = `contest`.`ID` WHERE `group`.`ID` = ?";
+   $query = "SELECT `group`.`ID`, `contest`.`ID` as `contestID`, `contest`.`folder` as `folder`, `contest`.`year` as `year`, `contest`.`showSolutions` FROM `group` JOIN `contest` on `group`.`contestID` = `contest`.`ID` WHERE `group`.`ID` = ?";
    $args = array($groupID);
    if (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"]) {
-      $query = "SELECT `group`.`ID`, `contest`.`ID` as `contestID`, `contest`.`folder` FROM `group` JOIN `contest` on `group`.`contestID` = `contest`.`ID` LEFT JOIN `user_user` on `group`.`userID` = `user_user`.`userID` WHERE `group`.`ID` = ? and ((`user_user`.`accessType` = 'write' AND `user_user`.`targetUserID` = ?) OR (`group`.`userID` = ?))";
+      $query = "SELECT `group`.`ID`, `contest`.`ID` as `contestID`, `contest`.`folder`, `contest`.`showSolutions` FROM `group` JOIN `contest` on `group`.`contestID` = `contest`.`ID` LEFT JOIN `user_user` on `group`.`userID` = `user_user`.`userID` WHERE `group`.`ID` = ? and ((`user_user`.`accessType` = 'write' AND `user_user`.`targetUserID` = ?) OR (`group`.`userID` = ?))";
       $args = array($groupID, $_SESSION['userID'], $_SESSION['userID']);
    }
    $stmt = $db->prepare($query);
    $stmt->execute($args);
    $row = $stmt->fetchObject();
    if (!$row) {
-      echo json_encode((object)array("status" => 'error', "message" => "Le groupe n'existe pas ou vous n'y avez pas accès (grader.php)"));
+      echo json_encode((object)array("status" => 'error', "message" => "Le groupe n'existe pas ou vous n'y avez pas accès"));
+      exit;
+   }
+   if (!intval($row->showSolutions) && (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"])) {
+      echo json_encode((object)array("status" => 'error', "message" => "Vous ne pouvez pas évaluer les soumissions d'un groupe correspondant à un concours en cours."));
       exit;
    }
    $stmt->closeCursor();
 } else {
+   if (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"]) {
+      echo json_encode((object)array("status" => 'error', "message" => "Seul un admin peut évaluer les scores d'un concours"));
+      exit;
+   }
    // Check contest existance
    $query = "SELECT `ID`, `folder`, `year` FROM `contest` WHERE `ID` = ?";
    $stmt = $db->prepare($query);
