@@ -2,6 +2,9 @@
 
 require_once("../shared/common.php");
 
+header("Content-Type: application/json");
+header("Connection: close");
+
 initSession();
 
 if (!isset($_SESSION["teamID"])) {
