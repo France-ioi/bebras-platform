@@ -255,6 +255,7 @@
    script_tag('/bower_components/pem-platform/task-pr.js');
    script_tag('/bower_components/jqgrid/js/minified/jquery.jqGrid.min.js');
    script_tag('/bower_components/jqgrid/js/i18n/grid.locale-' . $language . '.js');
+   script_tag('/bower_components/jstz/index.js');
    script_tag('/regions/' . strtoupper($countryCode) . '/regions.js');
    script_tag('/admin.js');
 ?>
