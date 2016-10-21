@@ -1430,7 +1430,7 @@ function loopGradeContest(curContestID, curGroupID) {
       if (data.status === 'success') {
          var selectorState = curGroupID ? '#gradeGroupState' : '#gradeContestState';
          $(selectorState).show();
-         $(selectorState).html('<span class="nbCurrent">0</span> / <span class="nbTotal">' + data.questionKeys.length + '</span> - ' + t("grading_current_question") + ' : <span class="current"></span> <span class="gradeprogressing"></span>');
+         $(selectorState).html(i18n.t('grading_in_progress')+'<span class="nbCurrent">0</span> / <span class="nbTotal">' + data.questionKeys.length + '</span> - ' + t("grading_current_question") + ' : <span class="current"></span> <span class="gradeprogressing"></span>');
          grade(curContestID, groupID, data.questionKeys, data.questionFolders, 0);
       }
       else {
@@ -1593,7 +1593,6 @@ function gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questio
    // If not score need to be send, go to the next packet directly
    if (!i) {
       $(selectorState+' .gradeprogressing').text($(selectorState+' .gradeprogressing').text()+'.');
-      $(selectorState).show();
       gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questionFolders, curIndex, curPackIndex + gradePackSize);
       return;
    }
@@ -1634,13 +1633,11 @@ function gradeQuestionPackEnd(task, curContestID, curGroupID, questionKeys, ques
       if (parseInt(curPackIndex / gradePackSize) % 25 === 0) {
          setTimeout(function() {
             $(selectorState+' .gradeprogressing').text($(selectorState+' .gradeprogressing').text()+'.');
-            $(selectorState).show();
             gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questionFolders, curIndex, curPackIndex + gradePackSize);
          }, 5000);
       }
       else {
          $(selectorState+' .gradeprogressing').text($(selectorState+' .gradeprogressing').text()+'.');
-         $(selectorState).show();
          gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questionFolders, curIndex, curPackIndex + gradePackSize);
       }
    }, 'json').fail(function() {
@@ -1672,7 +1669,6 @@ function computeScores(curContestID, curGroupID, packetNumber)
       var selectorState = curGroupID ? '#gradeGroupState' : '#gradeContestState';
       if (data.status === 'success') {
          if (data.finished) {
-            console.error('hide');
             $(selectorState).hide();
             $(selectorState).html('');
             var button = $(selectorButton);
@@ -1692,7 +1688,6 @@ function computeScores(curContestID, curGroupID, packetNumber)
          }
          else {
             $(selectorState+' .gradeprogressing').html($(selectorState+' .gradeprogressing').html()+'.');
-            $(selectorState).show();
             computeScores(curContestID, curGroupID, packetNumber + 1);
          }
       }

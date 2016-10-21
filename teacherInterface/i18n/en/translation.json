@@ -116,6 +116,7 @@
     "group_nbStudentsEffective_label": "Number of<br/>students",
     "group_nbStudents_label": "Expected<br/>students",
     "group_nbStudents_long_label": "Expected students",
+    "grading_in_progress": "Grading in progress:",
     "group_nbStudents_comment": "Give your best estimate. Used for statistics only",
     "group_schoolID_label": "School",
     "contest_question_contestID_label": "Contest",
