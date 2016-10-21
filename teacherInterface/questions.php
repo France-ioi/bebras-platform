@@ -23,14 +23,14 @@ if (isset($_REQUEST["contestID"]) && $_REQUEST['contestID']) {
    }
 } else if (isset($_REQUEST["groupID"]) && $_REQUEST['groupID']) {
    $groupID = $_REQUEST["groupID"];
-   $query = "SELECT `group`.`ID`, `contest`.`ID` as `contestID`, `contest`.`folder` FROM `group` JOIN `contest` on `group`.`contestID` = `contest`.`ID` WHERE `group`.`ID` = ?";
+   $query = "SELECT `group`.`ID`, `contest`.`ID` as `contestID`, `contest`.`folder`, `contest`.`showSolutions` FROM `group` JOIN `contest` on `group`.`contestID` = `contest`.`ID` WHERE `group`.`ID` = ?";
    $args = array($groupID);
    if ((!isset($_SESSION["isAdmin"])) || (!$_SESSION["isAdmin"])) {
       if (!isset($_SESSION['userID'])) {
          echo json_encode((object)array("status" => 'error', "message" => "Vous n'êtes pas loggé"));
          exit;
       } else {
-         $query = "SELECT `group`.`ID`, `contest`.`ID` as `contestID`, `contest`.`folder` FROM `group` JOIN `contest` on `group`.`contestID` = `contest`.`ID` LEFT JOIN `user_user` on `group`.`userID` = `user_user`.`userID` WHERE `group`.`ID` = ? and ((`user_user`.`accessType` = 'write' AND `user_user`.`targetUserID` = ?) OR (`group`.`userID` = ?))";
+         $query = "SELECT `group`.`ID`, `contest`.`ID` as `contestID`, `contest`.`folder`, `contest`.`showSolutions` FROM `group` JOIN `contest` on `group`.`contestID` = `contest`.`ID` LEFT JOIN `user_user` on `group`.`userID` = `user_user`.`userID` WHERE `group`.`ID` = ? and ((`user_user`.`accessType` = 'write' AND `user_user`.`targetUserID` = ?) OR (`group`.`userID` = ?))";
          $args = array($groupID, $_SESSION['userID'], $_SESSION['userID']);
       }
    }
@@ -39,6 +39,10 @@ if (isset($_REQUEST["contestID"]) && $_REQUEST['contestID']) {
    $row = $stmt->fetchObject();
    if (!$row) {
       echo json_encode((object)array("status" => 'error', "message" => "Le groupe n'existe pas ou vous n'y avez pas accès (questions.php)"));
+      exit;
+   }
+   if (!intval($row->showSolutions) && (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"])) {
+      echo json_encode((object)array("status" => 'error', "message" => "Vous ne pouvez pas évaluer les soumissions d'un groupe correspondant à un concours en cours."));
       exit;
    }
    $contestID = $row->contestID;

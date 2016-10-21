@@ -20,9 +20,9 @@ $groupID = isset($_REQUEST['groupID']) ? $_REQUEST['groupID'] : null;
 $bonusScore = null;
 $stmt = null;
 
-$query = "UPDATE `team` SET `endTime` = UTC_TIMESTAMP() WHERE `endTime` IS NULL AND TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), `team`.`startTime`)) > 3600";
-$stmt = $db->prepare($query);
-$stmt->execute(array());
+//$query = "UPDATE `team` SET `endTime` = UTC_TIMESTAMP() WHERE `endTime` IS NULL AND TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), `team`.`startTime`)) > 3600";
+//$stmt = $db->prepare($query);
+//$stmt->execute(array());
 
 if ($groupID == null) {
    // Check contest existance
@@ -68,10 +68,10 @@ if ($groupID == null) {
    ));
 } else {
    // Check group existance and access
-   $query = "SELECT `group`.`ID`, `contest`.`ID` as `contestID`, `contest`.`folder` as `folder`, `contest`.`bonusScore` as `bonusScore` FROM `group` JOIN `contest` on `group`.`contestID` = `contest`.`ID` WHERE `group`.`ID` = ?";
+   $query = "SELECT `group`.`ID`, `contest`.`ID` as `contestID`, `contest`.`folder` as `folder`, `contest`.`bonusScore` as `bonusScore`, `contest`.`showSolutions` FROM `group` JOIN `contest` on `group`.`contestID` = `contest`.`ID` WHERE `group`.`ID` = ?";
    $args = array($groupID);
    if (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"]) {
-      $query = "SELECT `group`.`ID`, `contest`.`ID` as `contestID`, `contest`.`folder` FROM `group` JOIN `contest` on `group`.`contestID` = `contest`.`ID` LEFT JOIN `user_user` on `group`.`userID` = `user_user`.`userID` WHERE `group`.`ID` = ? and ((`user_user`.`accessType` = 'write' AND `user_user`.`targetUserID` = ?) OR (`group`.`userID` = ?))";
+      $query = "SELECT `group`.`ID`, `contest`.`ID` as `contestID`, `contest`.`folder`, `contest`.`bonusScore` as `bonusScore`, `contest`.`showSolutions` FROM `group` JOIN `contest` on `group`.`contestID` = `contest`.`ID` LEFT JOIN `user_user` on `group`.`userID` = `user_user`.`userID` WHERE `group`.`ID` = ? and ((`user_user`.`accessType` = 'write' AND `user_user`.`targetUserID` = ?) OR (`group`.`userID` = ?))";
       $args = array($groupID, $_SESSION['userID'], $_SESSION['userID']);
    }
    $stmt = $db->prepare($query);
@@ -81,7 +81,11 @@ if ($groupID == null) {
       echo json_encode((object)array("status" => 'error', "message" => "Le groupe n'existe pas ou vous n'y avez pas accès (totalScores.php)"));
       exit;
    }
-   $bonusScore = $row->bonusScore;
+   if (!intval($row->showSolutions) && (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"])) {
+      echo json_encode((object)array("status" => 'error', "message" => "Vous ne pouvez pas évaluer les soumissions d'un groupe correspondant à un concours en cours."));
+      exit;
+   }
+   $bonusScore = intval($row->bonusScore);
 
    $query = "
       SELECT SUM(`team_question`.`score`) + ".$bonusScore." as `teamScore`,

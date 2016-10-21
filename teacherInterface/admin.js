@@ -1429,6 +1429,7 @@ function loopGradeContest(curContestID, curGroupID) {
    $.post('questions.php', { contestID: curContestID, groupID: curGroupID }, function(data) {
       if (data.status === 'success') {
          var selectorState = curGroupID ? '#gradeGroupState' : '#gradeContestState';
+         $(selectorState).show();
          $(selectorState).html('<span class="nbCurrent">0</span> / <span class="nbTotal">' + data.questionKeys.length + '</span> - ' + t("grading_current_question") + ' : <span class="current"></span> <span class="gradeprogressing"></span>');
          grade(curContestID, groupID, data.questionKeys, data.questionFolders, 0);
       }
@@ -1443,9 +1444,9 @@ function grade(curContestID, curGroupID, questionKeys, questionFolders, curIndex
 {
    var selectorState = curGroupID ? '#gradeGroupState' : '#gradeContestState';
    if (curIndex >= questionKeys.length) {
+      $(selectorState).show();
       $(selectorState).html(t("grading_compute_total_scores") + '<span class="gradeprogressing"></span>');
       computeScores(curContestID, curGroupID, 0);
-      
       return;
    }
    
@@ -1517,7 +1518,6 @@ function gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questio
    var selectorState = curGroupID ? '#gradeGroupState' : '#gradeContestState';
    // Compute scores of a pack
    if (curPackIndex >= curGradingData.teamQuestions.length) {
-      $(selectorState+' .gradeprogressing').text('');
       grade(curContestID, curGroupID, questionKeys, questionFolders, curIndex + 1);
       return;
    }
@@ -1593,6 +1593,7 @@ function gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questio
    // If not score need to be send, go to the next packet directly
    if (!i) {
       $(selectorState+' .gradeprogressing').text($(selectorState+' .gradeprogressing').text()+'.');
+      $(selectorState).show();
       gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questionFolders, curIndex, curPackIndex + gradePackSize);
       return;
    }
@@ -1633,11 +1634,13 @@ function gradeQuestionPackEnd(task, curContestID, curGroupID, questionKeys, ques
       if (parseInt(curPackIndex / gradePackSize) % 25 === 0) {
          setTimeout(function() {
             $(selectorState+' .gradeprogressing').text($(selectorState+' .gradeprogressing').text()+'.');
+            $(selectorState).show();
             gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questionFolders, curIndex, curPackIndex + gradePackSize);
          }, 5000);
       }
       else {
          $(selectorState+' .gradeprogressing').text($(selectorState+' .gradeprogressing').text()+'.');
+         $(selectorState).show();
          gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questionFolders, curIndex, curPackIndex + gradePackSize);
       }
    }, 'json').fail(function() {
@@ -1665,10 +1668,12 @@ function computeScores(curContestID, curGroupID, packetNumber)
 {
    // Compute teams total score
    $.post('totalScores.php', { contestID: curContestID, groupID: curGroupID, begin: packetNumber },function(data) {
-      var selectorButton = curGroupID ? '#buttonGradeGroup' : '#buttonGradeContest';
+      var selectorButton = curGroupID ? '#buttonGradeSelected_group' : '#buttonGradeContest';
       var selectorState = curGroupID ? '#gradeGroupState' : '#gradeContestState';
       if (data.status === 'success') {
          if (data.finished) {
+            console.error('hide');
+            $(selectorState).hide();
             $(selectorState).html('');
             var button = $(selectorButton);
             var msg = t("grading_scores_computed");
@@ -1687,6 +1692,7 @@ function computeScores(curContestID, curGroupID, packetNumber)
          }
          else {
             $(selectorState+' .gradeprogressing').html($(selectorState+' .gradeprogressing').html()+'.');
+            $(selectorState).show();
             computeScores(curContestID, curGroupID, packetNumber + 1);
          }
       }
@@ -1760,7 +1766,7 @@ function gradeGroup() {
    if (!checkGroupSelectedAndConfirm()) {
       return;
    }
-   $("#buttonGradeGroup").attr("disabled", true);
+   $("#buttonGradeSelected_group").attr("disabled", true);
    var curGroupID = groupID;
    loopGradeContest(undefined, curGroupID);
 }

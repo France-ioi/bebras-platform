@@ -138,12 +138,14 @@
             <button type="button" data-i18n="refresh_list" onclick="refreshGrid('group')"></button><a href="#" onclick="exportCSV('group')" data-i18n="export_to_csv"></a>
             <table id="grid_group"><tbody><tr><td/></tr></tbody></table>
             <div id="pager_group"></div> 
+            <div style="margin-top:10px"></div><br/>
             <button type="button" data-i18n="groups_create" onclick="newGroup()"></button>
             <button type="button" id="buttonEditSelected_group" data-i18n="groups_edit_selected" onclick="editGroup()"></button>
-            <button type="button" id="buttonDeleteSelected_group" data-i18n="groups_delete_selected"></button><br/>
+            <button type="button" id="buttonDeleteSelected_group" data-i18n="groups_delete_selected"></button>
+            <button type="button" id="buttonGradeSelected_group" data-i18n="groups_grade_selected" onclick="gradeGroup()"></button><br/>
+            <div id="gradeGroupState" style="display:none;"></div>
+            <div style="margin-top:10px"></div><br/>
             <span data-i18n="[html]group_print_certificates_help"></span>
-            <!--<button type="button"" id="buttonGradeGroup" data-i18n="group_grade" onclick="gradeGroup()"></button>
-            <div id="gradeGroupState"></div>-->
             <h3 id="group_print_certificates_title" data-i18n="group_print_certificates_title"></h3>
             <p id="group_print_certificates_help" data-i18n="group_print_certificates_help"></p>
             <button type="button" id="buttonPrintCertificates_group" onclick="printGroupCertificates()" data-i18n="group_print_certificates"></button>
