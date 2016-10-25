@@ -65,6 +65,11 @@ function openGroup($db, $password, $getTeams) {
    $nbUnlockedTasksInitial = $row->nbUnlockedTasksInitial;
    $subsetsSize = $row->subsetsSize;
    $isPublic = $row->isPublic;
+   if (intval($row->isPublic)) {
+      header('X-Backend-Hint: limit');
+   } else {
+      header('X-Backend-Hint: pass');
+   }
    if ($row->startTime === null) {
       $nbMinutesElapsed = 0;
    } else {
@@ -92,6 +97,7 @@ function openGroup($db, $password, $getTeams) {
    $_SESSION["nextQuestionAuto"] = $nextQuestionAuto;
    $_SESSION["nbUnlockedTasksInitial"] = $nbUnlockedTasksInitial;
    $_SESSION["subsetsSize"] = $subsetsSize;
+   $_SESSION["isPublic"] = $isPublic;
    $_SESSION["groupClosed"] = (($nbMinutesElapsed > 60) && (!$isPublic));
    // We don't want $_SESSION['userCode'] in the session at this point
    if (isset($_SESSION["userCode"])) {
@@ -130,7 +136,7 @@ function openGroup($db, $password, $getTeams) {
 
 function reloginTeam($db, $password, $teamID) {
    global $tinyOrm, $config;
-   $stmt = $db->prepare("SELECT `group`.`password`, `contest`.`status` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `group`.`ID` = ?");
+   $stmt = $db->prepare("SELECT `group`.`password`, `contest`.`status`, `group`.`isPublic` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `group`.`ID` = ?");
    $stmt->execute(array($_SESSION["groupID"]));
    $row = $stmt->fetchObject();
    if (!$row) {
@@ -160,6 +166,11 @@ function reloginTeam($db, $password, $teamID) {
          $_SESSION["teamID"] = $teamID;
          $_SESSION["teamPassword"] = $row->password;
          $_SESSION["nbMinutes"] = intval($row->nbMinutes);
+         if (intval($row->isPublic)) {
+            header('X-Backend-Hint: limit');
+         } else {
+            header('X-Backend-Hint: pass');
+         }
          return true;
       }
    }
@@ -229,6 +240,11 @@ function createTeam($db, $contestants) {
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
       $stmt->execute(array(getRandomID(), $contestant["lastName"], $contestant["firstName"], $contestant["genre"], $contestant["grade"], $contestant["studentId"], $teamID, $_SESSION["schoolID"], $saniValid, $contestant["email"], $contestant["zipCode"]));
    }
+   if ($_SESSION['isPublic']) {
+      header('X-Backend-Hint: limit');
+   } else {
+      header('X-Backend-Hint: pass');
+   }
    echo json_encode((object)array("success" => true, "teamID" => $teamID, "password" => $password));
 }
 
@@ -280,6 +296,11 @@ function loadContestData($db) {
    if ($row->endTime != null) {
       $_SESSION["closed"] = true;
    }
+   if ($_SESSION['isPublic']) {
+      header('X-Backend-Hint: limit');
+   } else {
+      header('X-Backend-Hint: pass');
+   }
    echo json_encode((object)array("success" => true, "questionsData" => $questionsData, 'scores' => $scores, "answers" => $answers, "timeUsed" => $row->timeUsed, "endTime" => $row->endTime, "teamPassword" => $_SESSION["teamPassword"]));
 }
 
@@ -307,6 +328,7 @@ function loadSession() {
       "nbUnlockedTasksInitial" => $_SESSION["nbUnlockedTasksInitial"],
       "subsetsSize" => $_SESSION["subsetsSize"],
       "contestID" => $_SESSION["contestID"],
+      "isPublic" => $_SESSION["isPublic"],
       "contestFolder" => $_SESSION["contestFolder"],
       "contestName" => $_SESSION["contestName"],
       "contestOpen" => $_SESSION["contestOpen"],
