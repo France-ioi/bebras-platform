@@ -6,6 +6,7 @@
 <head>
 <meta charset='utf-8'>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="shortcut icon" href="<?= $config->faviconfile ?>" />
 <title data-i18n="general_page_title"></title>
 <?php stylesheet_tag('/style.css'); ?>
 </head><body>

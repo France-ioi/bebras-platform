@@ -8,6 +8,8 @@ $config = (object) array();
 
 $config->maintenanceUntil = null; // maintenance end time (null if no maintenance)
 
+$config->faviconfile = 'favicon.ico';
+
 $config->db = (object) array();
 $config->db->use = 'mysql';
 $config->db->dynamoSessions = false;

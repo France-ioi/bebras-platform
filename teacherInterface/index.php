@@ -5,6 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" href="<?= $config->faviconfile ?>" />
 <title data-i18n="page_title"></title>
 <?php stylesheet_tag('/bower_components/jquery-ui/themes/base/jquery-ui.min.css'); ?>
 <?php stylesheet_tag('/bower_components/jqgrid/css/ui.jqgrid.css'); ?>
