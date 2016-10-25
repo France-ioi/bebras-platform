@@ -6,7 +6,6 @@ include_once("../shared/tinyORM.php");
 include_once("common_contest.php");
 
 function loadPublicGroups($db) {
-   restartSession();
    $stmt = $db->prepare("SELECT `group`.`name`, `group`.`code`, `contest`.`year`, `contest`.`category`, `contest`.`level` ".
       "FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `isPublic` = 1 AND `contest`.`visibility` <> 'Hidden';");
    $stmt->execute(array());
@@ -14,7 +13,7 @@ function loadPublicGroups($db) {
    while ($row = $stmt->fetchObject()) {
       $groups[] = $row;
    }
-   echo json_encode(array("success" => true, "groups" => $groups, "SID" => session_id()));
+   echo json_encode(array("success" => true, "groups" => $groups));
 }
 
 function loginTeam($db, $password) {
@@ -377,8 +376,6 @@ function getRemainingTime($db) {
 header("Content-Type: application/json");
 header("Connection: close");
 
-initSession();
-
 if (!isset($_POST["action"])) {
    echo json_encode(array("success" => false, "message" => "Aucune action fournie"));
    exit;
@@ -390,12 +387,22 @@ if ($action === "loadPublicGroups") {
    loadPublicGroups($db);
 }
 
-if ($action === "loadSessionOrPublicGroups") {
+initSession();
+
+if ($action === "loadSession") {
    if (isset($_SESSION["teamID"]) && (!isset($_SESSION["closed"]))) {
       loadSession($db);
    } else {
-      loadPublicGroups($db);
+      echo json_encode(['success' => true, "SID" => session_id()]);
    }
+}
+
+if ($action === "destroySession") {
+   restartSession();
+   echo json_encode(array(
+      "success" => true,
+      "SID" => session_id()));
+   return;
 }
 
 else if ($action === "checkPassword") {

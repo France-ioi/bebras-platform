@@ -889,6 +889,9 @@ var TimeManager = {
 // Main page
 
 window.selectMainTab = function(tabName) {
+   if (tabName == 'home') {
+      loadPublicGroups();
+   }
    var tabNames = ["school", "home", "continue"];
    for(var iTab = 0; iTab < tabNames.length; iTab++) {
       if (tabNames[iTab] === tabName) {
@@ -1577,17 +1580,13 @@ function initContestData(data) {
  * Loads all the information about a session if a session is already opened
  * Otherwise, displays the list of public groups.
 */
-function loadSessionOrPublicGroups(restartSession) {
-   var action = "loadSessionOrPublicGroups";
-   if (restartSession) {
-      action = "loadPublicGroups";
-   }
-   $.post("data.php", {SID: SID, action: action},
+function loadSession() {
+   $.post("data.php", {SID: SID, action: 'loadSession'},
       function(data) {
          SID = data.SID;
          if (data.teamID) {
             if (!confirm("Voulez-vous reprendre l'épreuve commencée ?")) {
-               loadSessionOrPublicGroups(true);
+               destroySession();
                return;
             }
             teamID = data.teamID;
@@ -1596,13 +1595,27 @@ function loadSessionOrPublicGroups(restartSession) {
             loadContestData(contestID, contestFolder);
             return;
          }
-         //$("#classroomGroups").show();
+      }, "json");
+}
+
+function destroySession() {
+   SID = null; // are we sure about that?
+   $.post("data.php", {action: 'destroySession'},
+      function(data) {
+         SID = data.SID;
+      }, "json");
+}
+
+function loadPublicGroups() {
+   $.post("data.php", {action: 'loadPublicGroups'},
+      function(data) {
+           //$("#classroomGroups").show();
          if (data.groups.length !== 0) {
             $("#listPublicGroups").html(getPublicGroupsList(data.groups));
          }
          $("#contentPublicGroups").show();
          $("#loadPublicGroups").hide();
-      }, "json");
+      }, 'json');
 }
 
 // Obtain an association array describing the parameters passed to page
@@ -1633,7 +1646,7 @@ function init() {
       $("#genre" + contestant + "_male").attr('checked', null);
    }
    initErrorHandler();
-   loadSessionOrPublicGroups(false);
+   loadSession();
    // Load initial tab according to parameters
    var params = getPageParameters();
    if (params.tab)
