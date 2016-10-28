@@ -1,5 +1,5 @@
 <?php
-require('../config.php');
+require(__DIR__.'/../config.php');
 
 if (preg_match('/(?i)msie [5-7]/',$_SERVER['HTTP_USER_AGENT'])) {
     // if IE<=7 or ?p=1

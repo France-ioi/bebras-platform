@@ -1,5 +1,5 @@
 <?php
-  include('./config.php');
+  include(__DIR__.'/config.php');
   header('Content-type: text/html');
 ?><!DOCTYPE html>
 <html>
