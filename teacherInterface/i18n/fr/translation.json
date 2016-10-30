@@ -406,7 +406,7 @@
     "diploma_score_rankSchoolRank": "a obtenu __score__ points sur __maxScore__,<br/>la __rankOrdinal__ place sur __maxRank__,<br/>et la __schoolRankOrdinal__ place sur __maxSchoolRank__ dans l'établissement.<br>",
     "group_print_certificates_title": "Imprimer les diplômes",
     "group_print_certificates": "Imprimer les diplômes",
-    "group_print_certificates_help": "Vous pouvez impimer ici les diplômes pour un groupe particulier sélectionné dans la liste. L'ensemble des diplômes d'un établissement peut être imprimé dans l'onglet « Établissements ».",
+    "group_print_certificates_help": "Vous pouvez imprimer ici les diplômes pour un groupe particulier sélectionné dans la liste. L'ensemble des diplômes d'un établissement peut être imprimé dans l'onglet « Établissements ».",
     "school_print_certificates_title": "Imprimer les diplômes",
     "school_print_certificates_help": "Vous pouvez imprimer les diplômes pour l'ensemble d'un établissement sélectionné dans la liste ci-dessus, ce pour les concours listés ci-dessous. Vous pouvez également les imprimer groupe par groupe dans l'onglet « Groupes ».",
     "group_print_certificates_impossible": "Vous pouvez imprimer de diplômes uniquement pour les concours officiels qui viennent de se terminer.",
