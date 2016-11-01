@@ -203,6 +203,8 @@ function handleLoadContestData($db) {
    $_SESSION["startTime"] = time() - intval($row->timeUsed);
    if ($row->endTime != null) {
       $_SESSION["closed"] = true;
+   } else {
+      unset($_SESSION["closed"]);
    }
    addBackendHint("ClientIP.loadContestData:pass");
    addBackendHint(sprintf("Team(%s):loadContestData", escapeHttpValue($teamID)));
