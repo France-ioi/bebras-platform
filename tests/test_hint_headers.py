@@ -7,12 +7,14 @@ response.
 """
 
 import http.client
+import http.cookies
+import json
 import urllib.request
 import urllib.parse
 import urllib.error
-import http.cookies
-import json
 import re
+import sys
+import traceback
 
 
 QuotedStringRe = re.compile("\"(?:\\\\.|[^\"\\\\])*\"")
@@ -56,9 +58,11 @@ class Transaction(object):
         if response.status != 200:
             raise Exception(
                 'bad response {} {}'.format(response.status, response.reason))
+        # for header in response.getheaders():
+        #     print(header)
         hints = response.getheader('X-Backend-Hints', "")
         cookies = http.cookies.SimpleCookie(response.getheader('Set-Cookie'))
-        if self.sid is None:
+        if self.sid is None and 'contest2' in cookies:
             self.sid = cookies['contest2'].value
         str_body = response.read().decode("UTF-8")
         try:
@@ -82,16 +86,31 @@ class Transaction(object):
         return self.post_generic_request('solutions.php', params)
 
     def checkHints(self, received, expected):
+        """ checkHints takes the received header (string) and list of
+            expected headers, prints any mismatches.
+        """
         rec_list = read_http_header_value(received)
         for exp_value in expected:
             if exp_value not in rec_list:
-                print("missing: {}".format(exp_value))
+                self.messages.append("missing: {}".format(exp_value))
         for rec_value in rec_list:
             if rec_value not in expected:
-                print("unexpected: {}".format(rec_value))
+                self.messages.append("unexpected: {}".format(rec_value))
+
+    def beginTest(self, name):
+        self.test_name = name
+        self.messages = list()
+
+    def endTest(self):
+        if self.messages:
+            print("\033[31;1m{}\033[0m".format(self.test_name))
+            for message in self.messages:
+                print("\033[31m{}\033[0m".format(message))
+        else:
+            print("\033[32m{}\033[0m".format(self.test_name))
 
     def loadSession(self, check=True):
-        self.testing = 'loadSession'
+        self.beginTest('loadSession')
         body, hints = self.post_data_request({'action': 'loadSession'})
         if not body.get('success', False):
             raise Exception('loadSession: failed')
@@ -104,9 +123,10 @@ class Transaction(object):
                     "ClientIp.loadSession:pass",
                     "SessionId({}):loadSession".format(self.sid)
                 ])
+        self.endTest()
 
     def destroySession(self, check=True):
-        self.testing = 'destroySession'
+        self.beginTest('destroySession')
         sid = self.sid
         body, hints = self.post_data_request({'action': 'destroySession'})
         if not body.get('success', False):
@@ -120,18 +140,20 @@ class Transaction(object):
                     "ClientIp.destroySession:pass",
                     "SessionId({}):destroySession".format(sid)
                 ])
+        self.endTest()
 
     def loadPublicGroups(self):
-        self.testing = 'loadPublicGroups'
+        self.beginTest('loadPublicGroups')
         body, hints = self.post_data_request({'action': 'loadPublicGroups'})
         if not body.get('success', False):
             raise Exception('loadPublicGroups: failed')
         self.checkHints(
             hints, ["ClientIp.loadPublicGroups:pass"])
         self.group_code = body['groups'][-1]['code']
+        self.endTest()
 
     def checkGroupPassword(self):
-        self.testing = 'checkGroupPassword'
+        self.beginTest('checkGroupPassword')
         body, hints = self.post_data_request({
             'action': 'checkPassword',
             'password': self.group_code,
@@ -157,9 +179,10 @@ class Transaction(object):
         #  "askZip": false, "nbUnlockedTasksInitial": "4",
         #  "nbMinutesElapsed": "478039", "bonusScore": "0", "subsetsSize": "0",
         #  "nbMinutes": "45", "contestVisibility": "Visible", "isPublic": "1"}
+        self.endTest()
 
     def createTeam(self):
-        self.testing = 'createTeam'
+        self.beginTest('createTeam')
         body, hints = self.post_data_request({
             'action': 'createTeam',
             'contestants[0][lastName]': 'Anonymous',
@@ -177,9 +200,26 @@ class Transaction(object):
                 "ClientIp.createTeam:public",
                 "Group({}):createTeam".format(self.group_id)
             ])
+        self.endTest()
+
+    def checkTeamPassword(self):
+        self.beginTest('checkTeamPassword')
+        body, hints = self.post_data_request({
+            'action': 'checkPassword',
+            'password': self.team_code,
+            'getTeams': False
+        })
+        if not body.get('success', False):
+            raise Exception('failed')
+        self.checkHints(
+            hints, [
+                "ClientIp.checkPassword:pass",
+                "Team({}):checkPassword".format(self.team_id)
+            ])
+        self.endTest()
 
     def loadContestData(self):
-        self.testing = 'loadContestData'
+        self.beginTest('loadContestData')
         body, hints = self.post_data_request({
             'action': 'loadContestData'
         })
@@ -187,7 +227,7 @@ class Transaction(object):
             raise Exception('loadContestData: failed')
         self.checkHints(
             hints, [
-                "ClientIP:loadContestData",
+                "ClientIP.loadContestData:pass",
                 "Team({}):loadContestData".format(self.team_id)
             ])
         # {'success': True, 'teamPassword': '8rzmzsjn',
@@ -197,9 +237,10 @@ class Transaction(object):
         #            'ID': '274', 'key': '2016-FR-19-minmax-variables',
         #            'maxScore': 40, 'answerType': '0'}, ...},
         #  'answers': [], 'scores': [], 'timeUsed': '0', 'endTime': None}
+        self.endTest()
 
     def getRemainingTime(self):
-        self.testing = 'getRemainingTime'
+        self.beginTest('getRemainingTime')
         body, hints = self.post_data_request({
             'action': 'getRemainingTime',
             'teamID': self.team_id
@@ -208,13 +249,14 @@ class Transaction(object):
             raise Exception('getRemainingTime: failed')
         self.checkHints(
             hints, [
-                "ClientIP:getRemainingTime",
+                "ClientIP.getRemainingTime:pass",
                 "Team({}):getRemainingTime".format(self.team_id)
             ])
         # {'success': True, 'remainingTime': 2700}
+        self.endTest()
 
     def closeContest(self):
-        self.testing = 'closeContest'
+        self.beginTest('closeContest')
         body, hints = self.post_data_request({
             'action': 'closeContest'
         })
@@ -222,12 +264,13 @@ class Transaction(object):
             raise Exception('closeContest: failed')
         self.checkHints(
             hints, [
-                "ClientIP:closeContest",
+                "ClientIP.closeContest:pass",
                 "Team({}):closeContest".format(self.team_id)
             ])
+        self.endTest()
 
     def sendAnswer(self):
-        self.testing = 'sendAnswer'
+        self.beginTest('sendAnswer')
         body, hints = self.post_answer_request({
             'answers[270][answer]': '{"easy":"2 2 4 1","medium":"","hard":""}',
             # 'answers[270][sending]': "true",  # not used
@@ -242,9 +285,10 @@ class Transaction(object):
                 "ClientIP.answer:pass",
                 "Team({}):answer".format(self.team_id)
             ])
+        self.endTest()
 
     def getSolutions(self):
-        self.testing = 'getSolutions'
+        self.beginTest('getSolutions')
         body, hints = self.post_solutions_request({'ieMode': 'false'})
         if not body.get('success', False):
             raise Exception('getSolutions: failed')
@@ -253,6 +297,7 @@ class Transaction(object):
                 "ClientIP.solutions:pass",
                 "Team({}):solutions".format(self.team_id)
             ])
+        self.endTest()
 
     def run(self):
         try:
@@ -263,13 +308,15 @@ class Transaction(object):
             self.checkGroupPassword()
             self.createTeam()
             print('team code: {}'.format(self.team_code))
+            self.checkTeamPassword()
             self.loadContestData()
             self.getRemainingTime()
             self.sendAnswer()
             self.closeContest()
             self.getSolutions()
         except Exception as ex:
-            print("{}: caught {}".format(self.testing, ex))
+            print("{}: caught {}".format(self.test_name, ex))
+            traceback.print_exc(file=sys.stdout)
 
 
 if __name__ == '__main__':
