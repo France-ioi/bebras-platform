@@ -1099,7 +1099,7 @@ function setupContest(data) {
    var sortedQuestionIDs = getSortedQuestionIDs(questionsData);
    if (newInterface) {
       fillListQuestionsNew(sortedQuestionIDs, questionsData);
-      if (customIntro != null) {
+      if ((customIntro != null) && (customIntro != '')) {
          $("#questionListIntro").html(customIntro);
       }
    } else {
