@@ -233,7 +233,7 @@ function createTeam($db, $contestants) {
       if (!isset($contestant["studentId"])) {
          $contestant["studentId"] = "";
       }
-      list($contestant["firstName"], $contestant["lastName"], $saniValid, $trash) = 
+      list($contestant["firstName"], $contestant["lastName"], $saniValid, $trash) =
          DataSanitizer::formatUserNames($contestant["firstName"], $contestant["lastName"]);
       $stmt = $db->prepare("
          INSERT INTO `contestant` (`ID`, `lastName`, `firstName`, `genre`, `grade`, `studentId`, `teamID`, `cached_schoolID`, `saniValid`, `email`, `zipCode`)
@@ -312,7 +312,7 @@ function closeContest($db) {
    $stmt = $db->prepare("SELECT `endTime` FROM `team` WHERE `ID` = ?");
    $stmt->execute(array($teamID));
    $row = $stmt->fetchObject();
-   echo json_encode((object)array("success" => true, "endTime" => $row->endTime));   
+   echo json_encode((object)array("success" => true, "endTime" => $row->endTime));
 }
 
 function loadSession() {
@@ -376,7 +376,7 @@ function recoverGroup($db) {
    $_SESSION["startTime"] = time(); // warning: SQL and PHP server must be in sync...
    $_SESSION["closed"] = false;
    $_SESSION["groupClosed"] = false;
-   echo json_encode((object)array("success" => true, "startTime" => $_SESSION["startTime"]));   
+   echo json_encode((object)array("success" => true, "startTime" => $_SESSION["startTime"]));
 }
 
 function getRemainingTime($db) {
@@ -385,13 +385,13 @@ function getRemainingTime($db) {
       $stmt->execute(array($_POST['teamID']));
       $row = $stmt->fetchObject();
       if (!$row) {
-         echo json_encode((object)array("success" => false)); 
+         echo json_encode((object)array("success" => false));
          return;
       }
       $remainingTime = (60 * $_SESSION["nbMinutes"]) - $row->timeUsed;
-      echo json_encode((object)array("success" => true, 'remainingTime' => $remainingTime)); 
+      echo json_encode((object)array("success" => true, 'remainingTime' => $remainingTime));
    } else {
-      echo json_encode((object)array("success" => false));  
+      echo json_encode((object)array("success" => false));
    }
 }
 
