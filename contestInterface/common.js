@@ -123,6 +123,9 @@ function inArray(arr, value) {
  */
 var platform = {
    updateHeight: function(height, success, error) {
+      if (height < 700) {
+        height = 700;
+      }
       questionIframe.setHeight(height);
       if (success) {success();}
    },

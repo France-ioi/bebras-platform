@@ -27,10 +27,6 @@ Get composer dependencies:
 
     composer install
 
-Update browser detection library (_WARNING_: run with same user as web server):
-
-    ./vendor/bin/browscap-php browscap:update
-
 Make the directories `logs/` and `contestInterface/contests/` writable by PHP.
 
 Get Bower dependencies: run `bower install` in both `contestInterface` and `teacherInterface`.
