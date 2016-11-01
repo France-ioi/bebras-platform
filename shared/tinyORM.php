@@ -5,8 +5,8 @@
  *
  */
 
-require_once('connect.php');
-require_once('models.php');
+require_once 'connect.php';
+require_once 'models.php';
 
 use Aws\DynamoDb\Exception;
 use Aws\DynamoDb\Marshaler;
@@ -37,6 +37,10 @@ class tinyOrm {
    );
    public function __construct() {
       global $tablesModels, $db, $dynamoDB, $config;
+      if (!$dynamoDB && $config->db->use == 'dynamoDB') {
+         require_once '../vendor/autoload.php';
+         $dynamoDB = connect_dynamoDB($config);
+      }
       $this->db = $db;
       $this->mode = $config->db->use;
       $this->dynamoDB = $dynamoDB;
