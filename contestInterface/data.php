@@ -5,6 +5,11 @@ include_once("../shared/common.php");
 include_once("../shared/tinyORM.php");
 include_once("common_contest.php");
 
+function jsonResponse($json) {
+   echo json_encode($json);
+   exit;
+}
+
 function loadPublicGroups($db) {
    $stmt = $db->prepare("SELECT `group`.`name`, `group`.`code`, `contest`.`year`, `contest`.`category`, `contest`.`level` ".
       "FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `isPublic` = 1 AND `contest`.`visibility` <> 'Hidden';");
@@ -13,11 +18,11 @@ function loadPublicGroups($db) {
    while ($row = $stmt->fetchObject()) {
       $groups[] = $row;
    }
-   echo json_encode(array("success" => true, "groups" => $groups));
+   jsonResponse(array("success" => true, "groups" => $groups));
 }
 
 function loginTeam($db, $password) {
-   echo json_encode(commonLoginTeam($db, $password));
+   jsonResponse(commonLoginTeam($db, $password));
 }
 
 function getGroupTeams($db, $groupID) {
@@ -44,7 +49,7 @@ function openGroup($db, $password, $getTeams) {
       return false;
    }
    if ($row->open != "Open") {
-      echo json_encode((object)array("success" => false, "message" => "Le concours de ce groupe n'est pas ouvert."));
+      jsonResponse((object)array("success" => false, "message" => "Le concours de ce groupe n'est pas ouvert."));
       return true;
    }
    $groupID = $row->ID;
@@ -104,7 +109,7 @@ function openGroup($db, $password, $getTeams) {
       unset($_SESSION["userCode"]);
       unset($_SESSION["userCodeGroupID"]);
    }
-   echo json_encode((object)array(
+   jsonResponse((object)array(
       "success" => true,
       "groupID" => $groupID,
       "contestID" => $contestID, 
@@ -140,17 +145,17 @@ function reloginTeam($db, $password, $teamID) {
    $stmt->execute(array($_SESSION["groupID"]));
    $row = $stmt->fetchObject();
    if (!$row) {
-      echo json_encode(array("success" => false, "message" => "Groupe invalide"));
+      jsonResponse(array("success" => false, "message" => "Groupe invalide"));
    } else if ($row->password !== $password) {
-      echo json_encode(array("success" => false, "message" => "Mot de passe invalide"));
+      jsonResponse(array("success" => false, "message" => "Mot de passe invalide"));
    } else if ($row->status == "Closed" || $row->status == "PreRanking") {
-      echo json_encode(array("success" => false, "message" => "Concours fermé"));      
+      jsonResponse(array("success" => false, "message" => "Concours fermé"));
    } else {
       $stmt = $db->prepare("SELECT `password`, `nbMinutes` FROM `team` WHERE `ID` = ? AND `groupID` = ?");
       $stmt->execute(array($teamID, $_SESSION["groupID"]));
       $row = $stmt->fetchObject();
       if (!$row) {
-         echo json_encode(array("success" => false, "message" => "Équipe invalide pour ce groupe"));
+         jsonResponse(array("success" => false, "message" => "Équipe invalide pour ce groupe"));
       } else {
          if ($config->db->use == 'dynamoDB') {
             try {
@@ -187,7 +192,7 @@ function createTeam($db, $contestants) {
    global $tinyOrm, $config;
    if ($_SESSION["groupClosed"]) {
       error_log("Hack attempt ? trying to create team on closed group ".$_SESSION["groupID"]);
-      echo json_encode(array("success" => false, "message" => "Groupe fermé"));
+      jsonResponse(array("success" => false, "message" => "Groupe fermé"));
       return;
    }
    // $_SESSION['userCode'] is set by optional password handling function,
@@ -245,7 +250,7 @@ function createTeam($db, $contestants) {
    } else {
       header('X-Backend-Hint: pass');
    }
-   echo json_encode((object)array("success" => true, "teamID" => $teamID, "password" => $password));
+   jsonResponse((object)array("success" => true, "teamID" => $teamID, "password" => $password));
 }
 
 function loadContestData($db) {
@@ -301,7 +306,7 @@ function loadContestData($db) {
    } else {
       header('X-Backend-Hint: pass');
    }
-   echo json_encode((object)array("success" => true, "questionsData" => $questionsData, 'scores' => $scores, "answers" => $answers, "timeUsed" => $row->timeUsed, "endTime" => $row->endTime, "teamPassword" => $_SESSION["teamPassword"]));
+   jsonResponse((object)array("success" => true, "questionsData" => $questionsData, 'scores' => $scores, "answers" => $answers, "timeUsed" => $row->timeUsed, "endTime" => $row->endTime, "teamPassword" => $_SESSION["teamPassword"]));
 }
 
 function closeContest($db) {
@@ -312,11 +317,11 @@ function closeContest($db) {
    $stmt = $db->prepare("SELECT `endTime` FROM `team` WHERE `ID` = ?");
    $stmt->execute(array($teamID));
    $row = $stmt->fetchObject();
-   echo json_encode((object)array("success" => true, "endTime" => $row->endTime));
+   jsonResponse((object)array("success" => true, "endTime" => $row->endTime));
 }
 
 function loadSession() {
-   echo json_encode(array(
+   jsonResponse(array(
       "success" => true,
       "teamID" => $_SESSION["teamID"],
       "nbMinutes" => $_SESSION["nbMinutes"],
@@ -340,18 +345,18 @@ function loadSession() {
 
 function recoverGroup($db) {
    if (!isset($_POST['groupCode']) || !isset($_POST['groupPass'])) {
-      echo json_encode((object)array("success" => false, "message" => 'Code ou mot de passe manquant'));
+      jsonResponse((object)array("success" => false, "message" => 'Code ou mot de passe manquant'));
       return;
    }
    $stmt = $db->prepare("SELECT `ID`, `bRecovered`, `contestID`, `expectedStartTime`, `name`, `userID`, `gradeDetail`, `grade`, `schoolID`, `nbStudents`, `nbTeamsEffective`, `nbStudentsEffective`, `noticePrinted`, `isPublic`, `participationType`, `password` FROM `group` WHERE `code` = ?");
    $stmt->execute(array($_POST['groupCode']));
    $row = $stmt->fetchObject();
    if (!$row || $row->password != $_POST['groupPass']) {
-      echo json_encode((object)array("success" => false, "message" => 'Mot de passe invalide'));
+      jsonResponse((object)array("success" => false, "message" => 'Mot de passe invalide'));
       return;
    }
    if ($row->bRecovered == 1) {
-      echo json_encode((object)array("success" => false, "message" => 'L\'opération n\'est possible qu\'une fois par groupe.'));
+      jsonResponse((object)array("success" => false, "message" => 'L\'opération n\'est possible qu\'une fois par groupe.'));
       return;
    }
    $stmtUpdate = $db->prepare("UPDATE `group` SET `code` = ?, `password` = ?, `bRecovered`=1 WHERE `ID` = ?;");
@@ -376,7 +381,7 @@ function recoverGroup($db) {
    $_SESSION["startTime"] = time(); // warning: SQL and PHP server must be in sync...
    $_SESSION["closed"] = false;
    $_SESSION["groupClosed"] = false;
-   echo json_encode((object)array("success" => true, "startTime" => $_SESSION["startTime"]));
+   jsonResponse((object)array("success" => true, "startTime" => $_SESSION["startTime"]));
 }
 
 function getRemainingTime($db) {
@@ -385,13 +390,13 @@ function getRemainingTime($db) {
       $stmt->execute(array($_POST['teamID']));
       $row = $stmt->fetchObject();
       if (!$row) {
-         echo json_encode((object)array("success" => false));
+         jsonResponse((object)array("success" => false));
          return;
       }
       $remainingTime = (60 * $_SESSION["nbMinutes"]) - $row->timeUsed;
-      echo json_encode((object)array("success" => true, 'remainingTime' => $remainingTime));
+      jsonResponse((object)array("success" => true, 'remainingTime' => $remainingTime));
    } else {
-      echo json_encode((object)array("success" => false));
+      jsonResponse((object)array("success" => false));
    }
 }
 
@@ -399,7 +404,7 @@ header("Content-Type: application/json");
 header("Connection: close");
 
 if (!isset($_POST["action"])) {
-   echo json_encode(array("success" => false, "message" => "Aucune action fournie"));
+   jsonResponse(array("success" => false, "message" => "Aucune action fournie"));
    exit;
 }
 
@@ -416,14 +421,14 @@ if ($action === "loadSession") {
    if (isset($_SESSION["teamID"]) && (!isset($_SESSION["closed"]))) {
       loadSession($db);
    } else {
-      echo json_encode(['success' => true, "SID" => session_id()]);
+      jsonResponse(['success' => true, "SID" => session_id()]);
    }
    return;
 }
 
 elseif ($action === "destroySession") {
    restartSession();
-   echo json_encode(array(
+   jsonResponse(array(
       "success" => true,
       "SID" => session_id()));
    return;
@@ -431,7 +436,7 @@ elseif ($action === "destroySession") {
 
 elseif ($action === "checkPassword") {
    if (!isset($_POST["password"])) {
-      echo json_encode(array("success" => false, "message" => "Mot de passe manquant"));
+      jsonResponse(array("success" => false, "message" => "Mot de passe manquant"));
    } else {
       $getTeams = $_POST["getTeams"];
       $password = strtolower($_POST["password"]);
@@ -443,9 +448,9 @@ elseif ($action === "checkPassword") {
 
 elseif ($action === "createTeam") {
    if (!isset($_POST["contestants"])) {
-      echo json_encode(array("success" => false, "message" => "Informations sur les candidats manquantes"));
+      jsonResponse(array("success" => false, "message" => "Informations sur les candidats manquantes"));
    } else if (!isset($_SESSION["groupID"])) {
-      echo json_encode(array("success" => false, "message" => "Groupe non chargé"));
+      jsonResponse(array("success" => false, "message" => "Groupe non chargé"));
    } else {
       createTeam($db, $_POST["contestants"]);
    }
@@ -457,11 +462,11 @@ elseif ($action === "loadContestData") {
       $logged = true;
    } else {
       if (!isset($_POST["groupPassword"])) {
-         echo json_encode(array("success" => false, "message" => "Mot de passe manquant"));
+         jsonResponse(array("success" => false, "message" => "Mot de passe manquant"));
       } else if (!isset($_POST["teamID"])) {
-         echo json_encode(array("success" => false, "message" => "Équipe manquante"));
+         jsonResponse(array("success" => false, "message" => "Équipe manquante"));
       } else if (!isset($_SESSION["groupID"])) {
-         echo json_encode(array("success" => false, "message" => "Groupe non chargé"));
+         jsonResponse(array("success" => false, "message" => "Groupe non chargé"));
       } else {
          $password = strtolower($_POST["groupPassword"]);
          $logged = reloginTeam($db, $password, $_POST["teamID"]);
