@@ -5,18 +5,6 @@ include_once("../shared/common.php");
 include_once("../shared/tinyORM.php");
 include_once("common_contest.php");
 
-function handleLoadPublicGroups($db) {
-   addBackendHint("ClientIp.loadPublicGroups:pass");
-   $stmt = $db->prepare("SELECT `group`.`name`, `group`.`code`, `contest`.`year`, `contest`.`category`, `contest`.`level` ".
-      "FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `isPublic` = 1 AND `contest`.`visibility` <> 'Hidden';");
-   $stmt->execute(array());
-   $groups = array();
-   while ($row = $stmt->fetchObject()) {
-      $groups[] = $row;
-   }
-   exitWithJson(array("success" => true, "groups" => $groups));
-}
-
 function getGroupTeams($db, $groupID) {
    $stmt = $db->prepare("SELECT `team`.`ID`, `contestant`.`lastName`, `contestant`.`firstName` FROM `contestant` LEFT JOIN `team` ON `contestant`.`teamID` = `team`.`ID` WHERE `team`.`groupID` = ?");
    $stmt->execute(array($groupID));
@@ -66,17 +54,24 @@ function reloginTeam($db, $password, $teamID) {
    $_SESSION["teamID"] = $teamID;
    $_SESSION["teamPassword"] = $row->password;
    $_SESSION["nbMinutes"] = intval($row->nbMinutes);
-   if (intval($row->isPublic)) {
-      header('X-Backend-Hint: limit');
-   } else {
-      header('X-Backend-Hint: pass');
-   }
 }
 
 function getRandomID() {
    $rand = (string) mt_rand(100000, 999999999);
    $rand .= (string) mt_rand(1000000, 999999999);
    return $rand;
+}
+
+function handleLoadPublicGroups($db) {
+   addBackendHint("ClientIp.loadPublicGroups:pass");
+   $stmt = $db->prepare("SELECT `group`.`name`, `group`.`code`, `contest`.`year`, `contest`.`category`, `contest`.`level` ".
+      "FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `isPublic` = 1 AND `contest`.`visibility` <> 'Hidden';");
+   $stmt->execute(array());
+   $groups = array();
+   while ($row = $stmt->fetchObject()) {
+      $groups[] = $row;
+   }
+   exitWithJson(array("success" => true, "groups" => $groups));
 }
 
 function handleCreateTeam($db) {
@@ -401,7 +396,7 @@ function handleGetRemainingTime($db) {
    exitWithJson((object)array("success" => true, 'remainingTime' => $remainingTime));
 }
 
-function recoverGroup($db) {
+function handleRecoverGroup($db) {
    if (!isset($_POST['groupCode']) || !isset($_POST['groupPass'])) {
       exitWithJson((object)array("success" => false, "message" => 'Code ou mot de passe manquant'));
    }
@@ -480,6 +475,8 @@ if ($action === "closeContest") {
    handleCloseContest($db);
 }
 
-elseif ($action === 'recoverGroup') {
-   recoverGroup($db);
+if ($action === 'recoverGroup') {
+   handleRecoverGroup($db);
 }
+
+exitWithJson(array("success" => false, "message" => "unsupported action"));
