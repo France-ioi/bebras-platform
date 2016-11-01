@@ -407,6 +407,7 @@ $action = $_POST["action"];
 
 if ($action === "loadPublicGroups") {
    loadPublicGroups($db);
+   return;
 }
 
 initSession();
@@ -417,9 +418,10 @@ if ($action === "loadSession") {
    } else {
       echo json_encode(['success' => true, "SID" => session_id()]);
    }
+   return;
 }
 
-if ($action === "destroySession") {
+elseif ($action === "destroySession") {
    restartSession();
    echo json_encode(array(
       "success" => true,
@@ -427,7 +429,7 @@ if ($action === "destroySession") {
    return;
 }
 
-else if ($action === "checkPassword") {
+elseif ($action === "checkPassword") {
    if (!isset($_POST["password"])) {
       echo json_encode(array("success" => false, "message" => "Mot de passe manquant"));
    } else {
@@ -439,7 +441,7 @@ else if ($action === "checkPassword") {
    }
 }
 
-else if ($action === "createTeam") {
+elseif ($action === "createTeam") {
    if (!isset($_POST["contestants"])) {
       echo json_encode(array("success" => false, "message" => "Informations sur les candidats manquantes"));
    } else if (!isset($_SESSION["groupID"])) {
@@ -449,7 +451,7 @@ else if ($action === "createTeam") {
    }
 }
 
-else if ($action === "loadContestData") {
+elseif ($action === "loadContestData") {
    $logged = false;
    if (isset($_SESSION["teamID"])) {
       $logged = true;
@@ -470,17 +472,17 @@ else if ($action === "loadContestData") {
    }
 }
 
-else if ($action === "closeContest") {
+elseif ($action === "closeContest") {
    if (isset($_SESSION["teamID"]) || reconnectSession($db)) {
       closeContest($db);
    }
 }
 
-else if ($action === "getRemainingTime") {
+elseif ($action === "getRemainingTime") {
    getRemainingTime($db);
 }
 
-else if ($action === 'recoverGroup') {
+elseif ($action === 'recoverGroup') {
    recoverGroup($db);
 }
 
