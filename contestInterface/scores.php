@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 require_once("../shared/common.php");
 

@@ -6,6 +6,7 @@ $noSessions = true;
 use Aws\DynamoDb\Exception;
 require_once("../shared/connect.php");
 require_once("../shared/tinyORM.php");
+include_once("common_contest.php");
 
 $tinyOrm = new tinyOrm();
 $testMode = $config->db->testMode;
@@ -30,15 +31,13 @@ function handleAnswers($db, $tinyOrm) {
    $teamPassword = $_POST["teamPassword"];
    try {
       $rows = $tinyOrm->select('team', array('password', 'startTime', 'nbMinutes'), array('ID' => $teamID));
-  } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
+   } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
       error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
       error_log('DynamoDB error trying to get record: teamID: '.$teamID);
-      echo json_encode((object)array("success" => false, 'error' => 'DynamoDB', 'message' => $e->getMessage()));
-      return;
+      exitWithJsonFailure($e->getMessage(), array('error' => 'DynamoDB'));
    }
    if ($testMode == false && (!count($rows) || $teamPassword != $rows[0]['password'])) {
-      echo json_encode(array("success" => false, "message" => "Requête invalide (password)"));
-      return;
+      exitWithJsonFailure("Requête invalide (password)");
    }
    $row = $rows[0];
    $answers = $_POST["answers"];
@@ -46,41 +45,33 @@ function handleAnswers($db, $tinyOrm) {
    $startTime = new DateTime($row['startTime'], new DateTimeZone("UTC"));
    $nbMinutes = intval($row['nbMinutes']);
    // We leave 2 extra minutes to handle network lag. The interface already prevents trying to answer after the end.
-   if ((($curTime->getTimestamp() - $startTime->getTimestamp()) > ((intval($nbMinutes) + 2) * 60)) && !$testMode) { 
-      echo json_encode(array("success" => false, 'error' => 'invalid', "message" => "La réponse a été envoyée après la fin de l'épreuve"));
+   if ((($curTime->getTimestamp() - $startTime->getTimestamp()) > ((intval($nbMinutes) + 2) * 60)) && !$testMode) {
       error_log("submission by team ".$teamID.
-		  " after the time limit of the contest! curTime : ".$curTime->format(DateTime::RFC850).
-		  " startTime :".$startTime->format(DateTime::RFC850).
-		  " nbMinutes : ".$nbMinutes);
-   } else {
-      $curTimeDB = new DateTime(null, new DateTimeZone("UTC"));
-      $curTimeDB = $curTimeDB->format('Y-m-d H:i:s');
-      $items = array();
-      foreach ($answers as $questionID => $answerObj) {
-         $items[] = array('teamID' => $teamID, 'questionID' => $questionID, 'answer'  => $answerObj["answer"], 'ffScore' => $answerObj['score'], 'date' => $curTimeDB);
-      }
-      try {
-         $tinyOrm -> batchWrite('team_question', $items, array('teamID', 'questionID', 'answer', 'ffScore', 'date'), array('answer', 'ffScore', 'date'));
-      } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
-         error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
-         error_log('DynamoDB error trying to write records: teamID: '.$teamID.', answers: '.json_encode($items).', items: '.json_encode($items));
-         echo json_encode((object)array("success" => false, 'error' => 'DynamoDB', 'message' => $e->getAwsErrorCode()));
-         return;
-      }
-      echo json_encode((object)array("success" => true));
+        " after the time limit of the contest! curTime : ".$curTime->format(DateTime::RFC850).
+        " startTime :".$startTime->format(DateTime::RFC850).
+        " nbMinutes : ".$nbMinutes);
+      exitWithJsonFailure("La réponse a été envoyée après la fin de l'épreuve", array('error' => 'invalid'));
    }
+   $curTimeDB = new DateTime(null, new DateTimeZone("UTC"));
+   $curTimeDB = $curTimeDB->format('Y-m-d H:i:s');
+   $items = array();
+   foreach ($answers as $questionID => $answerObj) {
+      $items[] = array('teamID' => $teamID, 'questionID' => $questionID, 'answer'  => $answerObj["answer"], 'ffScore' => $answerObj['score'], 'date' => $curTimeDB);
+   }
+   try {
+      $tinyOrm -> batchWrite('team_question', $items, array('teamID', 'questionID', 'answer', 'ffScore', 'date'), array('answer', 'ffScore', 'date'));
+   } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
+      error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
+      error_log('DynamoDB error trying to write records: teamID: '.$teamID.', answers: '.json_encode($items).', items: '.json_encode($items));
+      exitWithJsonFailure($e->getAwsErrorCode(), array('error' => 'DynamoDB'));
+   }
+   addBackendHint("ClientIP.answer:pass");
+   addBackendHint(sprintf("Team(%s):answer", escapeHttpValue($teamID)));
+   exitWithJson(array("success" => true));
 }
-
-header("Content-Type: application/json");
-header("Connection: close");
 
 if (!isset($_POST["answers"]) || !isset($_POST["teamID"]) || !isset($_POST["teamPassword"])) {
-   echo json_encode(array("success" => false, 'error' => 'invalid', "message" => "Requête invalide"));
    error_log("answers, teamID or teamPassword is not set : ".json_encode($_REQUEST));
-} else {
-   handleAnswers($db, $tinyOrm);
+   exitWithJsonFailure("Requête invalide", array('error' => 'invalid'));
 }
-if (isset($db)) {
-   unset($db);
-}
-
+handleAnswers($db, $tinyOrm);

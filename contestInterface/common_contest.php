@@ -1,6 +1,39 @@
 <?php
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 
+$backend_hints = array();
+
+function exitWithJson($json) {
+   global $backend_hints;
+   if (!empty($backend_hints)) {
+      header('X-Backend-Hints: ' . join(' ', $backend_hints));
+   }
+   header("Content-Type: application/json");
+   header("Connection: close");
+   echo json_encode($json);
+   exit;
+}
+
+function exitWithJsonFailure($message, $extras = null) {
+   $result = array("success" => false, "message" => $message);
+   if ($extras != null) {
+      array_replace($result, $extras);
+   }
+   exitWithJson($result);
+}
+
+function addBackendHint ($hint) {
+   global $backend_hints;
+   array_push($backend_hints, '"' . $hint . '"');
+}
+
+function escapeHttpValue($value) {
+   if (preg_match("/^[0-9A-Za-z_-]*$/", $value)) {
+      return $value;
+   }
+   return '#' . base64_encode($value);
+}
+
 function createTeamFromUserCode($db, $password) {
    // Use a custom function to fetch code from algorea_registration or anywhere else. You can
    // create it in config_local.php.
