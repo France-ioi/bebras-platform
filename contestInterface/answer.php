@@ -34,10 +34,10 @@ function handleAnswers($db, $tinyOrm) {
    } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
       error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
       error_log('DynamoDB error trying to get record: teamID: '.$teamID);
-      exitWithJson(array("success" => false, 'error' => 'DynamoDB', 'message' => $e->getMessage()));
+      exitWithJsonFailure($e->getMessage(), array('error' => 'DynamoDB'));
    }
    if ($testMode == false && (!count($rows) || $teamPassword != $rows[0]['password'])) {
-      exitWithJson(array("success" => false, "message" => "Requête invalide (password)"));
+      exitWithJsonFailure("Requête invalide (password)");
    }
    $row = $rows[0];
    $answers = $_POST["answers"];
@@ -50,7 +50,7 @@ function handleAnswers($db, $tinyOrm) {
         " after the time limit of the contest! curTime : ".$curTime->format(DateTime::RFC850).
         " startTime :".$startTime->format(DateTime::RFC850).
         " nbMinutes : ".$nbMinutes);
-      exitWithJson(array("success" => false, 'error' => 'invalid', "message" => "La réponse a été envoyée après la fin de l'épreuve"));
+      exitWithJsonFailure("La réponse a été envoyée après la fin de l'épreuve", array('error' => 'invalid'));
    }
    $curTimeDB = new DateTime(null, new DateTimeZone("UTC"));
    $curTimeDB = $curTimeDB->format('Y-m-d H:i:s');
@@ -63,7 +63,7 @@ function handleAnswers($db, $tinyOrm) {
    } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
       error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
       error_log('DynamoDB error trying to write records: teamID: '.$teamID.', answers: '.json_encode($items).', items: '.json_encode($items));
-      exitWithJson(array("success" => false, 'error' => 'DynamoDB', 'message' => $e->getAwsErrorCode()));
+      exitWithJsonFailure($e->getAwsErrorCode(), array('error' => 'DynamoDB'));
    }
    addBackendHint("ClientIP.answer:pass");
    addBackendHint(sprintf("Team(%s):answer", escapeHttpValue($teamID)));
@@ -72,6 +72,6 @@ function handleAnswers($db, $tinyOrm) {
 
 if (!isset($_POST["answers"]) || !isset($_POST["teamID"]) || !isset($_POST["teamPassword"])) {
    error_log("answers, teamID or teamPassword is not set : ".json_encode($_REQUEST));
-   exitWithJson(array("success" => false, 'error' => 'invalid', "message" => "Requête invalide"));
+   exitWithJsonFailure("Requête invalide", array('error' => 'invalid'));
 }
 handleAnswers($db, $tinyOrm);

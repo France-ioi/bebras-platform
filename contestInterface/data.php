@@ -26,19 +26,19 @@ function reloginTeam($db, $password, $teamID) {
    $stmt->execute(array($_SESSION["groupID"]));
    $row = $stmt->fetchObject();
    if (!$row) {
-      exitWithJson(array("success" => false, "message" => "Groupe invalide"));
+      exitWithJsonFailure("Groupe invalide");
    }
    if ($row->password !== $password) {
-      exitWithJson(array("success" => false, "message" => "Mot de passe invalide"));
+      exitWithJsonFailure("Mot de passe invalide");
    }
    if ($row->status == "Closed" || $row->status == "PreRanking") {
-      exitWithJson(array("success" => false, "message" => "Concours fermé"));
+      exitWithJsonFailure("Concours fermé");
    }
    $stmt = $db->prepare("SELECT `password`, `nbMinutes` FROM `team` WHERE `ID` = ? AND `groupID` = ?");
    $stmt->execute(array($teamID, $_SESSION["groupID"]));
    $row = $stmt->fetchObject();
    if (!$row) {
-      exitWithJson(array("success" => false, "message" => "Équipe invalide pour ce groupe"));
+      exitWithJsonFailure("Équipe invalide pour ce groupe");
    }
    if ($config->db->use == 'dynamoDB') {
       try {
@@ -77,14 +77,14 @@ function handleLoadPublicGroups($db) {
 function handleCreateTeam($db) {
    global $tinyOrm, $config;
    if (!isset($_POST["contestants"])) {
-      exitWithJson(array("success" => false, "message" => "Informations sur les candidats manquantes"));
+      exitWithJsonFailure("Informations sur les candidats manquantes");
    }
    if (!isset($_SESSION["groupID"])) {
-      exitWithJson(array("success" => false, "message" => "Groupe non chargé"));
+      exitWithJsonFailure("Groupe non chargé");
    }
    if ($_SESSION["groupClosed"]) {
       error_log("Hack attempt ? trying to create team on closed group ".$_SESSION["groupID"]);
-      exitWithJson(array("success" => false, "message" => "Groupe fermé"));
+      exitWithJsonFailure("Groupe fermé");
    }
    // $_SESSION['userCode'] is set by optional password handling function,
    // see comments of createTeamFromUserCode in common_contest.php.
@@ -147,13 +147,13 @@ function handleLoadContestData($db) {
    global $tinyOrm, $config;
    if (!isset($_SESSION["teamID"])) {
       if (!isset($_POST["groupPassword"])) {
-         exitWithJson(array("success" => false, "message" => "Mot de passe manquant"));
+         exitWithJsonFailure("Mot de passe manquant");
       }
       if (!isset($_POST["teamID"])) {
-         exitWithJson(array("success" => false, "message" => "Équipe manquante"));
+         exitWithJsonFailure("Équipe manquante");
       }
       if (!isset($_SESSION["groupID"])) {
-         exitWithJson(array("success" => false, "message" => "Groupe non chargé"));
+         exitWithJsonFailure("Groupe non chargé");
       }
       $password = strtolower($_POST["groupPassword"]);
       reloginTeam($db, $password, $_POST["teamID"]);
@@ -211,7 +211,7 @@ function handleLoadContestData($db) {
 
 function handleCloseContest($db) {
    if (!isset($_SESSION["teamID"]) && !reconnectSession($db)) {
-      exitWithJson(array("success" => false));
+      exitWithJsonFailure("Pas de session en cours");
    }
    $teamID = $_SESSION["teamID"];
    $stmtUpdate = $db->prepare("UPDATE `team` SET `endTime` = UTC_TIMESTAMP() WHERE `ID` = ? AND `endTime` is NULL");
@@ -265,7 +265,7 @@ function handleDestroySession() {
 
 function handleCheckPassword($db) {
    if (!isset($_POST["password"])) {
-      exitWithJson(array("success" => false, "message" => "Mot de passe manquant"));
+      exitWithJsonFailure("Mot de passe manquant");
    }
    $getTeams = array_key_exists('getTeams', $_POST) ? $_POST["getTeams"] : False;
    $password = strtolower($_POST["password"]);
@@ -435,7 +435,7 @@ function handleRecoverGroup($db) {
 }
 
 if (!isset($_POST["action"])) {
-   exitWithJson(array("success" => false, "message" => "Aucune action fournie"));
+   exitWithJsonFailure("Aucune action fournie");
 }
 
 $action = $_POST["action"];
@@ -479,4 +479,4 @@ if ($action === 'recoverGroup') {
    handleRecoverGroup($db);
 }
 
-exitWithJson(array("success" => false, "message" => "unsupported action"));
+exitWithJsonFailure("Action inconnue");

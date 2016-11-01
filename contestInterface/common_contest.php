@@ -14,6 +14,14 @@ function exitWithJson($json) {
    exit;
 }
 
+function exitWithJsonFailure($message, $extras = null) {
+   $result = array("success" => false, "message" => $message);
+   if ($extras != null) {
+      array_replace($result, $extras);
+   }
+   exitWithJson($result);
+}
+
 function addBackendHint ($hint) {
    global $backend_hints;
    array_push($backend_hints, '"' . $hint . '"');

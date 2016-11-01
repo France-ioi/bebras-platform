@@ -9,20 +9,20 @@ include_once("common_contest.php");
 initSession();
 
 if (!isset($_SESSION["teamID"])) {
-   exitWithJson(array('success' => false, 'message' => 'team not logged'));
+   exitWithJsonFailure('team not logged');
 }
 if (!isset($_SESSION["closed"])) {
-   exitWithJson(array('success' => false, 'message' => 'contest is not over (solutions)!'));
+   exitWithJsonFailure('contest is not over (solutions)!');
 }
 if (!isset($_SESSION["contestShowSolutions"]) || !intval($_SESSION["contestShowSolutions"])) {
-   exitWithJson(array('success' => false, 'message' => 'solutions non disponibles pour ce concours'));
+   exitWithJsonFailure('solutions non disponibles pour ce concours');
 }
 $teamID = $_SESSION["teamID"];
 $query = "SELECT `contest`.`ID`, `contest`.`folder`, `team`.score FROM `team` LEFT JOIN `group` ON (`team`.`groupID` = `group`.`ID`) LEFT JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `team`.`ID` = ?";
 $stmt = $db->prepare($query);
 $stmt->execute(array($teamID));
 if (!($row = $stmt->fetchObject())) {
-   exitWithJson(array('success' => false, 'message' => 'contestID inconnu'));
+   exitWithJsonFailure('contestID inconnu');
 }
 
 // if ($row->score == null) {
