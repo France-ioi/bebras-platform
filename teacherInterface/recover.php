@@ -5,6 +5,8 @@ require_once("../shared/common.php");
 require_once("commonAdmin.php");
 require_once 'config.php';
 
+$translationStrings = getTeacherTranslationsStrings();
+
 function getUserFromEmail($db, $email) {
    $query = "SELECT * FROM `user` WHERE (`officialEmail` = ? OR `alternativeEmail` = ?)";
    $stmt = $db->prepare($query);
@@ -20,7 +22,7 @@ function sendRecoverEmail($sEmail, $sRecoverCode) {
 
 
 function recoverSendMail($db, $sEmail) {
-   global $config;
+   global $config, $translationStrings;
    $row = getUserFromEmail($db, $sEmail);
    if (!$row) {
       echo json_encode(array("success" => false));
@@ -34,18 +36,15 @@ function recoverSendMail($db, $sEmail) {
    if ($sEmail !== "")
    {
       $link = $config->teacherInterface->sCoordinatorFolder."/recover.php?action=recover&email=".urlencode($sEmail)."&recoverCode=".urlencode($sRecoverCode);
-      $sBody = "Bonjour,\r\n\r\nPour définir un nouveau mot de passe, ouvrez le lien suivant dans votre navigateur  : \r\n\r\n".$link."\r\n\r\nN'hésitez pas à nous contacter si vous rencontrez des difficultés.\r\n\r\nCordialement,\r\n--\r\nL'équipe du Castor Informatique";
-
-      $sTitle = "Réinitialisation de mot de passe Coordinateur Castor Informatique";
+      $sBody = str_replace('__link__', $link, $translationStrings['recover_mail_body']);
+      $sTitle = $translationStrings['recover_mail_title'];
       sendMail($sEmail, $sTitle, $sBody, $config->email->sEmailSender);
-      //$params = array('recoverCode' => $recoverCode, 'email' => $email);
-      //http_post("eval01.france-ioi.org", 80, "/castor/sendMail2.php", $params);
    }
    echo json_encode(array("success" => true));
 }
 
 if (!isset($_REQUEST["action"])) {
-   echo "Le lien est invalide.";
+   echo $translationStrings['invalid_link'];
    exit;
 } 
 
@@ -57,7 +56,7 @@ if ($action == "sendMail") {
    $recoverCode = $_REQUEST["recoverCode"];
    $row = getUserFromEmail($db, $email);
    if (!$row || $row->recoverCode != $recoverCode) {
-      echo "Le lien est invalide.";
+      echo $translationStrings['invalid_link'];;
       return;
    }
    echo "
@@ -123,7 +122,7 @@ if ($action == "sendMail") {
    $password = $_REQUEST["password"];
    $row = getUserFromEmail($db, $email);
    if (!$row || $row->recoverCode != $recoverCode) {
-      echo "Le lien est invalide.";
+      echo $translationStrings['invalid_link'];
       return;
    }
    $query = "UPDATE `user` SET `passwordMd5` = ? WHERE `ID` = ?";
