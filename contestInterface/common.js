@@ -69,7 +69,7 @@ var logError = function(error, errormsg) {
   if (error.stack) {
     logStr += ' ' + error.stack;
   }
-  //logToConsole((currentQuestionKey ? currentQuestionKey+': ' : '')+logStr);
+  logToConsole((currentQuestionKey ? currentQuestionKey+': ' : '')+logStr);
   nbErrorsSent = nbErrorsSent + 1;
   if (nbErrorsSent > 10) {
     return;
