@@ -376,8 +376,10 @@ function handleCheckGroupPassword($db, $password, $getTeams) {
 
 function handleCheckTeamPassword($db, $password) {
    $result = commonLoginTeam($db, $password);
-   addBackendHint("ClientIp.checkPassword:pass");
-   addBackendHint(sprintf("Team(%s):checkPassword", escapeHttpValue($result->teamID)));
+   if ($result->success) {
+      addBackendHint("ClientIp.checkPassword:pass");
+      addBackendHint(sprintf("Team(%s):checkPassword", escapeHttpValue($result->teamID)));
+   }
    exitWithJson($result);
 }
 
