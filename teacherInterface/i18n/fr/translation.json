@@ -294,6 +294,7 @@
     "users_groups_readonly": "Vous pouvez choisir à quels collègues vous permettez d'accéder à vos groupes.",
     "invalid_identifiers": "Identifiant ou mot de passe invalide",
     "unknown_email": "Adresse inconnue",
+    "mail_from_name": "Inscription Castor-Informatique",
     "recover_email_sent_1": "Vous allez recevoir un courriel à l'adresse ",
     "recover_email_sent_2": ". Cliquez sur le lien qu'il contient pour définir un nouveau mot de passe",
     "recover_mail_body": "Bonjour,\r\n\r\nPour définir un nouveau mot de passe, ouvrez le lien suivant dans votre navigateur  : \r\n\r\n__link__\r\n\r\nN'hésitez pas à nous contacter si vous rencontrez des difficultés.\r\n\r\nCordialement,\r\n--\r\nL'équipe du Castor Informatique",
@@ -418,5 +419,8 @@
     "contest_needed_for_group": "Vous devez créer au moins un concours avant de créer un groupe",
     "admin_cannot_delete_school": "Les administrateurs ne peuvent pas supprimer d'établissement",
     "admin_cannot_create_group": "Les administrateurs ne peuvent pas créer de groupe",
-    "maintenance_until": "Désolé, ce site en indisponible pour cause de maintenance jusqu'à __end__."
+    "maintenance_until": "Désolé, ce site en indisponible pour cause de maintenance jusqu'à __end__.",
+    "go_to_index": "Retourner à la la <a href=\"index.php\">page d'accueil coordinateur</a>",
+    "validate_email_ok": "Votre adresse __email__ a maintenant été confirmée. Vous pouvez désormais vous <a href=\"index.php\">connecter sur l'interface coordinateur</a>.",
+    "validate_email_error": "<p><b style='color:red'>Erreur: l'url est invalide.</b></p><p>Réessayez en vous assurant d'inclure l'adresse complète fournie dans l'email que vous avez reçu. Si cela ne fonctionne toujours pas, contactez-nous à <a href=\"mailto:__contactEmail__\">__contactEmail__</a>.</p>"
 }

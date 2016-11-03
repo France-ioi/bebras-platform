@@ -5,7 +5,7 @@ require_once("../shared/common.php");
 require_once("commonAdmin.php");
 require_once 'config.php';
 
-$translationStrings = getTeacherTranslationsStrings();
+$translationStrings = getTeacherTranslationStrings();
 
 function getUserFromEmail($db, $email) {
    $query = "SELECT * FROM `user` WHERE (`officialEmail` = ? OR `alternativeEmail` = ?)";

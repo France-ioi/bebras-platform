@@ -7,12 +7,12 @@ require_once("commonAdmin.php");
 include('./config.php');
 header('Content-type: text/html');
 
-$errorMessage = "<p><b style='color:red'>Erreur. L'url est invalide.</b></p><p>Réessayez en vous assurant d'inclure l'adresse complète fournie dans l'email que vous avez reçu. Si cela ne fonctionne toujours pas, contactez-nous à ".$config->email->sInfoAddress."</p>";
+$translationStrings = getTeacherTranslationStrings();
+
+$errorMessage = str_replace('__contactEmail__', $config->email->sInfoAddress, $translationStrings['validate_email_error']);
 
 function validateEmail($type, $email, $salt) {
-   global $db;
-   global $config;
-   global $errorMessage;
+   global $db, $config, $errorMessage, $translationStrings;
    $query = "SELECT * FROM `user` WHERE (`".$type."` = ? AND `salt` = ?)";
    $stmt = $db->prepare($query);
    $stmt->execute(array($email, $salt));
@@ -24,7 +24,7 @@ function validateEmail($type, $email, $salt) {
       $query = "UPDATE `user` SET `".$type."Validated` = 1 ".$validate." WHERE (`ID` = ?)";
       $stmt = $db->prepare($query);
       $stmt->execute(array($row->ID));
-      echo "Votre adresse ".$email." a maintenant été confirmée. Vous pouvez désormais vous <a href='".$config->teacherInterface->sCoordinatorFolder."/'>connecter sur l'interface coordinateur</a>";
+      echo str_replace('__email__', $email, $translationStrings['validate_email_ok']);
    } else {
       echo $errorMessage;
    }
@@ -64,7 +64,7 @@ if (!isset($_REQUEST["check"])) {
 } else {
    echo $errorMessage;
 }
-echo "<p>Retourner à la la <a href='index.php'>page d'accueil coordinateur</a></p>";
+echo '<p data-i18n="[html]go_to_index"></p>';
 echo "</div>
 <script>
     i18n.init(";

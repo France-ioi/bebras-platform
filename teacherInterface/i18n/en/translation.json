@@ -279,6 +279,7 @@
     "invalid_identifiers": "Invalid identifiers",
     "unknown_email": "Unknown email",
     "recover_email_sent_1": "You will receive an email at the following address: ",
+    "mail_from_name": "Beaver Contest",
     "recover_email_sent_2": ". Click on the link in this email, to set up a new password",
     "recover_mail_body": "Hello,\r\n\r\nTo define a new password, please open the following link: \r\n\r\n__link__\r\n\r\nDo not hesitate to contact us in case you encounter any problem.\r\n\r\nRegards,\r\n--\r\nThe Beaver Contest Team",
     "recover_mail_title": "Teacher password reinitialization",
@@ -407,5 +408,8 @@
     "group_print_certificates_help": "TODO",
     "school_print_certificates": "TODO",
     "awards_personal_code_nocode": "",
-    "awards_personal_code_withcode": ""
+    "awards_personal_code_withcode": "",
+    "go_to_index": "Return to the <a href='index.php'>teacher interface</a>",
+    "validate_email_ok": "Your email address __email__ is now validated. You can now <a href=\"index.php\">sign in on the teacher interface</a>.",
+    "validate_email_error": "<p><b style='color:red'>Error: invalid URL.</b></p><p>Please make sure to follow the complete link given in the email you received. If this still does not work, contact us at <a href=\"mailto:__contactEmail__\">__contactEmail__</a></p>"
 }
