@@ -53,7 +53,7 @@ function toDate(dateStr, sep, fromServer) {
 }
 
 function dateToDisplay(d) {
-   var date = $.datepicker.formatDate("dd/mm/yy", d) 
+   var date = $.datepicker.formatDate("dd/mm/yy", d);
    var h = d.getHours();
    h = (h < 10) ? ("0" + h) : h ;
 
@@ -247,7 +247,7 @@ function initModels(isLogged) {
    }
    var editYesNo = { value:{"1": t("option_yes"), "0": t("option_no")}};
    var searchYesNo = { value:"_NOF_:" + t("option_no_filter") + ";1:" + t("option_yes") + ";0:" + t("option_no")};
-   var officialEmailEditType = "text";
+   var officialEmailEditType = "email";
    if (config.forceOfficialEmailDomain) {
       officialEmailEditType = "ac-email";
    }
@@ -300,7 +300,7 @@ function initModels(isLogged) {
                stype: "select", searchoptions:{ value:"_NOF_:" + t("option_no_filter") + ";1:" + t("option_female") + ";2:" + t("option_male")},
                width: 75},
             //contestants: {label: "Équipe", editable: false, width:300},
-            grade: {label: "Classe", editable: true, edittype: "select", width: 100, required: true, editoptions:{
+            grade: {label: "Classe", editable: true, edittype: "select", required: true, editoptions:{
                value:{
                   "-1": t("grade_-1"),
                   "-4": t("grade_-4"),
@@ -434,7 +434,7 @@ function initModels(isLogged) {
             lastName: {label: t("user_lastName_label"), editable: true, edittype: "text", width: 90, required: true},
             firstName: {label: t("user_firstName_label"), editable: true, edittype: "text", width: 90, required: true},
             officialEmail: {label: t("user_officialEmail_label"), editable: true, edittype: officialEmailEditType, width: 90, required: true},
-            alternativeEmail: {label: t("user_alternativeEmail_label"), editable: true, edittype: "text", width: 90},
+            alternativeEmail: {label: t("user_alternativeEmail_label"), editable: true, edittype: "email", width: 90},
             password: {label: t("user_password_label"), editable: true, edittype: "password", width: 90, required: true},
             password2: {label: t("user_password_confirm_label"), editable: true, edittype: "password", width: 90, required: true}
          }
@@ -824,18 +824,17 @@ function loadCustomAwards() {
       $('#custom_award_title').html(data.title);
       $('#custom_award_help').html(data.help);
       var table = '<table class="ui-common-table" style="border-spacing:0px 0px;"><thead><tr class="ui-jqgrid-labels">';
-      var iCol, iRow;
-      for (iCol = 0 ; iCol < data.colNames.length; iCol++) {
+      for (var iCol = 0 ; iCol < data.colNames.length; iCol++) {
          table += '<th style="width: '+data.colNames[iCol].width+'; border: 1px solid gray;">';
          table += data.colNames[iCol].name;
-         table += '</th>'
+         table += '</th>';
       }
       table +="</tr></thead><tbody>";
-      for (rowID in data.colData) {
+      for (var rowID in data.colData) {
          var row = data.colData[rowID];
          table += '<tr style="border: 1px solid gray;">';
          for (iCol = 0 ; iCol < data.colNames.length; iCol++) {
-            table += '<td style="border: 1px solid gray;'+data.colNames[iCol].style+'">'+row[iCol]+'</td>'
+            table += '<td style="border: 1px solid gray;'+data.colNames[iCol].style+'">'+row[iCol]+'</td>';
          }
          table += '</tr>';
       }
@@ -1963,10 +1962,13 @@ function newForm(modelName, title, message) {
       }
       html += "&nbsp;:</b></td><td style='width:350px'>";
       var fieldId = modelName + "_" + fieldName;
+      var requiredString = field.required ? 'required' : '';
       if (field.edittype === "text") {
-         html += "<input type='text' style='width:350px' id='" + fieldId + "' />";
+         html += "<input type='text' style='width:350px' id='" + fieldId + "' "+requiredString+"/>";
+      } else if (field.edittype === "email") {
+         html += "<input type='email' style='width:350px' id='" + fieldId + "' "+requiredString+"/>";   
       } else if (field.edittype === "password") {
-         html += "<input type='password'  style='width:350px' id='" + fieldId + "' />";
+         html += "<input type='password'  style='width:350px' id='" + fieldId + "' "+requiredString+"/>";
       } else if (field.edittype === "select") {
          html += "<select id='" + fieldId + "'>";
          html += "<option value='0'>" + t("select") + "</option>";
@@ -1997,7 +1999,7 @@ function newForm(modelName, title, message) {
          }
          html += "</select>";
       } else if (field.edittype === "ac-email") {
-         html += "<input type='text' id='" + fieldId + "' />@";
+         html += "<input type='text' id='" + fieldId + "' "+requiredString+"/>@";
          html += "<select id='" + fieldId + "_domain'>";
          html += "<option value='undefined'>" + t("region") + "</option>";
          for (var iDomain = 0; iDomain < domains.length; iDomain++) {
@@ -2006,7 +2008,7 @@ function newForm(modelName, title, message) {
          }
          html += "</select>";
       } else if (field.edittype === "datetime") {
-         html += "<input id='" + fieldId + "_date' type='text' /> ";
+         html += "<input id='" + fieldId + "_date' type='text' "+requiredString+"/> ";
          html += " à ";
          html += getSelectHours(fieldId) + ":" + getSelectMinutes(fieldId);
          html += "<br/>" + t("expectedStartTime_timeZone") + "<b>" + jstz.determine().name() + "</b>";
@@ -2021,7 +2023,7 @@ function newForm(modelName, title, message) {
    html += "</table>";
    if (modelName == 'user_create') {
       html += '<input type="checkbox" id="users_okMail">';
-      html += 'J\'accepte de recevoir occasionnellement des emails d\'informations de la part des organisateurs du concours.<br/><br/>';
+      html += t('user_accept_email')+'<br/><br/>';
    }
    html += "<input id='buttonValidate_" + modelName + "' type='button' value='OK' onclick='validateForm(\"" + modelName + "\")' />";
    html += "<input id='buttonCancel_" + modelName + "' type='button' value='Annuler' onclick='endEditForm(\"" + modelName + "\", 0 , {})' />";
@@ -2204,16 +2206,22 @@ function getSQLFromDate(date) {
    }
 }
 
+function validateEmailAddress(email) {
+   var re = /\S+@\S+\.\S+/;
+   return re.test(email);
+}
+
 
 function validateForm(modelName) {
    var item = {};
    item.ID = $("#" + modelName + "_ID").val();
+   var date;
    var fields = models[modelName].fields;
    for (var fieldName in fields) {
       var field = fields[fieldName];
       item[fieldName] = $("#" + modelName + "_" + fieldName).val();
       if (field.edittype === "datetime") {
-         var date = $("#" + modelName + "_" + fieldName + "_date").val();
+         date = $("#" + modelName + "_" + fieldName + "_date").val();
          var hours = $("#" + modelName + "_" + fieldName + "_hours").val();
          if (!hours) {
             hours = "00";
@@ -2240,7 +2248,13 @@ function validateForm(modelName) {
             var domain = $("#" + modelName + "_" + fieldName + "_domain").val();
             item[fieldName] += "@" +  domain;
          }
-      } else if (field.required) {
+      } else if (field.edittype == 'email') {
+         if (item[fieldName] && !validateEmailAddress(item[fieldName])) {
+            jqAlert(t("user_invalid_email"));
+            return;
+         }
+      }
+      if (field.required) {
          if (item[fieldName] === "" || item[fieldName] === "0") {
             jqAlert(t("field_missing_1") + field.label + t("field_missing_2"));
             return;
@@ -2283,7 +2297,7 @@ function validateForm(modelName) {
          contestEndDate = toDate(contest.endDate, "-", true, true);
       }
       var strDate = $("#group_expectedStartTime_date").val() + " " + $("#group_expectedStartTime_hours").val() + ":" + $("#group_expectedStartTime_minutes").val();
-      var date = toDate(strDate, "/", false, false);
+      date = toDate(strDate, "/", false, false);
 
       if ((item.participationType == "Official") && (parseInt(contest.closedToOfficialGroups) == 1)) {
          jqAlert(t("official_contests_restricted"));
