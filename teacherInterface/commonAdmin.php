@@ -58,11 +58,8 @@ function sendMail($sTo, $sTitle, $sBody, $sFrom, $sBCC = NULL)
 
 
    $bSent = $mail->Send();
-   if(!$bSent) {
-     echo "Mailer Error: " . $mail->ErrorInfo;
-   }
 
-   return $bSent;
+   return ['success' => $bSent, 'error' => $mail->ErrorInfo];
 }
 
 // performs the url encoding of arguments

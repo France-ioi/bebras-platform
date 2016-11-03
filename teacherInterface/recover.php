@@ -33,12 +33,14 @@ function recoverSendMail($db, $sEmail) {
    $stmt = $db->prepare($query);
    $stmt->execute(array($sRecoverCode, $row->ID));
 
-   if ($sEmail !== "")
+   if ($sEmail)
    {
       $link = $config->teacherInterface->sCoordinatorFolder."/recover.php?action=recover&email=".urlencode($sEmail)."&recoverCode=".urlencode($sRecoverCode);
       $sBody = str_replace('__link__', $link, $translationStrings['recover_mail_body']);
       $sTitle = $translationStrings['recover_mail_title'];
-      sendMail($sEmail, $sTitle, $sBody, $config->email->sEmailSender);
+      $res = sendMail($sEmail, $sTitle, $sBody, $config->email->sEmailSender);
+      echo json_encode($res);
+      return;
    }
    echo json_encode(array("success" => true));
 }

@@ -19,7 +19,7 @@ function checkOfficialEmail($email) {
    }
    $start = strpos($email, "@");
    if ($start === FALSE) {
-      return "impossible de trouver le caractère @ dans l'email.";
+      return "user_invalid_email";
    }
    if ($config->teacherInterface->forceOfficialEmailDomain) {
       $domain = substr($email, $start + 1);
@@ -37,21 +37,20 @@ function checkOfficialEmail($email) {
 
 function sendValidationEmail($emailType, $sEmail, $sSalt) {
    global $config;
-   if ($sEmail === "") {
-      return;
+   if (!$sEmail) {
+      return ['success' => false, 'error' => 'user_invalid_email'];
    }
    $coordinatorFolder = $config->teacherInterface->sCoordinatorFolder;
    $link = $coordinatorFolder."/validateEmail.php?".$emailType."=".urlencode($sEmail)."&check=".urlencode($sSalt);
    $sBody = sprintf($config->validationMailBody, $link);
    $sTitle = $config->validationMailTitle;
-   sendMail($sEmail, $sTitle, $sBody, $config->email->sEmailSender, $config->email->sEmailInsriptionBCC);
+   return sendMail($sEmail, $sTitle, $sBody, $config->email->sEmailSender, $config->email->sEmailInsriptionBCC);
 }
 
 function sendValidationEmails($record) {
    $code = md5($record["salt"]."5263610");
    $params = array('code' => $code, 'email' => $record["officialEmail"], 'salt' => $record["salt"]);
-   sendValidationEmail("acEmail", $record["officialEmail"], $record["salt"]);
-   //http_post("eval01.france-ioi.org", 80, "/castor/sendMail.php", $params);//OLD
+   return sendValidationEmail("acEmail", $record["officialEmail"], $record["salt"]);
 }
 
 function getUser($db) {
@@ -76,7 +75,7 @@ function checkUser($record) {
 }
 
 function existingEmail($db, $email, $userID) {
-   if ($email == "") {
+   if (!$email) {
       return false;
    }
    $query = "SELECT `ID` FROM `user` WHERE (`officialEmail` = :email OR `alternativeEmail` = :email) AND `ID` <> :userID";
@@ -369,9 +368,11 @@ function insertRecord($db, $modelName, $record, $roles) {
       $stmt->execute(array("ID" => getRandomID(), "insertID" => $insertID, "userID" => $record["userID"]));
    }
    if ($modelName === "user" && $config->email->bSendMailForReal) {
-      sendValidationEmails($record);
+      $res = sendValidationEmails($record);
+      echo json_encode($res);
+   } else {
+      echo json_encode(array("success" => true, "recordID" => $insertID));
    }
-   echo json_encode(array("success" => true, "recordID" => $insertID));
 }
 
 function deleteRecord($db, $modelName, $record, $roles) {
