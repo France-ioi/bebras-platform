@@ -441,6 +441,8 @@ var questionIframe = {
       // users shouldn't reload iframes
       this.inject('window.onbeforeunload = function() {return "Désolé, il est impossible de recharger l\'iframe. Si un problème est survenu, sélectionnez une autre question et revenez sur celle-ci.";};');
 
+      this.inject('window.onerror = window.parent.onerror;');
+
       // Inject localized strings
       this.inject('var t = function(item) {return item;}; function setTranslate(translateFun) { t = translateFun; }');
       this.iframe.contentWindow.setTranslate(t);
