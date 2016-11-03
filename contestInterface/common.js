@@ -27,6 +27,7 @@ var maxTeamScore = 0;
 var sending = false;
 var answersToSend = {};
 var answers = {};
+var states = {};
 var defaultAnswers = {};
 var lastSelectQuestionTime = 0;
 var currentQuestionKey = "";
@@ -213,6 +214,10 @@ var platform = {
          }
          if (success) {success();}
       }, logError);
+
+      questionIframe.task.getState(function(state) {
+         states[questionIframe.questionKey] = state;
+      });
    },
    firstNonVisitedQuestion: function(delay) {
       function timeoutFunFactory(questionID) {
@@ -614,7 +619,13 @@ var questionIframe = {
            if (answers[questionIframe.questionKey]) {
               var answer = answers[questionIframe.questionKey];
               task.reloadAnswer(answer, function() {
-                 nextStep();
+                  if (states[questionIframe.questionKey]) {
+                     task.reloadState(states[questionIframe.questionKey], function() {
+                        nextStep();
+                     }, logError);
+                  } else {
+                     nextStep();
+                  }
               }, logError);
            } else {
               nextStep();
@@ -690,14 +701,17 @@ var questionIframe = {
       if (this.loaded) {
          var that = this;
          if (questionIframe.task && questionIframe.task.iframe_loaded) {
-            questionIframe.task.unload(function() {
-               that.loaded = false;
-               that.loadQuestion(taskViews, questionKey, callback);
-            }, function() {
-               logError(arguments);
-               that.loaded = false;
-               that.loadQuestion(taskViews, questionKey, callback);
-            });   
+            questionIframe.task.getState(function(state) {
+               states[questionKey] = state;
+               questionIframe.task.unload(function() {
+                  that.loaded = false;
+                  that.loadQuestion(taskViews, questionKey, callback);
+               }, function() {
+                  logError(arguments);
+                  that.loaded = false;
+                  that.loadQuestion(taskViews, questionKey, callback);
+               });
+            }, logError);
          }
          else {
             this.loaded = false;
