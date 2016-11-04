@@ -141,7 +141,6 @@ class Transaction(object):
 
     def destroySession(self, check=True):
         self.beginTest('destroySession')
-        sid = self.sid
         body, hints = self.post_data_request({'action': 'destroySession'})
         if not body.get('success', False):
             raise Exception('destroySession: failed')
@@ -151,8 +150,7 @@ class Transaction(object):
             self.checkHints(
                 hints,
                 [
-                    "ClientIP.destroySession:pass",
-                    "SessionId({}):destroySession".format(sid)
+                    "ClientIP.destroySession"
                 ])
         self.endTest()
 

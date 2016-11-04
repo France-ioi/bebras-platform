@@ -260,8 +260,7 @@ function handleLoadSession() {
 
 function handleDestroySession() {
    $sid = session_id();
-   addBackendHint("ClientIP.destroySession:pass");
-   addBackendHint(sprintf("SessionId(%s):destroySession", escapeHttpValue($sid)));
+   addBackendHint("ClientIP.destroySession");
    restartSession();
    exitWithJson(array("success" => true, "SID" => $sid));
 }
