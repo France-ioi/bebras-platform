@@ -93,7 +93,7 @@ window.logError = logError;
 
 var updateContestName = function(contestName) {
   $('#headerH1').html(contestName);
-  $('title').html(contestName);
+  //$('title').html(contestName); doesn't work on old IEs
 };
 
 /**
