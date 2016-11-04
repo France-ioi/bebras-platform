@@ -33,7 +33,11 @@ function upgrade_url($url) {
 
 function static_asset($path) {
 	global $config;
-	return upgrade_url($config->teacherInterface->sAssetsStaticPath . $path);
+	$qs = '';
+	if ($config->timestamp !== false) {
+		$qs = '?v=' . $config->timestamp;
+	}
+	return upgrade_url($config->teacherInterface->sAssetsStaticPath . $path . $qs);
 }
 
 function script_tag($path) {
