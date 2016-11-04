@@ -2,6 +2,7 @@
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 
 $backend_hints = array();
+$failure_backend_hints = array();
 
 function exitWithJson($json) {
    global $backend_hints;
@@ -19,12 +20,20 @@ function exitWithJsonFailure($message, $extras = null) {
    if ($extras != null) {
       array_replace($result, $extras);
    }
+   global $backend_hints;
+   global $failure_backend_hints;
+   $backend_hints = $failure_backend_hints;
    exitWithJson($result);
 }
 
 function addBackendHint ($hint) {
    global $backend_hints;
    array_push($backend_hints, '"' . $hint . '"');
+}
+
+function addFailureBackendHint ($hint) {
+   global $failure_backend_hints;
+   array_push($failure_backend_hints, '"' . $hint . '"');
 }
 
 function escapeHttpValue($value) {
