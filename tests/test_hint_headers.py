@@ -160,7 +160,7 @@ class Transaction(object):
         if not body.get('success', False):
             raise Exception('loadPublicGroups: failed')
         self.checkHints(
-            hints, ["ClientIP.loadPublicGroups:pass"])
+            hints, ["ClientIP.loadPublicGroups"])
         self.group_code = body['groups'][-1]['code']
         self.endTest()
 

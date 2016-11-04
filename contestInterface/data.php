@@ -63,7 +63,7 @@ function getRandomID() {
 }
 
 function handleLoadPublicGroups($db) {
-   addBackendHint("ClientIP.loadPublicGroups:pass");
+   addBackendHint("ClientIP.loadPublicGroups");
    $stmt = $db->prepare("SELECT `group`.`name`, `group`.`code`, `contest`.`year`, `contest`.`category`, `contest`.`level` ".
       "FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `isPublic` = 1 AND `contest`.`visibility` <> 'Hidden';");
    $stmt->execute(array());
