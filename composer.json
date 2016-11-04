@@ -12,6 +12,7 @@
       "France-IOI/pem-task-compiler": "*@dev",
       "doctrine/cache": "1.3.*",
       "phpmailer/phpmailer": "^5.2",
-      "lib-curl": "*"
+      "lib-curl": "*",
+      "ua-parser/uap-php": "^3.4"
    }
 }

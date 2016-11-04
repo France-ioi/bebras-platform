@@ -109,8 +109,22 @@ class Transaction(object):
         else:
             print("\033[32m{}\033[0m".format(self.test_name))
 
-    def loadSession(self, check=True):
-        self.beginTest('loadSession')
+    def loadNewSession(self):
+        self.beginTest('loadNewSession')
+        body, hints = self.post_data_request({'action': 'loadSession'})
+        if not body.get('success', False):
+            raise Exception('loadSession: failed')
+        if 'SID' not in body or body['SID'] != self.sid:
+            raise Exception('loadSession: bad or missing SID')
+        self.checkHints(
+            hints,
+            [
+                "ClientIP.loadSession:new"
+            ])
+        self.endTest()
+
+    def loadOldSession(self, check=True):
+        self.beginTest('loadOldSession')
         body, hints = self.post_data_request({'action': 'loadSession'})
         if not body.get('success', False):
             raise Exception('loadSession: failed')
@@ -120,14 +134,13 @@ class Transaction(object):
             self.checkHints(
                 hints,
                 [
-                    "ClientIp.loadSession:pass",
+                    "ClientIP.loadSession:found",
                     "SessionId({}):loadSession".format(self.sid)
                 ])
         self.endTest()
 
     def destroySession(self, check=True):
         self.beginTest('destroySession')
-        sid = self.sid
         body, hints = self.post_data_request({'action': 'destroySession'})
         if not body.get('success', False):
             raise Exception('destroySession: failed')
@@ -137,8 +150,7 @@ class Transaction(object):
             self.checkHints(
                 hints,
                 [
-                    "ClientIp.destroySession:pass",
-                    "SessionId({}):destroySession".format(sid)
+                    "ClientIP.destroySession"
                 ])
         self.endTest()
 
@@ -148,8 +160,22 @@ class Transaction(object):
         if not body.get('success', False):
             raise Exception('loadPublicGroups: failed')
         self.checkHints(
-            hints, ["ClientIp.loadPublicGroups:pass"])
+            hints, ["ClientIP.loadPublicGroups"])
         self.group_code = body['groups'][-1]['code']
+        self.endTest()
+
+    def checkNoPassword(self):
+        self.beginTest('checkNoPassword')
+        body, hints = self.post_data_request({
+            'action': 'checkPassword'
+        })
+        if body.get('success', False):
+            raise Exception('unexpected success')
+        self.checkHints(
+            hints, [
+                "ClientIP.error",
+                "ClientIP.checkPassword:fail"
+            ])
         self.endTest()
 
     def checkGroupPassword(self):
@@ -165,7 +191,7 @@ class Transaction(object):
         self.group_id = body.get('groupID')
         self.checkHints(
             hints, [
-                "ClientIp.checkPassword:pass",
+                "ClientIP.checkPassword:pass",
                 "Group({}):checkPassword".format(self.group_id)
             ])
         # {"groupID": "8506", "askGrade": true, "askStudentId": false,
@@ -197,7 +223,7 @@ class Transaction(object):
         self.team_code = body.get('password')
         self.checkHints(
             hints, [
-                "ClientIp.createTeam:public",
+                "ClientIP.createTeam:public",
                 "Group({}):createTeam".format(self.group_id)
             ])
         self.endTest()
@@ -213,7 +239,7 @@ class Transaction(object):
             raise Exception('failed')
         self.checkHints(
             hints, [
-                "ClientIp.checkPassword:pass",
+                "ClientIP.checkPassword:pass",
                 "Team({}):checkPassword".format(self.team_id)
             ])
         self.endTest()
@@ -301,12 +327,14 @@ class Transaction(object):
 
     def run(self):
         try:
-            self.loadSession()
+            self.loadNewSession()
             self.destroySession()
             self.loadPublicGroups()
-            self.loadSession(check=False)
+            self.loadNewSession()
+            self.checkNoPassword()
             self.checkGroupPassword()
             self.createTeam()
+            self.loadOldSession()
             print('team code: {}'.format(self.team_code))
             self.checkTeamPassword()
             self.loadContestData()

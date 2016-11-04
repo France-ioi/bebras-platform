@@ -27,9 +27,8 @@ function computePasswordMD5($sPassword, $sSalt) {
 function sendMail($sTo, $sTitle, $sBody, $sFrom, $sBCC = NULL)
 {
    global $config;
-
+   $translationStrings = getTeacherTranslationStrings();
    $mail             = new PHPMailer();
-   // SMTP configuration : through gmail 
    $mail->IsSMTP(); // telling the class to use SMTP
    $mail->SMTPDebug  = 0; // SMTP debug information 0, 1 (errors and messages), 2 (messages only)
    $mail->SMTPAuth   = true;
@@ -47,8 +46,8 @@ function sendMail($sTo, $sTitle, $sBody, $sFrom, $sBCC = NULL)
    //$mail->MsgHTML($sBody);
    
    // Emails
-   $mail->SetFrom($sFrom, 'Inscription Castor-Informatique');
-   $mail->AddReplyTo($sFrom, 'Inscription Castor-Informatique');
+   $mail->SetFrom($sFrom, $translationStrings['mail_from_name']);
+   $mail->AddReplyTo($sFrom, $translationStrings['mail_from_name']);
    $mail->AddAddress($sTo);
    
    if (!is_null($sBCC))
@@ -58,11 +57,8 @@ function sendMail($sTo, $sTitle, $sBody, $sFrom, $sBCC = NULL)
 
 
    $bSent = $mail->Send();
-   if(!$bSent) {
-     echo "Mailer Error: " . $mail->ErrorInfo;
-   }
 
-   return $bSent;
+   return ['success' => $bSent, 'error' => $mail->ErrorInfo];
 }
 
 // performs the url encoding of arguments

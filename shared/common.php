@@ -138,3 +138,14 @@ function getTotalContestants($contestID, $grade, $nbContestants = null) {
    $stmt->execute($params);
    return $stmt->fetchColumn();
 }
+
+function getTeacherTranslationStrings() {
+   global $config;
+   static $teacherTranslationStrings = null;
+   if (!$teacherTranslationStrings) {
+      $normalStrings = json_decode(file_get_contents(__DIR__.'/../teacherInterface/i18n/'.$config->defaultLanguage.'/translation.json'), true);
+      $specificStrings = json_decode(file_get_contents(__DIR__.'/../teacherInterface/i18n/'.$config->defaultLanguage.'/'.$config->customStringsName.'.json'), true);
+      $teacherTranslationStrings = array_merge($normalStrings, $specificStrings);
+   }
+   return $teacherTranslationStrings;
+}

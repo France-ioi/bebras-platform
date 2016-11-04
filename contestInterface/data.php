@@ -63,7 +63,7 @@ function getRandomID() {
 }
 
 function handleLoadPublicGroups($db) {
-   addBackendHint("ClientIp.loadPublicGroups:pass");
+   addBackendHint("ClientIP.loadPublicGroups");
    $stmt = $db->prepare("SELECT `group`.`name`, `group`.`code`, `contest`.`year`, `contest`.`category`, `contest`.`level` ".
       "FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `isPublic` = 1 AND `contest`.`visibility` <> 'Hidden';");
    $stmt->execute(array());
@@ -138,7 +138,7 @@ function handleCreateTeam($db) {
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
       $stmt->execute(array(getRandomID(), $contestant["lastName"], $contestant["firstName"], $contestant["genre"], $contestant["grade"], $contestant["studentId"], $teamID, $_SESSION["schoolID"], $saniValid, $contestant["email"], $contestant["zipCode"]));
    }
-   addBackendHint(sprintf("ClientIp.createTeam:%s", $_SESSION['isPublic'] ? 'public' : 'private'));
+   addBackendHint(sprintf("ClientIP.createTeam:%s", $_SESSION['isPublic'] ? 'public' : 'private'));
    addBackendHint(sprintf("Group(%s):createTeam", escapeHttpValue($groupID)));
    exitWithJson((object)array("success" => true, "teamID" => $teamID, "password" => $password));
 }
@@ -229,13 +229,14 @@ function handleCloseContest($db) {
 
 function handleLoadSession() {
    $sid = session_id();
-   addBackendHint("ClientIp.loadSession:pass");
-   addBackendHint(sprintf("SessionId(%s):loadSession", escapeHttpValue($sid)));
    // If the session is new or closed, just return the SID.
    if (!isset($_SESSION["teamID"]) || isset($_SESSION["closed"])) {
+      addBackendHint("ClientIP.loadSession:new");
       exitWithJson(['success' => true, "SID" => $sid]);
    }
    // Otherwise, data from the session is also returned.
+   addBackendHint("ClientIP.loadSession:found");
+   addBackendHint(sprintf("SessionId(%s):loadSession", escapeHttpValue($sid)));
    exitWithJson(array(
       "success" => true,
       "teamID" => $_SESSION["teamID"],
@@ -259,13 +260,14 @@ function handleLoadSession() {
 
 function handleDestroySession() {
    $sid = session_id();
-   addBackendHint("ClientIp.destroySession:pass");
-   addBackendHint(sprintf("SessionId(%s):destroySession", escapeHttpValue($sid)));
+   addBackendHint("ClientIP.destroySession");
    restartSession();
    exitWithJson(array("success" => true, "SID" => $sid));
 }
 
 function handleCheckPassword($db) {
+   addFailureBackendHint("ClientIP.checkPassword:fail");
+   addFailureBackendHint("ClientIP.error");
    if (!isset($_POST["password"])) {
       exitWithJsonFailure("Mot de passe manquant");
    }
@@ -343,7 +345,7 @@ function handleCheckGroupPassword($db, $password, $getTeams) {
       unset($_SESSION["userCode"]);
       unset($_SESSION["userCodeGroupID"]);
    }
-   addBackendHint("ClientIp.checkPassword:pass");
+   addBackendHint("ClientIP.checkPassword:pass");
    addBackendHint(sprintf("Group(%s):checkPassword", escapeHttpValue($groupID)));
    exitWithJson((object)array(
       "success" => true,
@@ -376,8 +378,10 @@ function handleCheckGroupPassword($db, $password, $getTeams) {
 
 function handleCheckTeamPassword($db, $password) {
    $result = commonLoginTeam($db, $password);
-   addBackendHint("ClientIp.checkPassword:pass");
-   addBackendHint(sprintf("Team(%s):checkPassword", escapeHttpValue($result->teamID)));
+   if ($result->success) {
+      addBackendHint("ClientIP.checkPassword:pass");
+      addBackendHint(sprintf("Team(%s):checkPassword", escapeHttpValue($result->teamID)));
+   }
    exitWithJson($result);
 }
 

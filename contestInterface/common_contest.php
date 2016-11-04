@@ -2,6 +2,7 @@
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 
 $backend_hints = array();
+$failure_backend_hints = array();
 
 function exitWithJson($json) {
    global $backend_hints;
@@ -19,12 +20,20 @@ function exitWithJsonFailure($message, $extras = null) {
    if ($extras != null) {
       array_replace($result, $extras);
    }
+   global $backend_hints;
+   global $failure_backend_hints;
+   $backend_hints = $failure_backend_hints;
    exitWithJson($result);
 }
 
 function addBackendHint ($hint) {
    global $backend_hints;
    array_push($backend_hints, '"' . $hint . '"');
+}
+
+function addFailureBackendHint ($hint) {
+   global $failure_backend_hints;
+   array_push($failure_backend_hints, '"' . $hint . '"');
 }
 
 function escapeHttpValue($value) {
@@ -51,6 +60,7 @@ function createTeamFromUserCode($db, $password) {
 
 function commonLoginTeam($db, $password) {
    global $tinyOrm, $config;
+   $password = trim($password);
    $stmt = $db->prepare("SELECT `team`.`ID` as `teamID`, `group`.`ID` as `groupID`, `group`.`contestID`, `group`.`name`, `team`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, `contest`.`folder`, `contest`.`name` as `contestName`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`visibility`, `group`.`schoolID`, `team`.`endTime` FROM `team` JOIN `group` ON (`team`.`groupID` = `group`.`ID`) JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `team`.`password` = ?");
    $stmt->execute(array($password));
    $row = $stmt->fetchObject();
@@ -65,7 +75,7 @@ function commonLoginTeam($db, $password) {
          error_log('DynamoDB error finding team with password: '.$password);
       }
       if (!isset($teamDynamoDB[0]) || $row->teamID != $teamDynamoDB[0]['ID'] || $row->groupID != $teamDynamoDB[0]['groupID']) {
-         error_log('enregistrement différent entre MySQL et DynamoDB! SQL: teamID='.$row->teamID.', groupID='.$row->groupID.(isset($teamDynamoDB[0]) ? ' DDB: ID='.$teamDynamoDB[0]['ID'].', groupID='.$teamDynamoDB[0]['groupID'] : 'pas d\'enregistrement DynamoDB'));
+         error_log('enregistrement différent entre MySQL et DynamoDB! SQL: teamID='.$row->teamID.', groupID='.$row->groupID.(isset($teamDynamoDB[0]) ? ' DDB: ID='.$teamDynamoDB[0]['ID'].', groupID='.$teamDynamoDB[0]['groupID'] : ' pas d\'enregistrement DynamoDB'));
          return (object)array("success" => false, "message" => "enregistrement différent entre MySQL et DynamoDB!");
       }
    }
