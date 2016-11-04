@@ -164,6 +164,20 @@ class Transaction(object):
         self.group_code = body['groups'][-1]['code']
         self.endTest()
 
+    def checkNoPassword(self):
+        self.beginTest('checkNoPassword')
+        body, hints = self.post_data_request({
+            'action': 'checkPassword'
+        })
+        if body.get('success', False):
+            raise Exception('unexpected success')
+        self.checkHints(
+            hints, [
+                "ClientIP.error",
+                "ClientIP.checkPassword:fail"
+            ])
+        self.endTest()
+
     def checkGroupPassword(self):
         self.beginTest('checkGroupPassword')
         body, hints = self.post_data_request({
@@ -317,6 +331,7 @@ class Transaction(object):
             self.destroySession()
             self.loadPublicGroups()
             self.loadNewSession()
+            self.checkNoPassword()
             self.checkGroupPassword()
             self.createTeam()
             self.loadOldSession()

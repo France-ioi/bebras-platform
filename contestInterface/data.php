@@ -266,6 +266,8 @@ function handleDestroySession() {
 }
 
 function handleCheckPassword($db) {
+   addFailureBackendHint("ClientIP.checkPassword:fail");
+   addFailureBackendHint("ClientIP.error");
    if (!isset($_POST["password"])) {
       exitWithJsonFailure("Mot de passe manquant");
    }
