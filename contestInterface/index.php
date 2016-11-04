@@ -309,9 +309,9 @@
       return uri + separator + key + "=" + value;
     }
   }
-  window.contestsRoot = <?= json_encode($config->teacherInterface->sAbsoluteStaticPath.'/contests') ?>;
-  window.sAbsoluteStaticPath = <?= json_encode($config->teacherInterface->sAbsoluteStaticPath.'/') ?>;
-  window.sAssetsStaticPath = <?= json_encode(static_asset('/')) ?>;
+  window.contestsRoot = <?= json_encode(upgrade_url($config->teacherInterface->sAbsoluteStaticPath.'/contests')) ?>;
+  window.sAbsoluteStaticPath = <?= json_encode(upgrade_url($config->teacherInterface->sAbsoluteStaticPath.'/')) ?>;
+  window.sAssetsStaticPath = <?= json_encode(upgrade_url($config->teacherInterface->sAssetsStaticPath.'/')) ?>;
   try {
     i18n.init(<?= json_encode([
       'lng' => $config->defaultLanguage,
@@ -339,8 +339,8 @@
 </script>
 <!--[if IE 6]>
 <script>
-window.sAbsoluteStaticPath = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathOldIE.'/') ?>;
-window.contestsRoot = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathOldIE.'/contests') ?>;
+window.sAbsoluteStaticPath = <?= json_encode(upgrade_url($config->teacherInterface->sAbsoluteStaticPathOldIE.'/')) ?>;
+window.contestsRoot = <?= json_encode(upgrade_url($config->teacherInterface->sAbsoluteStaticPathOldIE.'/contests')) ?>;
 </script>
 <![endif]-->
 <!--[if lte IE 9]>

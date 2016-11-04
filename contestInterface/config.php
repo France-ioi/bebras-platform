@@ -15,13 +15,25 @@ function escape_js($str) {
 	return str_replace('"', '\\"', $str);
 }
 
-function static_asset($path) {
-	global $config;
-	$url = $config->teacherInterface->sAssetsStaticPath . $path;
-	if (array_key_exists("HTTPS", $_SERVER)) {
+function array_get($array, $key, $default) {
+	if (array_key_exists($key, $array)) {
+		return $array[$key];
+	} else {
+		return $default;
+	}
+}
+
+function upgrade_url($url) {
+	if (array_get($_SERVER, "HTTPS", "") == "on" ||
+			array_get($_SERVER, "HTTP_X_FORWARDED_PROTO", "") == "https") {
 		$url = preg_replace("/^http:/", "https:", $url, 1);
 	}
 	return $url;
+}
+
+function static_asset($path) {
+	global $config;
+	return upgrade_url($config->teacherInterface->sAssetsStaticPath . $path);
 }
 
 function script_tag($path) {
