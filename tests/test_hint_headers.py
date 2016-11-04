@@ -120,7 +120,7 @@ class Transaction(object):
             self.checkHints(
                 hints,
                 [
-                    "ClientIp.loadSession:pass",
+                    "ClientIP.loadSession:pass",
                     "SessionId({}):loadSession".format(self.sid)
                 ])
         self.endTest()
@@ -137,7 +137,7 @@ class Transaction(object):
             self.checkHints(
                 hints,
                 [
-                    "ClientIp.destroySession:pass",
+                    "ClientIP.destroySession:pass",
                     "SessionId({}):destroySession".format(sid)
                 ])
         self.endTest()
@@ -148,7 +148,7 @@ class Transaction(object):
         if not body.get('success', False):
             raise Exception('loadPublicGroups: failed')
         self.checkHints(
-            hints, ["ClientIp.loadPublicGroups:pass"])
+            hints, ["ClientIP.loadPublicGroups:pass"])
         self.group_code = body['groups'][-1]['code']
         self.endTest()
 
@@ -165,7 +165,7 @@ class Transaction(object):
         self.group_id = body.get('groupID')
         self.checkHints(
             hints, [
-                "ClientIp.checkPassword:pass",
+                "ClientIP.checkPassword:pass",
                 "Group({}):checkPassword".format(self.group_id)
             ])
         # {"groupID": "8506", "askGrade": true, "askStudentId": false,
@@ -197,7 +197,7 @@ class Transaction(object):
         self.team_code = body.get('password')
         self.checkHints(
             hints, [
-                "ClientIp.createTeam:public",
+                "ClientIP.createTeam:public",
                 "Group({}):createTeam".format(self.group_id)
             ])
         self.endTest()
@@ -213,7 +213,7 @@ class Transaction(object):
             raise Exception('failed')
         self.checkHints(
             hints, [
-                "ClientIp.checkPassword:pass",
+                "ClientIP.checkPassword:pass",
                 "Team({}):checkPassword".format(self.team_id)
             ])
         self.endTest()
