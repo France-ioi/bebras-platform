@@ -17,7 +17,11 @@ function escape_js($str) {
 
 function static_asset($path) {
 	global $config;
-	return $config->teacherInterface->sAssetsStaticPath . $path;
+	$url = $config->teacherInterface->sAssetsStaticPath . $path;
+	if (array_key_exists("HTTPS", $_SERVER)) {
+		$url = preg_replace("/^http:/", "https:", $url, 1);
+	}
+	return $url;
 }
 
 function script_tag($path) {
