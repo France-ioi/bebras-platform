@@ -229,7 +229,6 @@ function handleCloseContest($db) {
 
 function handleLoadSession() {
    $sid = session_id();
-   addBackendHint(sprintf("SessionId(%s):loadSession", escapeHttpValue($sid)));
    // If the session is new or closed, just return the SID.
    if (!isset($_SESSION["teamID"]) || isset($_SESSION["closed"])) {
       addBackendHint("ClientIP.loadSession:new");
@@ -237,6 +236,7 @@ function handleLoadSession() {
    }
    // Otherwise, data from the session is also returned.
    addBackendHint("ClientIP.loadSession:found");
+   addBackendHint(sprintf("SessionId(%s):loadSession", escapeHttpValue($sid)));
    exitWithJson(array(
       "success" => true,
       "teamID" => $_SESSION["teamID"],

@@ -119,8 +119,7 @@ class Transaction(object):
         self.checkHints(
             hints,
             [
-                "ClientIP.loadSession:new",
-                "SessionId({}):loadSession".format(self.sid)
+                "ClientIP.loadSession:new"
             ])
         self.endTest()
 
