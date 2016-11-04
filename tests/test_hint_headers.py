@@ -109,8 +109,23 @@ class Transaction(object):
         else:
             print("\033[32m{}\033[0m".format(self.test_name))
 
-    def loadSession(self, check=True):
-        self.beginTest('loadSession')
+    def loadNewSession(self):
+        self.beginTest('loadNewSession')
+        body, hints = self.post_data_request({'action': 'loadSession'})
+        if not body.get('success', False):
+            raise Exception('loadSession: failed')
+        if 'SID' not in body or body['SID'] != self.sid:
+            raise Exception('loadSession: bad or missing SID')
+        self.checkHints(
+            hints,
+            [
+                "ClientIP.loadSession:new",
+                "SessionId({}):loadSession".format(self.sid)
+            ])
+        self.endTest()
+
+    def loadOldSession(self, check=True):
+        self.beginTest('loadOldSession')
         body, hints = self.post_data_request({'action': 'loadSession'})
         if not body.get('success', False):
             raise Exception('loadSession: failed')
@@ -120,7 +135,7 @@ class Transaction(object):
             self.checkHints(
                 hints,
                 [
-                    "ClientIP.loadSession:pass",
+                    "ClientIP.loadSession:found",
                     "SessionId({}):loadSession".format(self.sid)
                 ])
         self.endTest()
@@ -301,12 +316,13 @@ class Transaction(object):
 
     def run(self):
         try:
-            self.loadSession()
+            self.loadNewSession()
             self.destroySession()
             self.loadPublicGroups()
-            self.loadSession(check=False)
+            self.loadNewSession()
             self.checkGroupPassword()
             self.createTeam()
+            self.loadOldSession()
             print('team code: {}'.format(self.team_code))
             self.checkTeamPassword()
             self.loadContestData()
