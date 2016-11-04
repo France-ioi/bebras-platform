@@ -792,7 +792,7 @@ var TimeManager = {
          this.prevTime = this.timeStart;
          this.updateTime();
          this.interval = setInterval(this.updateTime, 1000);
-         this.minuteInterval = setInterval(this.minuteIntervalHandler.bind(this), 60000);
+         this.minuteInterval = setInterval(this.minuteIntervalHandler, 60000);
       } else {
          $(".chrono").hide();
       }
@@ -849,7 +849,7 @@ var TimeManager = {
    },
 
    minuteIntervalHandler: function() {
-      this.syncCounter = 0;
+      TimeManager.syncCounter = 0;
    },
 
    updateTime: function() {
@@ -1137,6 +1137,7 @@ function setupContest(data) {
          hasAnsweredQuestion = true;
       }
    }
+
    $('.buttonClose').show();
    if (!contestEnded || !fullFeedback) {
       // Starts the timer
