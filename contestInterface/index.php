@@ -30,7 +30,7 @@
    <button type="button" id="button-continue" class="tabButton" onclick="selectMainTab('continue');return false;" data-i18n="[html]general_view_results"></button>
    <div id="tab-home" style="display:none">
       <!-- Display the first div during the contest week -->
-      <div id="warningPublicGroups" style="display:none;background:#F33;width:650px;text-align:center;padding:5px;margin:10px">
+      <div id="warningPublicGroups" style="background:#F33;width:650px;text-align:center;padding:5px;margin:10px">
          <p><b data-i18n="tab_home_warning_not_contest"></b></p>
          <button type="button" onclick="selectMainTab('school');return false;" data-i18n="[html]tab_home_button_wrong_choice"></button>
          <button type="button" onclick="confirmPublicGroup();return false;" data-i18n="[html]tab_home_button_confirm_choice"></button>
