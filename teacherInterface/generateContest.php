@@ -135,7 +135,7 @@ function awsCopyFile($src, $dst, $adminOnly = false) {
 
 function awsPutContents($dst, $content, $adminOnly = false) {
    $src_temp = tempnam('/tmp', 'bebras-platform');
-   $success = false !== file_put_contents($tempname, $content);
+   $success = false !== file_put_contents($src_temp, $content);
    if ($success) {
       $success = awsCopyFile($src_temp, $dst, $adminOnly);
    }
