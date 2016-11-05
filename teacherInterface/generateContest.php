@@ -38,13 +38,6 @@ if ($mode == "aws"|| $mode == "aws+local") {
 require_once('path.inc.php');
 require_once('../tasks/bebras/Bebras.php');
 
-if (!isset($_REQUEST["contestID"])) {
-   throw new Exception('No contest ID provided.');
-}
-
-$contestID = $_REQUEST["contestID"];
-$contestFolder = $_REQUEST["contestFolder"];
-
 function getMimeTypes() {
     # Returns the system MIME type mapping of extensions to MIME types, as defined in /etc/mime.types.
     $out = array();
@@ -217,25 +210,6 @@ function emptyContestDir($contestFolder) {
          exit();
       }
    }
-}
-
-if (!isset($_REQUEST['tasks'])) {
-   // Retrieve the question's list
-   $questions = getQuestions($db, $contestID);
-   
-   $questionsUrl = array();
-   foreach ($questions as $curQuestion) {
-      $questionsUrl[] = $curQuestion->folder.'/'.$curQuestion->key.'/';
-   }
-   emptyContestDir($contestFolder);
-   echo json_encode(array('questionsUrl' => $questionsUrl));
-   exit;
-}
-
-if (isset($_REQUEST['tasks']) && $_REQUEST['tasks']) {
-   $tasks = json_decode($_REQUEST['tasks'], true);
-   emptyContestDir($contestFolder);
-   generateContest($tasks, $contestID, $contestFolder, isset($_REQUEST['fullFeedback']) ? $_REQUEST['fullFeedback'] : false, isset($_REQUEST['status']) ? $_REQUEST['status'] : 'RunningContest');
 }
 
 function contestAddContent($contestFolder, $content, &$listParts, &$buffer, &$numPart, $isLast) {
@@ -432,4 +406,30 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
    contestPutContents($contestFolder.'/contest_'.$contestID.'_graders.html', $strGraders, !$fullFeedback);
    contestPutContents($contestFolder.'/.htaccess', $htAccessContent, true);
    echo json_encode(['success' => true]);
+}
+
+
+if (!isset($_REQUEST["contestID"])) {
+   throw new Exception('No contest ID provided.');
+}
+
+$contestID = $_REQUEST["contestID"];
+$contestFolder = $_REQUEST["contestFolder"];
+
+if (!isset($_REQUEST['tasks'])) {
+   // Retrieve the question's list
+   $questions = getQuestions($db, $contestID);
+   $questionsUrl = array();
+   foreach ($questions as $curQuestion) {
+      $questionsUrl[] = $curQuestion->folder.'/'.$curQuestion->key.'/';
+   }
+   emptyContestDir($contestFolder);
+   echo json_encode(array('questionsUrl' => $questionsUrl));
+   exit;
+}
+
+if (isset($_REQUEST['tasks']) && $_REQUEST['tasks']) {
+   $tasks = json_decode($_REQUEST['tasks'], true);
+   emptyContestDir($contestFolder);
+   generateContest($tasks, $contestID, $contestFolder, isset($_REQUEST['fullFeedback']) ? $_REQUEST['fullFeedback'] : false, isset($_REQUEST['status']) ? $_REQUEST['status'] : 'RunningContest');
 }
