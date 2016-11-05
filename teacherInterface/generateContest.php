@@ -115,7 +115,7 @@ function awsCopyFile($src, $dst, $adminOnly = false) {
       'SourceFile' => $src,
       'Key'        => $dst,
       'ContentType' => $mime_type,
-      'CacheControl' => 'public; max-age=86400',
+      'CacheControl' => 'public, max-age=86400',
    );
    $zipped = false;
    if (compressMimeType($mime_type)) {
