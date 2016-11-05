@@ -10,13 +10,15 @@ var schools;
 var groups;
 var filterSchoolID = "0";
 var filterGroupID = "0";
-var tasks = [];
 var generating = false;
 var gradePackSize = 20;
 var curGradingData = null;
 var curGradingBebras = null;
 var curGradingScoreCache = {};
 var models = null;
+var selectedContestID;  // currently selected contestID
+var selectedQuestionID; // currently selected questionID
+var selectedGroupID;    // currently selected groupID
 
 var t = i18n.t;
 
@@ -553,7 +555,7 @@ function initModels(isLogged) {
                formatter: utcDateFormatter,
                beforeSave: localDateToUtc,
                editable:true,
-               width: 120                 
+               width: 120
             },
             nbMinutes: {label: t("contest_nbMinutes_label"), editable: true, edittype: "text", subtype:"int", width: 100},
             bonusScore: {label: t("contest_bonusScore_label"), editable: true, edittype: "text", subtype:"int", width: 100},
@@ -872,22 +874,18 @@ function loadUsers() {
    loadGrid("user", "lastName", 20, [20, 50, 200, 500], function() {}, true);
 }
 
-var contestID;
-var contestFolder;
 function loadListContests() {
    loadGrid("contest", "name", 10, [10, 20, 30], function(id) {
-      contestID = id;
+      selectedContestID = id;
       $('#grid_contest_question').jqGrid('setGridParam', {
          url:'jqGridData.php?tableName=contest_question&contestID=' + id
       }).trigger('reloadGrid');
-   
    }, true);
 }
 
-var questionID;
 function loadListQuestions() {
    loadGrid("question", "key", 20, [20, 50, 200], function(id) {
-      questionID = id;
+      selectedQuestionID = id;
       var url = "bebras-tasks/" + questions[id].folder + "/" + questions[id].key + "/index.html";
       $("#preview_question").attr("src", url);
    }, true);
@@ -905,9 +903,8 @@ function loadContestQuestions() {
    loadGrid("contest_question", "order", 20, [20, 50, 200], function() {}, true);
 }
 
-var groupID;
 function loadListGroups() {
-   loadGrid("group", "name", 20, [10, 20, 50], function(id) {groupID = id;}, isAdmin());
+   loadGrid("group", "name", 20, [10, 20, 50], function(id) {selectedGroupID = id;}, isAdmin());
 }
 
 function filterSchool() {
@@ -1413,7 +1410,7 @@ function newGroup() {
 }
 
 function newContestQuestion() {
-   newItem("contest_question", {contestID: contestID});
+   newItem("contest_question", {contestID: selectedContestID});
 }
 
 function newItem(modelName, params, callback) {
@@ -1438,7 +1435,7 @@ function loopGradeContest(curContestID, curGroupID) {
          var selectorState = curGroupID ? '#gradeGroupState' : '#gradeContestState';
          $(selectorState).show();
          $(selectorState).html(i18n.t('grading_in_progress')+'<span class="nbCurrent">0</span> / <span class="nbTotal">' + data.questionKeys.length + '</span> - ' + t("grading_current_question") + ' : <span class="current"></span> <span class="gradeprogressing"></span>');
-         grade(curContestID, groupID, data.questionKeys, data.questionFolders, 0);
+         grade(curContestID, curGroupID, data.questionKeys, data.questionFolders, 0);
       }
       else {
          jqAlert(data.message);
@@ -1475,7 +1472,7 @@ function grade(curContestID, curGroupID, questionKeys, questionFolders, curIndex
             curGradingData.noScore = curGradingData.noAnswerScore;
             // will be filled later
             curGradingData.randomSeed = 0;
-            
+
             // Reset answers score cache
             curGradingScoreCache = {};
             try {
@@ -1504,7 +1501,7 @@ function grade(curContestID, curGroupID, questionKeys, questionFolders, curIndex
                   task.getResources(function(bebras) {
                      curGradingBebras = bebras;
                      task.load({'task': true, 'grader': true}, function() {
-                        gradeQuestion(task, curContestID, groupID, questionKeys, questionFolders, curIndex);
+                        gradeQuestion(task, curContestID, curGroupID, questionKeys, questionFolders, curIndex);
                      });
                   });
                }, true);
@@ -1706,7 +1703,7 @@ function computeScores(curContestID, curGroupID, packetNumber)
 }
 
 function checkContestSelectedAndConfirm() {
-   if (contestID === "0" || contestID === undefined) {
+   if (selectedContestID === "0" || selectedContestID === undefined) {
       jqAlert(t("select_contest"));
       return false;
    }
@@ -1717,7 +1714,7 @@ function checkContestSelectedAndConfirm() {
 }
 
 function checkGroupSelectedAndConfirm() {
-   if (groupID === "0" || groupID === undefined) {
+   if (selectedGroupID === "0" || selectedGroupID === undefined) {
       jqAlert(t("select_group"));
       return false;
    }
@@ -1760,8 +1757,7 @@ function gradeContest() {
    }
    var button = $("#buttonGradeContest");
    button.attr("disabled", true);
-   var curContestID = contestID;
-   loopGradeContest(curContestID, undefined);
+   loopGradeContest(selectedContestID, undefined);
 }
 
 function gradeGroup() {
@@ -1769,8 +1765,7 @@ function gradeGroup() {
       return;
    }
    $("#buttonGradeSelected_group").attr("disabled", true);
-   var curGroupID = groupID;
-   loopGradeContest(undefined, curGroupID);
+   loopGradeContest(undefined, selectedGroupID);
 }
 
 function rankContest() {
@@ -1779,7 +1774,7 @@ function rankContest() {
    }
    var button = $("#buttonRankContest");
    button.attr("disabled", true);
-   $.post("rankContest.php", {contestID: contestID}, 
+   $.post("rankContest.php", {contestID: selectedContestID},
       function(data) {
          if (!data.success) {
             jqAlert(data.message);
@@ -1798,7 +1793,7 @@ function generateAlgoreaCodes() {
    }
    var button = $("#buttonGenerateAlgoreaCodes");
    button.attr("disabled", true);
-   $.post("generateAlgoreaCodes.php", {contestID: contestID}, 
+   $.post("generateAlgoreaCodes.php", {contestID: selectedContestID},
       function(data) {
          if (!data.success) {
             jqAlert(data.message);
@@ -1811,54 +1806,151 @@ function generateAlgoreaCodes() {
    );
 }
 
-function genContest() {
-   if (contestID === "0" || contestID === undefined) {
+function Generator(contestID, contest) {
+   this.contestID = contestID;
+   this.contest = contest;
+   this.tasks = [];
+}
+
+Generator.prototype.success = function () {
+   jqAlert(t("contest_generated"));
+   $("#generateContest").attr("disabled", false);
+   refreshGrid("contest");
+};
+
+Generator.prototype.failure = function (message) {
+   jqAlert(t("contest_generation_prepare_failed"));
+   $("#generateContest").attr("disabled", false);
+};
+
+Generator.prototype.start = function () {
+   var self = this;
+   $("#generateContest").attr("disabled", true);
+   loadContests().done(function() {
+      // Retrieve the tasks' list
+      var params = {
+         action: "prepare",
+         contestID: self.contestID,
+         contestFolder: self.contest.folder,
+         newFolder: "true"
+      };
+      $.post("generateContest.php", params, function(data) {
+         if (!data.success) {
+            return self.failure("contest_generation_prepare_failed");
+         }
+         self.contestFolder = data.contestFolder;
+         self.questionsUrl = data.questionsUrl;
+         // Start generating the tasks.
+         self.currentTaskIndex = 0;
+         self.doTask();
+      }, 'json').fail(function() {
+         self.failure("contest_generation_failed");
+      });;
+   });
+}
+
+Generator.prototype.doTask = function () {
+   var self = this;
+   var currentTaskIndex = self.currentTaskIndex;
+   if (currentTaskIndex >= self.questionsUrl.length) {
+      return self.upload();
+   }
+   var taskUrl = self.questionsUrl[currentTaskIndex];
+   generating = true;
+   $('#preview_question').attr("src", "bebras-tasks/" + taskUrl);
+   $('#preview_question').on('load', onQuestionLoaded);
+   function onQuestionLoaded () {
+      $('#preview_question').off('load', onQuestionLoaded);
+      TaskProxyManager.getTaskProxy('preview_question', function (task) {
+         task.getResources(function (bebras) {
+            self.tasks.push({'bebras': bebras, 'url': taskUrl});
+            generating = false;
+            self.currentTaskIndex += 1;
+            self.doTask();
+         });
+      }, true);
+   }
+};
+
+Generator.prototype.upload = function() {
+   var self = this;
+   // XXX: status is needed only because of https://github.com/aws/aws-sdk-php/
+   var params = {
+      action: "generate",
+      contestID: this.contestID,
+      contestFolder: this.contestFolder,
+      fullFeedback: this.contest.fullFeedback,
+      status: this.contest.status,
+      tasks: JSON.stringify(this.tasks)
+   };
+   $.post("generateContest.php", params, function(data) {
+      if (!data.success) {
+         return self.failure("contest_generation_failed");
+      }
+      self.setFolder();
+   }, 'json').fail(function() {
+      jqAlert(t("contest_generation_failed"));
+      button.attr("disabled", false);
+   });
+};
+
+Generator.prototype.setFolder = function() {
+   var self = this;
+   var params = {
+      action: "setFolder",
+      contestID: this.contestID,
+      contestFolder: this.contestFolder
+   };
+   $.post("generateContest.php", params, function(data) {
+      if (!data.success) {
+         return self.failure("contest_generation_failed_set_folder");
+      }
+      self.success();
+   }, 'json').fail(function() {
+      return self.failure("contest_generation_failed_set_folder");
+   });
+};
+
+function genContest () {
+   if (selectedContestID === "0" || selectedContestID === undefined) {
       jqAlert(t("select_contest"));
       return;
    }
-   var button = $("#generateContest");
-   button.attr("disabled", true);
-   
-   tasks = []; // Reinit
-   loadContests().done(function() {
-      // Retrieve the tasks' list
-      $.post("generateContest.php", {contestID: contestID, contestFolder: contests[contestID].folder}, function(data) {
-         // Generate each tasks
-         genTasks(data.questionsUrl, 0);
-      }, 'json');
-   });
+   var generator = new Generator(selectedContestID, contests[selectedContestID]);
+   generator.start();
 }
 
 // Unused, keep it 'til 100% sure
 function genQuestion() {
+   var questionID = selectedQuestionID;
    if (questionID === "0" || questionID === undefined) {
       jqAlert(t("select_question"));
       return;
    }
-   
    var button = $("#generateQuestion");
    button.attr("disabled", true);
-   
    tasks = []; // Reinit
    var url = "bebras-tasks/" + questions[questionID].folder + "/" + questions[questionID].key + "/";
    $("#preview_question").attr("src", url);
-   
    // Retrieve bebras
    generating = true;
    $('#preview_question').load(function() {
       $('#preview_question').unbind('load');
-      
       var bebras = $('#preview_question')[0].contentWindow.task.getResources();
       tasks.push({
          'bebras': bebras,
          'url': questions[questionID].folder + "/" + questions[questionID].key + "/"
       });
-      
       generating = false;
-      
       // Compilation
       tasks = JSON.stringify(tasks);
-      $.post("generateContest.php", { contestID: questions[questionID].key, contestFolder: questions[questionID].key, 'tasks': tasks }, function(data) {
+      var params = {
+         action: "generate",
+         contestID: questions[questionID].key,
+         contestFolder: questions[questionID].key,
+         tasks: tasks
+      }
+      $.post("generateContest.php", params, function(data) {
          if (data.success) {
             jqAlert(t("question_generated"));
          } else {
@@ -1869,48 +1961,6 @@ function genQuestion() {
          jqAlert(t("question_generation_failed"));
          button.attr("disabled", false);
       });
-   });
-}
-
-function genTasks(questionsUrl, curIndex)
-{
-   if (curIndex >= questionsUrl.length) {
-      var button = $("#generateContest");
-      
-      tasks = JSON.stringify(tasks);
-      // XXX: status is needed only because of https://github.com/aws/aws-sdk-php/
-      $.post("generateContest.php", { contestID: contestID, contestFolder: contests[contestID].folder, 'tasks': tasks, fullFeedback: contests[contestID].fullFeedback, status: contests[contestID].status}, function(data) {
-         if (data.success) {
-            jqAlert(t("contest_generated"));
-         } else {
-            jqAlert(t("contest_generation_failed"));
-         }
-         button.attr("disabled", false);
-      }, 'json').fail(function() {
-         jqAlert(t("contest_generation_failed"));
-         button.attr("disabled", false);
-      });
-      
-      return;
-   }
-   
-   var url = "bebras-tasks/" + questionsUrl[curIndex];
-   $("#preview_question").attr("src", url);
-   generating = true;
-   $('#preview_question').load(function() {
-      $('#preview_question').unbind('load');
-      TaskProxyManager.getTaskProxy('preview_question', function(task) {
-         task.getResources(function(bebras) {
-            tasks.push({
-               'bebras': bebras,
-               'url': questionsUrl[curIndex]
-            });
-            
-            generating = false;
-            
-            genTasks(questionsUrl, curIndex + 1);
-         });
-      }, true);
    });
 }
 
