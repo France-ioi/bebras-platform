@@ -1819,7 +1819,7 @@ Generator.prototype.success = function () {
 };
 
 Generator.prototype.failure = function (message) {
-   jqAlert(t("contest_generation_prepare_failed"));
+   jqAlert(message);
    $("#generateContest").attr("disabled", false);
 };
 
@@ -1836,7 +1836,7 @@ Generator.prototype.start = function () {
       };
       $.post("generateContest.php", params, function(data) {
          if (!data.success) {
-            return self.failure("contest_generation_prepare_failed");
+            return self.failure(t("contest_generation_prepare_failed"));
          }
          self.contestFolder = data.contestFolder;
          self.questionsUrl = data.questionsUrl;
@@ -1844,7 +1844,7 @@ Generator.prototype.start = function () {
          self.currentTaskIndex = 0;
          self.doTask();
       }, 'json').fail(function() {
-         self.failure("contest_generation_failed");
+         self.failure(t("contest_generation_failed"));
       });;
    });
 }
@@ -1885,12 +1885,11 @@ Generator.prototype.upload = function() {
    };
    $.post("generateContest.php", params, function(data) {
       if (!data.success) {
-         return self.failure("contest_generation_failed");
+         return self.failure(t("contest_generation_failed"));
       }
       self.setFolder();
    }, 'json').fail(function() {
-      jqAlert(t("contest_generation_failed"));
-      button.attr("disabled", false);
+      self.failure(t("contest_generation_failed"));
    });
 };
 
@@ -1903,11 +1902,11 @@ Generator.prototype.setFolder = function() {
    };
    $.post("generateContest.php", params, function(data) {
       if (!data.success) {
-         return self.failure("contest_generation_failed_set_folder");
+         return self.failure(t("contest_generation_failed_set_folder"));
       }
       self.success();
    }, 'json').fail(function() {
-      return self.failure("contest_generation_failed_set_folder");
+      return self.failure(t("contest_generation_failed_set_folder"));
    });
 };
 
