@@ -417,14 +417,20 @@ $contestID = $_REQUEST["contestID"];
 $contestFolder = $_REQUEST["contestFolder"];
 
 if (!isset($_REQUEST['tasks'])) {
+   /* Prepare a new empty contest folder using a new timestamp suffix. */
+   $timestamp = time();
+   $newFolder = preg_replace("/(\.[0-9])?$/", "." . $timestamp, $contestFolder);
+   emptyContestDir($newFolder);
    // Retrieve the question's list
    $questions = getQuestions($db, $contestID);
    $questionsUrl = array();
    foreach ($questions as $curQuestion) {
       $questionsUrl[] = $curQuestion->folder.'/'.$curQuestion->key.'/';
    }
-   emptyContestDir($contestFolder);
-   echo json_encode(array('questionsUrl' => $questionsUrl));
+   echo json_encode(array(
+      'questionsUrl' => $questionsUrl,
+      'contestFolder' => $newFolder
+   ));
    exit;
 }
 
