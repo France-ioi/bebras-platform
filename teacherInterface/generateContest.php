@@ -445,7 +445,7 @@ if ($action === "prepare") {
    /* Create a fresh contestFolder by replacing the timestamp suffix. */
    $timestamp = time();
    if (array_key_exists("newFolder", $_REQUEST) && $_REQUEST["newFolder"] === "true") {
-      $contestFolder = preg_replace("/(\.[0-9]+)$/", "." . $timestamp, $contestFolder);
+      $contestFolder = preg_replace("/((?:\.[0-9]+)?$)/", "." . $timestamp, $contestFolder);
    }
    try {
       contestMkdir('');
