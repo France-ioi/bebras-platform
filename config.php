@@ -8,6 +8,7 @@ $config = (object) array();
 
 $config->maintenanceUntil = null; // maintenance end time (null if no maintenance)
 
+$config->timestamp = false;
 $config->faviconfile = 'favicon.ico';
 
 $config->db = (object) array();

@@ -275,14 +275,19 @@
    <span id="contentError"></span>
 </div>
 </form>
-<!--<iframe id="trackingFrame" src="http://eval02.france-ioi.org/castor_tracking/index.html" style="display:none"></iframe>-->
 <?php
+  script_tag('/bower_components/jquery/jquery.min.js');
+?>
+<!--[if lte IE 9]>
+  <?php
   // JSON3 shim for IE6-9 compatibility.
   script_tag('/bower_components/json3/lib/json3.min.js');
-  // jquery 1.9 is required for IE6+ compatibility.
-  script_tag('/bower_components/jquery/jquery.min.js');
   // Ajax CORS support for IE9 and lower.
   script_tag('/bower_components/jQuery-ajaxTransport-XDomainRequest/jquery.xdomainrequest.min.js');
+  ?>
+<![endif]-->
+<?php
+  // jquery 1.9 is required for IE6+ compatibility.
   script_tag('/bower_components/jquery-ui/jquery-ui.min.js');
   script_tag('/bower_components/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js');
   script_tag('/bower_components/i18next/i18next.min.js');
@@ -304,9 +309,9 @@
       return uri + separator + key + "=" + value;
     }
   }
-  window.contestsRoot = <?= json_encode($config->teacherInterface->sAbsoluteStaticPath.'/contests') ?>;
-  window.sAbsoluteStaticPath = <?= json_encode($config->teacherInterface->sAbsoluteStaticPath.'/') ?>;
-  window.sAssetsStaticPath = <?= json_encode(static_asset('/')) ?>;
+  window.contestsRoot = <?= json_encode(upgrade_url($config->teacherInterface->sAbsoluteStaticPath.'/contests')) ?>;
+  window.sAbsoluteStaticPath = <?= json_encode(upgrade_url($config->teacherInterface->sAbsoluteStaticPath.'/')) ?>;
+  window.sAssetsStaticPath = <?= json_encode(upgrade_url($config->teacherInterface->sAssetsStaticPath.'/')) ?>;
   try {
     i18n.init(<?= json_encode([
       'lng' => $config->defaultLanguage,
@@ -334,8 +339,8 @@
 </script>
 <!--[if IE 6]>
 <script>
-window.sAbsoluteStaticPath = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathOldIE.'/') ?>;
-window.contestsRoot = <?= json_encode($config->teacherInterface->sAbsoluteStaticPathOldIE.'/contests') ?>;
+window.sAbsoluteStaticPath = <?= json_encode(upgrade_url($config->teacherInterface->sAbsoluteStaticPathOldIE.'/')) ?>;
+window.contestsRoot = <?= json_encode(upgrade_url($config->teacherInterface->sAbsoluteStaticPathOldIE.'/contests')) ?>;
 </script>
 <![endif]-->
 <!--[if lte IE 9]>

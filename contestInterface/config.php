@@ -15,9 +15,29 @@ function escape_js($str) {
 	return str_replace('"', '\\"', $str);
 }
 
+function array_get($array, $key, $default) {
+	if (array_key_exists($key, $array)) {
+		return $array[$key];
+	} else {
+		return $default;
+	}
+}
+
+function upgrade_url($url) {
+	if (array_get($_SERVER, "HTTPS", "") == "on" ||
+			array_get($_SERVER, "HTTP_X_FORWARDED_PROTO", "") == "https") {
+		$url = preg_replace("/^http:/", "https:", $url, 1);
+	}
+	return $url;
+}
+
 function static_asset($path) {
 	global $config;
-	return $config->teacherInterface->sAssetsStaticPath . $path;
+	$qs = '';
+	if ($config->timestamp !== false) {
+		$qs = '?v=' . $config->timestamp;
+	}
+	return upgrade_url($config->teacherInterface->sAssetsStaticPath . $path . $qs);
 }
 
 function script_tag($path) {
