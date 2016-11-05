@@ -437,5 +437,7 @@ if (!isset($_REQUEST['tasks'])) {
 if (isset($_REQUEST['tasks']) && $_REQUEST['tasks']) {
    $tasks = json_decode($_REQUEST['tasks'], true);
    emptyContestDir($contestFolder);
-   generateContest($tasks, $contestID, $contestFolder, isset($_REQUEST['fullFeedback']) ? $_REQUEST['fullFeedback'] : false, isset($_REQUEST['status']) ? $_REQUEST['status'] : 'RunningContest');
+   generateContest($tasks, $contestID, $contestFolder,
+      isset($_REQUEST['fullFeedback']) ? $_REQUEST['fullFeedback'] : false,
+      isset($_REQUEST['status']) ? $_REQUEST['status'] : 'RunningContest');
 }
