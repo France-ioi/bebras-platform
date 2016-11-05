@@ -12,7 +12,7 @@ require_once("commonAdmin.php");
  */
 $mode = $config->teacherInterface->generationMode;
 $doLocal = strpos($mode, 'local') !== false;
-$doAws = strpos($mode, 'aws') != false;
+$doAws = strpos($mode, 'aws') !== false;
 
 if (property_exists($config->teacherInterface, 'sContestGenerationPath')) {
    $contestLocalDir = realpath(__DIR__.$config->teacherInterface->sContestGenerationPath);
