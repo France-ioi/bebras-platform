@@ -133,7 +133,7 @@ function awsCopyFile($src, $dst, $adminOnly = false) {
    return !!$result;
 }
 
-function awsPutContents($dst, $contents, $adminOnly = false) {
+function awsPutContents($dst, $content, $adminOnly = false) {
    $src_temp = tempnam('/tmp', 'bebras-platform');
    $success = false !== file_put_contents($tempname, $content);
    if ($success) {
@@ -192,15 +192,15 @@ function myCopyFile($src, $dst, $adminOnly = false) {
    }
 }
 
-function myPutContents($dst, $contents, $adminOnly = false) {
+function myPutContents($dst, $content, $adminOnly = false) {
    global $doLocal, $doAws;
    if ($doLocal) {
-      if (!file_put_contents(makeLocalPath($dst), $contents)) {
+      if (!file_put_contents(makeLocalPath($dst), $content)) {
          throw new Exception('local putContent failed');
       }
    }
    if ($doAws) {
-      if (!awsPutContents(makeAwsPath($dst), $contents, $adminOnly)) {
+      if (!awsPutContents(makeAwsPath($dst), $content, $adminOnly)) {
          throw new Exception('AWS putContent failed');
       }
    }
@@ -227,10 +227,10 @@ function contestCopyFileSols($src, $dst) {
    myCopyFile($src, joinPaths($contestFolder, $dst));
 }
 
-/* Write $contents to contest-relative path $dst, public unless $adminOnly is true */
-function contestPutContents($dst, $contents, $adminOnly = false) {
+/* Write $content to contest-relative path $dst, public unless $adminOnly is true */
+function contestPutContents($dst, $content, $adminOnly = false) {
    global $contestFolder;
-   myPutContents(joinPaths($contestFolder, $dst), $contents, $adminOnly);
+   myPutContents(joinPaths($contestFolder, $dst), $content, $adminOnly);
 }
 
 /* Add $content fragment to contest part files. */
