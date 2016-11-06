@@ -259,8 +259,7 @@ var platform = {
       if ((!hasAnsweredQuestion) && (nextQuestionID !== "0")) {
          if ((mode != "stay") && (mode != "cancel")) {
             if (fullFeedback) {
-               // TODO : translate
-               alert("Vous avez répondu à votre première question, et la suivante va s'afficher automatiquement. Dans la liste à gauche, vous pouvez voir si la question a été résolue (symbole vert) et le nombre de points obtenus, vous pouvez aussi revenir sur une question en cliquant sur son nom.");
+               alert(t("first_question_message_full_feedback"));
             } else {
                alert(t("first_question_message"));
             }
@@ -438,8 +437,8 @@ var questionIframe = {
       this.body.css('margin', '0');
       this.body.css('padding', '0');
 
-      // users shouldn't reload iframes
-      this.inject('window.onbeforeunload = function() {return "Désolé, il est impossible de recharger l\'iframe. Si un problème est survenu, sélectionnez une autre question et revenez sur celle-ci.";};');
+      // users shouldn't reload iframes.
+      this.inject('window.onbeforeunload = function() {return "' + t("error_reloading_iframe") + '";};');
 
       this.inject('window.onerror = window.parent.onerror;');
 
@@ -552,7 +551,7 @@ var questionIframe = {
       if (newInterface) {
          border = "";
       }
-      this.body.append('<div id="jsContent"></div><div id="container" style="' + border + 'padding: 5px;"><div class="question" style="font-size: 20px; font-weight: bold;">Le contenu du concours est en train d\'être téléchargé, merci de patienter le temps nécessaire.</div></div>');
+      this.body.append('<div id="jsContent"></div><div id="container" style="' + border + 'padding: 5px;"><div class="question" style="font-size: 20px; font-weight: bold;">' + t("content_is_loading") + '</div></div>');
 
       this.initialized = true;
    },
@@ -596,7 +595,7 @@ var questionIframe = {
                  if (!hasDisplayedContestStats) {
                     if (fullFeedback) {
                        if (!newInterface) {
-                          alert("C'est parti ! Notez votre score en haut à gauche qui se met à jour au fur et à mesure de vos réponses !");
+                          alert(t("contest_starts_now_full_feedback"));
                        }
                     } else {
                        alert(t("contest_starts_now"));
@@ -633,7 +632,7 @@ var questionIframe = {
       // We cannot just clone the element, because it'll result in an strange id conflict, even if we put the result in an iframe
       var questionContent = $('#question-' + questionKey).html();
       if (!questionContent) {
-         questionContent = 'Il s\'est produit une anomalie lors du téléchargement du contenu du concours. Veuillez tenter de recharger la page avec Ctrl+R ou Ctrl+F5. Si cela ne fonctionne pas, essayez éventuellement avec un autre navigateur. En cas d\'échec répété, merci de contacter la hotline, pour que nous puissions rechercher la cause de ce problème.';
+         questionContent = t("error_loading_content");
       }
       this.body.find('#container').append('<div id="question-'+questionKey+'" class="question">'+questionContent+'</div>');
 
@@ -1591,7 +1590,7 @@ function loadSession() {
       function(data) {
          SID = data.SID;
          if (data.teamID) {
-            if (!confirm("Voulez-vous reprendre l'épreuve commencée ?")) {
+            if (!confirm(t("restart_previous_contest"))) {
                destroySession();
                return;
             }
@@ -2033,7 +2032,7 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
             if (fullFeedback) {
                platform.validate("stay");
             } else if ((typeof answers[questionIframe.questionKey] == 'undefined') || (answers[questionIframe.questionKey] != answer)) {
-               if (!confirm(" Êtes-vous sûr de vouloir changer de question ? Votre réponse n'a pas été enregistrée et va être perdue.")) {
+               if (!confirm(t("confirm_leave_question"))) {
                   return;
                }
             }
@@ -2122,7 +2121,7 @@ function initErrorHandler() {
               $.ajax(settings);
            }
         } else if (exception === "timeout") {
-           $("#contentError").html(t("exception") + exception + "<br/><br/>" + 'Le concours n\'a pas été correctement initialisé. Merci de recharger votre page.');
+           $("#contentError").html(t("exception") + exception + "<br/><br/>" + t("contest_load_failure"));
            $("#divError").show();
         } else {
            $("#contentError").html(t("exception") + exception + "<br/><br/>" + t("server_output") + "<br/>" + jqxhr.responseText);
