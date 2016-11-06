@@ -55,21 +55,94 @@ window.unlockAllLevels = function() {
    }
 };
 
+// From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
+if (!Object.keys) {
+  Object.keys = (function() {
+    'use strict';
+    var hasOwnProperty = Object.prototype.hasOwnProperty,
+        hasDontEnumBug = !({ toString: null }).propertyIsEnumerable('toString'),
+        dontEnums = [
+          'toString',
+          'toLocaleString',
+          'valueOf',
+          'hasOwnProperty',
+          'isPrototypeOf',
+          'propertyIsEnumerable',
+          'constructor'
+        ],
+        dontEnumsLength = dontEnums.length;
+
+    return function(obj) {
+      if (typeof obj !== 'object' && (typeof obj !== 'function' || obj === null)) {
+        throw new TypeError('Object.keys called on non-object');
+      }
+
+      var result = [], prop, i;
+
+      for (prop in obj) {
+        if (hasOwnProperty.call(obj, prop)) {
+          result.push(prop);
+        }
+      }
+
+      if (hasDontEnumBug) {
+        for (i = 0; i < dontEnumsLength; i++) {
+          if (hasOwnProperty.call(obj, dontEnums[i])) {
+            result.push(dontEnums[i]);
+          }
+        }
+      }
+      return result;
+    };
+  }());
+}
+
+/* global error handler */
 var nbErrorsSent = 0;
-var logError = function(error, errormsg) {
-  var logStr;
-  if (typeof error != "string" && !error.stack) {
-     logStr = JSON.stringify(error);
-  } else {
-     logStr = error;
+var logError = function() {
+  var chunks = [];
+  var n = arguments.length, i;
+  if (currentQuestionKey !== undefined) {
+    chunks.push(["questionKey", currentQuestionKey]);
   }
-  if (errormsg) {
-     logStr += ' ' + errormsg;
+  for (i = 0; i < n; i++) {
+    var arg = arguments[i];
+    if (typeof arg === "string") {
+      chunks.push([i, arg]);
+    } else if (typeof arg === "object") {
+      if (typeof arg.name === "string") {
+        chunks.push([i, "name", arg.name]);
+      }
+      if (typeof arg.message === "string") {
+        chunks.push([i, "message", arg.message]);
+      }
+      if (typeof arg.stack === "string") {
+        chunks.push([i, "stack", arg.stack]);
+      }
+      if (typeof arg.details === "object") {
+        var details = arg.details;
+        if (details.length === 5) {
+          chunks.push([i, "details", "message", details[0]]);
+          chunks.push([i, "details", "file", details[1]]);
+          chunks.push([i, "details", "line", details[2]]);
+          chunks.push([i, "details", "column", details[3]]);
+          var ex = details[4];
+          if (ex && typeof ex === "object") {
+            chunks.push([i, "details", "ex", "name", ex.name]);
+            chunks.push([i, "details", "ex", "message", ex.message]);
+            chunks.push([i, "details", "ex", "stack", ex.stack]);
+          }
+        } else {
+          chunks.push([i, "details", "keys", Object.keys(details)]);
+        }
+      }
+      chunks.push([i, "keys", Object.keys(arg)]);
+    } else {
+      chunks.push([i, "type", typeof arg]);
+    }
   }
-  if (error.stack) {
-    logStr += ' ' + error.stack;
-  }
-  logToConsole((currentQuestionKey ? currentQuestionKey+': ' : '')+logStr);
+  var logStr = JSON.stringify(chunks);
+  logToConsole(logStr);
   nbErrorsSent = nbErrorsSent + 1;
   if (nbErrorsSent > 10) {
     return;
