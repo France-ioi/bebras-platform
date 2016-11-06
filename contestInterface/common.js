@@ -1678,7 +1678,7 @@ function loadSession() {
       function(data) {
          SID = data.SID;
          if (data.teamID) {
-            if (!confirm(t("restart_previous_contest"))) {
+            if (!confirm("Voulez-vous reprendre l'épreuve commencée ?")) { // t("restart_previous_contest") json not loaded yet!
                destroySession();
                return;
             }
