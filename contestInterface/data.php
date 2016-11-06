@@ -310,7 +310,7 @@ function handleCheckGroupPassword($db, $password, $getTeams) {
    $nextQuestionAuto = $row->nextQuestionAuto;
    $nbUnlockedTasksInitial = $row->nbUnlockedTasksInitial;
    $subsetsSize = $row->subsetsSize;
-   $isPublic = $row->isPublic;
+   $isPublic = intval($row->isPublic);
    if ($row->startTime === null) {
       $nbMinutesElapsed = 0;
    } else {
