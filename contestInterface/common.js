@@ -1599,7 +1599,7 @@ function getPublicGroupsList(groups) {
       arrGroups[group.level][group.category] = group;
       years[year] = true;
       if (!categories[year]) {
-        categories[year] = [];
+        categories[year] = {};
       }
       categories[year][group.category] = true;
       maxYear = Math.max(maxYear, year);
