@@ -827,7 +827,7 @@ var Utils = {
    /*
     * Returns an array with numbers 0 to nbValues -1.
     * Unless preventShuffle is true, the order is "random", but
-    * is fully determined by the value of the integer ordeKey
+    * is fully determined by the value of the integer orderKey
    */
    getShuffledOrder: function (nbValues, orderKey, preventShuffle) {
       var order = [];
@@ -2011,10 +2011,12 @@ function getSortedQuestionIDs(questionsData) {
       return 1;
    });
    var sortedQuestionsIDs = [];
+   // teamID is a string representing a very long integer, let's take only the 5 last digits:
+   var baseOrderKey = parseInt(teamID.slice(-5));
    for (var iOrder = 0; iOrder < orders.length; iOrder++) {
       order = orders[iOrder];
       questionsByOrder[order].sort(function(id1, id2) { if (id1 < id2) return -1; return 1; });
-      var shuffledOrder = Utils.getShuffledOrder(questionsByOrder[order].length, teamID + iOrder);
+      var shuffledOrder = Utils.getShuffledOrder(questionsByOrder[order].length, baseOrderKey + iOrder);
       for (var iSubOrder = 0; iSubOrder < shuffledOrder.length; iSubOrder++) {
          var subOrder = shuffledOrder[iSubOrder];
          sortedQuestionsIDs.push(questionsByOrder[order][subOrder]);
