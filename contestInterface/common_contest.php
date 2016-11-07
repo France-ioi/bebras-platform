@@ -75,8 +75,11 @@ function commonLoginTeam($db, $password) {
          error_log('DynamoDB error finding team with password: '.$password);
       }
       if (!isset($teamDynamoDB[0]) || $row->teamID != $teamDynamoDB[0]['ID'] || $row->groupID != $teamDynamoDB[0]['groupID']) {
-         error_log('enregistrement différent entre MySQL et DynamoDB! SQL: teamID='.$row->teamID.', groupID='.$row->groupID.(isset($teamDynamoDB[0]) ? ' DDB: ID='.$teamDynamoDB[0]['ID'].', groupID='.$teamDynamoDB[0]['groupID'] : ' pas d\'enregistrement DynamoDB'));
-         return (object)array("success" => false, "message" => "enregistrement différent entre MySQL et DynamoDB!");
+         //error_log('enregistrement différent entre MySQL et DynamoDB! SQL: teamID='.$row->teamID.', groupID='.$row->groupID.(isset($teamDynamoDB[0]) ? ' DDB: ID='.$teamDynamoDB[0]['ID'].', groupID='.$teamDynamoDB[0]['groupID'] : ' pas d\'enregistrement DynamoDB'));
+         //return (object)array("success" => false, "message" => "enregistrement différent entre MySQL et DynamoDB!");
+         $_SESSION['mysqlOnly'] = true;
+      } elseif (isset($_SESSION['mysqlOnly'])) {
+         unset($_SESSION['mysqlOnly']);
       }
    }
    if ($row->open == "Closed") {

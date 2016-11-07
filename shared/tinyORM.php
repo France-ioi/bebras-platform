@@ -392,8 +392,11 @@ class tinyOrm {
       }
    }
    
-   public function select($table, $fields = null, $where, $options = null) {
-      if ($this->mode == 'dynamoDB') {
+   public function select($table, $fields = null, $where, $options = null, $mode = null) {
+      if (!$mode) {
+         $mode = $this->mode;
+      }
+      if ($mode == 'dynamoDB') {
          return $this->selectDynamoDB($table, $fields, $where, $options);
       } else {
          return $this->selectSQL($table, $fields, $where, $options);
