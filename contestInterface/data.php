@@ -48,7 +48,10 @@ function reloginTeam($db, $password, $teamID) {
          error_log('DynamoDB error retrieving: '.$teamID);
       }
       if (!count($teamDynamoDB) || $teamDynamoDB['groupID'] != $_SESSION["groupID"]) {
-         error_log('team.groupID différent entre MySQL et DynamoDB! nb résultats DynamoDB: '.count($teamDynamoDB).(count($teamDynamoDB) ? ', $teamDynamoDB[groupID]'.$teamDynamoDB['groupID'].', $_SESSION[groupID]'.$_SESSION["groupID"] : ''));
+         //error_log('team.groupID différent entre MySQL et DynamoDB! nb résultats DynamoDB: '.count($teamDynamoDB).(count($teamDynamoDB) ? ', $teamDynamoDB[groupID]'.$teamDynamoDB['groupID'].', $_SESSION[groupID]'.$_SESSION["groupID"] : ''));
+         $_SESSION["mysqlOnly"] = true;
+      } elseif (isset($_SESSION['mysqlOnly'])) {
+         unset($_SESSION['mysqlOnly']);
       }
    }
    $_SESSION["teamID"] = $teamID;
@@ -119,6 +122,9 @@ function handleCreateTeam($db) {
    $stmt = $db->prepare("UPDATE `group` SET `nbTeamsEffective` = `nbTeamsEffective` + 1, `nbStudentsEffective` = `nbStudentsEffective` + ? WHERE `ID` = ?");
    $stmt->execute(array(count($contestants), $groupID));
 
+   if (isset($_SESSION['mysqlOnly'])) {
+      unset($_SESSION['mysqlOnly']);
+   }
    $_SESSION["teamID"] = $teamID;
    $_SESSION["teamPassword"] = $password;
    foreach ($contestants as $contestant) {
@@ -161,7 +167,7 @@ function handleLoadContestData($db) {
    $teamID = $_SESSION["teamID"];
    $stmt = $db->prepare("UPDATE `team` SET `startTime` = UTC_TIMESTAMP() WHERE `ID` = :teamID AND `startTime` IS NULL");
    $stmt->execute(array("teamID" => $teamID));
-   if ($config->db->use == 'dynamoDB') {
+   if ($config->db->use == 'dynamoDB' && !isset($_SESSION["mysqlOnly"])) {
       $stmt = $db->prepare("SELECT `startTime` FROM `team` WHERE `ID` = :teamID");
       $stmt->execute(array("teamID" => $teamID));
       $row = $stmt->fetchObject();
@@ -173,10 +179,12 @@ function handleLoadContestData($db) {
       }
    }
    $questionsData = getQuestions($db, $_SESSION["contestID"], $_SESSION["subsetsSize"], $teamID);
-   //$stmt = $db->prepare("SELECT `questionID`, `answer` FROM `team_question` WHERE `teamID` = ?");
-   //$stmt->execute(array($teamID));
+   $mode = null;
+   if (isset($_SESSION['mysqlOnly']) && $_SESSION['mysqlOnly']) {
+      $mode = 'mysql';
+   }
    try {
-      $results = $tinyOrm->select('team_question', array('questionID', 'answer', 'ffScore', 'score'), array('teamID' =>$teamID));
+      $results = $tinyOrm->select('team_question', array('questionID', 'answer', 'ffScore', 'score'), array('teamID' =>$teamID), null, $mode);
    } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
       if (strval($e->getAwsErrorCode()) != 'ConditionalCheckFailedException') {
          error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
@@ -320,6 +328,9 @@ function handleCheckGroupPassword($db, $password, $getTeams) {
       $teams = getGroupTeams($db, $groupID);
    } else {
       $teams = "";
+   }
+   if (isset($_SESSION['mysqlOnly'])) {
+      unset($_SESSION['mysqlOnly']);
    }
    $_SESSION["groupID"] = $groupID;
    $_SESSION["contestName"] = $row->contestName;
