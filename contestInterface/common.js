@@ -122,7 +122,7 @@ var logError = function() {
         }
         if (typeof arg.details === "object" && arg.details !== null) {
           var details = arg.details;
-          if (details.length === 5) {
+          if (details.length >= 4) {
             chunks.push([i, "details", "message", details[0]]);
             chunks.push([i, "details", "file", details[1]]);
             chunks.push([i, "details", "line", details[2]]);
