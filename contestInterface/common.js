@@ -122,7 +122,7 @@ var logError = function() {
         }
         if (typeof arg.details === "object" && arg.details !== null) {
           var details = arg.details;
-          if (details.length === 5) {
+          if (details.length >= 4) {
             chunks.push([i, "details", "message", details[0]]);
             chunks.push([i, "details", "file", details[1]]);
             chunks.push([i, "details", "line", details[2]]);
@@ -1834,6 +1834,12 @@ function finalCloseContest(message) {
             var encodedAnswers = base64_encode(JSON.stringify({pwd: teamPassword, ans: listAnswers}));
             $("#encodedAnswers").html(encodedAnswers);
             $("#divClosedEncodedAnswers").show();
+            // Attempt to send the answers payload to a backup server by adding
+            // an image to the DOM.
+            var img = document.createElement('img');
+            $('body').append($('<img>', {
+               width: 1, height: 1, 'class': 'hidden',
+               src: 'http://castor.epixode.fr/?q=' + encodeURIComponent(encodedAnswers)}));
          }
          $("#remindTeamPassword").html(teamPassword);
          $("#divClosedRemindPassword").show();
@@ -2229,19 +2235,6 @@ function base64url_encode(str) {
 	return base64_encode(str).replace('+', '-').replace('/', '_');
 }
 
-// TODO: is it still used?
-function addAnswerPing(questionID, answer) {
-   // add image ping
-   var img = document.createElement('img');
-   $('body').append($('<img>', { width: 1, height: 1, 'class': 'hidden',
-      src: 'http://castor.armu.re/' + [
-         encodeURIComponent(SID),
-         teamID,
-         questionID,
-         base64url_encode(answer)
-      ].join('/') }));
-}
-
 function sendAnswers() {
    if (sending) {
       return;
@@ -2252,7 +2245,6 @@ function sendAnswers() {
       var answerObj = answersToSend[questionID];
       answerObj.sending = true;
       somethingToSend = true;
-      //addAnswerPing(questionID, answerObj.answer);
    }
    if (!somethingToSend) {
       sending = false;

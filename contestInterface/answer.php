@@ -37,6 +37,7 @@ function handleAnswers($db, $tinyOrm) {
       exitWithJsonFailure($e->getMessage(), array('error' => 'DynamoDB'));
    }
    if ($testMode == false && (!count($rows) || $teamPassword != $rows[0]['password'])) {
+      error_log('teamID '.$teamID.' sent answer with password '.$teamPassword.(count($rows) ? ' instead of '.$rows[0]['password'] : ' (no such team)'));
       exitWithJsonFailure("Requête invalide (password)");
    }
    $row = $rows[0];
