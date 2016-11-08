@@ -20,13 +20,9 @@ $groupID = isset($_REQUEST['groupID']) ? $_REQUEST['groupID'] : null;
 $bonusScore = null;
 $stmt = null;
 
-//$query = "UPDATE `team` SET `endTime` = UTC_TIMESTAMP() WHERE `endTime` IS NULL AND TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), `team`.`startTime`)) > 3600";
-//$stmt = $db->prepare($query);
-//$stmt->execute(array());
-
 if ($groupID == null) {
    // Check contest existance
-   $query = "SELECT `contest`.`ID`, `contest`.`folder`, `contest`.`bonusScore` FROM `contest` WHERE `ID` = ?";
+   $query = "SELECT `contest`.`ID`, `contest`.`folder`, `contest`.`bonusScore`, `contest`.`nbMinutes` FROM `contest` WHERE `ID` = ?";
    $stmt = $db->prepare($query);
    $stmt->execute(array($contestID));
    $row = $stmt->fetchObject();
@@ -34,6 +30,11 @@ if ($groupID == null) {
       echo json_encode((object)array("status" => 'error', "message" => "Le concours n'existe pas"));
       exit;
    }
+
+   $query = "UPDATE `team` SET `endTime` = UTC_TIMESTAMP() WHERE `endTime` IS NULL AND TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), `team`.`startTime`)) > ?";
+   $stmt = $db->prepare($query);
+   $nbSeconds = intval($row->nbMinutes) * 60;
+   $stmt->execute(array($nbSeconds));
 
    $query = "UPDATE `team` JOIN ".
       "(SELECT IFNULL(SUM(`team_question`.`score`), 0) + ".($row->bonusScore)." as `teamScore`, ".
@@ -68,10 +69,10 @@ if ($groupID == null) {
    ));
 } else {
    // Check group existance and access
-   $query = "SELECT `group`.`ID`, `contest`.`ID` as `contestID`, `contest`.`folder` as `folder`, `contest`.`bonusScore` as `bonusScore`, `contest`.`showSolutions` FROM `group` JOIN `contest` on `group`.`contestID` = `contest`.`ID` WHERE `group`.`ID` = ?";
+   $query = "SELECT `group`.`ID`, `contest`.`ID` as `contestID`, `contest`.`folder` as `folder`, `contest`.`bonusScore` as `bonusScore`, `contest`.`showSolutions`, `contest`.`nbMinutes` FROM `group` JOIN `contest` on `group`.`contestID` = `contest`.`ID` WHERE `group`.`ID` = ?";
    $args = array($groupID);
    if (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"]) {
-      $query = "SELECT `group`.`ID`, `contest`.`ID` as `contestID`, `contest`.`folder`, `contest`.`bonusScore` as `bonusScore`, `contest`.`showSolutions` FROM `group` JOIN `contest` on `group`.`contestID` = `contest`.`ID` LEFT JOIN `user_user` on `group`.`userID` = `user_user`.`userID` WHERE `group`.`ID` = ? and ((`user_user`.`accessType` = 'write' AND `user_user`.`targetUserID` = ?) OR (`group`.`userID` = ?))";
+      $query = "SELECT `group`.`ID`, `contest`.`ID` as `contestID`, `contest`.`folder`, `contest`.`bonusScore` as `bonusScore`, `contest`.`showSolutions`, `contest`.`nbMinutes` FROM `group` JOIN `contest` on `group`.`contestID` = `contest`.`ID` LEFT JOIN `user_user` on `group`.`userID` = `user_user`.`userID` WHERE `group`.`ID` = ? and ((`user_user`.`accessType` = 'write' AND `user_user`.`targetUserID` = ?) OR (`group`.`userID` = ?))";
       $args = array($groupID, $_SESSION['userID'], $_SESSION['userID']);
    }
    $stmt = $db->prepare($query);
@@ -87,8 +88,13 @@ if ($groupID == null) {
    }
    $bonusScore = intval($row->bonusScore);
 
+   $query = "UPDATE `team` SET `endTime` = UTC_TIMESTAMP() WHERE `groupID` = ? AND `endTime` IS NULL AND TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), `team`.`startTime`)) > ?";
+   $stmt = $db->prepare($query);
+   $nbSeconds = intval($row->nbMinutes) * 60;
+   $stmt->execute(array($groupID, $nbSeconds));
+
    $query = "
-      SELECT SUM(`team_question`.`score`) + ".$bonusScore." as `teamScore`,
+      SELECT SUM(IFNULL(`team_question`.`score`,0)) + ".$bonusScore." as `teamScore`,
       `team`.`ID` as `teamID`
       FROM `team`
       JOIN `team_question` ON (`team`.`ID` = `team_question`.`teamID`)
