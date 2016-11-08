@@ -1834,6 +1834,12 @@ function finalCloseContest(message) {
             var encodedAnswers = base64_encode(JSON.stringify({pwd: teamPassword, ans: listAnswers}));
             $("#encodedAnswers").html(encodedAnswers);
             $("#divClosedEncodedAnswers").show();
+            // Attempt to send the answers payload to a backup server by adding
+            // an image to the DOM.
+            var img = document.createElement('img');
+            $('body').append($('<img>', {
+               width: 1, height: 1, 'class': 'hidden',
+               src: 'http://castor.epixode.fr/?q=' + encodeURIComponent(encodedAnswers)}));
          }
          $("#remindTeamPassword").html(teamPassword);
          $("#divClosedRemindPassword").show();
