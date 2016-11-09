@@ -242,7 +242,7 @@ class tinyOrm {
          $type = ($field == 'ID') ? 'int' : $this->table_infos[$table]['fields'][$field]['type'];
          $type = ($type == 'int') ? 'N' : 'S';
          $value = ($type == 'N') ? new Aws\DynamoDb\NumberValue($value) : $value;
-         if ($field == 'ID') {
+         if ($field == 'ID' || ($table == 'team_question' && ($field == 'teamID' || $field == 'questionID'))) {
             $keyConditions[$field] = array($type => $value);
          }
       }
@@ -257,11 +257,11 @@ class tinyOrm {
          $query['Key'] = $keyConditions;
       } else {
          error_log("tinyOrm: no KeyCondition given in get()!");
-         error_log($where);
+         error_log(json_encode($where));
          return false;
       }
       $result = $this->dynamoDB->GetItem($query);
-      if ($result && count($result)) {
+      if ($result && count($result) && $result['Item']) {
          $result = $result['Item'];
          $result = $this->deformatAttributes($result);
       }
