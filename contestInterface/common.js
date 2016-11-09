@@ -1466,7 +1466,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic) {
             teamPassword = groupCode;
             loadContestData(contestID, contestFolder);
          } else {
-            if ((data.nbMinutesElapsed > 30) && (data.isPublic === "0") && (!getTeams)) {
+            if ((data.nbMinutesElapsed > 30) && (data.isPublic === 0) && (!getTeams)) {
                if (parseInt(data.bRecovered)) {
                   alert(t("group_session_expired"));
                   window.location = t("contest_url");
