@@ -1466,7 +1466,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic) {
             teamPassword = groupCode;
             loadContestData(contestID, contestFolder);
          } else {
-            if ((data.nbMinutesElapsed > 30) && (data.isPublic === "0") && (!getTeams)) {
+            if ((data.nbMinutesElapsed > 30) && (!data.isPublic) && (!getTeams)) {
                if (parseInt(data.bRecovered)) {
                   alert(t("group_session_expired"));
                   window.location = t("contest_url");
@@ -1976,7 +1976,7 @@ function sendScores() {
                   image = "<img src='images/35.png'>";
                } else if (score == maxScore) {
                   image = '<span class="check">✓</span>';
-               } else if (score !== "0") {
+               } else if (parseInt(score)) {
                   image = "<img src='images/check.png'>";
                } else {
                   image = "";

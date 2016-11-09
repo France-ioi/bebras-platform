@@ -97,17 +97,17 @@ function commonLoginTeam($db, $password) {
    $_SESSION["teamPassword"] = $password;
    $_SESSION["groupID"] = $row->groupID;
    $_SESSION["schoolID"] = $row->schoolID;
-   $_SESSION["nbMinutes"] = $row->nbMinutes;
-   $_SESSION["bonusScore"] = $row->bonusScore;
-   $_SESSION["allowTeamsOfTwo"] = $row->allowTeamsOfTwo;
-   $_SESSION["newInterface"] = $row->newInterface;
+   $_SESSION["nbMinutes"] = intval($row->nbMinutes);
+   $_SESSION["bonusScore"] = intval($row->bonusScore);
+   $_SESSION["allowTeamsOfTwo"] = intval($row->allowTeamsOfTwo);
+   $_SESSION["newInterface"] = intval($row->newInterface);
    $_SESSION["customIntro"] = $row->customIntro;
-   $_SESSION["fullFeedback"] = $row->fullFeedback;
-   $_SESSION["nbUnlockedTasksInitial"] = $row->nbUnlockedTasksInitial;
-   $_SESSION["subsetsSize"] = $row->subsetsSize;
+   $_SESSION["fullFeedback"] = intval($row->fullFeedback);
+   $_SESSION["nbUnlockedTasksInitial"] = intval($row->nbUnlockedTasksInitial);
+   $_SESSION["subsetsSize"] = intval($row->subsetsSize);
    $_SESSION["contestFolder"] = $row->folder;
    $_SESSION["contestOpen"] = $row->open;
-   $_SESSION["contestShowSolutions"] = $row->showSolutions;
+   $_SESSION["contestShowSolutions"] = intval($row->showSolutions);
    $_SESSION["contestVisibility"] = $row->visibility;
    return (object)array(
       "success" => true,
@@ -116,16 +116,16 @@ function commonLoginTeam($db, $password) {
       "contestName" => $row->contestName,
       "contestFolder" => $row->folder,
       "contestOpen" => $row->open,
-      "contestShowSolutions" => $row->showSolutions,
+      "contestShowSolutions" => intval($row->showSolutions),
       "contestVisibility" => $row->visibility,
-      "nbMinutes" => $row->nbMinutes,
-      "bonusScore" => $row->bonusScore,
-      "allowTeamsOfTwo" => $row->allowTeamsOfTwo,
-      "newInterface" => $row->newInterface,
+      "nbMinutes" => intval($row->nbMinutes),
+      "bonusScore" => intval($row->bonusScore),
+      "allowTeamsOfTwo" => intval($row->allowTeamsOfTwo),
+      "newInterface" => intval($row->newInterface),
       "customIntro" => $row->customIntro,
-      "fullFeedback" => $row->fullFeedback,
-	   "nbUnlockedTasksInitial" => $row->nbUnlockedTasksInitial,
-	   "subsetsSize" => $row->subsetsSize,
+      "fullFeedback" => intval($row->fullFeedback),
+	   "nbUnlockedTasksInitial" => intval($row->nbUnlockedTasksInitial),
+	   "subsetsSize" => intval($row->subsetsSize),
       "teamID" => $row->teamID,
       );
 }

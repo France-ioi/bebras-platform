@@ -306,23 +306,23 @@ function handleCheckGroupPassword($db, $password, $getTeams) {
    $contestID = $row->contestID;
    $contestFolder = $row->folder;
    $contestOpen = $row->open;
-   $contestShowSolutions = $row->showSolutions;
+   $contestShowSolutions = intval($row->showSolutions);
    $contestVisibility = $row->visibility;
    $name = $row->name;
-   $nbMinutes = $row->nbMinutes;
-   $bonusScore = $row->bonusScore;
-   $allowTeamsOfTwo = $row->allowTeamsOfTwo;
-   $newInterface = $row->newInterface;
+   $nbMinutes = intval($row->nbMinutes);
+   $bonusScore = intval($row->bonusScore);
+   $allowTeamsOfTwo = intval($row->allowTeamsOfTwo);
+   $newInterface = intval($row->newInterface);
    $customIntro = $row->customIntro;
-   $fullFeedback = $row->fullFeedback;
-   $nextQuestionAuto = $row->nextQuestionAuto;
-   $nbUnlockedTasksInitial = $row->nbUnlockedTasksInitial;
-   $subsetsSize = $row->subsetsSize;
+   $fullFeedback = intval($row->fullFeedback);
+   $nextQuestionAuto = intval($row->nextQuestionAuto);
+   $nbUnlockedTasksInitial = intval($row->nbUnlockedTasksInitial);
+   $subsetsSize = intval($row->subsetsSize);
    $isPublic = intval($row->isPublic);
    if ($row->startTime === null) {
       $nbMinutesElapsed = 0;
    } else {
-      $nbMinutesElapsed = $row->nbMinutesElapsed;
+      $nbMinutesElapsed = intval($row->nbMinutesElapsed);
    }
    if ($getTeams === "true") {
       $teams = getGroupTeams($db, $groupID);
@@ -369,7 +369,7 @@ function handleCheckGroupPassword($db, $password, $getTeams) {
       "contestVisibility" => $contestVisibility,
       "name" => $name,
       "teams" => $teams,
-      "nbMinutes" => intval($nbMinutes),
+      "nbMinutes" => $nbMinutes,
       "bonusScore" => $bonusScore,
       "allowTeamsOfTwo" => $allowTeamsOfTwo,
       "newInterface" => $newInterface,
@@ -378,7 +378,7 @@ function handleCheckGroupPassword($db, $password, $getTeams) {
       "nbUnlockedTasksInitial" => $nbUnlockedTasksInitial,
       "subsetsSize" => $subsetsSize,
       'bRecovered' => $row->bRecovered,
-      "nbMinutesElapsed" => intval($nbMinutesElapsed),
+      "nbMinutesElapsed" => $nbMinutesElapsed,
       "askEmail" => !!intval($row->askEmail),
       "askZip" => !!intval($row->askZip),
       "askGenre" => !!intval($row->askGenre),
