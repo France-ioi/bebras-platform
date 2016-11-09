@@ -1976,7 +1976,7 @@ function sendScores() {
                   image = "<img src='images/35.png'>";
                } else if (score == maxScore) {
                   image = '<span class="check">✓</span>';
-               } else if (parseInt(score)) {
+               } else if (parseInt(score) > 0) {
                   image = "<img src='images/check.png'>";
                } else {
                   image = "";
