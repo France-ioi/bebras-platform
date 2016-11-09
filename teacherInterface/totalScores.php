@@ -93,9 +93,8 @@ if ($groupID == null) {
    $nbSeconds = intval($row->nbMinutes) * 60;
    $stmt->execute(array($groupID, $nbSeconds));
 
-   $query = "
-      SELECT SUM(IFNULL(`team_question`.`score`,0)) + ".$bonusScore." as `teamScore`,
-      `team`.`ID` as `teamID`
+   $query = "SELECT IFNULL(SUM(IFNULL(`team_question`.`score`,0)),0) + ".$bonusScore." as `teamScore`,
+      `team`.`ID` as `teamID`, team.password as teamPassword
       FROM `team`
       JOIN `team_question` ON (`team`.`ID` = `team_question`.`teamID`)
       WHERE `team`.`endTime` IS NOT NULL
