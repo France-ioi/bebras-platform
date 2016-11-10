@@ -86,22 +86,29 @@ if (!$groupID) {
       );
    }
 } else {
-   if ($config->db->use != 'dynamoDB') {
-      $query = 'SELECT `'.$teamQuestionTable.'`.`teamID`, `'.$teamQuestionTable.'`.`questionID`, `'.$teamQuestionTable.'`.`answer` FROM `'.$teamQuestionTable.'` JOIN `question` ON (`'.$teamQuestionTable.'`.`questionID` = `question`.`ID`) JOIN `contest_question` ON (`contest_question`.`questionID` = `question`.`ID`) JOIN `team` ON (`team`.`ID`= `'.$teamQuestionTable.'`.`teamID`) WHERE `contest_question`.`contestID` = ? AND `team`.`groupID` = ? AND `question`.`key` = ? AND (`'.$teamQuestionTable.'`.`score` IS NULL OR (`'.$teamQuestionTable.'`.`ffScore` is not null and `'.$teamQuestionTable.'`.`score` != `'.$teamQuestionTable.'`.`ffScore`));';
-      $stmt = $db->prepare($query);
-      $stmt->execute(array($contestID, $groupID, $questionKey));
-      while ($teamQuestion = $stmt->fetchObject()) {
-         $teamQuestions[] = array(
-             'questionID' => $teamQuestion->questionID,
-             'answer' => $teamQuestion->answer,
-             'teamID' => $teamQuestion->teamID
-         );
-      }
-   } else {
+   // always get SQL answers:
+   $query = 'SELECT `'.$teamQuestionTable.'`.`teamID`, `'.$teamQuestionTable.'`.`questionID`, `'.$teamQuestionTable.'`.`answer` FROM `'.$teamQuestionTable.'` JOIN `question` ON (`'.$teamQuestionTable.'`.`questionID` = `question`.`ID`) JOIN `contest_question` ON (`contest_question`.`questionID` = `question`.`ID`) JOIN `team` ON (`team`.`ID`= `'.$teamQuestionTable.'`.`teamID`) WHERE `contest_question`.`contestID` = ? AND `team`.`groupID` = ? AND `question`.`key` = ? AND (`'.$teamQuestionTable.'`.`score` IS NULL OR (`'.$teamQuestionTable.'`.`ffScore` is not null and `'.$teamQuestionTable.'`.`score` != `'.$teamQuestionTable.'`.`ffScore`));';
+   $stmt = $db->prepare($query);
+   $stmt->execute(array($contestID, $groupID, $questionKey));
+   $seenAnswers = [];
+   while ($teamQuestion = $stmt->fetchObject()) {
+      $seenAnswers[$teamQuestion->teamID.'-'.$teamQuestion->questionID] = true;
+      $teamQuestions[] = array(
+          'questionID' => $teamQuestion->questionID,
+          'answer' => $teamQuestion->answer,
+          'teamID' => $teamQuestion->teamID
+      );
+   }
+   // if we use dynamodb, add answers we haven't seen yet:
+   if ($config->db->use == 'dynamoDB') {
       $query = 'SELECT team.ID FROM team WHERE `team`.`groupID` = ?;';
       $stmt = $db->prepare($query);
       $stmt->execute(array($groupID));
       while ($teamID = $stmt->fetchColumn()) {
+         if (isset($seenAnswers[$teamID.'-'.$questionID])) {
+            // TODO: select sql or dynamodb answer according to most recent date
+            continue;
+         }
          try {
             $teamQuestion = $tinyOrm->get('team_question', array('answer', 'ffScore', 'score'), array('teamID' =>$teamID, 'questionID' => $questionID));
             if ($teamQuestion && $teamQuestion['answer'] && ($teamQuestion['score'] == null || ($teamQuestion['ffScore'] && $teamQuestion['score'] != $teamQuestion['ffScore']))) {

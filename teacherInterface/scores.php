@@ -106,28 +106,23 @@ foreach ($_POST['scores'] as $scoreInfos) {
             $tinyOrm->update('team_question', ['score' => intval($scoreInfos['score'])], ['teamID' => $scoreInfos['teamID'], 'questionID' => $scoreInfos['questionID']]);
          } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
             error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
-            error_log('DynamoDB error trying to write records: teamID: '.$teamID.', answers: '.json_encode($items).', items: '.json_encode($items));
+            error_log('DynamoDB error trying to write records: teamID: '.$teamID.', questionID: '.$questionID.', score: '.$scoreInfos['score']);
             exitWithJsonFailure($e->getAwsErrorCode(), array('error' => 'DynamoDB'));
          }
-      } else {
-         $query = "
-            UPDATE `team`
-            JOIN `".$teamQuestionTable."` ON (`team`.`ID` = `".$teamQuestionTable."`.`teamID`)
-            SET `".$teamQuestionTable."`.`score` = ?
-            WHERE `team`.`groupID` = ?
-            AND `".$teamQuestionTable."`.`questionID`= ?
-            AND `".$teamQuestionTable."`.`answer` = ?
-         ";
-         $args = array($scoreInfos['score'], $scoreInfos['groupID'], $scoreInfos['questionID'], $scoreInfos['answer']);
-         if ($scoreInfos['usesRandomSeed']) {
-            $query .= " AND `team`.`ID` = ?";
-            $args[] = $scoreInfos['teamID'];
-         }
-         if (!$stmtUpdate) {
-            $stmtUpdate = $db->prepare($query);
-         }
-         $stmtUpdate->execute($args);
       }
+      // sometimes answers are in dynamoDB, sometimes not... so we always check sql in addition to dynamodb
+      $query = "UPDATE `team`
+         JOIN `".$teamQuestionTable."` ON (`team`.`ID` = `".$teamQuestionTable."`.`teamID`)
+         SET `".$teamQuestionTable."`.`score` = ?
+         WHERE `team`.`groupID` = ?
+         AND `".$teamQuestionTable."`.`questionID`= ?
+         AND `team`.`ID` = ?
+      ";
+      $args = array($scoreInfos['score'], $scoreInfos['groupID'], $scoreInfos['questionID'], $scoreInfos['teamID']);
+      if (!$stmtUpdate) {
+         $stmtUpdate = $db->prepare($query);
+      }
+      $stmtUpdate->execute($args);
    }
    $response['status'] = 'success';
 }
