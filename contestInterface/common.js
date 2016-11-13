@@ -122,7 +122,7 @@ var logError = function() {
         }
         if (typeof arg.details === "object" && arg.details !== null) {
           var details = arg.details;
-          if (details.length === 5) {
+          if (details.length >= 4) {
             chunks.push([i, "details", "message", details[0]]);
             chunks.push([i, "details", "file", details[1]]);
             chunks.push([i, "details", "line", details[2]]);
@@ -827,7 +827,7 @@ var Utils = {
    /*
     * Returns an array with numbers 0 to nbValues -1.
     * Unless preventShuffle is true, the order is "random", but
-    * is fully determined by the value of the integer ordeKey
+    * is fully determined by the value of the integer orderKey
    */
    getShuffledOrder: function (nbValues, orderKey, preventShuffle) {
       var order = [];
@@ -1466,7 +1466,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic) {
             teamPassword = groupCode;
             loadContestData(contestID, contestFolder);
          } else {
-            if ((data.nbMinutesElapsed > 30) && (data.isPublic === "0") && (!getTeams)) {
+            if ((data.nbMinutesElapsed > 30) && (!data.isPublic) && (!getTeams)) {
                if (parseInt(data.bRecovered)) {
                   alert(t("group_session_expired"));
                   window.location = t("contest_url");
@@ -1834,6 +1834,12 @@ function finalCloseContest(message) {
             var encodedAnswers = base64_encode(JSON.stringify({pwd: teamPassword, ans: listAnswers}));
             $("#encodedAnswers").html(encodedAnswers);
             $("#divClosedEncodedAnswers").show();
+            // Attempt to send the answers payload to a backup server by adding
+            // an image to the DOM.
+            var img = document.createElement('img');
+            $('body').append($('<img>', {
+               width: 1, height: 1, 'class': 'hidden',
+               src: 'http://castor.epixode.fr/?q=' + encodeURIComponent(encodedAnswers)}));
          }
          $("#remindTeamPassword").html(teamPassword);
          $("#divClosedRemindPassword").show();
@@ -1970,7 +1976,7 @@ function sendScores() {
                   image = "<img src='images/35.png'>";
                } else if (score == maxScore) {
                   image = '<span class="check">✓</span>';
-               } else if (score !== "0") {
+               } else if (parseInt(score) > 0) {
                   image = "<img src='images/check.png'>";
                } else {
                   image = "";
@@ -2011,10 +2017,12 @@ function getSortedQuestionIDs(questionsData) {
       return 1;
    });
    var sortedQuestionsIDs = [];
+   // teamID is a string representing a very long integer, let's take only the 5 last digits:
+   var baseOrderKey = parseInt(teamID.slice(-5));
    for (var iOrder = 0; iOrder < orders.length; iOrder++) {
       order = orders[iOrder];
       questionsByOrder[order].sort(function(id1, id2) { if (id1 < id2) return -1; return 1; });
-      var shuffledOrder = Utils.getShuffledOrder(questionsByOrder[order].length, teamID + iOrder);
+      var shuffledOrder = Utils.getShuffledOrder(questionsByOrder[order].length, baseOrderKey + iOrder);
       for (var iSubOrder = 0; iSubOrder < shuffledOrder.length; iSubOrder++) {
          var subOrder = shuffledOrder[iSubOrder];
          sortedQuestionsIDs.push(questionsByOrder[order][subOrder]);
@@ -2227,19 +2235,6 @@ function base64url_encode(str) {
 	return base64_encode(str).replace('+', '-').replace('/', '_');
 }
 
-// TODO: is it still used?
-function addAnswerPing(questionID, answer) {
-   // add image ping
-   var img = document.createElement('img');
-   $('body').append($('<img>', { width: 1, height: 1, 'class': 'hidden',
-      src: 'http://castor.armu.re/' + [
-         encodeURIComponent(SID),
-         teamID,
-         questionID,
-         base64url_encode(answer)
-      ].join('/') }));
-}
-
 function sendAnswers() {
    if (sending) {
       return;
@@ -2250,7 +2245,6 @@ function sendAnswers() {
       var answerObj = answersToSend[questionID];
       answerObj.sending = true;
       somethingToSend = true;
-      //addAnswerPing(questionID, answerObj.answer);
    }
    if (!somethingToSend) {
       sending = false;

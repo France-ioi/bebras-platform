@@ -6,6 +6,7 @@
 
 require_once("../shared/common.php");
 require_once("commonAdmin.php");
+require_once '../shared/tinyORM.php';
 
 if (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"]) {
    if (!isset($_POST['groupMode']) || !$_POST['groupMode']) {
@@ -25,11 +26,9 @@ if (!isset($_POST['scores'])) {
 }
 
 // getting contestID or groupID, and sticking to it:
-$contestID = $_POST['scores'][0]['contestID'];
-$groupID = false;
-if (isset($_POST['scores'][0]['groupID'])) {
-   $groupID = $_POST['scores'][0]['groupID'];
-}
+$contestID = isset($_POST['scores'][0]['contestID']) ? $_POST['scores'][0]['contestID'] : null;
+$groupID = isset($_POST['scores'][0]['groupID']) ? $_POST['scores'][0]['groupID'] : null;
+
 if ($groupID) {
    $query = "SELECT `group`.`ID`, `contest`.`ID` as `contestID`, `contest`.`folder` as `folder`, `contest`.`year` as `year`, `contest`.`showSolutions` FROM `group` JOIN `contest` on `group`.`contestID` = `contest`.`ID` WHERE `group`.`ID` = ?";
    $args = array($groupID);
@@ -92,25 +91,39 @@ foreach ($_POST['scores'] as $scoreInfos) {
          $args[] = $scoreInfos['answer'];
       }
       $stmtUpdate = $db->prepare($query);
+      $stmtUpdate->execute($args);
    } else {
-      $query = "
-         UPDATE `team`
+      if ($config->db->use == 'dynamoDB') {
+         // verify that team is in the asked group:
+         $stmt = $db->prepare("SELECT `groupID` from team where ID = ?;");
+         $stmt->execute(array($scoreInfos['teamID']));
+         $thisGroupID = $stmt->fetchColumn();
+         if ($thisGroupID != $groupID) {
+            echo json_encode((object)array("status" => 'error', "message" => "L'équipe demandée n'est pas dans le groupe demandé"));
+            exit;
+         }
+         try {
+            $tinyOrm->update('team_question', ['score' => intval($scoreInfos['score'])], ['teamID' => $scoreInfos['teamID'], 'questionID' => $scoreInfos['questionID']]);
+         } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
+            error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
+            error_log('DynamoDB error trying to write records: teamID: '.$teamID.', questionID: '.$questionID.', score: '.$scoreInfos['score']);
+            exitWithJsonFailure($e->getAwsErrorCode(), array('error' => 'DynamoDB'));
+         }
+      }
+      // sometimes answers are in dynamoDB, sometimes not... so we always check sql in addition to dynamodb
+      $query = "UPDATE `team`
          JOIN `".$teamQuestionTable."` ON (`team`.`ID` = `".$teamQuestionTable."`.`teamID`)
          SET `".$teamQuestionTable."`.`score` = ?
          WHERE `team`.`groupID` = ?
          AND `".$teamQuestionTable."`.`questionID`= ?
-         AND `".$teamQuestionTable."`.`answer` = ?
+         AND `team`.`ID` = ?
       ";
-      $args = array($scoreInfos['score'], $scoreInfos['groupID'], $scoreInfos['questionID'], $scoreInfos['answer']);
-      if ($scoreInfos['usesRandomSeed']) {
-         $query .= " AND `team`.`ID` = ?";
-         $args[] = $scoreInfos['teamID'];
-      }
+      $args = array($scoreInfos['score'], $scoreInfos['groupID'], $scoreInfos['questionID'], $scoreInfos['teamID']);
       if (!$stmtUpdate) {
          $stmtUpdate = $db->prepare($query);
       }
+      $stmtUpdate->execute($args);
    }
-   $stmtUpdate->execute($args);
    $response['status'] = 'success';
 }
 
