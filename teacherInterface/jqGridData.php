@@ -637,6 +637,7 @@ if (!isset($_REQUEST["tableName"])) {
 $modelName = $_REQUEST["tableName"];
 if (!isset($_SESSION["userID"]) && !(($modelName === "user") && ($_REQUEST["oper"] === "insert"))) {
    error_log("Requête invalide pour utilisateur non connecté. session : ".json_encode($_SESSION)." request : ".json_encode($_REQUEST));
+   http_response_code(500);
    header("Status: 500 Server Error Invalid Request");
    echo "Requête invalide pour utilisateur non connecté";
    unset($db);
