@@ -1489,7 +1489,14 @@ function grade(curContestID, curGroupID, questionKeys, questionFolders, curIndex
                            res = (typeof defaultValue !== 'undefined') ? defaultValue : null;
                         }
                      } else {
-                        res = curGradingData;
+                        res = {
+                           randomSeed: curGradingData.randomSeed,
+                           maxScore: curGradingData.maxScore,
+                           minScore: curGradingData.minScore,
+                           noAnswerScore: curGradingData.noAnswerScore,
+                           noScore: curGradingData.noScore,
+                           options: curGradingData.options
+                        };
                      }
                      if (success) {
                         success(res);
