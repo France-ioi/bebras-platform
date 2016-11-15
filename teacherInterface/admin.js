@@ -1616,6 +1616,7 @@ function gradeOneAnswer(task, answers, i, scores, finalCallback) {
       gradeOneAnswer(task, answers, i+1, scores, finalCallback);
       return;
    }
+   curGradingData.randomSeed = scores[i].teamID;
    task.gradeAnswer(answer, null, function(score) {
       scores[i].score = score;
       setTimeout(function() {
