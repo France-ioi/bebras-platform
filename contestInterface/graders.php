@@ -1,17 +1,24 @@
 <?php 
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 
-require_once("../shared/common.php");
+require_once "../shared/common.php";
+require_once "common_contest.php";
 use Aws\S3\S3Client;
 
 initSession();
 
 if (!isset($_SESSION["teamID"])) {
-   echo json_encode(array(
-      'status' => 'fail',
-      'reason' => 'Equipe non loggée'
-   ));
-   exit;
+   if (!isset($_POST["groupPassword"])) {
+      exitWithJsonFailure("Mot de passe manquant");
+   }
+   if (!isset($_POST["teamID"])) {
+      exitWithJsonFailure("Équipe manquante");
+   }
+   if (!isset($_SESSION["groupID"])) {
+      exitWithJsonFailure("Groupe non chargé");
+   }
+   $password = strtolower(trim($_POST["groupPassword"]));
+   reloginTeam($db, $password, $_POST["teamID"]);
 }
 
 $teamID = $_SESSION["teamID"];
