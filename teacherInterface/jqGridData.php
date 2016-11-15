@@ -119,6 +119,7 @@ function checkRequestGroup($db, &$request, &$record, $operation, &$roles) {
      $record["password"] = genAccessCode($db);
      $roles[] = "generator";
    }
+   unset($record["isPublic"]);
    /*
    if ((!isset($record["year"])) || (!isset($record["grade"]))) {
       error_log("year or level missing when updating group");
