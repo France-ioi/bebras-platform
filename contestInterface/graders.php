@@ -9,13 +9,13 @@ initSession();
 
 if (!isset($_SESSION["teamID"])) {
    if (!isset($_POST["groupPassword"])) {
-      exitWithJsonFailure("Mot de passe manquant");
+      exitWithJsonFailure("error_missing_password");
    }
    if (!isset($_POST["teamID"])) {
-      exitWithJsonFailure("Équipe manquante");
+      exitWithJsonFailure("error_missing_team");
    }
    if (!isset($_SESSION["groupID"])) {
-      exitWithJsonFailure("Groupe non chargé");
+      exitWithJsonFailure("error_group_invalid");
    }
    $password = strtolower(trim($_POST["groupPassword"]));
    reloginTeam($db, $password, $_POST["teamID"]);
@@ -26,19 +26,11 @@ $query = "SELECT `contest`.`ID` as `ID`, `contest`.`folder` as `folder`, `contes
 $stmt = $db->prepare($query);
 $stmt->execute(array($teamID));
 if (!($row = $stmt->fetchObject())) {
-   echo json_encode(array(
-      'status' => 'fail',
-      'reason' => 'impossible de trouver le concours'
-   ));
-   exit;
+   exitWithJsonFailure('error_invalid_contest');
 }
 
 if ($row->fullFeedback == 0 && (!isset($_SESSION["closed"]) || $row->status == 'RunningContest' || $row->status == 'FutureContest')) {
-   echo json_encode(array(
-      'status' => 'fail',
-      'reason' => 'Participation officielle sans score en direct, évaluation impossible'
-   ));
-   exit;
+   exitWithJsonFailure('error_no_graders');
 }
 
 $contestID = $row->ID;
@@ -83,11 +75,8 @@ if ($config->teacherInterface->generationMode == 'local') {
    $gradersUrl = $config->teacherInterface->sAbsoluteStaticPath.'/contests/'.$contestFolder.'/contest_'.$contestID.'_graders.html';
 }
 
-header("Content-Type: application/json");
-header("Connection: close");
-
-echo json_encode(array(
-   'status' => 'success',
+exitWithJson(array(
+   'success' => true,
    'graders' => $graders,
    'gradersUrl' => $gradersUrl,
    'bonusScore' => $_SESSION["bonusScore"]

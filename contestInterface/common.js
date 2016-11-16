@@ -39,11 +39,30 @@ var delaySendingAttempts = 60000;
 var nbSubmissions = 0;
 var t = i18n.t;
 
+// translated ajax answer in case of errors. All answers use the same convention
+function ajaxt(answer, defaultMessage) {
+   if (!answer || !answer.message) {
+      if (defaultMessage) {
+         return t(defaultMessage);
+      } else {
+         return t('generic_error');
+      }
+   }
+   return t(answer.message, answer.messageArgs);
+}
+
 var logToConsole = function(logStr) {
   if (window.console) {
     console.error(logStr);
   }
 };
+
+function serverError(data) {
+   var message = ajaxt(data);
+   $('#contentError').html(message);
+   $('#divError').show();
+   logError(message);
+}
 
 window.unlockAllLevels = function() {
    var sortedQuestionIDs = getSortedQuestionIDs(questionsData);
@@ -922,6 +941,7 @@ var TimeManager = {
                var remainingTime = self.getRemainingTime();
                TimeManager.timeStart = TimeManager.timeStart + data.remainingTime - remainingTime;
             } else {
+               serverError(data);
                TimeManager.simpleTimeAdjustment();
             }
          },
@@ -1266,7 +1286,7 @@ function loadContestData(contestID, contestFolder, groupPassword)
    questionIframe.initialize(function() {
       if (fullFeedback) {
          $.post("graders.php", {SID: SID, ieMode: window.ieMode, teamID: teamID, groupPassword: groupPassword}, function(data) {
-            if (data.status === 'success' && (data.graders || data.gradersUrl)) {
+            if (data.success && (data.graders || data.gradersUrl)) {
                questionIframe.gradersLoaded = true;
                if (data.graders) {
                   $('#divGradersContent').html(data.graders);
@@ -1274,7 +1294,11 @@ function loadContestData(contestID, contestFolder, groupPassword)
                   $('#divGradersContent').load(data.gradersUrl);
                }
             }
-            if (data.status == 'success') { bonusScore = parseInt(data.bonusScore); }
+            if (data.success) {
+               bonusScore = parseInt(data.bonusScore);
+            } else {
+               serverError(data);
+            }
          }, 'json');
       }
       // The callback will be used by the task
@@ -1292,7 +1316,7 @@ function loadContestData(contestID, contestFolder, groupPassword)
          function(data) {
             if (!data.success) {
                $("#divCheckGroup").show();
-               $("#ReloginResult").html(t("invalid_password"));
+               $("#ReloginResult").html(ajaxt(data, "invalid_password"));
                Utils.enableButton("buttonRelogin");
                return;
             }
@@ -1358,11 +1382,7 @@ window.recoverGroup = function() {
    $.post("data.php", {SID: SID, action: "recoverGroup", groupCode: groupCode, groupPass: groupPass},
       function(data) {
          if (!data.success) {
-            if (data.message) {
-               $('#recoverGroupResult').html(data.message);
-            } else {
-               $('#recoverGroupResult').html(t("invalid_code"));
-            }
+            $('#recoverGroupResult').html(ajaxt(data, "invalid_code"));
             return;
          }
          window.checkGroup();
@@ -1452,11 +1472,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic) {
    $.post("data.php", {SID: SID, action: "checkPassword", password: groupCode, getTeams: getTeams},
       function(data) {
          if (!data.success) {
-            if (data.message) {
-               $("#" + curStep + "Result").html(data.message);
-            } else {
-               $("#" + curStep + "Result").html(t("invalid_code"));
-            }
+            $("#" + curStep + "Result").html(ajaxt(data, "invalid_code"));
             return;
          }
          initContestData(data);
@@ -1546,6 +1562,10 @@ window.validateLoginForm = function() {
 function createTeam(contestants) {
    $.post("data.php", {SID: SID, action: "createTeam", contestants: contestants},
       function(data) {
+         if (!data.success) {
+            serverError(ajaxt(data));
+            return;
+         }
          teamID = data.teamID;
          teamPassword = data.password;
          $("#divLogin").hide();
@@ -1678,6 +1698,10 @@ function initContestData(data) {
 function loadSession() {
    $.post("data.php", {SID: SID, action: 'loadSession'},
       function(data) {
+         if (!data.success) {
+            serverError(data);
+            return;
+         }
          SID = data.SID;
          if (data.teamID) {
             if (!confirm("Voulez-vous reprendre l'épreuve commencée ?")) { // t("restart_previous_contest") json not loaded yet!
@@ -1697,6 +1721,10 @@ function destroySession() {
    SID = null; // are we sure about that?
    $.post("data.php", {action: 'destroySession'},
       function(data) {
+         if (!data.success) {
+            serverError(data);
+            return;
+         }
          SID = data.SID;
       }, "json");
 }
@@ -1704,7 +1732,10 @@ function destroySession() {
 function loadPublicGroups() {
    $.post("data.php", {action: 'loadPublicGroups'},
       function(data) {
-           //$("#classroomGroups").show();
+         if (!data.success) {
+            serverError(data);
+            return;
+         }
          if (data.groups.length !== 0) {
             $("#listPublicGroups").html(getPublicGroupsList(data.groups));
          }
@@ -1821,7 +1852,11 @@ function doCloseContest(message) {
 function finalCloseContest(message) {
    TimeManager.stopNow();
    $.post("data.php", {SID: SID, action: "closeContest", teamID: teamID, teamPassword: teamPassword},
-      function() {}, "json"
+      function(data) {
+         if (!data.success) {
+            serverError(data);
+         }
+      }, "json"
    ).always(function() {
       window.onbeforeunload = function(){};
       if (!contestShowSolutions) {
@@ -1877,7 +1912,7 @@ function showScoresHat() {
       return;
    }
    $.post("graders.php", {SID: SID, ieMode: window.ieMode}, function(data) {
-      if (data.status === 'success' && (data.graders || data.gradersUrl)) {
+      if (data.success && (data.graders || data.gradersUrl)) {
          questionIframe.gradersLoaded = true;
          if (data.graders) {
             $('#divGradersContent').html(data.graders);
@@ -1891,6 +1926,9 @@ function showScoresHat() {
                showScores({bonusScore: bonusScore});
             });
          }
+      }
+      if (!data.success) {
+         serverError(data);
       }
    }, 'json');
 }
@@ -1955,7 +1993,7 @@ function gradeQuestion(i) {
 // Send the computed scores, then load the solutions
 function sendScores() {
    $.post('scores.php', { scores: scores, SID: SID }, function(data) {
-      if (data.status === 'success') {
+      if (data.success) {
          loadSolutionsHat();
          if (bonusScore) {
             $(".scoreBonus").html($(".scoreBonus").html().replace('50', bonusScore));
@@ -1993,6 +2031,8 @@ function sendScores() {
          $(".chrono").html("<tr><td style='font-size:28px'> " + t("score") + ' ' + teamScore + " / " + maxTeamScore + "</td></tr>");
          $(".chrono").css("background-color", "#F66");
    //      window.selectQuestion(sortedQuestionIDs[0], false);
+      } else {
+         serverError(data);
       }
    }, 'json');
 }
@@ -2306,6 +2346,8 @@ function loadSolutionsHat() {
               $("#divQuestions").show();
             });
          }
+      } else {
+         serverError(data);
       }
    }, 'json');
 }

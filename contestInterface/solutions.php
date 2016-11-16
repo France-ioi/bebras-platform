@@ -9,20 +9,20 @@ include_once("common_contest.php");
 initSession();
 
 if (!isset($_SESSION["teamID"])) {
-   exitWithJsonFailure('team not logged');
+   exitWithJsonFailure('error_invalid_session');
 }
 if (!isset($_SESSION["closed"])) {
-   exitWithJsonFailure('contest is not over (solutions)!');
+   exitWithJsonFailure('error_contest_not_over');
 }
 if (!isset($_SESSION["contestShowSolutions"]) || !intval($_SESSION["contestShowSolutions"])) {
-   exitWithJsonFailure('solutions non disponibles pour ce concours');
+   exitWithJsonFailure('error_contest_no_solutions');
 }
 $teamID = $_SESSION["teamID"];
 $query = "SELECT `contest`.`ID`, `contest`.`folder`, `team`.score FROM `team` LEFT JOIN `group` ON (`team`.`groupID` = `group`.`ID`) LEFT JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `team`.`ID` = ?";
 $stmt = $db->prepare($query);
 $stmt->execute(array($teamID));
 if (!($row = $stmt->fetchObject())) {
-   exitWithJsonFailure('contestID inconnu');
+   exitWithJsonFailure('error_invalid_contest');
 }
 
 // if ($row->score == null) {
@@ -77,4 +77,4 @@ if ($config->teacherInterface->generationMode == 'local') {
 
 addBackendHint("ClientIP.solutions:pass");
 addBackendHint(sprintf("Team(%s):solutions", escapeHttpValue($teamID)));
-exitWithJson(array('success' => !$error, 'solutions' => $solutions, 'solutionsUrl' => $solutionsUrl, 'error' => $error));
+exitWithJson(array('success' => !$error, 'solutions' => $solutions, 'solutionsUrl' => $solutionsUrl, 'message' => $error));

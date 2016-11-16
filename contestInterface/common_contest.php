@@ -17,10 +17,13 @@ function exitWithJson($json) {
    exit;
 }
 
-function exitWithJsonFailure($message, $extras = null) {
+function exitWithJsonFailure($message, $extras = null, $messageArgs = null) {
    $result = array("success" => false, "message" => $message);
-   if ($extras != null) {
+   if ($extras) {
       array_replace($result, $extras);
+   }
+   if ($messageArgs) {
+      $result['messageArgs'] = $messageArgs;
    }
    global $backend_hints;
    global $failure_backend_hints;
@@ -56,7 +59,7 @@ function createTeamFromUserCode($db, $password) {
    if (function_exists('customCreateTeamFromUserCode')) {
       return customCreateTeamFromUserCode($db, $password);
    } else {
-      return (object)array("success" => false, "message" => "Mot de passe invalide");
+      return (object)array("success" => false, "message" => "invalid_password");
    }
 }
 
@@ -85,7 +88,7 @@ function commonLoginTeam($db, $password) {
       }
    }
    if ($row->open == "Closed") {
-      return (object)array("success" => false, "message" => "Le concours lié à votre participation est actuellement fermé. Il réouvrira bientôt.");
+      return (object)array("success" => false, "message" => "error_contest_closed");
    }
    if ($row->endTime && $row->open == 'Open') {
       $stmt = $db->prepare("UPDATE `team` SET `endTime` = NULL WHERE `team`.`password` = ?");
@@ -134,7 +137,7 @@ function commonLoginTeam($db, $password) {
 
 function reconnectSession($db) {
    if (!isset($_POST["teamPassword"])) {
-      echo json_encode(array("success" => false, "message" => "Session invalide"));
+      echo json_encode(array("success" => false, "message" => "error_invalid_session"));
       error_log("invalid session : ".json_encode($_SESSION));
       error_log(json_encode($_REQUEST));
       return;
@@ -147,7 +150,7 @@ function reconnectSession($db) {
       return;
    }
    $teamID = $_SESSION["teamID"];
-   error_log("reconnexion de session acceptée ".json_encode($_REQUEST));
+   //error_log("session reconnection accepted ".json_encode($_REQUEST));
    // TODO: factoriser ce qui suit (copier-collé issu de data.php)
    $stmt = $db->prepare("SELECT TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), `team`.`startTime`)) as `timeUsed`, `endTime`, UNIX_TIMESTAMP() as `timeNow` FROM `team` WHERE `ID` = ?");
    $stmt->execute(array($teamID));
@@ -165,19 +168,19 @@ function reloginTeam($db, $password, $teamID) {
    $stmt->execute(array($_SESSION["groupID"]));
    $row = $stmt->fetchObject();
    if (!$row) {
-      exitWithJsonFailure("Groupe invalide");
+      exitWithJsonFailure("error_group_invalid");
    }
    if ($row->password !== $password) {
-      exitWithJsonFailure("Mot de passe invalide");
+      exitWithJsonFailure("invalid_password");
    }
    if ($row->status == "Closed" || $row->status == "PreRanking") {
-      exitWithJsonFailure("Concours fermé");
+      exitWithJsonFailure("error_contest_closed");
    }
    $stmt = $db->prepare("SELECT `password`, `nbMinutes` FROM `team` WHERE `ID` = ? AND `groupID` = ?");
    $stmt->execute(array($teamID, $_SESSION["groupID"]));
    $row = $stmt->fetchObject();
    if (!$row) {
-      exitWithJsonFailure("Équipe invalide pour ce groupe");
+      exitWithJsonFailure("error_invalid_team");
    }
    if ($config->db->use == 'dynamoDB') {
       try {
