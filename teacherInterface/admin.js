@@ -808,7 +808,8 @@ function loadGrid(modelName, sortName, rowNum, rowList, onSelectRow, withToolbar
        }
     },
     editurl: "jqGridData.php?tableName=" + tableName,
-    loadComplete: loadComplete
+    loadComplete: loadComplete,
+    loadError: jqGridDataFail
   }); 
   if (withToolbar) {
      $("#grid_" + modelName).jqGrid('filterToolbar', {autosearch:true, searchOnEnter:true});
