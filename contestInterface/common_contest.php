@@ -1,6 +1,8 @@
 <?php
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 
+require_once '../shared/tinyORM.php';
+
 $backend_hints = array();
 $failure_backend_hints = array();
 
@@ -155,4 +157,43 @@ function reconnectSession($db) {
       $_SESSION["closed"] = true;
    }
    return true;
+}
+
+function reloginTeam($db, $password, $teamID) {
+   global $tinyOrm, $config;
+   $stmt = $db->prepare("SELECT `group`.`password`, `contest`.`status`, `group`.`isPublic` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `group`.`ID` = ?");
+   $stmt->execute(array($_SESSION["groupID"]));
+   $row = $stmt->fetchObject();
+   if (!$row) {
+      exitWithJsonFailure("Groupe invalide");
+   }
+   if ($row->password !== $password) {
+      exitWithJsonFailure("Mot de passe invalide");
+   }
+   if ($row->status == "Closed" || $row->status == "PreRanking") {
+      exitWithJsonFailure("Concours fermé");
+   }
+   $stmt = $db->prepare("SELECT `password`, `nbMinutes` FROM `team` WHERE `ID` = ? AND `groupID` = ?");
+   $stmt->execute(array($teamID, $_SESSION["groupID"]));
+   $row = $stmt->fetchObject();
+   if (!$row) {
+      exitWithJsonFailure("Équipe invalide pour ce groupe");
+   }
+   if ($config->db->use == 'dynamoDB') {
+      try {
+         $teamDynamoDB = $tinyOrm->get('team', array('ID', 'groupID', 'nbMinutes'), array('ID' => $teamID));
+      } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
+         error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
+         error_log('DynamoDB error retrieving: '.$teamID);
+      }
+      if (!count($teamDynamoDB) || $teamDynamoDB['groupID'] != $_SESSION["groupID"]) {
+         //error_log('team.groupID différent entre MySQL et DynamoDB! nb résultats DynamoDB: '.count($teamDynamoDB).(count($teamDynamoDB) ? ', $teamDynamoDB[groupID]'.$teamDynamoDB['groupID'].', $_SESSION[groupID]'.$_SESSION["groupID"] : ''));
+         $_SESSION["mysqlOnly"] = true;
+      } elseif (isset($_SESSION['mysqlOnly'])) {
+         unset($_SESSION['mysqlOnly']);
+      }
+   }
+   $_SESSION["teamID"] = $teamID;
+   $_SESSION["teamPassword"] = $row->password;
+   $_SESSION["nbMinutes"] = intval($row->nbMinutes);
 }
