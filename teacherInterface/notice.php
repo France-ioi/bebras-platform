@@ -87,7 +87,7 @@ if (count($aGroups) == 0) {
    script_tag('/bower_components/jquery/jquery.min.js');
    script_tag('/bower_components/jquery-ui/jquery-ui.min.js');
    script_tag('/admin.js');
-?>;
+?>
 <title>Impression de la notice</title>
 <style>
    * {
