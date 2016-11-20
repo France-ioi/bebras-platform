@@ -83,7 +83,7 @@ foreach ($_POST['scores'] as $scoreInfos) {
       WHERE `group`.`contestID` = ?
       AND `".$teamQuestionTable."`.`questionID`= ?";
       $args = array($scoreInfos['score'], $scoreInfos['contestID'], $scoreInfos['questionID']);
-      if ($scoreInfos['usesRandomSeed'] == "true" || !$scoreInfos['answer']) {
+      if ($scoreInfos['usesRandomSeed'] == "true" || !isset($scoreInfos['answer']) || !$scoreInfos['answer']) {
          $query .= " AND `team`.`ID` = ?";
          $args[] = $scoreInfos['teamID'];
       } else {

@@ -59,7 +59,6 @@ if ($contestID != null) {
    $contestID = $row->contestID;
 }
 
-
 // Check questionKey existence
 $query = 'SELECT `question`.`ID` as `questionID`, `question`.`key`, `contest_question`.`minScore`, `contest_question`.`noAnswerScore`, `contest_question`.`maxScore`, `contest_question`.`options` FROM `question` LEFT JOIN `contest_question` ON (`question`.`ID` = `contest_question`.`questionID`) WHERE `contest_question`.`contestID` = ? AND `question`.`key` = ?';
 $stmt = $db->prepare($query);
@@ -75,9 +74,16 @@ $questionID = $row->questionID;
 $teamQuestionTable = getTeamQuestionTableForGrading();
 $teamQuestions = array();
 if (!$groupID) {
-   $query = 'SELECT `'.$teamQuestionTable.'`.`teamID`, `'.$teamQuestionTable.'`.`questionID`, `'.$teamQuestionTable.'`.`answer` FROM `'.$teamQuestionTable.'` JOIN `question` ON (`'.$teamQuestionTable.'`.`questionID` = `question`.`ID`) JOIN `contest_question` ON (`contest_question`.`questionID` = `question`.`ID`) JOIN `team` ON (`team`.`ID`= `'.$teamQuestionTable.'`.`teamID`) JOIN `group` ON (`team`.`groupID` = `group`.`ID`) WHERE `contest_question`.`contestID` = ? AND `group`.`contestID` = ? AND `question`.`key` = ? AND (`'.$teamQuestionTable.'`.`score` IS NULL OR (`'.$teamQuestionTable.'`.`ffScore` is not null and `'.$teamQuestionTable.'`.`score` != `'.$teamQuestionTable.'`.`ffScore`));';
+   $query = 'SELECT `'.$teamQuestionTable.'`.`teamID`, `'.$teamQuestionTable.'`.`questionID`, `'.$teamQuestionTable.'`.`answer` '.
+	   'FROM `'.$teamQuestionTable.'` '.
+	   'JOIN `contest_question` ON (`contest_question`.`questionID` = `'.$teamQuestionTable.'`.`questionID`) '.
+	   'JOIN `team` ON (`team`.`ID`= `'.$teamQuestionTable.'`.`teamID`) '.
+	   'JOIN `group` ON (`team`.`groupID` = `group`.`ID`) '.
+	   'WHERE `contest_question`.`contestID` = ? AND `group`.`contestID` = ? '.
+	   'AND `'.$teamQuestionTable.'`.`questionID` = ? '.
+	   'AND `'.$teamQuestionTable.'`.`score` IS NULL';
    $stmt = $db->prepare($query);
-   $stmt->execute(array($contestID, $contestID, $questionKey));
+   $stmt->execute(array($contestID, $contestID, $questionID));
    while ($teamQuestion = $stmt->fetchObject()) {
       $teamQuestions[] = array(
           'questionID' => $teamQuestion->questionID,
