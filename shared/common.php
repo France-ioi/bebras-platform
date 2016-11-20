@@ -99,7 +99,7 @@ function getQuestions($db, $contestID, $subsetsSize = 0, $teamID = 0) {
 
 function genAccessCode($db) {
    srand(time() + rand());
-   $charsAllowed = "23456789abcdefghijkmnpqrstuvwxyz";
+   $charsAllowed = "3456789abcdefghijkmnpqrstuvwxy";
    $query = "SELECT `ID` FROM `group` WHERE `password` = ? OR `code` = ? UNION ".
             "SELECT `ID` FROM `team` WHERE `password` = ? UNION ".
             "SELECT `ID` FROM `contestant` WHERE `algoreaCode` = ?";

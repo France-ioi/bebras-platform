@@ -20,45 +20,6 @@ function getGroupTeams($db, $groupID) {
    return $teams;
 }
 
-function reloginTeam($db, $password, $teamID) {
-   global $tinyOrm, $config;
-   $stmt = $db->prepare("SELECT `group`.`password`, `contest`.`status`, `group`.`isPublic` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `group`.`ID` = ?");
-   $stmt->execute(array($_SESSION["groupID"]));
-   $row = $stmt->fetchObject();
-   if (!$row) {
-      exitWithJsonFailure("Groupe invalide");
-   }
-   if ($row->password !== $password) {
-      exitWithJsonFailure("Mot de passe invalide");
-   }
-   if ($row->status == "Closed" || $row->status == "PreRanking") {
-      exitWithJsonFailure("Concours fermé");
-   }
-   $stmt = $db->prepare("SELECT `password`, `nbMinutes` FROM `team` WHERE `ID` = ? AND `groupID` = ?");
-   $stmt->execute(array($teamID, $_SESSION["groupID"]));
-   $row = $stmt->fetchObject();
-   if (!$row) {
-      exitWithJsonFailure("Équipe invalide pour ce groupe");
-   }
-   if ($config->db->use == 'dynamoDB') {
-      try {
-         $teamDynamoDB = $tinyOrm->get('team', array('ID', 'groupID', 'nbMinutes'), array('ID' => $teamID));
-      } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
-         error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
-         error_log('DynamoDB error retrieving: '.$teamID);
-      }
-      if (!count($teamDynamoDB) || $teamDynamoDB['groupID'] != $_SESSION["groupID"]) {
-         //error_log('team.groupID différent entre MySQL et DynamoDB! nb résultats DynamoDB: '.count($teamDynamoDB).(count($teamDynamoDB) ? ', $teamDynamoDB[groupID]'.$teamDynamoDB['groupID'].', $_SESSION[groupID]'.$_SESSION["groupID"] : ''));
-         $_SESSION["mysqlOnly"] = true;
-      } elseif (isset($_SESSION['mysqlOnly'])) {
-         unset($_SESSION['mysqlOnly']);
-      }
-   }
-   $_SESSION["teamID"] = $teamID;
-   $_SESSION["teamPassword"] = $row->password;
-   $_SESSION["nbMinutes"] = intval($row->nbMinutes);
-}
-
 function getRandomID() {
    $rand = (string) mt_rand(100000, 999999999);
    $rand .= (string) mt_rand(1000000, 999999999);
@@ -161,7 +122,7 @@ function handleLoadContestData($db) {
       if (!isset($_SESSION["groupID"])) {
          exitWithJsonFailure("Groupe non chargé");
       }
-      $password = strtolower($_POST["groupPassword"]);
+      $password = strtolower(trim($_POST["groupPassword"]));
       reloginTeam($db, $password, $_POST["teamID"]);
    }
    $teamID = $_SESSION["teamID"];
@@ -306,23 +267,23 @@ function handleCheckGroupPassword($db, $password, $getTeams) {
    $contestID = $row->contestID;
    $contestFolder = $row->folder;
    $contestOpen = $row->open;
-   $contestShowSolutions = $row->showSolutions;
+   $contestShowSolutions = intval($row->showSolutions);
    $contestVisibility = $row->visibility;
    $name = $row->name;
-   $nbMinutes = $row->nbMinutes;
-   $bonusScore = $row->bonusScore;
-   $allowTeamsOfTwo = $row->allowTeamsOfTwo;
-   $newInterface = $row->newInterface;
+   $nbMinutes = intval($row->nbMinutes);
+   $bonusScore = intval($row->bonusScore);
+   $allowTeamsOfTwo = intval($row->allowTeamsOfTwo);
+   $newInterface = intval($row->newInterface);
    $customIntro = $row->customIntro;
-   $fullFeedback = $row->fullFeedback;
-   $nextQuestionAuto = $row->nextQuestionAuto;
-   $nbUnlockedTasksInitial = $row->nbUnlockedTasksInitial;
-   $subsetsSize = $row->subsetsSize;
+   $fullFeedback = intval($row->fullFeedback);
+   $nextQuestionAuto = intval($row->nextQuestionAuto);
+   $nbUnlockedTasksInitial = intval($row->nbUnlockedTasksInitial);
+   $subsetsSize = intval($row->subsetsSize);
    $isPublic = intval($row->isPublic);
    if ($row->startTime === null) {
       $nbMinutesElapsed = 0;
    } else {
-      $nbMinutesElapsed = $row->nbMinutesElapsed;
+      $nbMinutesElapsed = intval($row->nbMinutesElapsed);
    }
    if ($getTeams === "true") {
       $teams = getGroupTeams($db, $groupID);
@@ -369,7 +330,7 @@ function handleCheckGroupPassword($db, $password, $getTeams) {
       "contestVisibility" => $contestVisibility,
       "name" => $name,
       "teams" => $teams,
-      "nbMinutes" => intval($nbMinutes),
+      "nbMinutes" => $nbMinutes,
       "bonusScore" => $bonusScore,
       "allowTeamsOfTwo" => $allowTeamsOfTwo,
       "newInterface" => $newInterface,
@@ -378,7 +339,7 @@ function handleCheckGroupPassword($db, $password, $getTeams) {
       "nbUnlockedTasksInitial" => $nbUnlockedTasksInitial,
       "subsetsSize" => $subsetsSize,
       'bRecovered' => $row->bRecovered,
-      "nbMinutesElapsed" => intval($nbMinutesElapsed),
+      "nbMinutesElapsed" => $nbMinutesElapsed,
       "askEmail" => !!intval($row->askEmail),
       "askZip" => !!intval($row->askZip),
       "askGenre" => !!intval($row->askGenre),

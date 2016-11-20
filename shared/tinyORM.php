@@ -242,7 +242,7 @@ class tinyOrm {
          $type = ($field == 'ID') ? 'int' : $this->table_infos[$table]['fields'][$field]['type'];
          $type = ($type == 'int') ? 'N' : 'S';
          $value = ($type == 'N') ? new Aws\DynamoDb\NumberValue($value) : $value;
-         if ($field == 'ID') {
+         if ($field == 'ID' || ($table == 'team_question' && ($field == 'teamID' || $field == 'questionID'))) {
             $keyConditions[$field] = array($type => $value);
          }
       }
@@ -257,11 +257,11 @@ class tinyOrm {
          $query['Key'] = $keyConditions;
       } else {
          error_log("tinyOrm: no KeyCondition given in get()!");
-         error_log($where);
+         error_log(json_encode($where));
          return false;
       }
       $result = $this->dynamoDB->GetItem($query);
-      if ($result && count($result)) {
+      if ($result && count($result) && $result['Item']) {
          $result = $result['Item'];
          $result = $this->deformatAttributes($result);
       }
@@ -313,10 +313,19 @@ class tinyOrm {
          'TableName' => $this->ddb_prefix . $table,
          'Key' => array()
       );
-      $keyArray = array('ID' => new Aws\DynamoDb\NumberValue($where['ID']));
-      // TODO: update to get the where from $this->hash_range
-      unset($where['ID']);
-      if (count($where)) {
+      $keyConditions = array();
+      $newWhere = [];
+      foreach ($where as $field => $value) {
+         $type = ($field == 'ID') ? 'int' : $this->table_infos[$table]['fields'][$field]['type'];
+         $type = ($type == 'int') ? 'N' : 'S';
+         $value = ($type == 'N') ? new Aws\DynamoDb\NumberValue($value) : $value;
+         if ($field == 'ID' || ($table == 'team_question' && ($field == 'teamID' || $field == 'questionID'))) {
+            $keyConditions[$field] = array($type => $value);
+         } else {
+            $newWhere[$field] = array($type => $value);
+         }
+      }
+      if (count($newWhere)) {
          $request['Expected'] = array();
          foreach ($where as $field => $value) {
             $request['Expected'][$field] = array('AttributeValueList' => array(), 'ComparisonOperator' => array());
@@ -330,12 +339,13 @@ class tinyOrm {
             }
          }
       }
-      $request['Key'] = $this->formatAttributes($keyArray);
+      $request['Key'] = $keyConditions;
       $request['AttributeUpdates'] = array();
       foreach ($fields as $field => $value) {
          $request['AttributeUpdates'][$field] = array('Action' => 'PUT', 'Value' => array());
-         $value = $this->normalizeField($table, $field, $value, 'dynamoDB');
-         $type = (gettype($value) == 'integer') ? 'N' : 'S';
+         $type = ($field == 'ID') ? 'int' : $this->table_infos[$table]['fields'][$field]['type'];
+         $type = ($type == 'int') ? 'N' : 'S';
+         $value = ($type == 'N') ? new Aws\DynamoDb\NumberValue($value) : $value;
          $request['AttributeUpdates'][$field]['Value'] = array($type => $value);
       }
       try {

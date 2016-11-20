@@ -1260,12 +1260,12 @@ function setupContest(data) {
  * if temID/password are incorrect, this means we're in the middle of re-login after an interruption
  * and the password provided is incorrect
 */
-function loadContestData(contestID, contestFolder, groupPassword, teamID)
+function loadContestData(contestID, contestFolder, groupPassword)
 {
    $("#divImagesLoading").show();
    questionIframe.initialize(function() {
       if (fullFeedback) {
-         $.post("graders.php", {SID: SID, ieMode: window.ieMode}, function(data) {
+         $.post("graders.php", {SID: SID, ieMode: window.ieMode, teamID: teamID, groupPassword: groupPassword}, function(data) {
             if (data.status === 'success' && (data.graders || data.gradersUrl)) {
                questionIframe.gradersLoaded = true;
                if (data.graders) {
@@ -1291,6 +1291,7 @@ function loadContestData(contestID, contestFolder, groupPassword, teamID)
          $.post("data.php", {SID: SID, action: "loadContestData", groupPassword: groupPassword, teamID: teamID},
          function(data) {
             if (!data.success) {
+               $("#divCheckGroup").show();
                $("#ReloginResult").html(t("invalid_password"));
                Utils.enableButton("buttonRelogin");
                return;
@@ -1390,7 +1391,7 @@ function fillListTeams(teams) {
       for (var iContestant in team.contestants) {
          var contestant = team.contestants[iContestant];
          if (iContestant == 1) {
-            teamName += " et ";
+            teamName += " et "; // XXX: translate
          }
          teamName += contestant.firstName + " " + contestant.lastName;
       }
@@ -1466,7 +1467,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic) {
             teamPassword = groupCode;
             loadContestData(contestID, contestFolder);
          } else {
-            if ((data.nbMinutesElapsed > 30) && (data.isPublic === 0) && (!getTeams)) {
+            if ((data.nbMinutesElapsed > 30) && (!data.isPublic) && (!getTeams)) {
                if (parseInt(data.bRecovered)) {
                   alert(t("group_session_expired"));
                   window.location = t("contest_url");
@@ -1578,7 +1579,8 @@ window.relogin = function() {
       return;
    }
    Utils.disableButton("buttonRelogin");
-   loadContestData(contestID, contestFolder, groupPassword, teamID);
+   $("#divCheckGroup").hide();
+   loadContestData(contestID, contestFolder, groupPassword);
 };
 
 /*
@@ -1976,7 +1978,7 @@ function sendScores() {
                   image = "<img src='images/35.png'>";
                } else if (score == maxScore) {
                   image = '<span class="check">✓</span>';
-               } else if (score !== "0") {
+               } else if (parseInt(score) > 0) {
                   image = "<img src='images/check.png'>";
                } else {
                   image = "";

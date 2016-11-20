@@ -3,6 +3,7 @@
 
 require_once("../shared/common.php");
 require_once("commonAdmin.php");
+require_once '../shared/tinyORM.php';
 
 if (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"]) {
    if (!isset($_POST['groupID']) || !$_POST['groupID']) {
@@ -14,11 +15,30 @@ if (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"]) {
    }
 }
 
-$packetSize = 100;
 $contestID = isset($_REQUEST['contestID']) ? $_REQUEST['contestID'] : null;
 $groupID = isset($_REQUEST['groupID']) ? $_REQUEST['groupID'] : null;
 $bonusScore = null;
 $stmt = null;
+
+function getDynamoDBScore($teamID) {
+   global $tinyOrm;
+   try {
+      $results = $tinyOrm->select('team_question', array('ffScore', 'score'), array('teamID' =>$teamID));
+   } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
+      if (strval($e->getAwsErrorCode()) != 'ConditionalCheckFailedException') {
+         error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
+         error_log('DynamoDB error retrieving team_questions for teamID: '.$teamID);
+      }
+      $results = [];
+   }
+   $totalScore = 0;
+   foreach($results as $result) {
+      if (isset($result['score'])) {
+         $totalScore += intval($result['score']);
+      }
+   }
+   return $totalScore;
+}
 
 if ($groupID == null) {
    // Check contest existance
@@ -93,35 +113,32 @@ if ($groupID == null) {
    $nbSeconds = intval($row->nbMinutes) * 60;
    $stmt->execute(array($groupID, $nbSeconds));
 
-   $query = "
-      SELECT SUM(IFNULL(`team_question`.`score`,0)) + ".$bonusScore." as `teamScore`,
-      `team`.`ID` as `teamID`
+   $query = "SELECT IFNULL(SUM(IFNULL(`team_question`.`score`,0)),0) + ".$bonusScore." as `teamScore`,
+      `team`.`ID` as `teamID`, team.password as teamPassword
       FROM `team`
-      JOIN `team_question` ON (`team`.`ID` = `team_question`.`teamID`)
+      LEFT JOIN `team_question` ON (`team`.`ID` = `team_question`.`teamID`)
       WHERE `team`.`endTime` IS NOT NULL
       AND `team`.`groupID` = ?
       GROUP BY `team`.`ID`
-      ORDER BY `team`.`ID`
-      LIMIT ".((int)$_REQUEST['begin'] * $packetSize).",".$packetSize;
+      ORDER BY `team`.`ID`;";
 
    $stmt = $db->prepare($query);
    $stmt->execute(array($groupID));
-
-   $i = 0;
-   while ($row = $stmt->fetchObject()) {
-      $teamScore = $row->teamScore;
-      if ($teamScore === null) {
-         $teamScore = 50;
+   $teams = $stmt->fetchAll();
+   foreach($teams as $team) {
+      $sqlScore = $team['teamScore'];
+      $dynamoDBScore = 0;
+      if ($config->db->use == 'dynamoDB') {
+         $dynamoDBScore = $bonusScore + getDynamoDBScore($team['teamID']);
       }
-      $query = "UPDATE `team` SET `team`.`score` = ? WHERE  `team`.`ID` = ?";
+      $score = ($sqlScore >= $dynamoDBScore) ? $sqlScore : $dynamoDBScore;
+      $query = "UPDATE `team` SET `team`.`score` = ? WHERE  `team`.`ID` = ?;";
       $stmtUpdate = $db->prepare($query);
-      $stmtUpdate->execute(array($teamScore, $row->teamID));
-      
-      $i++;
+      $stmtUpdate->execute(array($score, $team['teamID']));
    }
 
    echo json_encode(array(
        'status' => 'success',
-       'finished' => ($i != $packetSize),
+       'finished' => true
    ));
 }

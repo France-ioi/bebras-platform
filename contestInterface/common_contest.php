@@ -1,6 +1,8 @@
 <?php
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 
+require_once '../shared/tinyORM.php';
+
 $backend_hints = array();
 $failure_backend_hints = array();
 
@@ -97,17 +99,17 @@ function commonLoginTeam($db, $password) {
    $_SESSION["teamPassword"] = $password;
    $_SESSION["groupID"] = $row->groupID;
    $_SESSION["schoolID"] = $row->schoolID;
-   $_SESSION["nbMinutes"] = $row->nbMinutes;
-   $_SESSION["bonusScore"] = $row->bonusScore;
-   $_SESSION["allowTeamsOfTwo"] = $row->allowTeamsOfTwo;
-   $_SESSION["newInterface"] = $row->newInterface;
+   $_SESSION["nbMinutes"] = intval($row->nbMinutes);
+   $_SESSION["bonusScore"] = intval($row->bonusScore);
+   $_SESSION["allowTeamsOfTwo"] = intval($row->allowTeamsOfTwo);
+   $_SESSION["newInterface"] = intval($row->newInterface);
    $_SESSION["customIntro"] = $row->customIntro;
-   $_SESSION["fullFeedback"] = $row->fullFeedback;
-   $_SESSION["nbUnlockedTasksInitial"] = $row->nbUnlockedTasksInitial;
-   $_SESSION["subsetsSize"] = $row->subsetsSize;
+   $_SESSION["fullFeedback"] = intval($row->fullFeedback);
+   $_SESSION["nbUnlockedTasksInitial"] = intval($row->nbUnlockedTasksInitial);
+   $_SESSION["subsetsSize"] = intval($row->subsetsSize);
    $_SESSION["contestFolder"] = $row->folder;
    $_SESSION["contestOpen"] = $row->open;
-   $_SESSION["contestShowSolutions"] = $row->showSolutions;
+   $_SESSION["contestShowSolutions"] = intval($row->showSolutions);
    $_SESSION["contestVisibility"] = $row->visibility;
    return (object)array(
       "success" => true,
@@ -116,16 +118,16 @@ function commonLoginTeam($db, $password) {
       "contestName" => $row->contestName,
       "contestFolder" => $row->folder,
       "contestOpen" => $row->open,
-      "contestShowSolutions" => $row->showSolutions,
+      "contestShowSolutions" => intval($row->showSolutions),
       "contestVisibility" => $row->visibility,
-      "nbMinutes" => $row->nbMinutes,
-      "bonusScore" => $row->bonusScore,
-      "allowTeamsOfTwo" => $row->allowTeamsOfTwo,
-      "newInterface" => $row->newInterface,
+      "nbMinutes" => intval($row->nbMinutes),
+      "bonusScore" => intval($row->bonusScore),
+      "allowTeamsOfTwo" => intval($row->allowTeamsOfTwo),
+      "newInterface" => intval($row->newInterface),
       "customIntro" => $row->customIntro,
-      "fullFeedback" => $row->fullFeedback,
-	   "nbUnlockedTasksInitial" => $row->nbUnlockedTasksInitial,
-	   "subsetsSize" => $row->subsetsSize,
+      "fullFeedback" => intval($row->fullFeedback),
+	   "nbUnlockedTasksInitial" => intval($row->nbUnlockedTasksInitial),
+	   "subsetsSize" => intval($row->subsetsSize),
       "teamID" => $row->teamID,
       );
 }
@@ -155,4 +157,43 @@ function reconnectSession($db) {
       $_SESSION["closed"] = true;
    }
    return true;
+}
+
+function reloginTeam($db, $password, $teamID) {
+   global $tinyOrm, $config;
+   $stmt = $db->prepare("SELECT `group`.`password`, `contest`.`status`, `group`.`isPublic` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `group`.`ID` = ?");
+   $stmt->execute(array($_SESSION["groupID"]));
+   $row = $stmt->fetchObject();
+   if (!$row) {
+      exitWithJsonFailure("Groupe invalide");
+   }
+   if ($row->password !== $password) {
+      exitWithJsonFailure("Mot de passe invalide");
+   }
+   if ($row->status == "Closed" || $row->status == "PreRanking") {
+      exitWithJsonFailure("Concours fermé");
+   }
+   $stmt = $db->prepare("SELECT `password`, `nbMinutes` FROM `team` WHERE `ID` = ? AND `groupID` = ?");
+   $stmt->execute(array($teamID, $_SESSION["groupID"]));
+   $row = $stmt->fetchObject();
+   if (!$row) {
+      exitWithJsonFailure("Équipe invalide pour ce groupe");
+   }
+   if ($config->db->use == 'dynamoDB') {
+      try {
+         $teamDynamoDB = $tinyOrm->get('team', array('ID', 'groupID', 'nbMinutes'), array('ID' => $teamID));
+      } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
+         error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
+         error_log('DynamoDB error retrieving: '.$teamID);
+      }
+      if (!count($teamDynamoDB) || $teamDynamoDB['groupID'] != $_SESSION["groupID"]) {
+         //error_log('team.groupID différent entre MySQL et DynamoDB! nb résultats DynamoDB: '.count($teamDynamoDB).(count($teamDynamoDB) ? ', $teamDynamoDB[groupID]'.$teamDynamoDB['groupID'].', $_SESSION[groupID]'.$_SESSION["groupID"] : ''));
+         $_SESSION["mysqlOnly"] = true;
+      } elseif (isset($_SESSION['mysqlOnly'])) {
+         unset($_SESSION['mysqlOnly']);
+      }
+   }
+   $_SESSION["teamID"] = $teamID;
+   $_SESSION["teamPassword"] = $row->password;
+   $_SESSION["nbMinutes"] = intval($row->nbMinutes);
 }
