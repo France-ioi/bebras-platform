@@ -70,6 +70,7 @@
     "contests_delete_selected": "Supprimer le concours sélectionné",
     "contests_regenerate": "Regénérer le concours sélectionné",
     "contests_grade": "Lancer le calcul des scores",
+    "contests_total_scores": "Calculer les scores des équipes",
     "contests_rank": "Lancer le calcul des classements",
     "contests_switch_to_unofficial": "Passer en non officiel les groupes non démarrés",
     "feature_not_available": "pas encore disponible",

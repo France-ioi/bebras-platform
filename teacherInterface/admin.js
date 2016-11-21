@@ -1450,8 +1450,13 @@ function grade(curContestID, curGroupID, questionKeys, questionFolders, curIndex
    var selectorState = curGroupID ? '#gradeGroupState' : '#gradeContestState';
    if (curIndex >= questionKeys.length) {
       $(selectorState).show();
-      $(selectorState).html(t("grading_compute_total_scores") + '<span class="gradeprogressing"></span>');
-      computeScores(curContestID, curGroupID, 0);
+      if (curGroupID) {
+         $(selectorState).html(t("grading_compute_total_scores") + '<span class="gradeprogressing"></span>');
+         computeScores(curContestID, curGroupID, 0);
+      } else {
+         $('#buttonGradeContest').attr("disabled", false);
+         $('#gradeContestState').html('');
+      }
       return;
    }
    
@@ -1635,6 +1640,12 @@ function gradeOneAnswer(task, answers, i, scores, finalCallback) {
       setTimeout(function() {
          gradeOneAnswer(task, answers, i+1, scores, finalCallback);
       },0);
+   }, function() {
+      scores[i].score = -2;
+      scores[i].scoreNeedsChecking = 1;
+      setTimeout(function() {
+         gradeOneAnswer(task, answers, i+1, scores, finalCallback);
+      },0);
    });
 }
 
@@ -1694,7 +1705,7 @@ function computeScores(curContestID, curGroupID, packetNumber)
 {
    // Compute teams total score
    $.post('totalScores.php', { contestID: curContestID, groupID: curGroupID, begin: packetNumber },function(data) {
-      var selectorButton = curGroupID ? '#buttonGradeSelected_group' : '#buttonGradeContest';
+      var selectorButton = curGroupID ? '#buttonGradeSelected_group' : '#buttonComputeScoresContest';
       var selectorState = curGroupID ? '#gradeGroupState' : '#gradeContestState';
       if (data.status === 'success') {
          if (data.finished) {
@@ -1783,6 +1794,15 @@ function gradeContest() {
    var button = $("#buttonGradeContest");
    button.attr("disabled", true);
    loopGradeContest(selectedContestID, undefined);
+}
+
+function computeTotalScoresContest() {
+   if (!checkContestSelectedAndConfirm()) {
+      return;
+   }
+   var button = $("#buttonComputeScoresContest");
+   button.attr("disabled", true);
+   computeScores(selectedContestID, null, 0);
 }
 
 function gradeGroup() {

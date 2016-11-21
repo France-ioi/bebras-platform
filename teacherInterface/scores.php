@@ -74,15 +74,16 @@ foreach ($_POST['scores'] as $scoreInfos) {
       exit;
    }
    if ($scoreInfos['score'] == '') {$scoreInfos['score']= null;}
+   if (!isset($scoreInfos['scoreNeedsChecking'])) {$scoreInfos['scoreNeedsChecking'] = 0;}
    if ($contestID) {
       $query = "
       UPDATE `team`
       JOIN `".$teamQuestionTable."` ON (`team`.`ID` = `".$teamQuestionTable."`.`teamID`)
       JOIN `group` ON (`team`.`groupID` = `group`.`ID`)
-      SET `".$teamQuestionTable."`.`score` = ?
+      SET `".$teamQuestionTable."`.`score` = ?, `".$teamQuestionTable."`.`scoreNeedsChecking` = ?
       WHERE `group`.`contestID` = ?
       AND `".$teamQuestionTable."`.`questionID`= ?";
-      $args = array($scoreInfos['score'], $scoreInfos['contestID'], $scoreInfos['questionID']);
+      $args = array($scoreInfos['score'], $scoreInfos['scoreNeedsChecking'], $scoreInfos['contestID'], $scoreInfos['questionID']);
       if ($scoreInfos['usesRandomSeed'] == "true" || !isset($scoreInfos['answer']) || !$scoreInfos['answer']) {
          $query .= " AND `team`.`ID` = ?";
          $args[] = $scoreInfos['teamID'];
@@ -103,7 +104,7 @@ foreach ($_POST['scores'] as $scoreInfos) {
             exit;
          }
          try {
-            $tinyOrm->update('team_question', ['score' => intval($scoreInfos['score'])], ['teamID' => $scoreInfos['teamID'], 'questionID' => $scoreInfos['questionID']]);
+            $tinyOrm->update('team_question', ['score' => intval($scoreInfos['score']), 'scoreNeedsChecking' => intval($scoreInfos['scoreNeedsChecking'])], ['teamID' => $scoreInfos['teamID'], 'questionID' => $scoreInfos['questionID']]);
          } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
             error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
             error_log('DynamoDB error trying to write records: teamID: '.$teamID.', questionID: '.$questionID.', score: '.$scoreInfos['score']);
@@ -113,12 +114,12 @@ foreach ($_POST['scores'] as $scoreInfos) {
       // sometimes answers are in dynamoDB, sometimes not... so we always check sql in addition to dynamodb
       $query = "UPDATE `team`
          JOIN `".$teamQuestionTable."` ON (`team`.`ID` = `".$teamQuestionTable."`.`teamID`)
-         SET `".$teamQuestionTable."`.`score` = ?
+         SET `".$teamQuestionTable."`.`score` = ?, `".$teamQuestionTable."`.`scoreNeedsChecking` = ?
          WHERE `team`.`groupID` = ?
          AND `".$teamQuestionTable."`.`questionID`= ?
          AND `team`.`ID` = ?
       ";
-      $args = array($scoreInfos['score'], $scoreInfos['groupID'], $scoreInfos['questionID'], $scoreInfos['teamID']);
+      $args = array($scoreInfos['score'], $scoreInfos['scoreNeedsChecking'], $scoreInfos['groupID'], $scoreInfos['questionID'], $scoreInfos['teamID']);
       if (!$stmtUpdate) {
          $stmtUpdate = $db->prepare($query);
       }

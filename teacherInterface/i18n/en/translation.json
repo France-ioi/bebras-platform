@@ -67,6 +67,7 @@
     "contests_delete_selected": "Delete the selected contest",
     "contests_regenerate": "Regenerate the selected contest",
     "contests_grade": "Start the scores computation",
+    "contests_total_scores": "Compute teams' score",
     "contests_rank": "Start the rankings computation",
     "generate_algorea_codes": "Generate Algorea codes",
     "contests_switch_to_unofficial": "Set all groups that have not been used as being unofficial",
