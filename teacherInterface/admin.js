@@ -100,7 +100,7 @@ function disableButton(buttonId, withOverlay) {
 
 function enableButton(buttonId) {
    var button = $("#" + buttonId);
-   button.attr("disabled", false);
+   button.removeAttr("disabled");
 }
 
 function initErrorHandler() {
@@ -2565,13 +2565,14 @@ function login() {
             } else {
                jqAlert(t("invalid_identifiers"));
             }
-            enableButton("buttonLogin");
             return;
          }
          logUser(data.user);
          warningUsers(data.schoolUsers);
       }, "json"
-   );
+   ).always(function() {
+      enableButton("buttonLogin");
+   });
 }
 
 function recover() {
@@ -2661,6 +2662,7 @@ function printAlgoreaCodes() {
 }
 
 function init() {
+   enableButton("buttonLogin"); // strange firefox bug causing disabled login button when loading page
    initErrorHandler();
    i18n.init({
       lng: config.defaultLanguage,
