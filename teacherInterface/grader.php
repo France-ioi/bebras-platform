@@ -81,7 +81,8 @@ if (!$groupID) {
 	   'JOIN `group` ON (`team`.`groupID` = `group`.`ID`) '.
 	   'WHERE `contest_question`.`contestID` = ? AND `group`.`contestID` = ? '.
 	   'AND `'.$teamQuestionTable.'`.`questionID` = ? '.
-	   'AND `'.$teamQuestionTable.'`.`score` IS NULL';
+	   'AND `'.$teamQuestionTable.'`.`score` IS NULL '.
+      'AND `'.$teamQuestionTable.'`.`scoreNeedsChecking` = 0';
    $stmt = $db->prepare($query);
    $stmt->execute(array($contestID, $contestID, $questionID));
    while ($teamQuestion = $stmt->fetchObject()) {
