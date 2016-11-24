@@ -540,6 +540,9 @@ function selectRecordsForJQGrid($db, $modelName, $params, $roles) {
    }
 
    if (isset($params["sidx"]) && ($params["sidx"] != "")) {
+      if ($modelName == 'team_view' && $params['sidx'] == 'groupField') {
+         $params['sidx'] = 'groupName';
+      }
       $order = array("field" => $params["sidx"], "dir" => $params["sord"]);
       $request["orders"] = array($order);
    }
