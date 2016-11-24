@@ -16,7 +16,7 @@ Ci-dessous, vous trouverez la liste des participants officiels au concours qui o
 </p>
 <p>Vous pouvez corriger les classes des participants dans votre onglet "Élèves". Si cette liste contient des enseignants, passez les en hors concours depuis la dernière colonne de l'onglet Équipes.</p>
 <p>
-Si la classe indiquée par l'élève est la bonne, mais que c'est la classe du groupe qui est erronnnée, il n'y a rien à corriger (vous ne pouvez plus changer la classe d'un groupe).
+Si la classe indiquée par l'élève est la bonne, mais que c'est la classe du groupe qui est erronnée, ou si par exemple il s'agit d'un groupe avec des élèves de plusieurs classes, il n'y a rien à corriger (vous ne pouvez plus changer la classe d'un groupe). L'important est que la classe renseignée par l'élève soit bien sa classe.
 </p>
 <p>
 Attention : ne sont actuellement listés ici que les participants des groupes que vous avez créés. Les groupes créés par vos collègues coordinateurs sont à vérifier depuis leur compte coordinateur.
@@ -75,7 +75,7 @@ $stmt->execute(array("userID" => $_SESSION["userID"]));
 $rows = $stmt->fetchAll();
 
 if (count($rows) == 0) {
-   echo "<p>Aucun participant de vos groupes n'a indiqué une classe différente de celle du groupe.</p>";
+   echo "<p><b>Aucun participant de vos groupes n'a indiqué une classe différente de celle du groupe, tout semble bon pour vous de ce point de vue.</b></p>";
 } else {
    echo "<table cellspacing=0><tr><td>Concours</td><td>Établissement</td><td>Groupe</td><td>Classe du groupe</td><td>Classe indiquée par l'élève</td><td>Prénom</td><td>Nom</td></tr>";
    foreach ($rows as $row) {
