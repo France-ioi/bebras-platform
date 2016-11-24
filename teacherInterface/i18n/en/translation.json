@@ -52,6 +52,7 @@
     "groups_edit_selected": "Edit the selected group",
     "groups_delete_selected": "Delete the selected group",
     "groups_grade_selected": "Grade the selected group",
+    "cannot_grade_closed_contest": "You cannot grade a group from this contest",
     "groups_sheet_title": "Print information sheet",
     "groups_sheet_intro": "The information sheet is to be given to the teacher who supervises each group. It explains how the contest takes place, and provides the group codes. Before the contest week, print this information sheet for each group. You can:",
     "groups_sheet_button_print": "Print the information sheet for the group selected above",

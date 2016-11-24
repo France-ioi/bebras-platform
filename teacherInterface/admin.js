@@ -1809,6 +1809,12 @@ function gradeGroup() {
    if (!checkGroupSelectedAndConfirm()) {
       return;
    }
+   var group = groups[selectedGroupID];
+   var contest = contests[group.contestID];
+   if (contest.open != 'Open') {
+      jqAlert(t("cannot_grade_closed_contest"));
+      return;
+   }
    $("#buttonGradeSelected_group").attr("disabled", true);
    loopGradeContest(undefined, selectedGroupID);
 }

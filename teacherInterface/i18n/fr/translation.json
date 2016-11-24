@@ -53,6 +53,7 @@
     "groups_edit_selected": "Modifier le groupe sélectionné",
     "groups_delete_selected": "Supprimer le groupe sélectionné",
     "groups_grade_selected": "Calculer les scores du groupe sélectionné",
+    "cannot_grade_closed_contest": "Vous ne pouvez pas calculer les scores d'un groups lié à ce concours",
     "grading_in_progress": "Calcul des scores en cours :",
     "groups_sheet_title": "Impression de la notice",
     "groups_sheet_intro": "La notice est destinée à l'enseignant encadrant de chaque groupe. Elle lui explique la procédure de passage du concours et lui donne les codes du groupe. À l’approche du concours, imprimez cette notice pour chacun des groupes. Vous pouvez :",
