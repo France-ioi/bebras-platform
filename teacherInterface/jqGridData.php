@@ -457,6 +457,10 @@ function selectRecords($db, $modelName, $recordID, $roles, $extraFilters = array
       } else if ($modelName === "school_year") {
          $request["filters"]["userID"] = $_SESSION["userID"];
       } else if ($modelName === "school_search") {
+      } else if ($modelName === "team_view") {
+         if (isset($extraFilters["groupField"])) {
+            $request["filters"]["groupField"] = $extraFilters["groupField"];
+         }
       } else if ($modelName === "contestant") {
          if (isset($extraFilters["contestID"])) {
             $request["filters"]["contestID"] = $extraFilters["contestID"];

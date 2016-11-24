@@ -252,9 +252,11 @@ $tablesModels = array (
 if (isset($_SESSION["isAdmin"]) && $_SESSION["isAdmin"]) {
    $fieldGroup = array("tableName" => "group", "fieldName" => "name");
    $fieldGroupFilter = array("joins" => array("group"), "condition" => "`[PREFIX]group`.`name` LIKE :groupField");
+   $fieldGroupFilterTeam = $fieldGroupFilter;
 } else {
    $fieldGroup = array("tableName" => "team", "fieldName" => "groupID", "access" => array("write" => array(), "read" => array("user")));
    $fieldGroupFilter = array("joins" => array("team"), "condition" => "`[PREFIX]team`.`groupID` = :groupField");
+   $fieldGroupFilterTeam = array("joins" => array(), "condition" => "`[PREFIX]team`.`groupID` = :groupField");
 }
 
 $viewsModels = array(
@@ -427,6 +429,7 @@ $viewsModels = array(
       ),
       "filters" => array(
          "schoolID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`schoolID` = :schoolID"),
+         "groupField" => $fieldGroupFilterTeam,
          "userID" => array("joins" => array("user_user"), "condition" => "(`group`.`userID` = :userID OR `[PREFIX]user_user`.`accessType` <> 'none')"),
          "contestants" => array(
             "joins" => array("contestant"),
