@@ -94,7 +94,7 @@ if (count($rows) == 0) {
 ?>
 
 <p>
-En cas de question, contactez info@france-ioi.org
+En cas de question, contactez info@castor-informatique.fr
 </p>
 </body>
 </html>
