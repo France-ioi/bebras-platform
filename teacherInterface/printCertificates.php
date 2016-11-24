@@ -13,7 +13,6 @@
       script_tag('/bower_components/jquery/jquery.min.js');
       script_tag('/bower_components/jquery-ui/jquery-ui.min.js'); // for $.datepicker.formatDate
       script_tag('/bower_components/i18next/i18next.min.js');
-      script_tag('/config.js.php');
    ?>
       <style>
          @import url(https://fonts.googleapis.com/css?family=Varela+Round); /* needed for Alkindi... TODO: find a better system */
