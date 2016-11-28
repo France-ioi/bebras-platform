@@ -12,6 +12,11 @@ if (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"]) {
 // To (re)compute team.nbContestants:
 // update team set nbContestants = 0; insert into team (ID) select teamID from contestant on duplicate key update nbContestants = nbContestants + 1;
 
+// To pass contestants with grade < 0 as unofficial:
+//UPDATE contestant join team on contestant.teamID = team.ID SET team.participationType = 'Unofficial' WHERE contestant.grade < 0;
+
+// To reset ranks: update contestant set rank = NULL;
+
 function computeNbContestants($db, $contestID, $maxContestants) {
    $stmt = $db->prepare('update team
             JOIN `group` ON (`team`.`groupID` = `group`.`ID`)
