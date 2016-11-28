@@ -21,11 +21,15 @@ function generateAlgoreaCodes($db, $contestID) {
 }
 
 if ((!isset($_SESSION["isAdmin"])) || (!$_SESSION["isAdmin"])) {
-   echo json_encode((object)array("success" => false, "message" => "Seul un admin peut calculer les classements"));
+   echo json_encode((object)array("success" => false, "message" => "Only an admin can do that!"));
    exit;
 }
 
 $contestID = $_REQUEST["contestID"];
+if (!$contestID) {
+   echo json_encode((object)array("success" => false, "message" => "contestID forgotten"));
+   exit;
+}
 
 generateAlgoreaCodes($db, $contestID);
 unset($db);
