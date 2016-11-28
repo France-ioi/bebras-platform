@@ -4,6 +4,11 @@
 require_once("../shared/common.php");
 require_once("commonAdmin.php");
 
+if (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"]) {
+   echo json_encode((object)array("status" => 'error', "message" => "Only admins can do that!"));
+   exit;
+}
+
 // To (re)compute team.nbContestants:
 // update team set nbContestants = 0; insert into team (ID) select teamID from contestant on duplicate key update nbContestants = nbContestants + 1;
 
@@ -26,6 +31,10 @@ function getContestInfos($db, $contestID) {
    $stmt = $db->prepare('select ID, allowTeamsOfTwo, rankGrades, rankNbContestants from contest where ID = :contestID');
    $stmt->execute(array('contestID' => $contestID));
    $contestInfos = $stmt->fetch(PDO::FETCH_ASSOC);
+   if (!$contestInfos) {
+      echo json_encode((object)array("status" => 'error', "message" => "Contest not found!"));
+      exit;
+   }
    // get grades if relevant
    if ($contestInfos['rankGrades']) {
       $stmt = $db->prepare('select distinct contestant.grade from contestant
