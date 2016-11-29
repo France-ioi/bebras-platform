@@ -27,30 +27,50 @@ $contestsParams = array(
       array("contestID" => 37, "minScore" => 185, "grade" => null)
    ),
    2015 => array(
-      array("contestID" => 54, "minScore" => 350, "grade" => 4, "nbContestantsPerTeam" => 1),
-      array("contestID" => 54, "minScore" => 370, "grade" => 5, "nbContestantsPerTeam" => 1),
-      array("contestID" => 54, "minScore" => 410, "grade" => 6, "nbContestantsPerTeam" => 1),
-      array("contestID" => 54, "minScore" => 430, "grade" => 7, "nbContestantsPerTeam" => 1),
-      array("contestID" => 54, "minScore" => 450, "grade" => 8, "nbContestantsPerTeam" => 1),
-      array("contestID" => 54, "minScore" => 460, "grade" => 9, "nbContestantsPerTeam" => 1),
-      array("contestID" => 54, "minScore" => 476, "grade" => 10, "nbContestantsPerTeam" => 1),
-      array("contestID" => 54, "minScore" => 477, "grade" => 11, "nbContestantsPerTeam" => 1),
-      array("contestID" => 54, "minScore" => 477, "grade" => 12, "nbContestantsPerTeam" => 1),
-      array("contestID" => 54, "minScore" => 400, "grade" => 13, "nbContestantsPerTeam" => 1),
-      array("contestID" => 54, "minScore" => 400, "grade" => 14, "nbContestantsPerTeam" => 1),
-      array("contestID" => 54, "minScore" => 400, "grade" => 15, "nbContestantsPerTeam" => 1),
-      array("contestID" => 54, "minScore" => 350, "grade" => 4, "nbContestantsPerTeam" => 2),
-      array("contestID" => 54, "minScore" => 370, "grade" => 5, "nbContestantsPerTeam" => 2),
-      array("contestID" => 54, "minScore" => 420, "grade" => 6, "nbContestantsPerTeam" => 2),
-      array("contestID" => 54, "minScore" => 440, "grade" => 7, "nbContestantsPerTeam" => 2),
-      array("contestID" => 54, "minScore" => 460, "grade" => 8, "nbContestantsPerTeam" => 2),
-      array("contestID" => 54, "minScore" => 470, "grade" => 9, "nbContestantsPerTeam" => 2),
-      array("contestID" => 54, "minScore" => 477, "grade" => 10, "nbContestantsPerTeam" => 2),
-      array("contestID" => 54, "minScore" => 477, "grade" => 11, "nbContestantsPerTeam" => 2),
-      array("contestID" => 54, "minScore" => 477, "grade" => 12, "nbContestantsPerTeam" => 2),
-      array("contestID" => 54, "minScore" => 400, "grade" => 13, "nbContestantsPerTeam" => 2),
-      array("contestID" => 54, "minScore" => 400, "grade" => 14, "nbContestantsPerTeam" => 2),
-      array("contestID" => 54, "minScore" => 400, "grade" => 15, "nbContestantsPerTeam" => 2),
+      array("contestID" => 54, "minScore" => 300, "grade" => 4, "nbContestantsPerTeam" => 1),
+      array("contestID" => 54, "minScore" => 300, "grade" => 5, "nbContestantsPerTeam" => 1),
+      array("contestID" => 54, "minScore" => 300, "grade" => 6, "nbContestantsPerTeam" => 1),
+      array("contestID" => 54, "minScore" => 300, "grade" => 7, "nbContestantsPerTeam" => 1),
+      array("contestID" => 54, "minScore" => 300, "grade" => 8, "nbContestantsPerTeam" => 1),
+      array("contestID" => 54, "minScore" => 300, "grade" => 9, "nbContestantsPerTeam" => 1),
+      array("contestID" => 54, "minScore" => 300, "grade" => 10, "nbContestantsPerTeam" => 1),
+      array("contestID" => 54, "minScore" => 300, "grade" => 11, "nbContestantsPerTeam" => 1),
+      array("contestID" => 54, "minScore" => 300, "grade" => 12, "nbContestantsPerTeam" => 1),
+      array("contestID" => 54, "minScore" => 300, "grade" => 4, "nbContestantsPerTeam" => 2),
+      array("contestID" => 54, "minScore" => 300, "grade" => 5, "nbContestantsPerTeam" => 2),
+      array("contestID" => 54, "minScore" => 300, "grade" => 6, "nbContestantsPerTeam" => 2),
+      array("contestID" => 54, "minScore" => 300, "grade" => 7, "nbContestantsPerTeam" => 2),
+      array("contestID" => 54, "minScore" => 300, "grade" => 8, "nbContestantsPerTeam" => 2),
+      array("contestID" => 54, "minScore" => 300, "grade" => 9, "nbContestantsPerTeam" => 2),
+      array("contestID" => 54, "minScore" => 300, "grade" => 10, "nbContestantsPerTeam" => 2),
+      array("contestID" => 54, "minScore" => 300, "grade" => 11, "nbContestantsPerTeam" => 2),
+      array("contestID" => 54, "minScore" => 300, "grade" => 12, "nbContestantsPerTeam" => 2),
+   ),
+   2016 => array(
+      array("contestID" => 455965778962240640, "minScore" => 500, "grade" => 4, "nbContestantsPerTeam" => 1),
+      array("contestID" => 455965778962240640, "minScore" => 500, "grade" => 5, "nbContestantsPerTeam" => 1),
+      array("contestID" => 455965778962240640, "minScore" => 500, "grade" => 6, "nbContestantsPerTeam" => 1),
+      array("contestID" => 455965778962240640, "minScore" => 500, "grade" => 7, "nbContestantsPerTeam" => 1),
+      array("contestID" => 455965778962240640, "minScore" => 500, "grade" => 8, "nbContestantsPerTeam" => 1),
+      array("contestID" => 455965778962240640, "minScore" => 500, "grade" => 9, "nbContestantsPerTeam" => 1),
+      array("contestID" => 455965778962240640, "minScore" => 500, "grade" => 10, "nbContestantsPerTeam" => 1),
+      array("contestID" => 455965778962240640, "minScore" => 500, "grade" => 11, "nbContestantsPerTeam" => 1),
+      array("contestID" => 455965778962240640, "minScore" => 500, "grade" => 12, "nbContestantsPerTeam" => 1),
+      array("contestID" => 455965778962240640, "minScore" => 500, "grade" => 13, "nbContestantsPerTeam" => 1),
+      array("contestID" => 455965778962240640, "minScore" => 500, "grade" => 14, "nbContestantsPerTeam" => 1),
+      array("contestID" => 455965778962240640, "minScore" => 500, "grade" => 15, "nbContestantsPerTeam" => 1),
+      array("contestID" => 455965778962240640, "minScore" => 500, "grade" => 4, "nbContestantsPerTeam" => 2),
+      array("contestID" => 455965778962240640, "minScore" => 500, "grade" => 5, "nbContestantsPerTeam" => 2),
+      array("contestID" => 455965778962240640, "minScore" => 500, "grade" => 6, "nbContestantsPerTeam" => 2),
+      array("contestID" => 455965778962240640, "minScore" => 500, "grade" => 7, "nbContestantsPerTeam" => 2),
+      array("contestID" => 455965778962240640, "minScore" => 500, "grade" => 8, "nbContestantsPerTeam" => 2),
+      array("contestID" => 455965778962240640, "minScore" => 500, "grade" => 9, "nbContestantsPerTeam" => 2),
+      array("contestID" => 455965778962240640, "minScore" => 500, "grade" => 10, "nbContestantsPerTeam" => 2),
+      array("contestID" => 455965778962240640, "minScore" => 500, "grade" => 11, "nbContestantsPerTeam" => 2),
+      array("contestID" => 455965778962240640, "minScore" => 500, "grade" => 12, "nbContestantsPerTeam" => 2),
+      array("contestID" => 455965778962240640, "minScore" => 500, "grade" => 13, "nbContestantsPerTeam" => 2),
+      array("contestID" => 455965778962240640, "minScore" => 500, "grade" => 14, "nbContestantsPerTeam" => 2),
+      array("contestID" => 455965778962240640, "minScore" => 500, "grade" => 15, "nbContestantsPerTeam" => 2),
    )
 );
 
@@ -216,6 +236,17 @@ class ContestAnalysis
          -3 => "Pas encore au collège",
          -4 => "Autre"
       );
+      $gradeNamesTunisie = array(
+         4 => "5ème",
+         5 => "6ème",
+         6 => "7ème",
+         7 => "8ème",
+         8 => "9ème",
+         9 => "1ère",
+         11 => "3ème",
+         12 => "4ème",
+         10 => "2nde",
+      );
       if ($grade != null && $nbContestantsPerTeam != null) {
          $row->tabname = $gradeNames[$grade];
          $row->category = $gradeNames[$grade].' ('.($nbContestantsPerTeam > 1 ? 'participation en binôme' : 'participation individuelle').')';
@@ -307,7 +338,7 @@ class ContestAnalysis
             `school`.city,
             `s2`.`name` as name2,
             `s2`.`city` as city2,
-            algorea_registration.algoreaAccount
+            algorea_registration.franceioiID
          FROM `contestant`,
             `team`
             LEFT JOIN contestant c2 ON (team.password = c2.algoreaCode)
@@ -391,37 +422,6 @@ class ContestAnalysis
             </table>
             </div>
          </td>
-      </tr>
-      <tr>
-         <td colspan=2 align=center>
-            <p>
-            Les ".count($aTop)." premiers ayant un score supérieur ou égal à ".$minScoreTop." sont listés ci-dessous.
-            </p>
-         </td>
-      </tr>
-      <tr>
-         <td colspan=2>
-         <div style='height:200px;width:100%;overflow-y:scroll'>
-         <table border=1 cellspacing=0 style='width:100%'>
-         <tr>
-            <td><b>Élève</b></td>
-            <td width=80><b>Score</b></td>
-            <td><b>Rang</b></td>
-            <td><b>Établissement</b></td>
-         </tr>";
-      foreach ($aTop as $line) {
-         $s .= "
-         <tr>
-            <td>".$line->firstName." ".$line->lastName[0].".</td>
-            <td>".$line->score."</td>
-            <td>".$line->rank."</td>
-            <td>".$line->name.", ".$line->city."</td>
-         </tr>";
-      }
-      $s .= "
-         </table>
-         </div>
-         </td>
       </tr>";
       return (object)array('ID'=>$infos->ID, 'category'=>$infos->category, 'tabname'=>$infos->tabname, 'content'=>$s, 'nbContestantsPerTeam' => $nbContestantsPerTeam);
    }
@@ -430,5 +430,6 @@ class ContestAnalysis
 //ContestAnalysis::getReport("template2012.inc.html", "epreuve2012.html", 2012);
 //ContestAnalysis::getReport("template2013.inc.html", "resultats2013.php", 2013);
 //ContestAnalysis::getReport("template2013.inc.html", "resultats2014.php", 2014);
-ContestAnalysis::getReport("template2013.inc.html", "../../castor-informatique.fr/resultats2015_castor.php", 2015);
+//ContestAnalysis::getReport("template2013.inc.html", "../../castor-informatique.fr/resultats2015_castor.php", 2015);
+ContestAnalysis::getReport("template2013.inc.html", "resultats2016.html", 2016);
 ?>
