@@ -19,7 +19,6 @@ if (!isset($_SESSION["userID"])) {
 
 $query = "
    SELECT 
-      `contest`.`year` AS `contestYear`, 
       `contest`.`name` AS `contestName`,
       `contest`.`allowTeamsOfTwo`,
       `school`.`name` AS `schoolName`,
@@ -61,12 +60,6 @@ $aGroups = array();
 while ($row = $stmt->fetchObject())
 {
 
-   $curYear = date("Y");
-   if ($row->contestYear === $curYear) {
-      $row->contestType = $translations['notice_title_contest'].' '.$curYear;
-   } else {
-      $row->contestType = $translations['notice_title_training'];
-   }
    $query = "UPDATE `group` SET `noticePrinted` = 1 WHERE  `group`.`ID` = :groupID";
    $stmtSub = $db->prepare($query);
    $stmtSub->execute(array("groupID" => $row->groupID));
@@ -137,13 +130,12 @@ if (count($aGroups) == 0) {
 
 <?php foreach ($aGroups as $id => $row): ?>
 <h1 <?php if ($id !=0):?>class="break"<?php endif;?>>
-<?php echo $row->contestType ?><br/>
+<?php echo $row->contestName ?><br/>
 <span class="red">Notice enseignant encadrant</span>
 </h1>
 
 <div class="warning">À NE PAS MONTRER AUX ÉLÈVES</div>
 <div class="header">
-<?php echo $row->contestName;?>
 <br/>
 <?php echo $row->schoolName;?>
 <br/>
