@@ -29,13 +29,60 @@ $gradeCat = [
 	15 => 'lyceepro'
 ];
 
-$finalRes = [];
+$regionNames = [
+    "foreign"=> "Hors France",
+    "aix-marseille"=> "Aix-Marseille",
+    "amiens"=> "Amiens",
+    "besancon"=> "Besançon",
+    "bordeaux"=> "Bordeaux",
+    "caen"=> "Caen",
+    "clermont"=> "Clermont-Ferrand",
+    "corse"=> "Corse",
+    "creteil"=> "Créteil",
+    "dijon"=> "Dijon",
+    "grenoble"=> "Grenoble",
+    "guadeloupe"=> "Guadeloupe",
+    "guyane"=> "Guyane",
+    "lille"=> "Lille",
+    "limoges"=> "Limoges",
+    "lyon"=> "Lyon",
+    "martinique"=> "Martinique",
+    "mayotte"=> "Mayotte",
+    "montpellier"=> "Montpellier",
+    "nancy-metz"=> "Nancy-Metz",
+    "nantes"=> "Nantes",
+    "nice"=> "Nice",
+    "noumea"=> "Nouméa",
+    "orleans-tours"=> "Orléans-Tours",
+    "paris"=> "Paris",
+    "poitiers"=> "Poitiers",
+    "rouen"=> "Rouen",
+    "reims"=> "Reims",
+    "rennes"=> "Rennes",
+    "reunion"=> "La Réunion",
+    "strasbourg"=> "Strasbourg",
+    "toulouse"=> "Toulouse",
+    "versailles"=> "Versailles",
+    "polynesie"=> "Polynésie française"
+];
+
+$finalRes = ['all' => []];
 $schoolIdToArrayIndex = [];
+$regionToArrayIndex = [];
 
 foreach($bigRes as $row) {
 	if (!isset($finalRes[$row['region']])) {
 		$finalRes[$row['region']] = [];
+		$regionToArrayIndex[$row['region']] = count($finalRes['all']);
+		$finalRes['all'][$regionToArrayIndex[$row['region']]] = [
+			'name' => $regionNames[$row['region']],
+			'country' => '',
+			'city' => '',
+			'zipcode' => '',
+			'contestantData' => ['total' => 0],
+		];
 	}
+	$regionIndexInAll = $regionToArrayIndex[$row['region']];
 	$regionData = &$finalRes[$row['region']];
 	if (!isset($schoolIdToArrayIndex[$row['ID']])) {
 		$index = count($regionData);
@@ -56,6 +103,11 @@ foreach($bigRes as $row) {
 		$regionData[$index]['contestantData'][$gradeCat[intval($row['grade'])]] = 0;
 	}
 	$regionData[$index]['contestantData'][$gradeCat[intval($row['grade'])]] += intval($row['contestantCount']);
+	$finalRes['all'][$regionIndexInAll]['contestantData']['total'] += intval($row['contestantCount']);
+	if (!isset($finalRes['all'][$regionIndexInAll]['contestantData'][$gradeCat[intval($row['grade'])]])) {
+		$finalRes['all'][$regionIndexInAll]['contestantData'][$gradeCat[intval($row['grade'])]] = 0;
+	}
+	$finalRes['all'][$regionIndexInAll]['contestantData'][$gradeCat[intval($row['grade'])]] += intval($row['contestantCount']);
 }
 
 echo 'var contestData = '.json_encode($finalRes, JSON_UNESCAPED_UNICODE).';';
