@@ -51,7 +51,7 @@ if (!$_SESSION["isAdmin"]) {
 }
 
 // Choose order
-$query .= " ORDER BY contestYear ASC, `contest`.level ASC, groupName ASC";
+$query .= " ORDER BY `contest`.level ASC, groupName ASC";
 
 $stmt = $db->prepare($query);
 $stmt->execute($params);
@@ -130,13 +130,13 @@ if (count($aGroups) == 0) {
 
 <?php foreach ($aGroups as $id => $row): ?>
 <h1 <?php if ($id !=0):?>class="break"<?php endif;?>>
+<?php echo $translations['notice_title_contest'] ?><br/>
 <?php echo $row->contestName ?><br/>
 <span class="red">Notice enseignant encadrant</span>
 </h1>
 
 <div class="warning">À NE PAS MONTRER AUX ÉLÈVES</div>
 <div class="header">
-<br/>
 <?php echo $row->schoolName;?>
 <br/>
 Groupe <b>
