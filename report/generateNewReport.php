@@ -107,6 +107,10 @@ foreach($bigRes as $row) {
 	if (!isset($finalRes['all'][$regionIndexInAll]['contestantData'][$gradeCat[intval($row['grade'])]])) {
 		$finalRes['all'][$regionIndexInAll]['contestantData'][$gradeCat[intval($row['grade'])]] = 0;
 	}
+	if (!isset($finalRes['all'][$regionIndexInAll]['contestantData'][intval($row['grade'])])) {
+		$finalRes['all'][$regionIndexInAll]['contestantData'][intval($row['grade'])] = 0;
+	}
+	$finalRes['all'][$regionIndexInAll]['contestantData'][intval($row['grade'])] += intval($row['contestantCount']);
 	$finalRes['all'][$regionIndexInAll]['contestantData'][$gradeCat[intval($row['grade'])]] += intval($row['contestantCount']);
 }
 
