@@ -36,7 +36,7 @@ if ($contest['rankGrades']) {
    $select = ', `team`.`nbContestants`';
 }
 
-$query = "SELECT count(*) AS `totalContestants`, `contestant`.`grade`, `team`.`nbContestants` FROM `contestant` ".
+$query = "SELECT count(distinct contestant.ID) AS `totalContestants`, `contestant`.`grade`, `team`.`nbContestants` FROM `contestant` ".
    "JOIN `team` ON (`contestant`.`teamID` = `team`.`ID`) ".
    "JOIN `group` ON (`group`.`ID` = `team`.`groupID`) ".
    "LEFT JOIN `user_user` ON (`group`.`userID` = `user_user`.`userID`) ".
@@ -58,7 +58,7 @@ while ($row = $stmt->fetchObject()) {
    $itemsPerSchool[] = $row;
 }
 
-$query = "SELECT count(*) AS `totalContestants`, `contestant`.`grade`, `team`.`nbContestants` FROM `contestant` ".
+$query = "SELECT count(contestant.ID) AS `totalContestants`, `contestant`.`grade`, `team`.`nbContestants` FROM `contestant` ".
    "JOIN `team` ON (`contestant`.`teamID` = `team`.`ID`) ".
    "JOIN `group` ON (`group`.`ID` = `team`.`groupID`) ".
    "WHERE `team`.`participationType` = 'Official' ".
