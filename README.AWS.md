@@ -99,20 +99,20 @@ under some precise assumptions.
 See `shared/transferTable.php` for a small script to transfer a table from MySQL
 to DynamoDB.
 
-## DynamodDB backup/recovery
+## DynamodDB migration to SQL
 
-For backup/recoveries, install dynamo-archive: `npm install -g dynamo-archive` as root.
+If you want to migrate your dynamoDB data to SQL:
 
-You can run a cron on `shared/dump-dynamodb.sh`, adjusting the `RATE` variable
-(representing the rate over 100 of "read speed used by the script" / "read throughput")
-and the `BUCKETNAME` variable. It will dump the team and team_question bases in a file
-with one json entry per line, and upload it on s3.
-
-To recover from a backup file:
-
-`aws s3 cp s3://$BUCKET/$FILE - | dynamo-restore --table $TABLE --key $KEY --secret $SECRET --region $REGION`
-
-replacing the different variables starting with `$`.
+- first, you don't need to transfer "teams", as it's updated on both sides
+- setup your config so that you use dynamoDB
+- increase the read capacity of the team_question table, to at least 200
+- set the date interval you want the dynamoDB team_questions from in `shared/dumprecentteamquestion.php`
+- `cd shared`
+- run `php dumprecentteamquestion.php > recentteamquestion.dump`
+- the file `recentteamquestion.dump` will contain the team_question extract, one item per line in json format
+- run `php dumptosql.php`, it will produce `recentteamquestion.sql`
+- import the sql file your base
+- don't forget to dicrease the capacity of the team_question table
 
 ## Elastic Beanstalk (EBS)
 
