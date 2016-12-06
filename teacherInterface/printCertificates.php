@@ -222,6 +222,9 @@
                var group = allData.group[groupID];
                var contest = allData.contest[group.contestID];
                var user = allData.user[group.userID];
+               if (user == undefined) {
+                  user = allData.colleagues[group.userID];
+               }
                var coordName = i18n.t('user_gender_'+(user.gender == 'F' ? 'female' : 'male'));
                coordName += ' '+user.firstName+' '+user.lastName;
                s += "<div style=\"page-break-after:always\"><center>";
