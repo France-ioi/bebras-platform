@@ -42,28 +42,28 @@ if (!count($awarded)) {
     <style type="text/css">
     body, td {
       font-family: Arial, sans-serif;
-      font-size: 9px;
-      width: 18cm;
-      margin: 0 0;
+      font-size: 12px;
+      width: 16cm;
+      margin-left: 1.5cm;
     }
     p {
       margin-bottom:5px;
       margin-top: 0px;
     }
     .title{
-      font-size: 11px;
+      font-size: 15px;
       font-weight:bold;
     }
     .small{
-      font-size: 7px;
+      font-size: 11px;
     }
     .code{
-      font-size: 11px;
+      font-size: 15px;
       font-weight:bold;
     }
     .label{
-       width: 6cm;
-       height: 3.75cm;
+       width: 8cm;
+       height: 6cm;
        padding: 0 0 0 0;
        margin-right: 0;
        float: left;
@@ -111,7 +111,7 @@ foreach($awarded as $contestant) {
    echo '<p class="small">'.$strings['award_print_third_line'].'</p>';
    echo '</div></div>';
    $nbLabelsOnPage += 1;
-   if ($nbLabelsOnPage >= 18) {
+   if ($nbLabelsOnPage >= 8) {
       $nbLabelsOnPage = 0;
       echo '<div class="page-break"></div>';
    }
