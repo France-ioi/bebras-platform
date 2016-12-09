@@ -106,9 +106,10 @@ if ($action == "sendMail") {
    <body>
    <div id='divHeader'>
         <table style='width:100%'><tr>
-            <td style='width:20%'><img src='images/castor_small.png'/></td>
-            <td><p class='headerH1'>Castor Informatique France</p>
-            <p class='headerH2'> Plate-forme du concours Castor - <span style='color:red;font-weight:bold'>ACCES COORDINATEUR</span></p>
+            <td style=\"width:20%\" data-i18n=\"[html]main_logo\"></td>
+            <td>
+            <p class=\"headerH1\" data-i18n=\"title\"></p>
+            <p class=\"headerH2\" data-i18n=\"[html]subtitle\"></p>
             </td>
             <td></td>
          </tr></table>
