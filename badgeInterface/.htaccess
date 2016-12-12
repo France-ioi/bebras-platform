@@ -1,0 +1,3 @@
+
+RewriteEngine On
+RewriteRule ^([^/]*)/verifyCode$ /verifyCode.php?badgeName=$1 [L]
