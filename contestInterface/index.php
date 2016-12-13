@@ -27,6 +27,7 @@
   </ul>
 </nav>
 <div id="mainContent">
+  <div id="browserAlert" style="display: none;" data-i18n="[html]browser_support"></div>
   <p id="generalInstructions" data-i18n="[html]general_instructions"></p>
 
 <form autocomplete="off">
