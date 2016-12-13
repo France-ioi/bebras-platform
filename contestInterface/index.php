@@ -33,6 +33,8 @@
 <form autocomplete="off">
 <div id="divCheckGroup" class="dialog">
 
+  <div id="tab-home" style="display:none">
+    <div class="tabTitle" data-i18n="general_public_contests"></div>
       <!-- Display the first div during the contest week -->
       <div id="warningPublicGroups" style="display:none;background:#F33;width:650px;text-align:center;padding:5px;margin:10px">
          <p><b data-i18n="tab_home_warning_not_contest"></b></p>
@@ -49,10 +51,14 @@
             <p data-i18n="[html]tab_public_contests_organization"></p>
          </div>
       </div>
-   </div>
-   <div id="tab-school">
-<!--      <p>Pour <b>voir votre score détaillé</b> si vous avez participé au concours 2012, cliquez sur "Continuer le concours" et saisissez votre code personnel fourni au début de l'épreuve. Vous aurez aussi accès aux réponses et à une <b>correction détaillée</b> en dessous de chaque question.</p>
-      <h3>Vous démarrez un concours en classe, pour la première fois ?</h3>-->
+  </div>
+
+  <div id="tab-school">
+    <div class="tabTitle" data-i18n="general_start_contest"></div>
+      <!--
+      <p>Pour <b>voir votre score détaillé</b> si vous avez participé au concours 2012, cliquez sur "Continuer le concours" et saisissez votre code personnel fourni au début de l'épreuve. Vous aurez aussi accès aux réponses et à une <b>correction détaillée</b> en dessous de chaque question.</p>
+      <h3>Vous démarrez un concours en classe, pour la première fois ?</h3>
+      -->
       <p data-i18n="[html]tab_start_contest_enter_code"><br />
          <div id="divInput">
             <input id="groupCode" type="text"/>
@@ -67,8 +73,10 @@
          <br><span id="recoverGroupResult" style="color:red"></span>
          <p data-i8n="[html]others_retry"></p>
       </div>
-   </div>
-   <div id="tab-continue" style="display:none">
+  </div>
+
+  <div id="tab-continue" style="display:none">
+    <div class="tabTitle" data-i18n="general_continue_contest"></div>
       <p><span data-i18n="tab_view_results_access_code"></span>
          <div id="divInput">
             <input id="interruptedPassword" type="password">
@@ -93,7 +101,8 @@
              </div>
          </p>
       </div>
-   </div>
+  </div>
+
   <div id="tab-results" style="display:none">
     <div class="tabTitle" data-i18n="general_view_results"></div>
     <p data-i18n="tab_view_results_access_code"></p>

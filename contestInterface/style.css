@@ -4,11 +4,11 @@
   -o-user-select: none;
   user-select: none;
   -khtml-user-select: none;
-  font-family: arial;
 }
 
 body {
-   margin-left:0px;
+  margin-left:0px;
+  font-family: arial;
 }
 
 .fullFeedback {
@@ -252,10 +252,6 @@ a {
      padding-left: 100px;
 }
 
-.dialog {
-   padding-left: 245px;
-}
-
 .questionScores, .questionScores td {
    border: solid black 1px;
 }
@@ -352,6 +348,10 @@ a {
 
 /* new interface styles */
 
+.tabTitle {
+  font-size: 2em;
+  font-family:"Century Gothic", "Trebuchet MS", "Arial Narrow", Arial, sans-serif;
+}
 .header, .layout_table_wrapper {
   max-width:880px;width:auto !important;width:880px;
   min-width:650px;

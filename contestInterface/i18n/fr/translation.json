@@ -33,6 +33,7 @@
     "tab_view_select_team": "Sélectionnez votre équipe",
     "tab_view_ask_password_to_teacher": "Puis demandez à votre enseignant de saisir le code de secours du groupe :",
     "tab_view_restart_contest": "Reprendre le concours",
+    "tab_view_other_contests": "<ul><li><a href=\"http://castor-informatique.fr\">Castor Informatique</a></li><li><a href='http://algorea.org'>Algoréa</a></li><li><a href='http://www.france-ioi.org'>france-ioi.org</a></li></ul>",
     "nb_contestants_question": "Faites-vous l'épreuve tout seul ou bien à deux sur un même ordinateur ?",
     "nb_contestants_one": "Tout seul",
     "nb_contestants_two": "À deux",
