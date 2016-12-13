@@ -60,6 +60,39 @@ a {
   user-select: text;
   -khtml-user-select: text;
 }
+/* Contest home */
+#divHeader {
+  clear: both;
+  overflow: hidden;
+  margin-bottom: -2.5em;
+}
+#leftTitle {
+  float: left;
+  margin-left: 45px;
+  margin-right: 8em;
+}
+#headerGroup {
+  float: left;
+  border-bottom: 1px solid #eee;
+  font-family:"Century Gothic", "Trebuchet MS", "Arial Narrow", Arial, sans-serif;
+  text-transform:uppercase;
+  text-align: left;
+}
+#headerH1 {
+   font-size:40px;
+   font-weight:normal;
+   margin:0;
+   padding:0;
+   color: #736451;
+   margin-bottom: 10px;
+}
+#headerH2 {
+   font-size: 24px;
+   font-weight: normal;
+   margin: 0;
+   padding: 0;
+   color: #000000;
+}
 #mainNav {
   float: left;
   margin-right: 8em;
@@ -201,30 +234,6 @@ a {
    background-color: #E0E0E0;
 }
 
-#headerH1 {
-   font-family:"Century Gothic", "Trebuchet MS", "Arial Narrow", Arial, sans-serif;
-   font-size:40px;
-   text-transform:uppercase;
-   font-weight:normal;
-   margin:0;
-   padding:0;
-   padding-top:30px;
-   color: #736451;
-   margin-bottom: 10px;
-   text-align: left;
-}
-
-#headerH2 {
-   font-family: "Century Gothic", "Trebuchet MS", "Arial Narrow", Arial, sans-serif;
-   font-size: 24px;
-   text-transform: uppercase;
-   text-align: left;
-   font-weight: normal;
-   margin: 0;
-   padding: 0;
-   color: #000000;
-   border-bottom: 1px solid #eeeeee;
-}
 .div h3 {
    font-family: "Century Gothic", "Trebuchet MS", "Arial Narrow", Arial, sans-serif;
    font-size: 24px;

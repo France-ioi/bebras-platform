@@ -10,14 +10,12 @@
 <title data-i18n="general_page_title"></title>
 <?php stylesheet_tag('/style.css'); ?>
 </head><body>
-<form autocomplete="off">
 <div id="divHeader">
-     <table style="width:100%"><tr>
-         <td style="width:20%" data-i18n="[html]left_title"></td>
-         <td><p id="headerH1" data-i18n="general_title"></p>
-         <p id="headerH2" data-i18n="general_subtitle"></p></td>
-         <td style="width:20%" data-i18n="[html]right_title"></td>
-      </tr></table>
+  <div id="leftTitle" data-i18n="[html]left_title"></div>
+  <div id="headerGroup">
+    <h1 id="headerH1" data-i18n="general_title"></h1>
+    <h2 id="headerH2" data-i18n="general_subtitle"></h2>
+  </div>
 </div>
 <nav id="mainNav">
   <ul>
@@ -29,6 +27,7 @@
   </ul>
 </nav>
 <div id="mainContent">
+<form autocomplete="off">
 <div id="divCheckGroup" class="dialog">
    <p data-i18n="[html]general_instructions">
    </p>
