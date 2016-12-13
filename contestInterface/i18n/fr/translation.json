@@ -133,7 +133,7 @@
     "grade_12_pro": "En terminale pro.",
     "question_locked": "Question à débloquer",
     "question_list_intro": "<li>Chaque question comporte trois versions, permettant de gagner 2, 3 ou 4 étoiles.<li>Résoudre une version débloque la version suivante et une autre question.<li>Si les versions 3 ou 4 étoiles sont débloquées, vous pouvez y aller directement.<li>Vous pouvez revenir ici à tout moment en cliquant sur le bouton en haut à droite.",
-    "left_title": "<img src=\"images/castor_small.png\"/>",
+    "left_title": "<img src=\"images/castor.png\"/>",
     "right_title": "",
     "top_image": "<img src=\"images/castor_small.png\" style=\"width:65px\" />",
     "top_image_new": "<img class=\"header_logo_img\" src=\"images/castor_small.png\" />"
