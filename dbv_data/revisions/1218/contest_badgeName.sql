@@ -1,0 +1,2 @@
+ALTER TABLE `contest` ADD `badgeName` VARCHAR(50) NULL DEFAULT NULL ;
+ALTER TABLE `history_contest` ADD `badgeName` VARCHAR(50) NULL DEFAULT NULL ;

@@ -224,10 +224,12 @@
             <div id="custom_award_data"></div>
           </div>
       </div>
-   </d style="display:none;" id="linkExportAlgoreaCodes"se"></b> <p style="float:right;"><aihrpf="#" onclick="$('#divError').hide()">[<span data-i18n="error_close"></span>]</a></p><br/>
+   </div>
+   <div id="divError">
+      <b data-i18n="error_server_response"></b> <p style="float:right;"><a href="#" onclick="$('#divError').hide()">[<span data-i18n="error_close"></span>]</a></p><br/>
       <span id="contentError"></span>
    </div>
-   <div id="divSchoolSearch"style="display:none" class="dialog">
+   <div id="divSchoolSearch" style="display:none" class="dialog">
       <p data-i18n="schools_search_text">
       </p>
       <table id="grid_school_search"><tbody><tr><td/></tr></tbody></table>
