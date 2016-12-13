@@ -60,6 +60,47 @@ a {
   user-select: text;
   -khtml-user-select: text;
 }
+#mainNav {
+  float: left;
+  margin-right: 8em;
+  margin-top: 3.5em;
+}
+#mainNav .i18n {display: none;}
+#mainNav ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0 0 0 30px;
+}
+#mainNav li {
+  cursor: pointer;
+  margin-bottom: 5px;
+  padding: 5px;
+  position: relative;
+  background: #736451;
+  color: #fff;
+  line-height: 24px;
+  letter-spacing: 0.04em;
+}
+#mainNav li::after {
+  content: " ";
+  border: 17px solid #000;
+  position: absolute;
+  right: -17px;
+  border-left-color: #736451;
+  border-top-color: transparent;
+  top: 0px;
+  border-bottom-color: transparent;
+  border-right: none;
+}
+#mainNav li.selected {
+  background: #2482bf;
+}
+#mainNav li.selected::after {
+  border-left-color: #2482bf;
+}
+#mainContent {
+  float: left;
+}
 
 .questionListHeader {
    width:195px;

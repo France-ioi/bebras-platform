@@ -19,16 +19,19 @@
          <td style="width:20%" data-i18n="[html]right_title"></td>
       </tr></table>
 </div>
+<nav id="mainNav">
+  <ul>
+    <li id="button-school" class="selected" onclick="selectMainTab('school');return false;" data-i18n="general_nav_start_contest"></li>
+    <li id="button-home" onclick="selectMainTab('home');return false;" data-i18n="general_nav_public_contests"></li>
+    <li id="button-continue" onclick="selectMainTab('continue');return false;" data-i18n="general_nav_continue_contest"></li>
+    <li id="button-results" onclick="selectMainTab('results');return false;" data-i18n="general_nav_view_results"></li>
+    <li id="button-contests" onclick="selectMainTab('contests');return false;" data-i18n="general_nav_view_other_contests"></li>
+  </ul>
+</nav>
+<div id="mainContent">
 <div id="divCheckGroup" class="dialog">
    <p data-i18n="[html]general_instructions">
    </p>
-   <p>
-   <b data-i18n="general_choice"></b>
-   </p>
-   <button type="button" id="button-school" class="tabButton selected" onclick="selectMainTab('school');return false;" data-i18n="[html]general_start_contest"></button>
-   <button type="button" id="button-home" class="tabButton" onclick="selectMainTab('home');return false;" data-i18n="[html]general_public_contests"></button>
-   <button type="button" id="button-continue" class="tabButton" onclick="selectMainTab('continue');return false;" data-i18n="[html]general_view_results"></button>
-   <div id="tab-home" style="display:none">
       <!-- Display the first div during the contest week -->
       <div id="warningPublicGroups" style="display:none;background:#F33;width:650px;text-align:center;padding:5px;margin:10px">
          <p><b data-i18n="tab_home_warning_not_contest"></b></p>
@@ -118,6 +121,7 @@
     <div data-i18n="[html]tab_view_other_contests"></div>
   </div>
 </div>
+
 <div id="divCheckNbContestants" style="display:none" class="dialog">
    <p data-i18n="nb_contestants_question"></p>
       <div id="divInput">
@@ -302,6 +306,7 @@
    <span id="contentError"></span>
 </div>
 </form>
+</div>
 <?php
   script_tag('/bower_components/jquery/jquery.min.js');
 ?>
