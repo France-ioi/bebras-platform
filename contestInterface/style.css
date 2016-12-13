@@ -134,6 +134,13 @@ a {
 #mainContent {
   float: left;
 }
+#generalInstructions {
+  border: 1px solid #ddd;
+  padding: 5px 10px;
+  border-radius: 6px;
+  background: #f3e5e0;
+  margin-top: 0;
+}
 
 .questionListHeader {
    width:195px;

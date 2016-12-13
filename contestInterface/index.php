@@ -27,10 +27,11 @@
   </ul>
 </nav>
 <div id="mainContent">
+  <p id="generalInstructions" data-i18n="[html]general_instructions"></p>
+
 <form autocomplete="off">
 <div id="divCheckGroup" class="dialog">
-   <p data-i18n="[html]general_instructions">
-   </p>
+
       <!-- Display the first div during the contest week -->
       <div id="warningPublicGroups" style="display:none;background:#F33;width:650px;text-align:center;padding:5px;margin:10px">
          <p><b data-i18n="tab_home_warning_not_contest"></b></p>
