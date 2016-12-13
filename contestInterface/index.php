@@ -90,6 +90,33 @@
          </p>
       </div>
    </div>
+  <div id="tab-results" style="display:none">
+    <div class="tabTitle" data-i18n="general_view_results"></div>
+    <p data-i18n="tab_view_results_access_code"></p>
+    <div id="divInput">
+      <input id="interruptedPassword" type="password">&nbsp;&nbsp;&nbsp;<button type="button" id="buttonInterrupted" onclick="checkPasswordInterrupted()" data-i18n="tab_view_results_view_results_button"></button>
+      <br/><span id="InterruptedResult" style="color:red"></span>
+    </div>
+    <p data-i18n="tab_view_results_info_1"></p>
+    <p><b data-i18n="tab_view_results_info_2"></b></p>
+    <!--<p>Si vous ne disposez pas de mot de passe mais que vous êtes en classe, alors entrez le code de groupe fourni par votre enseignant.</p>-->
+    <p data-i18n="tab_view_results_info_3"></p>
+    <p data-i18n="tab_view_results_info_4"></p>
+    <div id="divRelogin" style="display:none">
+      <p data-i18n="tab_view_select_team_in_list"></p>
+      <select id="selectTeam"><option value='0' data-i18n="tab_view_select_team"></option></select>
+      <p data-i18n="tab_view_ask_password_to_teacher"></p>
+      <div id="divInput">
+        <input id="groupPassword" type="password">&nbsp;&nbsp;&nbsp;<button type="button" id="buttonRelogin" onclick="relogin()" data-i18n="tab_view_restart_contest"></button>
+        <br/><span id="ReloginResult" style="color:red"></span>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-contests" style="display:none">
+    <div class="tabTitle" data-i18n="general_view_other_contests"></div>
+    <div data-i18n="[html]tab_view_other_contests"></div>
+  </div>
 </div>
 <div id="divCheckNbContestants" style="display:none" class="dialog">
    <p data-i18n="nb_contestants_question"></p>

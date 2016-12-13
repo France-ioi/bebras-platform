@@ -984,7 +984,7 @@ window.selectMainTab = function(tabName) {
    if (tabName == 'home') {
       loadPublicGroups();
    }
-   var tabNames = ["school", "home", "continue"];
+   var tabNames = ["school", "home", "continue", "results", "contests"];
    for(var iTab = 0; iTab < tabNames.length; iTab++) {
       if (tabNames[iTab] === tabName) {
          $("#tab-" + tabNames[iTab]).show();
