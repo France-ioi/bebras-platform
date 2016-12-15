@@ -27,6 +27,9 @@
   </ul>
 </nav>
 <div id="mainContent">
+
+  <div id="browserAlert" data-i18n="[html]browser_support"></div>
+
   <div id="browserAlert" style="display: none;" data-i18n="[html]browser_support"></div>
   <p id="generalInstructions" data-i18n="[html]general_instructions"></p>
 
@@ -390,6 +393,31 @@ window.contestsRoot = <?= json_encode(upgrade_url($config->teacherInterface->sAb
 window.ieMode = true;
 </script>
 <![endif]-->
+<script type="text/javascript">
+  var browser_support = true;
+  if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
+    var ffversion=new Number(RegExp.$1);
+    if (ffversion<3.6) var browser_support = false;
+  }
+  else if (/Chrome[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
+    var chversion=new Number(RegExp.$1);
+    if (chversion<5) var browser_support = false;
+  }
+  else if (/Safari[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
+    var sfversion=new Number(RegExp.$1);
+    if (sfversion<3) var browser_support = false;
+  }
+  else if (navigator.userAgent.indexOf('MSIE') != -1) {
+    var detectIEregexp = /MSIE (\d+\.\d+);/;
+    if (detectIEregexp.test(navigator.userAgent)){
+      var ieversion=new Number(RegExp.$1);
+      if (ieversion<8) var browser_support = false;
+    }
+  }
+  if (browser_support) {
+    $('#browserAlert').hide();
+  }
+</script>
 <div style="height:400px">
 </div>
 </body></html>
