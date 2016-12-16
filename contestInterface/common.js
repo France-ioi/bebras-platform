@@ -1613,7 +1613,7 @@ function getPublicGroupsList(groups) {
       {name: t("level_4_name"), i18name: "level_4_name", id: 4},
       {name: t("level_all_questions_name"), i18name: "level_all_questions_name", id: 0}
    ];
-   var strGroups = "<table style='border:solid 1px black' cellspacing=0 cellpadding=5>";
+   var strGroups = "<table style='border:solid 1px black; border-collapse:collapse;' cellspacing=0 cellpadding=5>";
    for (year = maxYear; years[year] === true; year--) {
       for (category in categories[year]) {
          var nbGroupsInCategory = 0;

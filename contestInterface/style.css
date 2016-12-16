@@ -7,7 +7,7 @@
 }
 
 body {
-  margin-left:0px;
+  margin: 0px;
   font-family: arial;
 }
 
@@ -60,20 +60,26 @@ a {
   user-select: text;
   -khtml-user-select: text;
 }
+/*
+
+    LAYOUT
+
+*/
+
 /* Contest home */
 #divHeader {
   clear: both;
   overflow: hidden;
-  margin-bottom: -2.5em;
+  margin-bottom: 1em;
+  border-bottom: 1px solid #ededed;
+  padding-bottom: 1em;
 }
 #leftTitle {
   float: left;
-  margin-left: 45px;
-  margin-right: 8em;
+  margin: 10px 4em 0 32px;
 }
 #headerGroup {
   float: left;
-  border-bottom: 1px solid #eee;
   font-family:"Century Gothic", "Trebuchet MS", "Arial Narrow", Arial, sans-serif;
   text-transform:uppercase;
   text-align: left;
@@ -81,10 +87,9 @@ a {
 #headerH1 {
    font-size:40px;
    font-weight:normal;
-   margin:0;
+   margin: 10px 0;
    padding:0;
    color: #736451;
-   margin-bottom: 10px;
 }
 #headerH2 {
    font-size: 24px;
@@ -93,16 +98,20 @@ a {
    padding: 0;
    color: #000000;
 }
+#generalInstructions {
+  text-transform: none;
+  font-family: Arial;
+  margin-top: 2.5em;
+}
 #mainNav {
   float: left;
-  margin-right: 8em;
-  margin-top: 3.5em;
+  margin: 10px 4em 0 20px;
 }
 #mainNav .i18n {display: none;}
 #mainNav ul {
   list-style: none;
   padding-left: 0;
-  margin: 0 0 0 30px;
+  margin: 0;
 }
 #mainNav li {
   cursor: pointer;
@@ -133,13 +142,6 @@ a {
 }
 #mainContent {
   float: left;
-}
-#generalInstructions {
-  border: 1px solid #ddd;
-  padding: 5px 10px;
-  border-radius: 6px;
-  background: #f3e5e0;
-  margin-top: 0;
 }
 
 .questionListHeader {
@@ -345,8 +347,6 @@ a {
   -o-user-select: text;
   user-select: text;
 }
-
-/* new interface styles */
 
 .tabTitle {
   font-size: 2em;
