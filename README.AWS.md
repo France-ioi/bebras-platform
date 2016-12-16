@@ -110,7 +110,7 @@ If you want to migrate your dynamoDB data to SQL:
 - `cd shared`
 - run `php dumprecentteamquestion.php > recentteamquestion.dump`
 - the file `recentteamquestion.dump` will contain the team_question extract, one item per line in json format
-- run `php dumptosql.php`, it will produce `recentteamquestion.sql`
+- run `php dumptosql.php`, adjusting the $sqlTable variable if you need, it will produce `recentteamquestion.sql`
 - import the sql file your base
 - don't forget to dicrease the capacity of the team_question table
 
