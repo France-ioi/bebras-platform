@@ -417,6 +417,4 @@ window.ieMode = true;
     $('#browserAlert').hide();
   }
 </script>
-<div style="height:400px">
-</div>
 </body></html>
