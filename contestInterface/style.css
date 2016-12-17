@@ -103,6 +103,9 @@ a {
   font-family: Arial;
   margin-top: 2.5em;
 }
+
+#mainContent {
+}
 #mainNav {
   float: left;
   margin: 10px 4em 0 20px;
@@ -140,10 +143,9 @@ a {
 #mainNav li.selected::after {
   border-left-color: #2482bf;
 }
-#mainContent {
+.contentTab {
   float: left;
 }
-
 .questionListHeader {
    width:195px;
    padding-right: 5px;

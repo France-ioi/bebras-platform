@@ -36,7 +36,7 @@
   -->
     </ul>
   </nav>
-  <div id="tab-home" style="display:none">
+  <div id="tab-home" style="display:none" class="contentTab">
     <div class="tabTitle" data-i18n="general_public_contests"></div>
       <!-- Display the first div during the contest week -->
       <div id="warningPublicGroups" style="display:none;background:#F33;width:650px;text-align:center;padding:5px;margin:10px">
@@ -56,7 +56,7 @@
       </div>
   </div>
 
-  <div id="tab-school">
+  <div id="tab-school" class="contentTab">
     <div class="tabTitle" data-i18n="general_start_contest"></div>
       <!--
       <p>Pour <b>voir votre score détaillé</b> si vous avez participé au concours 2012, cliquez sur "Continuer le concours" et saisissez votre code personnel fourni au début de l'épreuve. Vous aurez aussi accès aux réponses et à une <b>correction détaillée</b> en dessous de chaque question.</p>
@@ -78,7 +78,7 @@
       </div>
   </div>
 
-  <div id="tab-continue" style="display:none">
+  <div id="tab-continue" style="display:none" class="contentTab">
     <div class="tabTitle" data-i18n="general_continue_contest"></div>
       <p><span data-i18n="tab_view_results_access_code"></span>
          <div id="divInput">
@@ -106,7 +106,7 @@
       </div>
   </div>
 
-  <div id="tab-results" style="display:none">
+  <div id="tab-results" style="display:none" class="contentTab">
     <div class="tabTitle" data-i18n="general_view_results"></div>
     <p data-i18n="tab_view_results_access_code"></p>
     <div id="divInput">
@@ -129,7 +129,7 @@
     </div>
   </div>
 
-  <div id="tab-contests" style="display:none">
+  <div id="tab-contests" style="display:none" class="contentTab">
     <div class="tabTitle" data-i18n="general_view_other_contests"></div>
     <div data-i18n="[html]tab_view_other_contests"></div>
   </div>
