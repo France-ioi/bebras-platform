@@ -18,17 +18,6 @@
     <p id="generalInstructions" data-i18n="[html]general_instructions"></p>
   </div>
 </div>
-<nav id="mainNav">
-  <ul>
-    <li id="button-school" class="selected" onclick="selectMainTab('school');return false;" data-i18n="general_nav_start_contest"></li>
-    <li id="button-home" onclick="selectMainTab('home');return false;" data-i18n="general_nav_public_contests"></li>
-    <li id="button-continue" onclick="selectMainTab('continue');return false;" data-i18n="general_nav_continue_contest"></li>
-<!--
-	<li id="button-results" onclick="selectMainTab('results');return false;" data-i18n="general_nav_view_results"></li>
-    <li id="button-contests" onclick="selectMainTab('contests');return false;" data-i18n="general_nav_view_other_contests"></li>
--->
-  </ul>
-</nav>
 <div id="mainContent">
 
   <div id="browserAlert" data-i18n="[html]browser_support"></div>
@@ -36,7 +25,17 @@
 
 <form autocomplete="off">
 <div id="divCheckGroup" class="dialog">
-
+  <nav id="mainNav">
+    <ul>
+      <li id="button-school" class="selected" onclick="selectMainTab('school');return false;" data-i18n="general_nav_start_contest"></li>
+      <li id="button-home" onclick="selectMainTab('home');return false;" data-i18n="general_nav_public_contests"></li>
+      <li id="button-continue" onclick="selectMainTab('continue');return false;" data-i18n="general_nav_continue_contest"></li>
+  <!--
+    <li id="button-results" onclick="selectMainTab('results');return false;" data-i18n="general_nav_view_results"></li>
+      <li id="button-contests" onclick="selectMainTab('contests');return false;" data-i18n="general_nav_view_other_contests"></li>
+  -->
+    </ul>
+  </nav>
   <div id="tab-home" style="display:none">
     <div class="tabTitle" data-i18n="general_public_contests"></div>
       <!-- Display the first div during the contest week -->
