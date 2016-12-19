@@ -1461,6 +1461,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic) {
          }
          initContestData(data);
          $("#headerH2").html(data.name);
+         $("#generalInstructions").hide();
          if (data.teamID !== undefined) { // The password of the team was provided directly
             $("#div" + curStep).hide();
             teamID = data.teamID;
@@ -1478,6 +1479,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic) {
                }
             }
             $("#div" + curStep).hide();
+            $('#mainNav').hide();
             hideLoginFields(data);
             if (curStep === "CheckGroup") {
                if (isPublic) {
