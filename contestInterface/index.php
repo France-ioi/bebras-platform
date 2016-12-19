@@ -63,7 +63,7 @@
       <h3>Vous démarrez un concours en classe, pour la première fois ?</h3>
       -->
       <p data-i18n="[html]tab_start_contest_enter_code"><br />
-         <div id="divInput">
+         <div class="divInput">
             <input id="groupCode" type="text"/>
                &nbsp;&nbsp;&nbsp;<button type="button" id="buttonCheckGroup" onclick="checkGroup()" data-i18n="tab_start_contest_start_button"></button>
                <br /><span id="CheckGroupResult" style="color:red"></span>
@@ -81,7 +81,7 @@
   <div id="tab-continue" style="display:none" class="contentTab">
     <div class="tabTitle" data-i18n="general_continue_contest"></div>
       <p><span data-i18n="tab_view_results_access_code"></span>
-         <div id="divInput">
+         <div class="divInput">
             <input id="interruptedPassword" type="password">
             &nbsp;&nbsp;&nbsp;<button type="button" id="buttonInterrupted" onclick="checkPasswordInterrupted()" data-i18n="tab_view_results_view_results_button"></button>
             <br/><span id="InterruptedResult" style="color:red"></span>
@@ -97,7 +97,7 @@
          <p><select id="selectTeam"><option value='0' data-i18n="tab_view_select_team"></option></select></p>
          <p data-i18n="tab_view_ask_password_to_teacher"></p>
          <p>
-            <div id="divInput">
+            <div class="divInput">
                    <input id="groupPassword" type="password">
                    &nbsp;&nbsp;&nbsp;<button type="button" id="buttonRelogin" onclick="relogin()" data-i18n="tab_view_restart_contest"></button>
                    <br/><span id="ReloginResult" style="color:red"></span>
@@ -109,7 +109,7 @@
   <div id="tab-results" style="display:none" class="contentTab">
     <div class="tabTitle" data-i18n="general_view_results"></div>
     <p data-i18n="tab_view_results_access_code"></p>
-    <div id="divInput">
+    <div class="divInput">
       <input id="interruptedPassword" type="password">&nbsp;&nbsp;&nbsp;<button type="button" id="buttonInterrupted" onclick="checkPasswordInterrupted()" data-i18n="tab_view_results_view_results_button"></button>
       <br/><span id="InterruptedResult" style="color:red"></span>
     </div>
@@ -122,7 +122,7 @@
       <p data-i18n="tab_view_select_team_in_list"></p>
       <select id="selectTeam"><option value='0' data-i18n="tab_view_select_team"></option></select>
       <p data-i18n="tab_view_ask_password_to_teacher"></p>
-      <div id="divInput">
+      <div class="divInput">
         <input id="groupPassword" type="password">&nbsp;&nbsp;&nbsp;<button type="button" id="buttonRelogin" onclick="relogin()" data-i18n="tab_view_restart_contest"></button>
         <br/><span id="ReloginResult" style="color:red"></span>
       </div>
@@ -136,20 +136,19 @@
 </div>
 
 <div id="divCheckNbContestants" style="display:none" class="dialog">
-   <p data-i18n="nb_contestants_question"></p>
-      <div id="divInput">
-         <button type="button" onclick="setNbContestants(1)" data-i18n="nb_contestants_one"></button>
-         &nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onclick="setNbContestants(2)" data-i18n="nb_contestants_two"></button>
-      </div>
-   </p>
+  <p data-i18n="nb_contestants_question"></p>
+  <div class="divInput">
+    <button type="button" onclick="setNbContestants(1)" data-i18n="nb_contestants_one"></button>
+    &nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onclick="setNbContestants(2)" data-i18n="nb_contestants_two"></button>
+  </div>
 </div>
 <div id="divLogin" style="display:none" class="dialog">
-   <p id="login-input-firstName-1"> <span data-i18n="[html]login_input_firstname"></span> <input id="firstName1" type="text" autocomplete="off"></input></p>
-   <p id="login-input-lasttName-1"> <span data-i18n="[html]login_input_lastname"></span> <input id="lastName1" type="text" autocomplete="off"></input></p>
-   <p id="login-input-email-1"> <span data-i18n="[html]login_input_email"></span> <input id="email1" type="text" autocomplete="off"></input></p>
-   <p id="login-input-zipCode-1"> <span data-i18n="[html]login_input_zipCode"></span> <input id="zipCode1" type="text" autocomplete="off"></input></p>
+   <p id="login-input-firstName-1"> <span data-i18n="[html]login_input_firstname"></span> <input id="firstName1" type="text" autocomplete="off" /></p>
+   <p id="login-input-lasttName-1"> <span data-i18n="[html]login_input_lastname"></span> <input id="lastName1" type="text" autocomplete="off" /></p>
+   <p id="login-input-email-1"> <span data-i18n="[html]login_input_email"></span> <input id="email1" type="text" autocomplete="off" /></p>
+   <p id="login-input-zipCode-1"> <span data-i18n="[html]login_input_zipCode"></span> <input id="zipCode1" type="text" autocomplete="off" /></p>
    <div id="login-input-genre-1"> <span data-i18n="login_ask_gender"></span> <br/>
-         <div id="divInput">
+         <div class="divInput">
             <input type="radio" id="genre1_female" name="genre1" value="1" autocomplete="off"><label for="genre1_female" data-i18n="login_female"></label>
             <br><input type="radio" id="genre1_male" name="genre1" value="2" autocomplete="off"><label for="genre1_male" data-i18n="login_male"></label>
          </div>
@@ -171,17 +170,17 @@
        <option value="15" data-i18n="grade_12_pro"></option>
        <option value="-4" data-i18n="grade_-4">Autre</option>
    </select> </p>
-   <p id="login-input-studentId-1"> <span data-i18n="[html]login_input_studentId"></span> <input id="studentId1" type="text" autocomplete="off"></input></p>
+   <p id="login-input-studentId-1"> <span data-i18n="[html]login_input_studentId"></span> <input id="studentId1" type="text" autocomplete="off" /></p>
    <div id="contestant2" style="display:none">
       <p><b data-i18n="login_teammate"></b></p>
-      <p id="login-input-firstName-2"><span data-i18n="[html]login_input_firstname"></span> <input id="firstName2" type="text" autocomplete="off"></input></p>
-      <p id="login-input-lasttName-2"><span data-i18n="[html]login_input_lastname"></span> <input id="lastName2" type="text" autocomplete="off"></input></p>
-      <p id="login-input-email-2"><span data-i18n="[html]login_input_email"></span> <input id="email2" type="text" autocomplete="off"></input></p>
-      <p id="login-input-zipCode-2"><span data-i18n="[html]login_input_zipCode"></span> <input id="zipCode2" type="text" autocomplete="off"></input></p>
+      <p id="login-input-firstName-2"><span data-i18n="[html]login_input_firstname"></span> <input id="firstName2" type="text" autocomplete="off" /></p>
+      <p id="login-input-lasttName-2"><span data-i18n="[html]login_input_lastname"></span> <input id="lastName2" type="text" autocomplete="off" /></p>
+      <p id="login-input-email-2"><span data-i18n="[html]login_input_email"></span> <input id="email2" type="text" autocomplete="off" /></p>
+      <p id="login-input-zipCode-2"><span data-i18n="[html]login_input_zipCode"></span> <input id="zipCode2" type="text" autocomplete="off" /></p>
       <div id="login-input-genre-2"><span data-i18n="login_ask_gender"></span> <br/>
-         <div id="divInput">
+         <div class="divInput">
          <input type="radio" id="genre2_female" name="genre2" value="1" autocomplete="off"/><label for="genre2_female" data-i18n="login_female"></label><br>
-         <input type="radio" id="genre2_male" name="genre2" value="2" autocomplete="off"/><label for="genre2_male" data-i18n="login_male"></label></input>
+         <input type="radio" id="genre2_male" name="genre2" value="2" autocomplete="off"/><label for="genre2_male" data-i18n="login_male"></label />
          </div>
       </div>
       <p id="login-input-grade-2"> <span data-i18n="grade_question"></span> <select id="grade2">
@@ -201,7 +200,7 @@
        <option value="15" data-i18n="grade_12_pro"></option>
        <option value="-4" data-i18n="grade_-4">Autre</option>
       </select> </p>
-      <p id="login-input-studentId-2"><span data-i18n="[html]login_input_studentId"></span> <input id="studentId2" type="text" autocomplete="off"></input></p>
+      <p id="login-input-studentId-2"><span data-i18n="[html]login_input_studentId"></span> <input id="studentId2" type="text" autocomplete="off" /></p>
    </div>
    <p><button type="button" id="buttonLogin" onclick="validateLoginForm()" data-i18n="login_start_contest"></button><span id="LoginResult" style="color:red"></span></p>
 </div>
@@ -211,7 +210,7 @@
    <p>
    Code d'accès : <span id="teamPassword" class="selectable" style="font-size:2em"></span>
    </p>
-         <div id="divInput">
+         <div class="divInput">
             <button type="button" data-i18n="password_confirm" id="buttonConfirmTeamPassword" onclick="confirmTeamPassword()"></button>
          </div>
 </div>
@@ -258,7 +257,7 @@
                <td class="header_time" id="header_time">Temps restant&nbsp;: <br/><b><span class='minutes'></span>:<span class='seconds'></span></b></td>
                <td class="header_rank" style="display:none">Classement&nbsp; <br/><b><span class="rank" width="95%"></span></b></td>
                <td class="header_button">
-                 <input class="button_return_list" type="button" value="Retour à la liste des questions" onclick="backToList()"></input>
+                 <input class="button_return_list" type="button" value="Retour à la liste des questions" onclick="backToList()" />
                </td>
             </tr>
          </table>
