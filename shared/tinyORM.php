@@ -328,9 +328,11 @@ class tinyOrm {
       if (count($newWhere)) {
          $request['Expected'] = array();
          foreach ($where as $field => $value) {
-            $request['Expected'][$field] = array('AttributeValueList' => array(), 'ComparisonOperator' => array());
-            if (!isset($value)) {
+            $request['Expected'][$field] = array();
+            if (!isset($value) || $value === null) {
+               // doesn't work, for some reason...
                $request['Expected'][$field]['ComparisonOperator'] = 'NULL';
+               //$request['Expected'][$field]['Exists'] = false;
             } else {
                $request['Expected'][$field]['ComparisonOperator'] = 'EQ';
                $value = $this->normalizeField($table, $field, $value, 'dynamoDB');
