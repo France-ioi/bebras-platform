@@ -39,6 +39,6 @@ if (!$contestant) {
 	exit();
 }
 
-$contestant['genre'] = ($contestant['genre'] == 2 ? 'Male' : 'Female');
+$contestant['sSex'] = ($contestant['genre'] == 2 ? 'Male' : 'Female');
 
 echo json_encode($contestant);

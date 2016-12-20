@@ -58,4 +58,4 @@ if (!$contestantID) {
 $stmt = $db->prepare('insert into algorea_registration (code, contestantID, franceioiID) values (:code, :contestantID, :franceioiID);');
 $stmt->execute(['code' => $code, 'contestantID' => $contestantID, 'franceioiID' => $idUser]);
 
-echo json_encode(['success' => true, 'error' => 'code is not valid']);
+echo json_encode(['success' => true]);
