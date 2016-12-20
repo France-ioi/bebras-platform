@@ -128,12 +128,12 @@ function handleLoadContestData($db) {
    $teamID = $_SESSION["teamID"];
    $stmt = $db->prepare("UPDATE `team` SET `startTime` = UTC_TIMESTAMP() WHERE `ID` = :teamID AND `startTime` IS NULL");
    $stmt->execute(array("teamID" => $teamID));
-   if ($config->db->use == 'dynamoDB' && !isset($_SESSION["mysqlOnly"])) {
+   if ($config->db->use == 'dynamoDB' && (!isset($_SESSION["mysqlOnly"]) || !$_SESSION["mysqlOnly"])) {
       $stmt = $db->prepare("SELECT `startTime` FROM `team` WHERE `ID` = :teamID");
       $stmt->execute(array("teamID" => $teamID));
-      $row = $stmt->fetchObject();
+      $startTime = $stmt->fetchColumn();
       try {
-         $tinyOrm->update('team', array('startTime' => $row->startTime), array('ID'=>$teamID, 'startTime'=>null));
+         $tinyOrm->update('team', array('startTime' => $startTime), array('ID'=>$teamID));
       } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
          error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
          error_log('DynamoDB error updating team for teamID: '.$teamID);
