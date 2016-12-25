@@ -1,4 +1,4 @@
-
 RewriteEngine On
-RewriteRule ^([^/]*)/verifyCode$ /verifyCode.php?badgeName=$1 [L]
-RewriteRule ^([^/]*)/updateInfos$ /updateInfos.php?badgeName=$1 [L]
+RewriteBase "/"
+RewriteCond %{REQUEST_URI} !^/index.php/
+RewriteRule "^" /index.php/$0 [L]
