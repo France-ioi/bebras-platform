@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * This file checks for a contestant.algoreaCode in the database and returns the information in json format.
  */
 
