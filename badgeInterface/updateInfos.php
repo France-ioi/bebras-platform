@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * updates algorea_registration
  */
 
@@ -14,7 +14,7 @@ $userInfos = $_POST['userInfos'];
 
 if (!isset($userInfos['idUser']) || !isset($userInfos['code'])) {
 	echo json_encode(['success' => false, 'error' => 'missing idUser or code in userInfos']);
-	exit();	
+	exit();
 }
 
 $code = $userInfos['code'];
@@ -41,7 +41,7 @@ if ($infos) {
 	exit();
 }
 
-$stmt = $db->prepare('select contestant.ID from contestant 
+$stmt = $db->prepare('select contestant.ID from contestant
 	join team on team.ID = contestant.teamID
 	join `group` on `group`.ID = team.groupID
 	join contest on contest.ID = `group`.contestID
