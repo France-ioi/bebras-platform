@@ -7,6 +7,11 @@ a {
   font-weight: bold;
   text-decoration: none;
 }
+p {
+  margin: 0 0 1em;
+}
+hr {
+  margin: 2em 0;
 }
 
 .ui-jqgrid {font-size:10pt}
