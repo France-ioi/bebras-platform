@@ -1,33 +1,77 @@
-* {
-   font-family: Arial;
+body {
+  margin: 0;
+  font-family: Arial;
+}
+a {
+  color: #4D87CE;
+  font-weight: bold;
+  text-decoration: none;
+}
 }
 
 .ui-jqgrid {font-size:10pt}
 .ui-jqgrid tr.jqgrow td {font-size:10pt}
 
-.headerH1 {
-	font-family:"Century Gothic", "Trebuchet MS", "Arial Narrow", Arial, sans-serif;
-	font-size:40px;
-	text-transform:uppercase;
-	font-weight:normal;
-	margin:0;
-	padding:0;
-	padding-top:30px;
-	color: #736451;
-	margin-bottom: 10px;
-	text-align: left;
-}
 
-.headerH2 {
-	font-family: "Century Gothic", "Trebuchet MS", "Arial Narrow", Arial, sans-serif;
-	font-size: 24px;
-	text-transform: uppercase;
-	text-align: left;
-	font-weight: normal;
-	margin: 0;
-	padding: 0;
-	color: #000000;
-	border-bottom: 1px solid #eeeeee;
+#divHeader {
+  clear: both;
+  overflow: hidden;
+  margin-bottom: 1em;
+  border-bottom: 1px solid #ededed;
+  padding-bottom: 1em;
+}
+#leftTitle {
+  float: left;
+  margin: 10px 3em 0 32px;
+}
+#headerGroup {
+  float: left;
+  font-family:"Century Gothic", "Trebuchet MS", "Arial Narrow", Arial, sans-serif;
+  text-transform:uppercase;
+  text-align: left;
+}
+#headerH1 {
+  font-size:40px;
+  font-weight:normal;
+  margin: 30px 0 10px;
+  padding: 0 10px;
+  color: #736451;
+}
+#headerH2 {
+  font-size: 24px;
+  font-weight: normal;
+  margin: 0;
+  padding: 0 10px;
+  color: #000000;
+}
+#logoutLink {
+  text-decoration: none;
+  font-weight: bold;
+  color: #736451;
+  float: right;
+  margin: 16px auto 0;
+  background: #fff;
+  box-shadow: 1px 1px 3px #ccc;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: 250ms all;
+}
+#logoutLink:hover {
+  border-color: #777;
+  background: #736451;
+  color: #fff;
+}
+#login_link_to_home {
+  text-transform: none;
+  font-family: Arial;
+  margin-top: 20px;
+  margin-bottom: 0;
+  padding: 0 10px;
+}
+#main_screen {
+  margin: 1em;
 }
 .div h3 {
 	font-family: "Century Gothic", "Trebuchet MS", "Arial Narrow", Arial, sans-serif;
@@ -42,13 +86,6 @@
 
 .dialog {
    padding-left: 200px;
-}
-#logoutLink {
-   font-family: "Century Gothic", "Trebuchet MS", "Arial Narrow", Arial, sans-serif;
-   float:right;
-   text-decoration: none;
-   font-weight: bold;
-   font-color: #736451;
 }
 
 .ui-jqgrid .ui-jqgrid-htable th div {

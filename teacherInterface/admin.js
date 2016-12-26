@@ -1023,6 +1023,7 @@ function continueLogUser() {
    var spreadCastorBox = false;
    loadSchoolsUsers();
    $("#login_form").hide();
+   $("#login_link_to_home").hide();
    $("#loading").hide();
    initModels(true);
    $("#logoutLink").show();

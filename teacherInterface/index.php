@@ -12,48 +12,17 @@
 <?php stylesheet_tag('/admin.css'); ?>
 </head>
 <body>
+<div id="divHeader">
+  <div id="leftTitle" data-i18n="[html]main_logo"></div>
+  <div id="headerGroup">
+    <h1 id="headerH1" data-i18n="title"></h1>
+    <h2 id="headerH2" data-i18n="[html]subtitle"></h2>
+    <button id="logoutLink" style="display:none;" onclick="logout()"><span data-i18n="logout"></span></button>
+    <p id="login_link_to_home" data-i18n="[html]login_link_to_home"></p>
+  </div>
+</div>
+
 <div autocomplete="off">
-   <div id="divHeader">
-        <table style="width:100%"><tr>
-            <td style="width:20%" data-i18n="[html]main_logo"></td>
-            <td>
-            <a id="logoutLink" style="display:none;" href="#" onclick="logout()">[<span data-i18n="logout"></span>]</a>
-            <p class="headerH1" data-i18n="title"></p>
-            <p class="headerH2" data-i18n="[html]subtitle"></p>
-            </td>
-            <td></td>
-         </tr>
-         <tr id="headerWarning" style="display:none"><td></td><td style="width:900px">         <!--
-<p><b>Relisez et corrigez</b> d'éventuelles erreurs dans les noms et prénoms de vos élèves. Lorsqu'un paricipant est un enseignant et non un élève, ajoutez [E] devant son nom afin de vous assurer qu'il ne sera pas considéré dans le classement des élèves. Par exemple si l'enseignant est Jacques Dupont, mettez "[E] Dupont" pour son nom</p>
-         <p>Les <b>scores de vos élèves</b> sont disponibles. Vous avez jusqu'au 23 Novembre pour nous signaler toute anomalie. Les scores <b>deviendront définitfs le 25 Novembre</b>. Assurez-vous que si l'un ou plusieurs de vos élèves ont eu une erreur de connexion à la fin de leur épreuve avec un code à nous envoyer par mail, ils nous envoient bien ce mail avant le 23 Novembre s'ils ne l'ont pas déjà fait.</p>
-         <p>Notez aussi que si vous avez mis par erreur "oui" dans la colonne <b>Hors classement</b> d'un groupe d'élèves, il est encore temps de le modifier pour que vos élèves soient classés. Vous pouvez aussi modifier le nom d'un groupe pour le reconnaître plus facilement dans la liste des équipes.</p>
-         -->
-            <table>
-            <tr>
-            <td>
-
-            <div data-i18n="[html]announcement"></div>
-
-            </td>
-            <td style='vertical-align: top;'>
-               <div id='spread-castor'>
-                  <h2 data-i18n="[html]spread_castor_title"></h2>
-                  <div id='spread-castor-table'></div>
-                  <div style='padding-bottom:0.2em' data-i18n="spread_castor_message"></div>
-                  <div data-i18n="spread_castor_email">
-                     <input id='spread-castor-email' type='text'>
-                     <button type="button" id='spread-castor-send' data-i18n="spread_castor_validate"></button>
-                  </div>
-                  <div id='spread-castor-message'></div>
-               </div>
-            </td>
-            </tr>
-            </table>
-
-         </tr>
-         </table>
-   </div>
-
    <div id="edit_form" style="display:none;" class="dialog">
    </div>
 
@@ -61,8 +30,26 @@
       <div id="loading" class="dialog">
          <span style="color:red;font-weight:bold" data-i18n="loading"></span>
       </div>
+
+      <div id="headerWarning" class="dialog" style="display:none"><!--
+            <p><b>Relisez et corrigez</b> d'éventuelles erreurs dans les noms et prénoms de vos élèves. Lorsqu'un paricipant est un enseignant et non un élève, ajoutez [E] devant son nom afin de vous assurer qu'il ne sera pas considéré dans le classement des élèves. Par exemple si l'enseignant est Jacques Dupont, mettez "[E] Dupont" pour son nom</p>
+            <p>Les <b>scores de vos élèves</b> sont disponibles. Vous avez jusqu'au 23 Novembre pour nous signaler toute anomalie. Les scores <b>deviendront définitfs le 25 Novembre</b>. Assurez-vous que si l'un ou plusieurs de vos élèves ont eu une erreur de connexion à la fin de leur épreuve avec un code à nous envoyer par mail, ils nous envoient bien ce mail avant le 23 Novembre s'ils ne l'ont pas déjà fait.</p>
+            <p>Notez aussi que si vous avez mis par erreur "oui" dans la colonne <b>Hors classement</b> d'un groupe d'élèves, il est encore temps de le modifier pour que vos élèves soient classés. Vous pouvez aussi modifier le nom d'un groupe pour le reconnaître plus facilement dans la liste des équipes.</p>
+            -->
+         <div data-i18n="[html]announcement"></div>
+         <div id='spread-castor'>
+            <h2 data-i18n="[html]spread_castor_title"></h2>
+            <div id='spread-castor-table'></div>
+            <div style='padding-bottom:0.2em' data-i18n="spread_castor_message"></div>
+            <div data-i18n="spread_castor_email">
+               <input id='spread-castor-email' type='text'>
+               <button type="button" id='spread-castor-send' data-i18n="spread_castor_validate"></button>
+            </div>
+            <div id='spread-castor-message'></div>
+         </div>
+      </div>
+
       <div id="login_form" class="dialog" style="display:none">
-         <p id="login_link_to_home" data-i18n="[html]login_link_to_home"></p>
          <h3 data-i18n="login_teacher_wannabe_admin"></h3>
          <a href="#" onclick="newUser()" data-i18n="login_register"></a>
         <h3 data-i18n="login_are_you_admin"></h3>
@@ -77,6 +64,7 @@
         <span data-i18n="login_input_email"></span> <input id="recoverEmail" type="text"><br/>
         <button type="button" data-i18n="login_get_new_password" id="buttonRecover" onclick="recover()"></button><br />
       </div>
+
       <div id="admin_view" style="display:none">
          <div id="filters"></div>
          <ul>
@@ -91,8 +79,9 @@
             <li><a href="#tabs-questions" id="li-tabs-questions" data-i18n="questions_title"></a></li>
             <li><a href="#tabs-contests" id="li-tabs-contests" data-i18n="contests_title"></a></li>
          </ul>
-         <div id="tabs-help" data-i18n="[html]help_content">
-         </div>
+         
+         <div id="tabs-help" data-i18n="[html]help_content"></div>
+
          <div id="tabs-users">
             <p>
             <button type="button" onclick="editUser()" data-i18n="users_edit_infos"></button>
