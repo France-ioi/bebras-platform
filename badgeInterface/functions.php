@@ -4,15 +4,15 @@ global $db;
 require_once '../shared/connect.php';
 
 function exitWithJson($json) {
-   header("Content-Type: application/json");
-   header("Connection: close");
-   echo json_encode($json);
-   exit;
+  header("Content-Type: application/json");
+  header("Connection: close");
+  echo json_encode($json);
+  exit;
 }
 
 function exitWithJsonFailure($message) {
-   $result = array("success" => false, "error" => $message);
-   exitWithJson($result);
+  $result = array("success" => false, "error" => $message);
+  exitWithJson($result);
 }
 
 function getRequiredParam($key) {
