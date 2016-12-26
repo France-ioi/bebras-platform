@@ -193,7 +193,7 @@ Ce code est très important car il sert en cas de panne d'ordinateur ou autre in
    <ol>
    <li>Il retourne sur le site :  <a href='<?php echo $config->contestOfficialURL; ?>'><?php echo $config->contestOfficialURL; ?></a></li>
    <li>Il clique sur "Continuer le concours".</li>
-   <li>Il saisit son code personnel qu'il a noté à l'étape 7.</li>
+   <li>Il saisit son code personnel qu'il a noté à l'étape 6.</li>
    <li>Si l'élève n'a pas ou mal noté son code personnel :
       <ul>
       <li>Il saisit le code de son groupe : <span class="groupCode"><?php echo $row->code ?></span></li>
