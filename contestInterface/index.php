@@ -15,7 +15,7 @@
   <div id="headerGroup">
     <h1 id="headerH1" data-i18n="general_title"></h1>
     <h2 id="headerH2" data-i18n="general_subtitle"></h2>
-    <p id="generalInstructions" data-i18n="[html]general_instructions"></p>
+    <p id="login_link_to_home" data-i18n="[html]general_instructions"></p>
   </div>
 </div>
 <div id="mainContent">

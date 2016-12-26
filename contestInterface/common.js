@@ -1461,7 +1461,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic) {
          }
          initContestData(data);
          $("#headerH2").html(data.name);
-         $("#generalInstructions").hide();
+         $("#login_link_to_home").hide();
          if (data.teamID !== undefined) { // The password of the team was provided directly
             $("#div" + curStep).hide();
             teamID = data.teamID;
@@ -1471,7 +1471,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic) {
             if ((data.nbMinutesElapsed > 30) && (!data.isPublic) && (!getTeams)) {
                if (parseInt(data.bRecovered)) {
                   alert(t("group_session_expired"));
-                  window.location = t("contest_url");
+                  //window.location = t("contest_url");
                   return false;
                } else {
                   $("#recoverGroup").show();
