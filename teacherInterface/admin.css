@@ -1,14 +1,66 @@
 body {
   margin: 0;
   font-family: Arial;
+  min-width: fit-content;
 }
-a {
+a,
+.ui-widget-content a {
   color: #4D87CE;
   font-weight: bold;
   text-decoration: none;
 }
+.ui-jqgrid a {
+  color: #333;
+}
 p {
   margin: 0 0 1em;
+}
+.btn {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+.btn.focus, .btn:focus, .btn:hover {
+  color: #333;
+  text-decoration: none;
+}
+.btn-default {
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.btn-default:hover {
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
+.btn-primary {
+  color: #fff;
+  background-color: #337ab7;
+  border-color: #2e6da4;
+}
+.btn-primary:hover {
+  color: #fff;
+  background-color: #286090;
+  border-color: #204d74;
 }
 hr {
   margin: 2em 0;
@@ -50,17 +102,12 @@ hr {
   color: #000000;
 }
 #logoutLink {
-  text-decoration: none;
-  font-weight: bold;
   color: #736451;
   float: right;
-  margin: 16px auto 0;
+  margin-top: 10px;
   background: #fff;
   box-shadow: 1px 1px 3px #ccc;
   border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 5px 10px;
-  cursor: pointer;
   transition: 250ms all;
 }
 #logoutLink:hover {
@@ -76,21 +123,27 @@ hr {
   padding: 0 10px;
 }
 #main_screen {
+  margin: 1em 0;
+  min-width: fit-content;
+}
+#admin_view {
   margin: 1em;
+  min-width: fit-content;
 }
 .div h3 {
 	font-family: "Century Gothic", "Trebuchet MS", "Arial Narrow", Arial, sans-serif;
 	font-size: 24px;
-	font-color: #736451;
 	text-align: left;
 	font-weight: normal;
+  color: #736451;
 }
 #divInput {
   	padding-left: 100px;
 }
 
 .dialog {
-   padding-left: 200px;
+   margin: 20px;
+   max-width: 800px;
 }
 
 .ui-jqgrid .ui-jqgrid-htable th div {

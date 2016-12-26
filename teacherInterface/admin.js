@@ -1287,7 +1287,7 @@ function loadContests() {
          var contest = contests[contestID];
          if (contest.printCertificates == 1) {
             nbContests += 1;
-            contestList += '<li><button onclick="printSchoolCertificates(\''+contest.ID+'\')">'+contest.name+'</button></li>';
+            contestList += '<li><button onclick="printSchoolCertificates(\''+contest.ID+'\')" class="btn btn-default">'+contest.name+'</button></li>';
          }
       }
       contestList += "</ul>";

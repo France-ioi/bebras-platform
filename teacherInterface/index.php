@@ -17,7 +17,7 @@
   <div id="headerGroup">
     <h1 id="headerH1" data-i18n="title"></h1>
     <h2 id="headerH2" data-i18n="[html]subtitle"></h2>
-    <button id="logoutLink" style="display:none;" onclick="logout()"><span data-i18n="logout"></span></button>
+    <button type="button" id="logoutLink" style="display:none;" onclick="logout()" class="btn"><span data-i18n="logout"></span></button>
     <p id="login_link_to_home" data-i18n="[html]login_link_to_home"></p>
   </div>
 </div>
@@ -43,7 +43,7 @@
             <div style='padding-bottom:0.2em' data-i18n="spread_castor_message"></div>
             <div data-i18n="spread_castor_email">
                <input id='spread-castor-email' type='text'>
-               <button type="button" id='spread-castor-send' data-i18n="spread_castor_validate"></button>
+               <button type="button" id='spread-castor-send' data-i18n="spread_castor_validate" class="btn btn-default"></button>
             </div>
             <div id='spread-castor-message'></div>
          </div>
@@ -57,12 +57,12 @@
          <div id="divInput">
          <span data-i18n="login_email"></span> <input id="email" type="text"><br/>
          <span data-i18n="login_password"></span> <input id="password" type="password" onkeypress="if (event.keyCode == 13) {login();  return false;}"><br/>
-         <button type="button" data-i18n="login_connexion" id="buttonLogin" onclick="login()"></button><br />
+         <button type="button" data-i18n="login_connexion" id="buttonLogin" onclick="login()" class="btn btn-default"></button><br />
          </div>
          <div id="login_error" style="color:red"></div>
         <h3 data-i18n="login_lost_password"></h3>
         <span data-i18n="login_input_email"></span> <input id="recoverEmail" type="text"><br/>
-        <button type="button" data-i18n="login_get_new_password" id="buttonRecover" onclick="recover()"></button><br />
+        <button type="button" data-i18n="login_get_new_password" id="buttonRecover" onclick="recover()" class="btn btn-default"></button><br />
       </div>
 
       <div id="admin_view" style="display:none">
@@ -79,13 +79,10 @@
             <li><a href="#tabs-questions" id="li-tabs-questions" data-i18n="questions_title"></a></li>
             <li><a href="#tabs-contests" id="li-tabs-contests" data-i18n="contests_title"></a></li>
          </ul>
-         
+
          <div id="tabs-help" data-i18n="[html]help_content"></div>
 
          <div id="tabs-users">
-            <p>
-            <button type="button" onclick="editUser()" data-i18n="users_edit_infos"></button>
-            </p>
             <table>
                <tr><td><b data-i18n="users_gender"></b></td><td id="user-gender"></td></tr>
                <tr><td><b data-i18n="users_lastname"></b></td><td id="user-lastName"></td></tr>
@@ -93,110 +90,131 @@
                <tr><td><b data-i18n="users_official_email"></b></td><td id="user-officialEmail"></td></tr>
                <tr><td><b data-i18n="users_alternative_email"></b></td><td id="user-alternativeEmail"></td></tr>
             </table>
-            <button type="button" id="buttonRefreshUsers" style="display:none" data-i18n="refresh_list" onclick="refreshGrid('user')"></button>
-            <a id="linkExportUsers" style="display:none" href="#" onclick="exportCSV('user')" data-i18n="export_to_csv"></a><br/>
-            <table id="grid_user"><tbody><tr><td/></tr></tbody></table>
-            <div id="pager_user"></div> 
-            <button type="button" id="buttonDeleteSelected_user" style="display:none" data-i18n="users_delete_selected"></button>
-         </div>
-         <div id="tabs-schools">
-            <p>
-            <div id="advSchools" style="display:none">
-               <p data-i18n="schools_list"></p>
-               <button type="button" id="buttonRefreshSchools" style="display:none" data-i18n="refresh_list" onclick="refreshGrid('school')"></button>
-               <a href="#" onclick="exportCSV('school')" data-i18n="export_to_csv"></a>
-               <table id="grid_school"><tbody><tr><td/></tr></tbody></table>
-               <div id="pager_school"></div> 
-               <button type="button" onclick="searchSchool()" onclick_old="newSchool()" data-i18n="schools_add"></button>
-               <button type="button" id="buttonDeleteSelected_school" data-i18n="schools_delete"></button><br/><br/>
-               <button type="button" id="buttonComputeCoords_school" style="display:none" data-i18n="schools_recompute_coords"></button><br/>
-               <div id="computeCoordsLog"></div>
-               <h3 id="school_print_certificates_title" data-i18n="school_print_certificates_title"></h3>
-               <p id="school_print_certificates_help" data-i18n="school_print_certificates_help"></p>
-               <div id="school_print_certificates_contests"></div>
+            <button type="button" onclick="editUser()" data-i18n="edit_user" class="btn btn-default"></button>
+            <div>
+               <button type="button" id="buttonRefreshUsers" style="display:none" data-i18n="refresh_list" onclick="refreshGrid('user')" class="btn btn-default"></button>
+               <button type="button" id="linkExportUsers" style="display:none" onclick="exportCSV('user')" data-i18n="export_to_csv" class="btn btn-default"></button>
+               <div class="gridTable">
+                  <table id="grid_user"><tbody><tr><td/></tr></tbody></table>
+                  <div id="pager_user"></div>
+               </div>
+               <button type="button" id="buttonDeleteSelected_user" style="display:none" data-i18n="users_delete_selected" class="btn btn-default"></button>
             </div>
-            </p>   
-            <p data-i18n="[html]colleagues">
-            </p>
-            <p>
-            <table id="grid_colleagues"><tbody><tr><td/></tr></tbody></table>
-            <div id="pager_colleagues"></div> 
-            </p>
          </div>
+
+         <div id="tabs-schools">
+            <div id="advSchools" style="display:none">
+               <h2 data-i18n="schools_list"></h2>
+               <div>
+                  <button type="button" id="buttonRefreshSchools" style="display:none" data-i18n="refresh_list" onclick="refreshGrid('school')" class="btn btn-default"></button>
+                  <button onclick="exportCSV('school')" data-i18n="export_to_csv" class="btn btn-default"></button>
+                  <div class="gridTable">
+                     <table id="grid_school"><tbody><tr><td/></tr></tbody></table>
+                     <div id="pager_school"></div>
+                  </div>
+                  <button type="button" onclick="searchSchool()" onclick_old="newSchool()" data-i18n="schools_add" class="btn btn-default"></button>
+                  <button type="button" id="buttonDeleteSelected_school" data-i18n="schools_delete" class="btn btn-default"></button>
+               </div>
+               <button type="button" id="buttonComputeCoords_school" style="display:none" data-i18n="schools_recompute_coords" class="btn btn-default"></button>
+               <div id="computeCoordsLog"></div>
+               <h2 id="school_print_certificates_title" data-i18n="school_print_certificates_title"></h2>
+               <p id="school_print_certificates_help" data-i18n="school_print_certificates_help"></p>
+               <div id="school_print_certificates_contests" class=""></div>
+            </div>
+            <div data-i18n="[html]colleagues"></div>
+            <div class="gridTable">
+               <table id="grid_colleagues"><tbody><tr><td/></tr></tbody></table>
+               <div id="pager_colleagues"></div>
+            </div>
+         </div>
+
+
          <div id="tabs-groups">
-            <p data-i18n="[html]groups_intro">
-            <button type="button" data-i18n="refresh_list" onclick="refreshGrid('group')"></button><a href="#" onclick="exportCSV('group')" data-i18n="export_to_csv"></a>
-            <table id="grid_group"><tbody><tr><td/></tr></tbody></table>
-            <div id="pager_group"></div> 
-            <div style="margin-top:10px"></div><br/>
-            <button type="button" data-i18n="groups_create" onclick="newGroup()"></button>
-            <button type="button" id="buttonEditSelected_group" data-i18n="groups_edit_selected" onclick="editGroup()"></button>
-            <button type="button" id="buttonDeleteSelected_group" data-i18n="groups_delete_selected"></button>
-            <button type="button" id="buttonGradeSelected_group" data-i18n="groups_grade_selected" onclick="gradeGroup()"></button><br/>
+            <div data-i18n="[html]groups_intro"></div>
+            <button type="button" data-i18n="refresh_list" onclick="refreshGrid('group')" class="btn btn-default"></button>
+            <button type="button" onclick="exportCSV('group')" data-i18n="export_to_csv" class="btn btn-default"></button>
+            <div class="gridTable">
+               <table id="grid_group"><tbody><tr><td/></tr></tbody></table>
+               <div id="pager_group"></div>
+            </div>
+            <button type="button" data-i18n="groups_create" onclick="newGroup()" class="btn btn-default"></button>
+            <button type="button" id="buttonEditSelected_group" data-i18n="groups_edit_selected" onclick="editGroup()" class="btn btn-default"></button>
+            <button type="button" id="buttonDeleteSelected_group" data-i18n="groups_delete_selected" class="btn btn-default"></button>
+            <button type="button" id="buttonGradeSelected_group" data-i18n="groups_grade_selected" onclick="gradeGroup()" class="btn btn-default"></button>
             <div id="gradeGroupState" style="display:none;"></div>
-            <div style="margin-top:10px"></div><br/>
-            <span data-i18n="[html]group_print_certificates_help"></span>
-            <h3 id="group_print_certificates_title" data-i18n="group_print_certificates_title"></h3>
+            <h2 id="group_print_certificates_title" data-i18n="group_print_certificates_title"></h2>
             <p id="group_print_certificates_help" data-i18n="group_print_certificates_help"></p>
-            <button type="button" id="buttonPrintCertificates_group" onclick="printGroupCertificates()" data-i18n="group_print_certificates"></button>
-            <h3 data-i18n="groups_sheet_title"></h3>
-            <p data-i18n="[html]groups_sheet_intro">
-            </p>
+            <button type="button" id="buttonPrintCertificates_group" onclick="printGroupCertificates()" data-i18n="group_print_certificates" class="btn btn-default"></button>
+            <h2 data-i18n="groups_sheet_title"></h2>
+            <p data-i18n="[html]groups_sheet_intro"></p>
             <ul>
-            <li>
-            <button type="button" id="printNotice_group" data-i18n="groups_sheet_button_print" onclick="printGroup()"></button>
-            </li>
-            <li>
-            <button type="button" id="printNotice_groupAll" data-i18n="groups_sheet_button_print_all" onclick="printGroupAll()"></button>
-            </li>
+               <li><button type="button" id="printNotice_group" data-i18n="groups_sheet_button_print" onclick="printGroup()" class="btn btn-default"></button></li>
+               <li><button type="button" id="printNotice_groupAll" data-i18n="groups_sheet_button_print_all" onclick="printGroupAll()" class="btn btn-default"></button></li>
             </ul>
          </div>
+
          <div id="tabs-teams">
-            <p data-i18n="[html]teams_intro"></p>
-            <button type="button" data-i18n="refresh_list" onclick="refreshGrid('team_view')"></button><a href="#" onclick="exportCSV('team_view')" data-i18n="export_to_csv"></a>
-            <table id="grid_team_view"><tbody><tr><td/></tr></tbody></table>
-            <div id="pager_team_view"></div> 
-            <button type="button" id="buttonDeleteSelected_team_view" data-i18n="teams_delete_selected" style="display:none"></button>
+            <div data-i18n="[html]teams_intro"></div>
+            <button type="button" data-i18n="refresh_list" onclick="refreshGrid('team_view')" class="btn btn-default"></button>
+            <button type="button" onclick="exportCSV('team_view')" data-i18n="export_to_csv" class="btn btn-default"></button>
+            <div class="gridTable">
+               <table id="grid_team_view"><tbody><tr><td/></tr></tbody></table>
+               <div id="pager_team_view"></div>
+            </div>
+            <button type="button" id="buttonDeleteSelected_team_view" data-i18n="teams_delete_selected" style="display:none" class="btn btn-default"></button>
          </div>
+
          <div id="tabs-contestants">
-            <p data-i18n="[html]contestants_intro"></p>
-            
-            <button type="button" data-i18n="refresh_list" onclick="refreshGrid('contestant')"></button><a href="#" onclick="exportCSV('contestant')" data-i18n="export_to_csv"></a>
-            <table id="grid_contestant"><tbody><tr><td/></tr></tbody></table>
-            <div id="pager_contestant"></div> 
-            <button type="button" id="buttonDeleteSelected_contestant" data-i18n="contestants_delete_selected" style="display:none"></button>
+            <div data-i18n="[html]contestants_intro"></div>
+            <button type="button" data-i18n="refresh_list" onclick="refreshGrid('contestant')" class="btn btn-default"></button>
+            <button type="button" onclick="exportCSV('contestant')" data-i18n="export_to_csv" class="btn btn-default"></button>
+            <div class="gridTable">
+               <table id="grid_contestant"><tbody><tr><td/></tr></tbody></table>
+               <div id="pager_contestant"></div>
+            </div>
+            <button type="button" id="buttonDeleteSelected_contestant" data-i18n="contestants_delete_selected" style="display:none" class="btn btn-default"></button>
          </div>
+
          <div id="tabs-certificates">
-            <p data-i18n="[html]certificates_intro"></p>
+            <div data-i18n="[html]certificates_intro"></div>
          </div>
+
          <div id="tabs-questions">
-            <table id="grid_question"><tbody><tr><td/></tr></tbody></table>
-            <div id="pager_question"></div> 
+            <div class="gridTable">
+               <table id="grid_question"><tbody><tr><td/></tr></tbody></table>
+               <div id="pager_question"></div>
+            </div>
             <div>
-               <button type="button" data-i18n="questions_create" onclick="newItem('question')"></button>
-               <button type="button" id="buttonDeleteSelected_question" data-i18n="questions_delete_selected"></button>
+               <button type="button" data-i18n="questions_create" onclick="newItem('question')" class="btn btn-default"></button>
+               <button type="button" id="buttonDeleteSelected_question" data-i18n="questions_delete_selected" class="btn btn-default"></button>
             </div>
             <iframe id="preview_question" src="" style="width:800px;height:800px;"></iframe>
          </div>
+
          <div id="tabs-contests">
-            <table id="grid_contest"><tbody><tr><td/></tr></tbody></table>
-            <div id="pager_contest"></div> 
-            <button type="button" data-i18n="contests_create" onclick="newItem('contest')"></button>
-            <button type="button" id="buttonDeleteSelected_contest" data-i18n="contests_delete_selected"></button>
-            <button type="button" id="generateContest" data-i18n="contests_regenerate" onclick="genContest()"></button><br/>
-            <button type="button" id="buttonGradeContest" data-i18n="contests_grade" onclick="gradeContest()"></button>
-            <button type="button" id="buttonComputeScoresContest" data-i18n="contests_total_scores" onclick="computeTotalScoresContest()"></button>
-            <button type="button" id="buttonRankContest" data-i18n="contests_rank" onclick="rankContest()"></button>
-            <!--<button style="display:none;" type="button" id="buttonGenerateAlgoreaCodes" data-i18n="generate_algorea_codes" onclick="generateAlgoreaCodes()"></button>-->
-            <button type="button" id="buttonUnofficializeContest" data-i18n="contests_switch_to_unofficial" onclick="alert(t('admin.feature_not_available'))"></button><br/>
+            <div class="gridTable">
+               <table id="grid_contest"><tbody><tr><td/></tr></tbody></table>
+               <div id="pager_contest"></div>
+            </div>
+            <button type="button" data-i18n="contests_create" onclick="newItem('contest')" class="btn btn-default"></button>
+            <button type="button" id="buttonDeleteSelected_contest" data-i18n="contests_delete_selected" class="btn btn-default"></button>
+            <button type="button" id="generateContest" data-i18n="contests_regenerate" onclick="genContest()" class="btn btn-default"></button><br/>
+            <button type="button" id="buttonGradeContest" data-i18n="contests_grade" onclick="gradeContest()" class="btn btn-default"></button>
+            <button type="button" id="buttonComputeScoresContest" data-i18n="contests_total_scores" onclick="computeTotalScoresContest()" class="btn btn-default"></button>
+            <button type="button" id="buttonRankContest" data-i18n="contests_rank" onclick="rankContest()" class="btn btn-default"></button>
+            <!--<button style="display:none;" type="button" id="buttonGenerateAlgoreaCodes" data-i18n="generate_algorea_codes" onclick="generateAlgoreaCodes()" class="btn btn-default"></button>-->
+            <button type="button" id="buttonUnofficializeContest" data-i18n="contests_switch_to_unofficial" onclick="alert(t('admin.feature_not_available'))" class="btn btn-default"></button><br/>
             <div id="gradeContestState"></div>
             <br/><br/>
-            <p data-i18n="contests_questions"></p>
-            <table id="grid_contest_question"><tbody><tr><td/></tr></tbody></table>
-            <div id="pager_contest_question"></div> 
-            <button type="button" data-i18n="contests_questions_add" onclick="newContestQuestion()"></button>
-            <button type="button" id="buttonDeleteSelected_contest_question" data-i18n="contests_questions_delete"></button>
+            <h2 data-i18n="contests_questions"></h2>
+            <div class="gridTable">
+               <table id="grid_contest_question"><tbody><tr><td/></tr></tbody></table>
+               <div id="pager_contest_question"></div>
+            </div>
+            <button type="button" data-i18n="contests_questions_add" onclick="newContestQuestion()" class="btn btn-default"></button>
+            <button type="button" id="buttonDeleteSelected_contest_question" data-i18n="contests_questions_delete" class="btn btn-default"></button>
          </div>
+
          <div id="tabs-awards">
             <div data-i18n="[html]awards_content_intro"></div>
             <div data-i18n="[html]awards_content_detail"></div>
@@ -205,10 +223,12 @@
                <p id="withPersonalCode" data-i18n="[html]awards_personal_code_withcode"></p>
             </div>
             <p style="display:none;text-align:center;" id="linkExportAlgoreaCodes" data-i18n="[html]generate_algorea_codes"></p>
-            <p><a id="linkExportAwards1" href="#" onclick="exportCSV('award1')" data-i18n="export_to_csv"></a></p>
-            <table id="grid_award1"><tbody><tr><td/></tr></tbody></table>
-            <div id="pager_award1"></div>
-            <h3 id="custom_award_title"></h3>
+            <button type="button" id="linkExportAwards1" onclick="exportCSV('award1')" data-i18n="export_to_csv" class="btn btn-default"></button>
+            <div class="gridTable">
+               <table id="grid_award1"><tbody><tr><td/></tr></tbody></table>
+               <div id="pager_award1"></div>
+            </div>
+            <h2 id="custom_award_title"></h2>
             <div id="custom_award_help"></div>
             <div id="custom_award_data"></div>
           </div>
