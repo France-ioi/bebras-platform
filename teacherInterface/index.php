@@ -50,19 +50,21 @@
       </div>
 
       <div id="login_form" class="dialog" style="display:none">
-         <h3 data-i18n="login_teacher_wannabe_admin"></h3>
+         <h2 data-i18n="login_teacher_wannabe_admin"></h2>
          <a href="#" onclick="newUser()" data-i18n="login_register"></a>
-        <h3 data-i18n="login_are_you_admin"></h3>
-         <span data-i18n="login"></span>
-         <div id="divInput">
-         <span data-i18n="login_email"></span> <input id="email" type="text"><br/>
-         <span data-i18n="login_password"></span> <input id="password" type="password" onkeypress="if (event.keyCode == 13) {login();  return false;}"><br/>
-         <button type="button" data-i18n="login_connexion" id="buttonLogin" onclick="login()" class="btn btn-default"></button><br />
+         <h2 data-i18n="login_are_you_admin"></h2>
+         <p data-i18n="login"></p>
+         <div id="divInput" class="formWrapper">
+            <label><span data-i18n="login_email" class="label"></span> <input id="email" type="text"></label>
+            <label><span data-i18n="login_password" class="label"></span> <input id="password" type="password" onkeypress="if (event.keyCode == 13) {login();  return false;}"></label>
+            <button type="button" data-i18n="login_connexion" id="buttonLogin" onclick="login()" class="btn btn-default"></button><br />
          </div>
          <div id="login_error" style="color:red"></div>
-        <h3 data-i18n="login_lost_password"></h3>
-        <span data-i18n="login_input_email"></span> <input id="recoverEmail" type="text"><br/>
-        <button type="button" data-i18n="login_get_new_password" id="buttonRecover" onclick="recover()" class="btn btn-default"></button><br />
+         <h2 data-i18n="login_lost_password"></h2>
+         <div class="formWrapper">
+            <label><span data-i18n="login_input_email" class="label"></span> <input id="recoverEmail" type="text"></label>
+            <button type="button" data-i18n="login_get_new_password" id="buttonRecover" onclick="recover()" class="btn btn-default"></button>
+         </div>
       </div>
 
       <div id="admin_view" style="display:none">

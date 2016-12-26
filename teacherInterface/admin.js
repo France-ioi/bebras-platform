@@ -2053,14 +2053,14 @@ function getContestFromID(ID) {
 
 function newForm(modelName, title, message) {
    var js = "";
-   var html = "<h3>" + title + "</h3>" + message +
+   var html = "<h2>" + title + "</h2>" + message +
       "<input type='hidden' id='" + modelName + "_ID' /><table>";
    for (var fieldName in models[modelName].fields) {
       var field = models[modelName].fields[fieldName];
       if (field.edittype === undefined) {
          continue;
       }
-      html += "<tr><td style='width:230px;line-height:2em'><b>";
+      html += "<tr><td style='width:230px;padding:10px 0;'><b>";
       if (field.longLabel !== undefined) {
          html += field.longLabel;
       } else {
@@ -2131,11 +2131,11 @@ function newForm(modelName, title, message) {
    }
    html += "</table>";
    if (modelName == 'user_create') {
-      html += '<input type="checkbox" id="users_okMail">';
-      html += t('user_accept_email')+'<br/><br/>';
+      html += '<label><input type="checkbox" id="users_okMail">';
+      html += t('user_accept_email')+'</label>';
    }
-   html += "<input id='buttonValidate_" + modelName + "' type='button' value='OK' onclick='validateForm(\"" + modelName + "\")' />";
-   html += "<input id='buttonCancel_" + modelName + "' type='button' value='Annuler' onclick='endEditForm(\"" + modelName + "\", 0 , {})' />";
+   html += "<input id='buttonValidate_" + modelName + "' type='button' value='OK' onclick='validateForm(\"" + modelName + "\")' class='btn btn-primary'/> ";
+   html += "<input id='buttonCancel_" + modelName + "' type='button' value='Annuler' onclick='endEditForm(\"" + modelName + "\", 0 , {})' class='btn btn-default'/>";
    html += "<div id='edit_form_error' style='color:red'></div>";
    $("#edit_form").html(html);
    eval(js);
