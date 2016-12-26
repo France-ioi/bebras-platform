@@ -1,17 +1,18 @@
 <?php
 
+global $db;
 require_once '../shared/connect.php';
 
 function exitWithJson($json) {
-   header("Content-Type: application/json");
-   header("Connection: close");
-   echo json_encode($json);
-   exit;
+  header("Content-Type: application/json");
+  header("Connection: close");
+  echo json_encode($json);
+  exit;
 }
 
 function exitWithJsonFailure($message) {
-   $result = array("success" => false, "error" => $message);
-   exitWithJson($result);
+  $result = array("success" => false, "error" => $message);
+  exitWithJson($result);
 }
 
 function getRequiredParam($key) {
@@ -24,6 +25,7 @@ function getRequiredParam($key) {
 /* Return the user details for the matching (badgeName, code) pair, or null if
    no match is found. */
 function verifyCode($badgeName, $code) {
+  global $db;
   $stmt = $db->prepare('select contestant.lastName as sLastName, contestant.firstName as sFirstName, contestant.genre as genre, contestant.email as sEmail, contestant.zipcode as sZipcode from contestant
     join team on team.ID = contestant.teamID
     join `group` on `group`.ID = team.groupID
@@ -45,6 +47,7 @@ function verifyCode($badgeName, $code) {
 
 /* Associate the user with ID idUser to the given (badgeName, code) pair. */
 function updateAlgoreaRegistration($badgeName, $code, $idUser) {
+  global $db;
   $stmt = $db->prepare('select algorea_registration.* from algorea_registration
     join contestant on contestant.ID = algorea_registration.contestantID
     join team on team.ID = contestant.teamID
