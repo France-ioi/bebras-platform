@@ -70,6 +70,16 @@ input[type=email] {
   background-color: #286090;
   border-color: #204d74;
 }
+.btn.disabled, .btn[disabled], fieldset[disabled] .btn {
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  opacity: .65;
+}
+button[disabled], html input[disabled] {
+  cursor: default;
+}
 hr {
   margin: 2em 0;
 }
