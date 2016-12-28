@@ -225,6 +225,7 @@
     "question_key_label": "Identifiant",
     "question_name_label": "Titre",
     "question_folder_label": "Répertoire",
+    "question_path_label": "Chemin",
     "question_answerType_label": "Type de réponse",
     "option_multiple_choice": "QCM",
     "option_free_input": "Libre unique",

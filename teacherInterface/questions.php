@@ -48,18 +48,18 @@ if (isset($_REQUEST["contestID"]) && $_REQUEST['contestID']) {
    $contestID = $row->contestID;
 }
 
-$query = 'SELECT `question`.`key`, `question`.`folder` FROM `question` JOIN `contest_question` ON (`question`.`ID` = `contest_question`.`questionID`) WHERE `contest_question`.`contestID` = ? ORDER BY contest_question.`order` ASC;';
+$query = 'SELECT `question`.`key`, `question`.`path` FROM `question` JOIN `contest_question` ON (`question`.`ID` = `contest_question`.`questionID`) WHERE `contest_question`.`contestID` = ? ORDER BY contest_question.`order` ASC;';
 $stmt = $db->prepare($query);
 $stmt->execute(array($contestID));
 $questionKeys = array();
-$questionFolders = array();
+$questionPaths = array();
 while ($question = $stmt->fetchObject()) {
    $questionKeys[] = $question->key;
-   $questionFolders[] = $question->folder;
+   $questionPaths[] = $question->path;
 }
 
 echo json_encode(array(
    'status' => 'success',
    'questionKeys' => $questionKeys,
-   'questionFolders' => $questionFolders,
+   'questionPaths' => $questionPaths
 ));

@@ -285,8 +285,8 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
       $cssCurrentModules = array();
       $cssModules = array();
 
-      list($curFolder, $curKey) = explode('/', $curTask['url']);
-      $task = new PEMTaskCompiler($curTask['bebras'], __DIR__.'/bebras-tasks/'.$curFolder.'/'.$curKey.'/', true);
+      $curKey = $curTask['key'];
+      $task = new PEMTaskCompiler($curTask['bebras'], $curTask['key'], __DIR__.'/bebras-tasks/'.$curTask['url'], true);
 
       // Create the task directory.
       contestMkdir($curKey);
@@ -453,12 +453,15 @@ if ($action === "prepare") {
       // Retrieve the question's list
       $questions = getQuestions($db, $contestID);
       $questionsUrl = array();
+      $questionsKey = array();
       foreach ($questions as $curQuestion) {
-         $questionsUrl[] = $curQuestion->folder.'/'.$curQuestion->key.'/';
+         $questionsUrl[] = $curQuestion->path;
+         $questionsKey[] = $curQuestion->key;
       }
       echo json_encode(array(
          'success' => true,
          'questionsUrl' => $questionsUrl,
+         'questionsKey' => $questionsKey,
          'contestFolder' => $contestFolder
       ));
    } catch (Exception $e) {

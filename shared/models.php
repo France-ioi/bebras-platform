@@ -128,7 +128,7 @@ $tablesModels = array (
       "autoincrementID" => false,
       "fields" => array(
          "key" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
-         "folder" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "path" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "name" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "answerType" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "expectedAnswer" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin")))
@@ -644,7 +644,7 @@ $viewsModels = array(
       ),
       "fields" => array(
          "key" => array(),
-         "folder" => array(),
+         "path" => array(),
          "name" => array(),
          "answerType" => array(),
          "expectedAnswer" => array()

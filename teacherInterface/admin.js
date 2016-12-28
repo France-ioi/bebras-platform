@@ -632,11 +632,11 @@ function initModels(isLogged) {
          tableName: "question",
          fields: {
             key: {label: t("question_key_label"), editable: true, edittype: "text", width: 120},
-            folder: {label: t("question_folder_label"), editable: true, edittype: "text", width: 100},
-            name: {label: t("question_name_label"), editable: true, edittype: "text", width: 400},
+            path: {label: t("question_path_label"), editable: true, edittype: "text", width: 300},
+            name: {label: t("question_name_label"), editable: true, edittype: "text", width: 300},
             answerType: {label: t("question_answerType_label"), editable: true, edittype: "select", width: 150,
-               editoptions:{ value:{"0": t("option_multiple_choice"), "1": t("option_free_input"), "2": t("option_evaluated")}}},
-            expectedAnswer: {label: t("question_expectedAnswer_label"), editable: true, edittype: "text", width: 200}
+            editoptions:{ value:{"0": t("option_multiple_choice"), "1": t("option_free_input"), "2": t("option_evaluated")}}},
+            expectedAnswer: {label: t("question_expectedAnswer_label"), editable: true, edittype: "text", width: 100}
          }
       },
       school_user: {
@@ -887,7 +887,7 @@ function loadListContests() {
 function loadListQuestions() {
    loadGrid("question", "key", 20, [20, 50, 200], function(id) {
       selectedQuestionID = id;
-      var url = "bebras-tasks/" + questions[id].folder + "/" + questions[id].key + "/index.html";
+      var url = "bebras-tasks/" + questions[id].path;
       $("#preview_question").attr("src", url);
    }, true);
 }
@@ -1437,7 +1437,7 @@ function loopGradeContest(curContestID, curGroupID) {
          var selectorState = curGroupID ? '#gradeGroupState' : '#gradeContestState';
          $(selectorState).show();
          $(selectorState).html(i18n.t('grading_in_progress')+'<span class="nbCurrent">0</span> / <span class="nbTotal">' + data.questionKeys.length + '</span> - ' + t("grading_current_question") + ' : <span class="current"></span> <span class="gradeprogressing"></span>');
-         grade(curContestID, curGroupID, data.questionKeys, data.questionFolders, 0);
+         grade(curContestID, curGroupID, data.questionKeys, data.questionPaths, 0);
       }
       else {
          jqAlert(data.message);
@@ -1446,7 +1446,7 @@ function loopGradeContest(curContestID, curGroupID) {
    }, 'json');
 }
 
-function grade(curContestID, curGroupID, questionKeys, questionFolders, curIndex)
+function grade(curContestID, curGroupID, questionKeys, questionPaths, curIndex)
 {
    var selectorState = curGroupID ? '#gradeGroupState' : '#gradeContestState';
    if (curIndex >= questionKeys.length) {
@@ -1467,7 +1467,7 @@ function grade(curContestID, curGroupID, questionKeys, questionFolders, curIndex
    // Retrieve the bebras/grader of the current question
    $.post('grader.php', { contestID: curContestID, groupID: curGroupID, questionKey: questionKeys[curIndex] },function(data) {
       if (data.status === 'success') {
-         var url = "bebras-tasks/" + questionFolders[curIndex] + "/" + questionKeys[curIndex] + "/index.html";
+         var url = "bebras-tasks/" + questionPaths[curIndex];
          $("#preview_question").attr("src", url);
          
          // Retrieve bebras
@@ -1515,7 +1515,7 @@ function grade(curContestID, curGroupID, questionKeys, questionFolders, curIndex
                   task.getResources(function(bebras) {
                      curGradingBebras = bebras;
                      task.load({'task': true, 'grader': true}, function() {
-                        gradeQuestion(task, curContestID, curGroupID, questionKeys, questionFolders, curIndex);
+                        gradeQuestion(task, curContestID, curGroupID, questionKeys, questionPaths, curIndex);
                      });
                   });
                }, true);
@@ -1532,11 +1532,11 @@ function grade(curContestID, curGroupID, questionKeys, questionFolders, curIndex
    }, 'json');
 }
 
-function gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questionFolders, curIndex, curPackIndex) {
+function gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questionPaths, curIndex, curPackIndex) {
    var selectorState = curGroupID ? '#gradeGroupState' : '#gradeContestState';
    // Compute scores of a pack
    if (curPackIndex >= curGradingData.teamQuestions.length) {
-      grade(curContestID, curGroupID, questionKeys, questionFolders, curIndex + 1);
+      grade(curContestID, curGroupID, questionKeys, questionPaths, curIndex + 1);
       return;
    }
    
@@ -1613,12 +1613,12 @@ function gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questio
    // If not score need to be send, go to the next packet directly
    if (!i) {
       $(selectorState+' .gradeprogressing').text($(selectorState+' .gradeprogressing').text()+'.');
-      gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questionFolders, curIndex, curPackIndex + gradePackSize);
+      gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questionPaths, curIndex, curPackIndex + gradePackSize);
       return;
    }
    
    gradeOneAnswer(task, answersToGrade, 0, scores, function() {
-      gradeQuestionPackEnd(task, curContestID, curGroupID, questionKeys, questionFolders, curIndex, curPackIndex, scores, selectorState);
+      gradeQuestionPackEnd(task, curContestID, curGroupID, questionKeys, questionPaths, curIndex, curPackIndex, scores, selectorState);
    });
 }
 
@@ -1650,7 +1650,7 @@ function gradeOneAnswer(task, answers, i, scores, finalCallback) {
    });
 }
 
-function gradeQuestionPackEnd(task, curContestID, curGroupID, questionKeys, questionFolders, curIndex, curPackIndex, scores, selectorState) {
+function gradeQuestionPackEnd(task, curContestID, curGroupID, questionKeys, questionPaths, curIndex, curPackIndex, scores, selectorState) {
    var usesRandomSeed = (('usesRandomSeed' in curGradingBebras) && curGradingBebras.usesRandomSeed);
    // If the answer is in cache and the task doesn't use randomSeed, the server side will update it
    // but only in the case of a contest global evaluation
@@ -1674,12 +1674,12 @@ function gradeQuestionPackEnd(task, curContestID, curGroupID, questionKeys, ques
       if (parseInt(curPackIndex / gradePackSize) % 25 === 0) {
          setTimeout(function() {
             $(selectorState+' .gradeprogressing').text($(selectorState+' .gradeprogressing').text()+'.');
-            gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questionFolders, curIndex, curPackIndex + gradePackSize);
+            gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questionPaths, curIndex, curPackIndex + gradePackSize);
          }, 5000);
       }
       else {
          $(selectorState+' .gradeprogressing').text($(selectorState+' .gradeprogressing').text()+'.');
-         gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questionFolders, curIndex, curPackIndex + gradePackSize);
+         gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questionPaths, curIndex, curPackIndex + gradePackSize);
       }
    }, 'json').fail(function() {
       jqAlert('Something went wrong while sending scores...');
@@ -1687,13 +1687,13 @@ function gradeQuestionPackEnd(task, curContestID, curGroupID, questionKeys, ques
    });
 }
 
-function gradeQuestion(task, curContestID, curGroupID, questionKeys, questionFolders, curIndex) {
+function gradeQuestion(task, curContestID, curGroupID, questionKeys, questionPaths, curIndex) {
    // Compute all scores by pack
    if (curGradingBebras.grader[0] && curGradingBebras.grader[0].content) {
       $('#preview_question')[0].contentWindow.eval($('#preview_question')[0].contentWindow.eval(curGradingBebras.grader[0].content));
    }
    
-   gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questionFolders, curIndex, 0);
+   gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questionPaths, curIndex, 0);
 }
 
 /**
@@ -1892,6 +1892,7 @@ Generator.prototype.start = function () {
          }
          self.contestFolder = data.contestFolder;
          self.questionsUrl = data.questionsUrl;
+         self.questionsKey = data.questionsKey;
          // Start generating the tasks.
          self.currentTaskIndex = 0;
          self.doTask();
@@ -1908,6 +1909,7 @@ Generator.prototype.doTask = function () {
       return self.upload();
    }
    var taskUrl = self.questionsUrl[currentTaskIndex];
+   var taskKey = self.questionsKey[currentTaskIndex];
    generating = true;
    $('#preview_question').attr("src", "bebras-tasks/" + taskUrl);
    $('#preview_question').on('load', onQuestionLoaded);
@@ -1915,7 +1917,7 @@ Generator.prototype.doTask = function () {
       $('#preview_question').off('load', onQuestionLoaded);
       TaskProxyManager.getTaskProxy('preview_question', function (task) {
          task.getResources(function (bebras) {
-            self.tasks.push({'bebras': bebras, 'url': taskUrl});
+            self.tasks.push({'bebras': bebras, 'url': taskUrl, 'key': taskKey});
             generating = false;
             self.currentTaskIndex += 1;
             self.doTask();
@@ -1981,7 +1983,7 @@ function genQuestion() {
    var button = $("#generateQuestion");
    button.attr("disabled", true);
    tasks = []; // Reinit
-   var url = "bebras-tasks/" + questions[questionID].folder + "/" + questions[questionID].key + "/";
+   var url = "bebras-tasks/" + questions[questionID].path;
    $("#preview_question").attr("src", url);
    // Retrieve bebras
    generating = true;
@@ -1990,7 +1992,8 @@ function genQuestion() {
       var bebras = $('#preview_question')[0].contentWindow.task.getResources();
       tasks.push({
          'bebras': bebras,
-         'url': questions[questionID].folder + "/" + questions[questionID].key + "/"
+         'key': questions[questionID].key,
+         'url': questions[questionID].path
       });
       generating = false;
       // Compilation

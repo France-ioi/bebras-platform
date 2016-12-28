@@ -191,6 +191,7 @@
     "question_key_label": "Identifier",
     "question_name_label": "Title",
     "question_folder_label": "Folder",
+    "question_path_label": "Chemin",
     "question_answerType_label": "Answer type",
     "option_multiple_choice": "Multiple choice",
     "option_free_input": "Free input",
