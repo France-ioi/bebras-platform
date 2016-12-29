@@ -17,6 +17,11 @@ if ($action == 'verifyCode') {
   exitWithJson(verifyCode($badgeName, $code));
 }
 
+if ($action == 'removeByCode') {
+  $code = getRequiredParam('code');
+  exitWithJson(removeByCode($badgeName, $code));
+}
+
 if ($action == 'updateInfos') {
   $code = getRequiredParam('code');
   $idUser = getRequiredParam('idUser');

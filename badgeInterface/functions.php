@@ -82,3 +82,24 @@ function updateAlgoreaRegistration($badgeName, $code, $idUser) {
   $stmt->execute(['code' => $code, 'contestantID' => $contestantID, 'franceioiID' => $idUser]);
   return ['success' => true];
 }
+
+/* Remove the association of a code with a franceioiID in algorea_registration */
+function removeByCode($badgeName, $code) {
+  global $db;
+  $stmt = $db->prepare('select contestant.ID from contestant 
+    join team on team.ID = contestant.teamID
+    join `group` on `group`.ID = team.groupID
+    join contest on contest.ID = `group`.contestID
+    where algoreaCode = :code and contest.badgeName = :badgeName;');
+  $stmt->execute(['code' => $code, 'badgeName' => $badgeName]);
+
+  $contestantID = $stmt->fetchColumn();
+
+  if (!$contestantID) {
+    return ['success' => false, 'error' => 'code is not valid'];
+  }
+
+  $stmt = $db->prepare('remove algorea_registration where contestantID = :contestantID and code = :code;');
+  $stmt->execute(['contestantID' => $contestantID, 'code' => $code]);
+  return ['success' => true];
+}
