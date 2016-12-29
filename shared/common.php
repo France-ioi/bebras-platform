@@ -74,7 +74,7 @@ function pickSubset($questionsData, $subsetSize, $contestID, $teamID) {
 }
 
 function getQuestions($db, $contestID, $subsetsSize = 0, $teamID = 0) {
-   $stmt = $db->prepare("SELECT `question`.`ID`, `question`.`key`, `question`.`folder`, `question`.`name`, `contest_question`.`minScore`, `contest_question`.`noAnswerScore`, `contest_question`.`maxScore`, `contest_question`.`options`, `question`.`answerType`, `contest_question`.`order` FROM `contest_question` LEFT JOIN `question` ON (`contest_question`.`questionID` = `question`.`ID`) WHERE `contest_question`.`contestID` = ?");
+   $stmt = $db->prepare("SELECT `question`.`ID`, `question`.`key`, `question`.`path`, `question`.`name`, `contest_question`.`minScore`, `contest_question`.`noAnswerScore`, `contest_question`.`maxScore`, `contest_question`.`options`, `question`.`answerType`, `contest_question`.`order` FROM `contest_question` LEFT JOIN `question` ON (`contest_question`.`questionID` = `question`.`ID`) WHERE `contest_question`.`contestID` = ?");
    $stmt->execute(array($contestID));
    $questionsData = array();
    $i = 0;
