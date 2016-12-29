@@ -1671,6 +1671,7 @@ function initContestData(data) {
       $(".newInterface").html("").hide();
       $(".oldInterface").show();
    }
+   $('#mainNav').hide();
 }
 
 /*
