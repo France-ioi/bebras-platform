@@ -1107,11 +1107,12 @@ function updateUnlockedLevels(sortedQuestionIDs, updatedQuestionKey, contestEnde
    for (iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
       questionKey = questionsData[sortedQuestionIDs[iQuestionID]].key;
       prevQuestionUnlockedLevels[questionKey] = questionUnlockedLevels[questionKey];
-      if (contestEnded) {
+      //if (contestEnded) {
          questionUnlockedLevels[questionKey] = 3;
          nbTasksUnlocked[2]++;
          continue;
-      }
+      //}
+      /*
       questionUnlockedLevels[questionKey] = 0;
       if (scores[questionKey] != null) {
          var score = scores[questionKey].score;
@@ -1130,6 +1131,7 @@ function updateUnlockedLevels(sortedQuestionIDs, updatedQuestionKey, contestEnde
             nbTasksUnlocked[2]++;
          }
       }
+      */
    }
    for (iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
       var questionData = questionsData[sortedQuestionIDs[iQuestionID]];
@@ -1661,6 +1663,7 @@ function initContestData(data) {
    contestVisibility = data.contestVisibility;
    contestShowSolutions = !!parseInt(data.contestShowSolutions);
    TimeManager.setTotalTime(data.nbMinutes * 60);
+   $('#mainNav').hide();
    if (newInterface) {
       $("#question-iframe-container").addClass("newInterfaceIframeContainer");
       $(".oldInterface").html("").hide();
