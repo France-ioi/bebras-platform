@@ -18,12 +18,11 @@
     <p id="login_link_to_home" data-i18n="[html]general_instructions"></p>
   </div>
 </div>
-<div id="mainContent">
+<div id="mainContent" autocomplete="off">
 
   <div id="browserAlert" data-i18n="[html]browser_support"></div>
 
 
-<form autocomplete="off">
   <nav id="mainNav">
     <ul>
       <li id="button-school" class="selected" onclick="selectMainTab('school');return false;" data-i18n="general_nav_start_contest"></li>
@@ -180,7 +179,7 @@
       <div id="login-input-genre-2"><span data-i18n="login_ask_gender"></span> <br/>
          <div class="divInput">
          <input type="radio" id="genre2_female" name="genre2" value="1" autocomplete="off"/><label for="genre2_female" data-i18n="login_female"></label><br>
-         <input type="radio" id="genre2_male" name="genre2" value="2" autocomplete="off"/><label for="genre2_male" data-i18n="login_male"></label />
+         <input type="radio" id="genre2_male" name="genre2" value="2" autocomplete="off"/><label for="genre2_male" data-i18n="login_male"></label>
          </div>
       </div>
       <p id="login-input-grade-2"> <span data-i18n="grade_question"></span> <select id="grade2">
@@ -214,11 +213,12 @@
             <button type="button" data-i18n="password_confirm" id="buttonConfirmTeamPassword" onclick="confirmTeamPassword()"></button>
          </div>
 </div>
+</div>
 <div id="divImagesLoading" style="display:none" class="dialog">
   <span id="nbImagesLoaded">0</span> <span data-i18n="images_preloaded"></span>
 </div>
 
-<div id="divQuestions" style="display:none">
+<div id="divQuestions" style="display:none" autocomplete="off">
    <div class="oldInterface">
       <div class="questionListHeader">
          <table class="chrono" width="95%">
@@ -281,18 +281,18 @@
    </span>
 </div>
 
-<div id="question-iframe-container">
+<div id="question-iframe-container" autocomplete="off">
    <div class="newInterface" style="width:770px;margin:auto;text-align:left;padding: 10px 0 10px">
       <span class="questionTitle" style="padding-right: 20px"></span><span id="questionStars"></span>
    </div>
    <iframe src="about:blank" id="question-iframe" scrolling="no"></iframe>
 </div>
-<div id="divFooter" style="display:none;text-align:center">
+<div id="divFooter" style="display:none;text-align:center" autocomplete="off">
    <div class="header_sep_bottom"></div>
    <button type="button" id="buttonCloseNew" class="buttonClose" data-i18n="questions_finish_early" onclick='tryCloseContest()'></button>
 </div>
 
-<div id="divClosed" style="display:none" class="dialog">
+<div id="divClosed" style="display:none" class="dialog" autocomplete="off">
    <h3 id="divClosedMessage">
    </h3>
    <div id="divClosedPleaseWait" style="display:none">
@@ -313,11 +313,9 @@
       </p>
    </div>
 </div>
-<div id="divError">
+<div id="divError" autocomplete="off">
    <b data-i18n="error_server"></b> <p style="float:right;"><a href="#" onclick="$('#divError').hide()">[<span data-i18n="error_close"></span>]</a></p><br/>
    <span id="contentError"></span>
-</div>
-</form>
 </div>
 <?php
   script_tag('/bower_components/jquery/jquery.min.js');
