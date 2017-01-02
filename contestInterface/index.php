@@ -89,7 +89,7 @@
 		 </p>
 		 <br/>
 		 <p>
-			 <button type="buton" id="buttonBlockly" onclick="checkGroup('python')">Python</button> Si vous maîtrisez Python et préférez ce langage à un langage visuel.
+			 Une version Python est en préparation, nous espérons qu'elle sera disponible bientôt.
 		 </p>
 	  </div>
   </div>
