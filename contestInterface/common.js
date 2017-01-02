@@ -1345,9 +1345,9 @@ window.setNbImagesLoaded = function(content) {
 /*
  * Called when starting a contest by providing a group code on the main page.
 */
-window.checkGroup = function() {
+window.checkGroup = function(language) {
    var groupCode = $("#groupCode").val();
-   return window.checkGroupFromCode("CheckGroup", groupCode, false, false);
+   return window.checkGroupFromCode("CheckGroup", groupCode, false, false, language);
 };
 
 window.recoverGroup = function() {
@@ -1439,6 +1439,45 @@ var hideLoginFields = function(postData) {
    }
 };
 
+window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic) {
+   initContestData(data);
+   $("#headerH2").html(data.name);
+   $("#login_link_to_home").hide();
+   if (data.teamID !== undefined) { // The password of the team was provided directly
+      $("#div" + curStep).hide();
+      teamID = data.teamID;
+      teamPassword = groupCode;
+      loadContestData(contestID, contestFolder);
+   } else {
+      if ((data.nbMinutesElapsed > 30) && (!data.isPublic) && (!getTeams)) {
+         if (parseInt(data.bRecovered)) {
+            alert(t("group_session_expired"));
+            //window.location = t("contest_url");
+            return false;
+         } else {
+            $("#recoverGroup").show();
+            return false;
+         }
+      }
+      $("#div" + curStep).hide();
+      $('#mainNav').hide();
+      hideLoginFields(data);
+      if (curStep === "CheckGroup") {
+         if (isPublic) {
+            window.setNbContestants(1);
+            createTeam([{ lastName: "Anonymous", firstName: "Anonymous", genre: 2, email: null, zipCode: null}]);
+         } else if (data.allowTeamsOfTwo == 1) {
+            $("#divCheckNbContestants").show();
+         } else {
+            window.setNbContestants(1);
+         }
+      } else {
+         fillListTeams(data.teams);
+         $("#divRelogin").show();
+      }
+   }
+};
+
 /*
  * Checks if a group is valid and loads information about the group and corresponding contest,
  * curStep: indicates which step of the login process the students are currently at :
@@ -1447,11 +1486,11 @@ var hideLoginFields = function(postData) {
  * groupCode: a group code, or a team password
  * isPublic: is this a public group ?
 */
-window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic) {
+window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, language) {
    Utils.disableButton("button" + curStep);
    $('#recoverGroup').hide();
    $("#" + curStep + "Result").html('');
-   $.post("data.php", {SID: SID, action: "checkPassword", password: groupCode, getTeams: getTeams},
+   $.post("data.php", {SID: SID, action: "checkPassword", password: groupCode, getTeams: getTeams, language: language},
       function(data) {
          if (!data.success) {
             if (data.message) {
@@ -1461,41 +1500,11 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic) {
             }
             return;
          }
-         initContestData(data);
-         $("#headerH2").html(data.name);
-         $("#login_link_to_home").hide();
-         if (data.teamID !== undefined) { // The password of the team was provided directly
-            $("#div" + curStep).hide();
-            teamID = data.teamID;
-            teamPassword = groupCode;
-            loadContestData(contestID, contestFolder);
+         if ((data.contestID == "412528966787346538") && (language == undefined)) {
+            $("#" + curStep).hide();
+            $("#selectLanguage").show();
          } else {
-            if ((data.nbMinutesElapsed > 30) && (!data.isPublic) && (!getTeams)) {
-               if (parseInt(data.bRecovered)) {
-                  alert(t("group_session_expired"));
-                  //window.location = t("contest_url");
-                  return false;
-               } else {
-                  $("#recoverGroup").show();
-                  return false;
-               }
-            }
-            $("#div" + curStep).hide();
-            $('#mainNav').hide();
-            hideLoginFields(data);
-            if (curStep === "CheckGroup") {
-               if (isPublic) {
-                  window.setNbContestants(1);
-                  createTeam([{ lastName: "Anonymous", firstName: "Anonymous", genre: 2, email: null, zipCode: null}]);
-               } else if (data.allowTeamsOfTwo == 1) {
-                  $("#divCheckNbContestants").show();
-               } else {
-                  window.setNbContestants(1);
-               }
-            } else {
-               fillListTeams(data.teams);
-               $("#divRelogin").show();
-            }
+            groupWasChecked(data, curStep, groupCode);
          }
       }, "json").done(function() { Utils.enableButton("button" + curStep); });
 };

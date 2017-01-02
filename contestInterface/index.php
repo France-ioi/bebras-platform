@@ -75,6 +75,23 @@
          <br><span id="recoverGroupResult" style="color:red"></span>
          <p data-i8n="[html]others_retry"></p>
       </div>
+	  <div id="selectLanguage" style="display:none">
+		 <p>
+			Quel langage souhaitez-vous utiliser pour ce concours ?
+		 </p>
+		 <br/>
+		 <p>
+			 <button type="buton" id="buttonBlockly" onclick="checkGroup('blockly')">Blockly</button> <b>Ce que nous vous conseillons pour ce concours.</b>
+		 </p>
+		 <br/>
+		 <p>
+			 <button type="buton" id="buttonBlockly" onclick="checkGroup('scratch')">Scratch</button> Si vous avez l'habitude de Scratch.
+		 </p>
+		 <br/>
+		 <p>
+			 <button type="buton" id="buttonBlockly" onclick="checkGroup('python')">Python</button> Si vous maîtrisez Python et préférez ce langage à un langage visuel.
+		 </p>
+	  </div>
   </div>
 
   <div id="tab-continue" style="display:none" class="tabContent">
