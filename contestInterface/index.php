@@ -18,7 +18,7 @@
     <p id="login_link_to_home" data-i18n="[html]general_instructions"></p>
   </div>
 </div>
-<div id="mainContent" autocomplete="off">
+<form id="mainContent" autocomplete="off">
 
   <div id="browserAlert" data-i18n="[html]browser_support"></div>
 
@@ -230,7 +230,7 @@
             <button type="button" data-i18n="password_confirm" id="buttonConfirmTeamPassword" onclick="confirmTeamPassword()"></button>
          </div>
 </div>
-</div>
+</form>
 <div id="divImagesLoading" style="display:none" class="dialog">
   <span id="nbImagesLoaded">0</span> <span data-i18n="images_preloaded"></span>
 </div>

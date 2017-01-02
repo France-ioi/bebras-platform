@@ -22,7 +22,7 @@
   </div>
 </div>
 
-<div autocomplete="off">
+<form autocomplete="off">
    <div id="edit_form" style="display:none;" class="dialog">
    </div>
 
@@ -254,7 +254,7 @@
          <button type="button" data-i18n="cancel" onclick="endSearchSchool()"/>
       </p>
    </div>
-</div>
+</form>
 <?php
    global $config;
    $language = $config->defaultLanguage;
