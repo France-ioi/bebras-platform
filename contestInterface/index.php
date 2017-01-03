@@ -81,11 +81,11 @@
 		 </p>
 		 <br/>
 		 <p>
-			 <button type="buton" id="buttonBlockly" onclick="checkGroup('blockly')">Blockly</button> <b>Ce que nous vous conseillons pour ce concours.</b>
+			 <button type="button" id="buttonBlockly" onclick="checkGroup('blockly')">Blockly</button> <b>Ce que nous vous conseillons pour ce concours.</b>
 		 </p>
 		 <br/>
 		 <p>
-			 <button type="buton" id="buttonBlockly" onclick="checkGroup('scratch')">Scratch</button> Si vous avez l'habitude de Scratch.
+			 <button type="button" id="buttonBlockly" onclick="checkGroup('scratch')">Scratch</button> Si vous avez l'habitude de Scratch.
 		 </p>
 		 <br/>
 		 <p>
