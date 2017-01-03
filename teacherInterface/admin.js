@@ -1040,9 +1040,9 @@ function continueLogUser() {
       loadListQuestions();
       loadContestQuestions();
       if (state !== 'normal') {
-         loadContestants();
-         loadTeams();
-         loadListAwards();
+         //loadContestants();
+         //loadTeams();
+         //loadListAwards();
       }
       initDeleteButton("user");
       initDeleteButton("contest");
