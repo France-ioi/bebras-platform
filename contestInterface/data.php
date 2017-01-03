@@ -53,13 +53,13 @@ function handleCreateTeam($db) {
    // $_SESSION['userCode'] is set by optional password handling function,
    // see comments of createTeamFromUserCode in common_contest.php.
    $groupID = $_SESSION["groupID"];
-   if (isset($_SESSION["userCode"]) && isset($_SESSION["userCodeGroupID"]) && $_SESSION["userCodeGroupID"] == $groupID) {
+   if (isset($_SESSION["userCode"]) && isset($_SESSION["userCodeGroupCode"]) && $_SESSION["userCodeGroupCode"] == $_SESSION["groupCode"]) {
       $password = $_SESSION["userCode"];
-      unset($_SESSION["userCode"]);
-      unset($_SESSION["userCodeGroupID"]);
    } else {
       $password = genAccessCode($db);
    }
+   unset($_SESSION["userCode"]);
+   unset($_SESSION["userCodeGroupCode"]);
    $teamID = getRandomID();
    $stmt = $db->prepare("INSERT INTO `team` (`ID`, `groupID`, `password`, `nbMinutes`) VALUES (?, ?, ?, ?)");
    $stmt->execute(array($teamID, $groupID, $password, $_SESSION["nbMinutes"]));
@@ -294,6 +294,7 @@ function handleCheckGroupPassword($db, $password, $getTeams) {
       unset($_SESSION['mysqlOnly']);
    }
    $_SESSION["groupID"] = $groupID;
+   $_SESSION["groupCode"] = $password;
    $_SESSION["contestName"] = $row->contestName;
    $_SESSION["schoolID"] = $schoolID;
    $_SESSION["contestID"] = $contestID;
@@ -312,11 +313,6 @@ function handleCheckGroupPassword($db, $password, $getTeams) {
    $_SESSION["subsetsSize"] = $subsetsSize;
    $_SESSION["isPublic"] = $isPublic;
    $_SESSION["groupClosed"] = (($nbMinutesElapsed > 60) && (!$isPublic));
-   // We don't want $_SESSION['userCode'] in the session at this point
-   if (isset($_SESSION["userCode"])) {
-      unset($_SESSION["userCode"]);
-      unset($_SESSION["userCodeGroupID"]);
-   }
    addBackendHint("ClientIP.checkPassword:pass");
    addBackendHint(sprintf("Group(%s):checkPassword", escapeHttpValue($groupID)));
    exitWithJson((object)array(

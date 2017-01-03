@@ -3,7 +3,7 @@
     "logout": "Se déconnecter",
     "title": "Castor Informatique France",
     "subtitle": "Plateforme du concours - <span style='color:red;font-weight:bold'>ACCÈS COORDINATEUR</span>",
-    "announcement": "<p>Bonjour et bienvenue.</p><p>Le concours Castor 2015 est terminé.</p><p><b>Les résultats définitifs sont disponibles :</b></p><p><ul><li>Les scores dans les onglets équipes et élèves.</li><li>Les classements dans l'onglet élèves.</li><li>Les qualifications à Algoréa dans l'onglet Récompenses, et l'impression des codes de qualification.</li><li>Les diplômes peuvent être imprimés.</li></ul></p><p><b>Notez bien qu'il y a un classement différent pour chaque classe, suivant si la participation est individuelle ou par binôme.</b> Allez sur <a href='http://castor-informatique.fr/resultats.php'>cette page</a> pour des informations diverses sur les résultats.</p><p>Les scores des entraînements ne s'affichent pas toujours, nous allons faire le nécessaire pour qu'ils soient visibles bientôt.</p>",
+    "announcement": "",
     "loading": "Chargement en cours…",
     "invalid_link": "Le lien est invalide.",
     "login_register": "Inscrivez-vous !",
