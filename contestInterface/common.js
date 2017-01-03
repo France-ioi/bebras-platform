@@ -296,13 +296,15 @@ var platform = {
                }
                computeFullFeedbackScore();
                platform.continueValidate(mode);
+               if (success) {success();}
             }, logError);
          } else {
             submitAnswer(questionKey, answer, null);
             answers[questionKey] = answer;
             platform.continueValidate(mode);
+            if (success) {success();}
          }
-         if (success) {success();}
+//         if (success) {success();}
       }, logError);
    },
    firstNonVisitedQuestion: function(delay) {
@@ -2145,14 +2147,18 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
       questionIframe.task.getAnswer(function(answer) {
          if ( ! TimeManager.isContestOver() && ((answer !== defaultAnswers[questionIframe.questionKey]) || (typeof answers[questionIframe.questionKey] != 'undefined'))) {
             if (fullFeedback) {
-               platform.validate("stay");
+               platform.validate("stay", function() {
+                  nextStep();
+               }, function() {
+                  logError(arguments);                  
+               });
             } else if ((typeof answers[questionIframe.questionKey] == 'undefined') || (answers[questionIframe.questionKey] != answer)) {
                if (!confirm(t("confirm_leave_question"))) {
                   return;
                }
+               nextStep();
             }
          }
-         nextStep();
       }, function() {
          logError(arguments);
          nextStep();
