@@ -253,6 +253,9 @@ var platform = {
       success(res);
    },
    validate: function(mode, success, error) {
+      this.validateWithQuestionKey(mode, success, error, questionIframe.questionKey);
+   },
+   validateWithQuestionKey: function(mode, success, error, questionKey) {
       if (TimeManager.isContestOver()) {
          alert(t("contest_closed_answers_readonly"));
          if (error) {error();} else if (success) {success();}
@@ -268,24 +271,24 @@ var platform = {
          if (mode == "cancel") {
             answer = "";
          }
-         var questionData = questionsData[questionsKeyToID[questionIframe.questionKey]];
+         var questionData = questionsData[questionsKeyToID[questionKey]];
          if (fullFeedback) {
             questionIframe.task.gradeAnswer(answer, null, function(score, message) {
                if (score < questionData.maxScore) {
                   mode = "stay";
                }
-               if ((answer != defaultAnswers[questionIframe.questionKey]) || (typeof answers[questionIframe.questionKey] != 'undefined')) {
+               if ((answer != defaultAnswers[questionKey]) || (typeof answers[questionKey] != 'undefined')) {
                   var prevScore = 0;
-                  if (typeof  scores[questionIframe.questionKey] != 'undefined') {
-                     prevScore = scores[questionIframe.questionKey].score;
+                  if (typeof  scores[questionKey] != 'undefined') {
+                     prevScore = scores[questionKey].score;
                   }
-                  if ((typeof answers[questionIframe.questionKey] == 'undefined') ||
-                      ((answer != answers[questionIframe.questionKey]) && (score >= prevScore))) {
-                     scores[questionIframe.questionKey] = {score: score, maxScore: questionData.maxScore};
-                     submitAnswer(questionIframe.questionKey, answer, score);
-                     answers[questionIframe.questionKey] = answer;
+                  if ((typeof answers[questionKey] == 'undefined') ||
+                      ((answer != answers[questionKey]) && (score >= prevScore))) {
+                     scores[questionKey] = {score: score, maxScore: questionData.maxScore};
+                     submitAnswer(questionKey, answer, score);
+                     answers[questionKey] = answer;
 
-                     updateUnlockedLevels(getSortedQuestionIDs(questionsData), questionIframe.questionKey);
+                     updateUnlockedLevels(getSortedQuestionIDs(questionsData), questionKey);
                      if (!newInterface) {
                         $('#score_' + questionData.key).html(score + " / " + questionData.maxScore);
                      }
@@ -295,8 +298,8 @@ var platform = {
                platform.continueValidate(mode);
             }, logError);
          } else {
-            submitAnswer(questionIframe.questionKey, answer, null);
-            answers[questionIframe.questionKey] = answer;
+            submitAnswer(questionKey, answer, null);
+            answers[questionKey] = answer;
             platform.continueValidate(mode);
          }
          if (success) {success();}
