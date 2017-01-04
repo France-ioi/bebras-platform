@@ -1,0 +1,1 @@
+ALTER TABLE `group` CHANGE `isPublic` `isPublic` TINYINT(4) NOT NULL DEFAULT '0';
