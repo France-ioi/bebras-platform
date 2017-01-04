@@ -2158,6 +2158,8 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
                }
                nextStep();
             }
+         } else {
+            nextStep();
          }
       }, function() {
          logError(arguments);
