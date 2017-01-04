@@ -89,7 +89,7 @@
 		 </p>
 		 <br/>
 		 <p>
-			 Une version Python est en préparation, nous espérons qu'elle sera disponible bientôt.
+			 <button type="button" id="buttonPython" onclick="checkGroup('python')">Python</button> Si vous maîtrisez bien ce langage.
 		 </p>
 	  </div>
   </div>
