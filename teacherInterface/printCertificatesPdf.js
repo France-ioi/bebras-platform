@@ -426,7 +426,7 @@ function newGenerateDiplomas(params) {
 
    }
    var docDefinition = getFullPdfDocument(content);
-   pdfMake.createPdf(docDefinition).open()
+   pdfMake.createPdf(docDefinition).download()
 }
 
 
