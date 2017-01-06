@@ -111,7 +111,7 @@ font-family: 'Varela Round', sans-serif;
       <p>La création du fichier peut prendre plusieurs secondes.</p>
    </div>
    <br/><br/>
-   <p>Assurez-vous d'utiliser un navigateur récent</p>
+   <p>Assurez-vous d'utiliser un navigateur récent, et de ne pas bloquer les popups.</p>
 
 </div>
 
