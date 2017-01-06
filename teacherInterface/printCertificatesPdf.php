@@ -106,12 +106,12 @@ font-family: 'Varela Round', sans-serif;
    </div>
 
    <div id="loaded" style="display:none">
-      <button type="button" onclick="getStrings(params)" style="display: block;margin: 0 auto">Générer le PDF</button>
+      <button type="button" onclick="newGenerateDiplomas(params)" style="display: block;margin: 0 auto">Générer le PDF</button>
 
       <p>La création du fichier peut prendre plusieurs secondes.</p>
    </div>
    <br/><br/>
-   <p>Assurez-vous d'utiliser un navigateur récent, et de ne pas bloquer les popups.</p>
+   <p>Assurez-vous d'utiliser un navigateur récent.</p>
 
 </div>
 

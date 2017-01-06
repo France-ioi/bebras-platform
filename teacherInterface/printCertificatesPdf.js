@@ -166,7 +166,8 @@ function getStrings(params) {
       window.i18nconfig.ns.namespaces = [stringsName, 'translation'];
    }
    i18n.init(window.i18nconfig, function () {
-     newGenerateDiplomas(params);
+      $("#preload").hide();
+      $("#loaded").show();
    });   
 }
 
@@ -440,8 +441,7 @@ function loadAllData(params) {
                  getThresholds();
                  loadData("contest", function() {
                    getTotalContestants(params, function() {
-                      $("#preload").hide();
-                      $("#loaded").show();
+                     getStrings(params);
                    });
                  }, params);
                }, params);
