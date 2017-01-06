@@ -2197,7 +2197,7 @@ function printSchoolCertificates(contestID) {
       jqAlert(t("warning_no_school_selected"));
       return false;
    }
-   window.open("printCertificates.php?schoolID="+schoolID+"&contestID="+contestID, "printSchool" + schoolID, 'width=700,height=600,menubar=yes,status=yes,toolbar=yes,scrollbars=yes,resizable=yes');
+   window.open("printCertificatesPdf.php?schoolID="+schoolID+"&contestID="+contestID, "printSchool" + schoolID, 'width=700,height=600,menubar=yes,status=yes,toolbar=yes,scrollbars=yes,resizable=yes');
    return false;
 }
 
