@@ -166,6 +166,7 @@ function getStrings(params) {
       window.i18nconfig.ns.namespaces = [stringsName, 'translation'];
    }
    i18n.init(window.i18nconfig, function () {
+      genDocumentParts(params);
       $("#preload").hide();
       $("#loaded").show();
    });   
@@ -405,10 +406,12 @@ The styles depend on the contest.
     });
 }
 
-function newGenerateDiplomas(params) {
+function newGenerateDiplomas(params, iPart) {
+   $("#buttonPdf" + iPart).prop("disabled", true);
    var content = [];
    var contestantPerGroup = fillDataDiplomas(params);
-   for (var groupID in contestantPerGroup) {
+   for (var iGroup = 0; iGroup < partsGroupsIDs[iPart].length; iGroup++) {
+      var groupID = partsGroupsIDs[iPart][iGroup];
       var group = allData.group[groupID];
       var contest = allData.contest[group.contestID];
       var user = allData.user[group.userID];
@@ -427,6 +430,34 @@ function newGenerateDiplomas(params) {
    }
    var docDefinition = getFullPdfDocument(content);
    pdfMake.createPdf(docDefinition).download()
+}
+
+var partsGroupsIDs = [];
+
+function genDocumentParts(params) {
+   var curNbContestants = 0;
+   var curPart = [];
+   var contestantPerGroup = fillDataDiplomas(params);
+   for (var groupID in contestantPerGroup) {
+      var group = allData.group[groupID];
+      var nb = contestantPerGroup[groupID].length;
+      if ((curNbContestants + nb > 100) && curPart.length > 0) {
+         partsGroupsIDs.push(curPart);
+         curPart = [];
+         curNbContestants = 0;
+      }
+      curPart.push(groupID);
+      curNbContestants += nb;
+   }
+   partsGroupsIDs.push(curPart);
+   if (partsGroupsIDs.length == 1) {
+      $("#buttons").append('<p><button type="button" id="buttonPdf' + iPart + '" onclick="newGenerateDiplomas(params, ' + iPart + ')" style="display: block;margin: 0 auto">Générer le PDF</button></p>');
+   } else {
+      $("#buttons").append("<p>Pour éviter la création d'un très gros fichier, le document est découpé en " + partsGroupsIDs.length + " morceaux :</p>");
+      for (var iPart = 0; iPart < partsGroupsIDs.length; iPart++) {
+         $("#buttons").append('<p><button type="button" id="buttonPdf' + iPart + '" onclick="newGenerateDiplomas(params, ' + iPart + ')" style="display: block;margin: 0 auto">Générer le PDF ' + (iPart + 1) + '/' + partsGroupsIDs.length + '</button></p>');
+      }
+   }
 }
 
 
