@@ -2188,7 +2188,7 @@ function printGroupCertificates() {
       jqAlert(t("group_print_certificates_impossible"));
       return;
    }
-   window.open("printCertificates.php?schoolID="+group.schoolID+"&contestID="+group.contestID+"&groupID=" + groupID, "printGroup" + groupID, 'width=700,height=600,menubar=yes,status=yes,toolbar=yes,scrollbars=yes,resizable=yes');
+   window.open("printCertificatesPdf.php?schoolID="+group.schoolID+"&contestID="+group.contestID+"&groupID=" + groupID, "printGroup" + groupID, 'width=700,height=600,menubar=yes,status=yes,toolbar=yes,scrollbars=yes,resizable=yes');
 }
 
 function printSchoolCertificates(contestID) {

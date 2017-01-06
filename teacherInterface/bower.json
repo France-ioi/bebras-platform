@@ -24,6 +24,7 @@
     "jQuery-ajaxTransport-XDomainRequest": "~1.0",
     "json3": "~3.3",
     "jquery-base64": "https://github.com/carlo/jquery-base64.git",
-    "jstz": "https://bitbucket.org/pellepim/jstimezonedetect/raw/6c427658686c664da52c6a87cd62ec910baab276/dist/jstz.min.js"
+    "jstz": "https://bitbucket.org/pellepim/jstimezonedetect/raw/6c427658686c664da52c6a87cd62ec910baab276/dist/jstz.min.js",
+    "pdfmake": "^0.1.23"
   }
 }
