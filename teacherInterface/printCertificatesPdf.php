@@ -101,7 +101,7 @@ font-family: 'Varela Round', sans-serif;
    <p class="bigmessage">Génération des diplômes</p>
 
    <div id="preload">
-      <p>Téléchargement des donnéees en cours.</p>
+      <p>Téléchargement des données en cours.</p>
       <p>Veuillez patienter quelques instants.</p>
    </div>
 
