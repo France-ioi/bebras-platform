@@ -18,7 +18,7 @@ script_tag('/bower_components/pdfmake/build/vfs_fonts.js');
 script_tag('/bower_components/jquery/jquery.min.js');
 script_tag('/bower_components/jquery-ui/jquery-ui.min.js'); // for $.datepicker.formatDate
 script_tag('/bower_components/i18next/i18next.min.js');
-script_tag('printCertificatesPdf.js');
+script_tag('/printCertificatesPdf.js');
 
 ?>
 
