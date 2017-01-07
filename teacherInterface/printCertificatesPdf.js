@@ -271,28 +271,31 @@ function getCoordName(user) {
           ' ' + user.firstName + ' ' + user.lastName;
 }
 
-function addHeaderForGroup(content, group, contest, user, school) {
+function addHeaderForGroup(content, group, contest, user, school, isFirst) {
    // The string diploma_group_title is split in 2 strings : diploma_group_title and diploma_coordinator_title
    var diploma_group_title = 'Groupe'; // i18n.t('diploma_group_title');
    var diploma_coordinator_title = 'Coordonné par';
 
-   content.push(
-      {
-        stack: [
-          school.name,
-          {
-            text: [
-               diploma_group_title,
-               {text: ' « '},
-               group.name,
-               {text: ' »'}
-            ]
-          }
-        ],
-        style: ['documentTitle', 'mainColor'],
-        margin: [0, 0, 0, 20]
-      }
-   );
+   var contentTitle = {
+     stack: [
+       school.name,
+       {
+         text: [
+            diploma_group_title,
+            {text: ' « '},
+            group.name,
+            {text: ' »'}
+         ]
+       }
+     ],
+     style: ['documentTitle', 'mainColor'],
+     margin: [0, 0, 0, 20]
+   };
+
+   if (!isFirst) {
+      contentTitle.pageBreak = 'before';
+   }
+   content.push(contentTitle);
 
    var coordName = getCoordName(user);
    content.push(
@@ -479,7 +482,7 @@ function newGenerateDiplomas(params, iPart) {
       }
       var school = allData.school[group.schoolID];
 
-      addHeaderForGroup(content, group, contest, user, school);
+      addHeaderForGroup(content, group, contest, user, school, (iGroup == 0));
       addContestantTableForGroup(content, contestantPerGroup[groupID]);
 
       for (var iDiploma in contestantPerGroup[groupID]) {
@@ -491,7 +494,7 @@ function newGenerateDiplomas(params, iPart) {
 
    }
    var docDefinition = getFullPdfDocument(content);
-   pdfMake.createPdf(docDefinition).download("diplomes_" + iPart + ".pdf")
+   pdfMake.createPdf(docDefinition).download("diplomes_" + (iPart + 1) + ".pdf")
 }
 
 var partsGroupsIDs = [];
@@ -527,7 +530,7 @@ function genDocumentParts(params) {
       $("#buttons").html("Aucun diplôme à imprimer");
    }
    if (partsGroupsIDs.length == 1) {
-      $("#buttons").append('<p><button type="button" id="buttonPdf' + iPart + '" onclick="newGenerateDiplomas(params, 0)" style="display: block;margin: 0 auto">Générer le PDF</button></p>');
+      $("#buttons").append('<p><button type="button" id="buttonPdf0" onclick="newGenerateDiplomas(params, 0)" style="display: block;margin: 0 auto">Générer le PDF</button></p>');
    } else {
       for (var iPart = 0; iPart < partsGroupsIDs.length; iPart++) {
          $("#buttons").append('<p><button type="button" id="buttonPdf' + iPart + '" onclick="newGenerateDiplomas(params, ' + iPart + ')" style="display: block;margin: 0 auto">Générer le PDF ' + (iPart + 1) + '/' + partsGroupsIDs.length + '</button></p>');
