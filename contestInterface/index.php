@@ -85,11 +85,13 @@
 		 </p>
 		 <br/>
 		 <p>
-			 <button type="button" id="buttonBlockly" onclick="checkGroup('scratch')">Scratch</button> Si vous avez l'habitude de Scratch.
+			 <button type="button" id="buttonBlockly" onclick="checkGroup('scratch')">Scratch</button> Si vous avez l'habitude de Scratch.<br/>
+          Attention : ne fonctionne bien qu'avec les navigateurs Google Chrome ou Mozilla Firefox récents.
 		 </p>
 		 <br/>
 		 <p>
-			 <button type="button" id="buttonPython" onclick="checkGroup('python')">Python</button> Si vous maîtrisez bien ce langage.
+			 <button type="button" id="buttonPython" onclick="checkGroup('python')">Python</button> Si vous maîtrisez bien ce langage.<br/>
+          Attention : ne fonctionne bien qu'avec les navigateurs Google Chrome ou Mozilla Firefox récents.
 		 </p>
 	  </div>
   </div>
