@@ -194,6 +194,7 @@ function countDiplomas(params) {
 
 var qualifiedOnly = false;
 var rankPercentile = 1;
+var diplomasPerPart = 100;
 
 function updateNbDiplomas() {
    qualifiedOnly = $("#qualifiedOnly").prop("checked");
@@ -201,6 +202,7 @@ function updateNbDiplomas() {
    if ($("#topRankedOnly").prop("checked")) {
       rankPercentile = parseInt($("#minRankPercentile").val()) / 100;
    }
+   diplomasPerPart = parseInt($("#diplomasPerPart").val());
    genDocumentParts(params);
    var counts = countDiplomas(params);
    $("#printedCertificates").html(counts.toPrint);
@@ -511,7 +513,7 @@ function genDocumentParts(params) {
       if (nb == 0) {
          continue;
       }
-      if ((curNbContestants + nb > 100) && curPart.length > 0) {
+      if ((curNbContestants + nb > diplomasPerPart) && curPart.length > 0) {
          partsGroupsIDs.push(curPart);
          curPart = [];
          curNbContestants = 0;
@@ -527,7 +529,6 @@ function genDocumentParts(params) {
    if (partsGroupsIDs.length == 1) {
       $("#buttons").append('<p><button type="button" id="buttonPdf' + iPart + '" onclick="newGenerateDiplomas(params, 0)" style="display: block;margin: 0 auto">Générer le PDF</button></p>');
    } else {
-      $("#buttons").append("<p>Pour éviter la création d'un très gros fichier, le document est découpé en " + partsGroupsIDs.length + " morceaux :</p>");
       for (var iPart = 0; iPart < partsGroupsIDs.length; iPart++) {
          $("#buttons").append('<p><button type="button" id="buttonPdf' + iPart + '" onclick="newGenerateDiplomas(params, ' + iPart + ')" style="display: block;margin: 0 auto">Générer le PDF ' + (iPart + 1) + '/' + partsGroupsIDs.length + '</button></p>');
       }

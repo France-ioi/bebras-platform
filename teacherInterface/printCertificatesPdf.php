@@ -119,6 +119,7 @@ font-family: 'Varela Round', sans-serif;
          <p>Diplômes à imprimer : <span id="printedCertificates"></span> sur <span id="totalCertificates"></span>
       </div>
       <br/>
+      <p>Créer un pdf pour chaque paquet de <input type="number" id="diplomasPerPart" value="100" style="width:40px" onchange="updateNbDiplomas()"></input> diplômes.<br/>(Un petit nombre réduit les chances que votre navigateur crashe)</p>
       <div id="buttons">
       </div>
    </div>
