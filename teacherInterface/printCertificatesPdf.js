@@ -491,7 +491,7 @@ function newGenerateDiplomas(params, iPart) {
 
    }
    var docDefinition = getFullPdfDocument(content);
-   pdfMake.createPdf(docDefinition).download("diplomes_" + iPart)
+   pdfMake.createPdf(docDefinition).download("diplomes_" + iPart + ".pdf")
 }
 
 var partsGroupsIDs = [];
