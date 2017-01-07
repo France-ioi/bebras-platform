@@ -105,13 +105,23 @@ font-family: 'Varela Round', sans-serif;
       <p>Veuillez patienter quelques instants.</p>
    </div>
 
-   <div id="loaded" style="display:none">
+   <div id="loaded" style="display:none;text-align:center">
+      <div style="width:600px;background:#EEE;border:solid black 1px;margin:auto">
+         <p>La création d'un pdf peut prendre plusieurs secondes.</p>
+         <p><b>Attention :</b> il est possible que le navigateur affiche une popup vous disant<br/>que la page ne répond plus et vous demandant si vous voulez continuer.<br/>Répondez oui car la préparation des diplômes peut prendre du temps.</p>
+         <p>Assurez-vous d'utiliser un navigateur récent.</p>
+      </div>
+      <br/>
+      <div style="border:solid black 1px;margin:auto;padding:5px;text-align:left;width:600px;">
+         <p><b>Option</b> : n'imprimer les diplômes que pour :</p>
+         <p><input type="checkbox" id="qualifiedOnly" onchange="updateNbDiplomas()"></input>Les élèves ayant obtenu <span id="qualificationText"></span></p>
+         <p><input type="checkbox" id="topRankedOnly" onchange="updateNbDiplomas()"></input>Les élèves étant dans les <input type="number" id="minRankPercentile" style="width:40px;text-align:center" value="50" onchange="updateNbDiplomas()"/></input>% mieux classés de leur catégorie</p>
+         <p>Diplômes à imprimer : <span id="printedCertificates"></span> sur <span id="totalCertificates"></span>
+      </div>
+      <br/>
       <div id="buttons">
       </div>
-      <p>La création d'un pdf peut prendre plusieurs secondes.</p>
    </div>
-   <br/><br/>
-   <p>Assurez-vous d'utiliser un navigateur récent.</p>
 
 </div>
 
