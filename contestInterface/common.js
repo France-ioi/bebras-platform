@@ -1509,7 +1509,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
             $("#" + curStep).hide();
             $("#selectLanguage").show();
          } else {
-            groupWasChecked(data, curStep, groupCode);
+            groupWasChecked(data, curStep, groupCode, getTeams, isPublic);
          }
       }, "json").done(function() { Utils.enableButton("button" + curStep); });
 };
