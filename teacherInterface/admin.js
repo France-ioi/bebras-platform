@@ -2649,7 +2649,7 @@ function getMailToManualValidation(message) {
 
 function newUser() {
    initModels(false);
-   var message = "<p>" + t("warning_official_email_required") + getMailToManualValidation(t("contact_us") + window.config.infoEmail) + "</p>";
+   var message = "<p>" + t("warning_official_email_required") + getMailToManualValidation(window.config.infoEmail) + "</p>";
 
    newForm("user_create", t("user_registration"), message);
 }
