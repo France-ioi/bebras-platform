@@ -2443,7 +2443,7 @@ function validateForm(modelName) {
          endEditForm(modelName, data.recordID, item);
          if (modelName === "user_create") {
             if (item.officialEmail) {
-               jqAlert(t("you_will_get_email"));
+               jqAlert(t("you_will_get_email") + window.config.infoEmail);
             } else {
                jqAlert(t("no_official_email_1") + getMailToManualValidation(t("contact_us")) + window.config.infoEmail + " " + t("no_official_email_2"));
             }
