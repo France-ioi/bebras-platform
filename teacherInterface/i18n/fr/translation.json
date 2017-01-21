@@ -288,7 +288,7 @@
     "you_will_get_email": "Vous allez recevoir un courrier électronique sur votre adresse académique avec lequel vous allez pouvoir valider votre compte.<br/><br/>Vérifiez bien qu'il n'est pas classé comme indésirable.<br/><br/>Suivez le lien fourni dans ce courriel pour valider votre compte ; vous pourrez alors vous connecter.<br/><br/>Si vous ne recevez aucun courriel dans les 2h, contactez info@castor-informatique.fr depuis votre adresse académique pour que nous validions votre compte.",
     "no_official_email_1": "Vous n'avez pas fourni d'adresse académique, donc votre compte ne peut être validé que par un administrateur. N'oubliez pas de ",
     "no_official_email_2": " en nous expliquant votre situation",
-    "contact_us": "nous contacter par email à info@castor-informatique.fr",
+    "contact_us": "nous contacter par email à ",
     "school_details": "Détails de l'établissement :",
     "edit_user": "Modifier vos informations",
     "school_only_creator_can_edit": "Seul le coodinateur qui a créé l'établissement peut modifier ces informations",

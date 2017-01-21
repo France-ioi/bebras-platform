@@ -2445,7 +2445,7 @@ function validateForm(modelName) {
             if (item.officialEmail) {
                jqAlert(t("you_will_get_email"));
             } else {
-               jqAlert(t("no_official_email_1") + getMailToManualValidation(t("contact_us")) + t("no_official_email_2"));
+               jqAlert(t("no_official_email_1") + getMailToManualValidation(t("contact_us")) + window.config.infoEmail + " " + t("no_official_email_2"));
             }
          }
       }, "json"
@@ -2649,7 +2649,7 @@ function getMailToManualValidation(message) {
 
 function newUser() {
    initModels(false);
-   var message = "<p>" + t("warning_official_email_required") + getMailToManualValidation(t("contact_us")) + "</p>";
+   var message = "<p>" + t("warning_official_email_required") + getMailToManualValidation(t("contact_us") + window.config.infoEmail) + "</p>";
 
    newForm("user_create", t("user_registration"), message);
 }
