@@ -13,7 +13,11 @@ function getPersonalCode($contestID) {
 	global $db;
 	$stmt = $db->prepare('select algoreaCode from contestant join team on team.ID = contestant.teamID join `group` on `group`.ID = team.groupID where contestant.userID = :userID and `group`.contestID = :contestID;');
 	$stmt->execute(['userID' => $_SESSION['userID'], 'contestID' => $contestID]);
-	return $stmt->fetchColumn();
+	$res = $stmt->fetchColumn();
+   if (!$res) {
+      return 0;
+   }
+   return $res;
 }
 
 function generateRandomCode() {
