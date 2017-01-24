@@ -394,7 +394,7 @@
     "grading_scores_with_differences": "avec __nbDifferences__ différences",
     "awards_content_intro": "",
     "awards_content_detail": "<p>Dans cet onglet, seront listés les élèves qualifiés pour l'étape suivante du concours.</p>",
-    "awards_personal_code_nocode": "Vous pouvez également obtenir un code de qualification qui vous permettra de tester vous-même le concours. <button onclick=\"generatePersonalCode()\" class=\"btn btn-default\">Générer un code</button>.",
+    "awards_personal_code_nocode": "Vous pouvez également obtenir un code de qualification qui vous permettra de tester vous-même le concours. <button type='button' onclick=\"generatePersonalCode()\" class=\"btn btn-default\">Générer un code</button>.",
     "awards_personal_code_withcode": "Le code de qualification qui vous permettra de tester vous-même le concours est : <strong id=\"personalCode\"></strong>. Vous pouvez vous enregistrer avec ce code sur <a target=\"_blank\" href=\"http://www.algorea.org\">algorea.org</a>.",
     "main_logo": "<img src=\"images/castor_small.png\"/>",
     "notice_title_contest": "Concours Castor",
