@@ -2152,10 +2152,10 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
                }, function() {
                   logError(arguments);                  
                });
-            } else if ((typeof answers[questionIframe.questionKey] == 'undefined') || (answers[questionIframe.questionKey] != answer)) {
-               if (!confirm(t("confirm_leave_question"))) {
-                  return;
-               }
+            } else if (((typeof answers[questionIframe.questionKey] == 'undefined') || (answers[questionIframe.questionKey] != answer)) {
+                       && !confirm(t("confirm_leave_question"))) {
+               return;
+            } else {
                nextStep();
             }
          } else {
