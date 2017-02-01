@@ -2152,7 +2152,7 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
                }, function() {
                   logError(arguments);                  
                });
-            } else if (((typeof answers[questionIframe.questionKey] == 'undefined') || (answers[questionIframe.questionKey] != answer)) {
+            } else if (((typeof answers[questionIframe.questionKey] == 'undefined') || (answers[questionIframe.questionKey] != answer))
                        && !confirm(t("confirm_leave_question"))) {
                return;
             } else {
