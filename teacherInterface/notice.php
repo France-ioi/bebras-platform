@@ -20,6 +20,7 @@ if (!isset($_SESSION["userID"])) {
 $query = "
    SELECT 
       `contest`.`name` AS `contestName`,
+      `contest`.`nbMinutes`,
       `contest`.`allowTeamsOfTwo`,
       `school`.`name` AS `schoolName`,
       `group`.`id` AS `groupID`, 
@@ -184,8 +185,8 @@ Ils saisissent le code que vous leur donnez au début du concours, mais pas avan
 <li>Le système leur attribue un <b>code personnel qu'ils doivent noter sur une feuille.</b><br/>
 Ce code est très important car il sert en cas de panne d'ordinateur ou autre interruption.</li>
 <li>Lorsqu'ils sont prêts, les élèves peuvent <b>cliquer sur le bouton "commencer"</b>.</li>
-<li>Le chronomètre se déclenche : <b>le concours dure 45 minutes consécutives</b>.</li>
-<li>S'ils ont terminé avant 45mn, ils cliquent sur “J'ai fini”. Sinon le concours se termine automatiquement.</li>
+<li>Le chronomètre se déclenche : <b>le concours dure <?php echo $row->nbMinutes ?> minutes consécutives</b>.</li>
+<li>S'ils ont terminé avant <?php echo $row->nbMinutes ?>mn, ils cliquent sur “J'ai fini”. Sinon le concours se termine automatiquement.</li>
 </ol>
 
 <div class="footer">
