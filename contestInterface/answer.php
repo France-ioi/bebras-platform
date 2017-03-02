@@ -45,14 +45,16 @@ function handleAnswers($db, $tinyOrm) {
    $curTime = new DateTime(null, new DateTimeZone("UTC"));
    $startTime = new DateTime($row['startTime'], new DateTimeZone("UTC"));
    $nbMinutes = intval($row['nbMinutes']);
+   /*
    // We leave 2 extra minutes to handle network lag. The interface already prevents trying to answer after the end.
-   if ((($curTime->getTimestamp() - $startTime->getTimestamp()) > ((intval($nbMinutes) + 2) * 60)) && !$testMode) {
+   if ((($curTime->getTimestamp() - $startTime->getTimestamp()) > ((intval($nbMinutes) + 2) * 60)) && !$testMode && ($nbMinutes > 0)) {
       error_log("submission by team ".$teamID.
         " after the time limit of the contest! curTime : ".$curTime->format(DateTime::RFC850).
         " startTime :".$startTime->format(DateTime::RFC850).
         " nbMinutes : ".$nbMinutes);
       exitWithJsonFailure("La réponse a été envoyée après la fin de l'épreuve", array('error' => 'invalid'));
    }
+   */
    $curTimeDB = new DateTime(null, new DateTimeZone("UTC"));
    $curTimeDB = $curTimeDB->format('Y-m-d H:i:s');
    $items = array();

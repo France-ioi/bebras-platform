@@ -858,8 +858,8 @@ var Utils = {
  * all times are in seconds since 01/01/70
 */
 var TimeManager = {
-   endTime: null,  // is set once the contest is closed, to the closing time
-   timeUsedBefore: null, // time used before the contest is loaded (in case of an interruption)
+   ended: false,  // is set to true once the contest is closed
+   initialRemainingSeconds: null, // time remaining when the contest is loaded (in case of an interruption)
    timeStart: null, // when the contest was loaded (potentially after an interruption)
    totalTime: null, // time allocated to this contest
    endTimeCallback: null, // function to call when out of time
@@ -872,33 +872,33 @@ var TimeManager = {
       this.totalTime = totalTime;
    },
 
-   init: function(timeUsed, endTime, contestOverCallback, endTimeCallback) {
-      this.timeUsedBefore = parseInt(timeUsed);
-      this.endTime = endTime;
+   init: function(isTimed, initialRemainingSeconds, ended, contestOverCallback, endTimeCallback) {
+      this.initialRemainingSeconds = parseInt(initialRemainingSeconds);
+      this.ended = ended;
       this.endTimeCallback = endTimeCallback;
       var curDate = new Date();
       this.timeStart = curDate.getTime() / 1000;
-      if (this.endTime) {
+      if (this.ended) {
          contestOverCallback();
-      } else if (this.totalTime > 0) {
+      } else if (isTimed) {
          this.prevTime = this.timeStart;
          this.updateTime();
          this.interval = setInterval(this.updateTime, 1000);
          this.minuteInterval = setInterval(this.minuteIntervalHandler, 60000);
       } else {
-         $(".chrono").hide();
+         $(".header_time").hide();
       }
    },
 
-   getRemainingTime: function() {
+   getRemainingSeconds: function() {
       var curDate = new Date();
       var curTime = curDate.getTime() / 1000;
-      var usedTime = (curTime - this.timeStart) + this.timeUsedBefore;
-      var remainingTime = this.totalTime - usedTime;
-      if (remainingTime < 0) {
-         remainingTime = 0;
+      var usedSeconds = (curTime - this.timeStart);
+      var remainingSeconds = this.initialRemainingSeconds - usedSeconds;
+      if (remainingSeconds < 0) {
+         remainingSeconds = 0;
       }
-      return remainingTime;
+      return remainingSeconds;
    },
 
    // fallback when sync with server fails:
@@ -921,11 +921,11 @@ var TimeManager = {
       $(".minutes").html('');
       $(".seconds").html('synchro...');
       var self = this;
-      $.post('data.php', {SID: SID, action: 'getRemainingTime', teamID: teamID},
+      $.post('data.php', {SID: SID, action: 'getRemainingSeconds', teamID: teamID},
          function(data) {
             if (data.success) {
-               var remainingTime = self.getRemainingTime();
-               TimeManager.timeStart = TimeManager.timeStart + data.remainingTime - remainingTime;
+               var remainingSeconds = self.getRemainingSeconds();
+               TimeManager.timeStart = TimeManager.timeStart + data.remainingSeconds - remainingSeconds;
             } else {
                TimeManager.simpleTimeAdjustment();
             }
@@ -945,7 +945,7 @@ var TimeManager = {
    },
 
    updateTime: function() {
-      if (TimeManager.endTime || TimeManager.synchronizing) {
+      if (TimeManager.ended || TimeManager.synchronizing) {
          return;
       }
       var curDate = new Date();
@@ -957,29 +957,29 @@ var TimeManager = {
          return;
       }
       TimeManager.prevTime = curTime;
-      var remainingTime = TimeManager.getRemainingTime();
-      var minutes = Math.floor(remainingTime / 60);
-      var seconds = Math.floor(remainingTime - 60 * minutes);
+      var remainingSeconds = TimeManager.getRemainingSeconds();
+      var minutes = Math.floor(remainingSeconds / 60);
+      var seconds = Math.floor(remainingSeconds - 60 * minutes);
       $(".minutes").html(minutes);
       $(".seconds").html(Utils.pad2(seconds));
-      if (remainingTime <= 0) {
+      if (remainingSeconds <= 0) {
          clearInterval(this.interval);
          clearInterval(this.minuteInterval);
          TimeManager.endTimeCallback();
       }
    },
 
-   setEndTime: function(endTime) {
-      this.endTime = endTime;
+   setEnded: function(ended) {
+      this.ended = ended;
    },
 
    stopNow: function() {
       var curDate = new Date();
-      this.endTime = curDate.getTime() / 1000;
+      this.ended = true;
    },
 
    isContestOver: function() {
-      return this.endTime;
+      return this.ended;
    }
 };
 
@@ -1189,8 +1189,6 @@ function setupContest(data) {
       computeFullFeedbackScore();
    }
 
-   var contestEnded = (data.endTime != null);
-
    // Determines the order of the questions, and displays them on the left
    var sortedQuestionIDs = getSortedQuestionIDs(questionsData);
    if (newInterface) {
@@ -1201,7 +1199,7 @@ function setupContest(data) {
    } else {
       fillListQuestions(sortedQuestionIDs, questionsData);
    }
-   updateUnlockedLevels(sortedQuestionIDs, null, contestEnded);
+   updateUnlockedLevels(sortedQuestionIDs, null, data.ended);
 
    // Defines function to call if students try to close their browser or tab
    window.onbeforeunload = function() {
@@ -1218,7 +1216,7 @@ function setupContest(data) {
    // We don't want to start the process of selecting a question, if the grading is going to start !
 
    if (!newInterface) {
-      window.selectQuestion(sortedQuestionIDs[0], false, contestEnded && !fullFeedback);
+      window.selectQuestion(sortedQuestionIDs[0], false, data.ended && !fullFeedback);
    }
 
    // Reloads previous answers to every question
@@ -1233,29 +1231,19 @@ function setupContest(data) {
    }
 
    $('.buttonClose').show();
-   if (!contestEnded || !fullFeedback) {
-      // Starts the timer
-      TimeManager.init(
-         data.timeUsed,
-         data.endTime,
-         function() {
-            closeContest(t("contest_is_over"));
-         },
-         function() {
-            closeContest("<b>" + t("time_is_up") + "</b>");
-         }
-      );
-   } else {
-      TimeManager.endTime = true;
-      hasDisplayedContestStats = true;
-      loadSolutionsHat();
-   }
-   if (contestEnded && newInterface) {
-      $('#questionListIntro').html('<p>'+t('check_score_detail')+'</p>');
-      $('#header_time').html('');
-   }
 
-   //questionIframe.iframe.contentWindow.ImagesLoader.refreshImages();
+   // Starts the timer
+   TimeManager.init(
+      data.isTimed,
+      data.remainingSeconds,
+      data.ended,
+      function() {
+         closeContest(t("contest_is_over"));
+      },
+      function() {
+         closeContest("<b>" + t("time_is_up") + "</b>");
+      }
+   );
 }
 
 /*
@@ -1676,7 +1664,6 @@ function initContestData(data) {
    contestOpen = !!parseInt(data.contestOpen);
    contestVisibility = data.contestVisibility;
    contestShowSolutions = !!parseInt(data.contestShowSolutions);
-   TimeManager.setTotalTime(data.nbMinutes * 60);
    $('#mainNav').hide();
    if (newInterface) {
       $("#question-iframe-container").addClass("newInterfaceIframeContainer");
@@ -1771,8 +1758,8 @@ function init() {
  * Called when a student clicks on the button to stop before the timer ends
 */
 window.tryCloseContest = function() {
-   var remainingTime = TimeManager.getRemainingTime();
-   var nbMinutes = Math.floor(remainingTime / 60);
+   var remainingSeconds = TimeManager.getRemainingSeconds();
+   var nbMinutes = Math.floor(remainingSeconds / 60);
    if (nbMinutes > 1) {
       if (!confirm(t("time_remaining_1") + nbMinutes + t("time_remaining_2"))) {
          return;

@@ -241,7 +241,7 @@
    <div class="oldInterface">
       <div class="questionListHeader">
          <table class="chrono" width="95%">
-            <tr><td class="fullFeedback">Temps&nbsp;: </td><td><span class='minutes'></span>:<span class='seconds'></span></td></tr>
+            <tr class="header_time"><td class="fullFeedback">Temps&nbsp;: </td><td><span class='minutes'></span>:<span class='seconds'></span></td></tr>
             <tr><td class="fullFeedback">Score&nbsp;:</td><td><span class='scoreTotalFullFeedback'></span></td></tr>
          </table>
          <p></p>

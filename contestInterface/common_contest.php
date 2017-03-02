@@ -60,10 +60,28 @@ function createTeamFromUserCode($db, $password) {
    }
 }
 
+function updateSessionWithContestInfos($row) {
+   $_SESSION["contestID"] = $row->contestID;
+   $_SESSION["contestName"] = $row->contestName;
+   $_SESSION["contestFolder"] = $row->folder;
+   $_SESSION["contestOpen"] = $row->open;
+   $_SESSION["contestShowSolutions"] = intval($row->showSolutions);
+   $_SESSION["contestVisibility"] = $row->visibility;
+   $_SESSION["bonusScore"] = intval($row->bonusScore);
+   $_SESSION["allowTeamsOfTwo"] = intval($row->allowTeamsOfTwo);
+   $_SESSION["newInterface"] = intval($row->newInterface);
+   $_SESSION["customIntro"] = $row->customIntro;
+   $_SESSION["fullFeedback"] = intval($row->fullFeedback);
+   $_SESSION["nbUnlockedTasksInitial"] = intval($row->nbUnlockedTasksInitial);
+   $_SESSION["subsetsSize"] = intval($row->subsetsSize);
+   $_SESSION["nextQuestionAuto"] = intval($row->nextQuestionAuto);
+   $_SESSION["allowPauses"] = intval($row->allowPauses);
+}
+
 function commonLoginTeam($db, $password) {
    global $tinyOrm, $config;
    $password = trim($password);
-   $stmt = $db->prepare("SELECT `team`.`ID` as `teamID`, `group`.`ID` as `groupID`, `group`.`contestID`, `group`.`isPublic`, `group`.`name`, `team`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, `contest`.`folder`, `contest`.`name` as `contestName`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`visibility`, `group`.`schoolID`, `team`.`endTime` FROM `team` JOIN `group` ON (`team`.`groupID` = `group`.`ID`) JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `team`.`password` = ?");
+   $stmt = $db->prepare("SELECT `team`.`ID` as `teamID`, `group`.`ID` as `groupID`, `group`.`contestID`, `group`.`isPublic`, `group`.`name`, `team`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, `contest`.`folder`, `contest`.`name` as `contestName`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`allowPauses`, `contest`.`visibility`, `group`.`schoolID`, `team`.`endTime` FROM `team` JOIN `group` ON (`team`.`groupID` = `group`.`ID`) JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `team`.`password` = ?");
    $stmt->execute(array($password));
    $row = $stmt->fetchObject();
    if (!$row) {
@@ -87,48 +105,35 @@ function commonLoginTeam($db, $password) {
    if ($row->open == "Closed") {
       return (object)array("success" => false, "message" => "Le concours lié à votre participation est actuellement fermé. Il réouvrira bientôt.");
    }
-   if ($row->endTime && $row->open == 'Open') {
-      $stmt = $db->prepare("UPDATE `team` SET `endTime` = NULL WHERE `team`.`password` = ?");
-      $stmt->execute(array($password));
-   }
-   $_SESSION["contestID"] = $row->contestID;
-   $_SESSION["isPublic"] = intval($row->isPublic);
-   $_SESSION["contestName"] = $row->contestName;
-   $_SESSION["name"] = $row->name;
+   updateSessionWithContestInfos($row);
    $_SESSION["teamID"] = $row->teamID;
+   $_SESSION["name"] = $row->name;
+   $_SESSION["nbMinutes"] = intval($row->nbMinutes);
    $_SESSION["teamPassword"] = $password;
    $_SESSION["groupID"] = $row->groupID;
    $_SESSION["schoolID"] = $row->schoolID;
-   $_SESSION["nbMinutes"] = intval($row->nbMinutes);
-   $_SESSION["bonusScore"] = intval($row->bonusScore);
-   $_SESSION["allowTeamsOfTwo"] = intval($row->allowTeamsOfTwo);
-   $_SESSION["newInterface"] = intval($row->newInterface);
-   $_SESSION["customIntro"] = $row->customIntro;
-   $_SESSION["fullFeedback"] = intval($row->fullFeedback);
-   $_SESSION["nbUnlockedTasksInitial"] = intval($row->nbUnlockedTasksInitial);
-   $_SESSION["subsetsSize"] = intval($row->subsetsSize);
-   $_SESSION["contestFolder"] = $row->folder;
-   $_SESSION["contestOpen"] = $row->open;
-   $_SESSION["contestShowSolutions"] = intval($row->showSolutions);
-   $_SESSION["contestVisibility"] = $row->visibility;
+   $_SESSION["isPublic"] = intval($row->isPublic);
+
    return (object)array(
       "success" => true,
-      "name" => $row->name,
-      "contestID" => $row->contestID,
-      "contestName" => $row->contestName,
-      "contestFolder" => $row->folder,
-      "contestOpen" => $row->open,
-      "contestShowSolutions" => intval($row->showSolutions),
-      "contestVisibility" => $row->visibility,
-      "nbMinutes" => intval($row->nbMinutes),
-      "bonusScore" => intval($row->bonusScore),
-      "allowTeamsOfTwo" => intval($row->allowTeamsOfTwo),
-      "newInterface" => intval($row->newInterface),
-      "customIntro" => $row->customIntro,
-      "fullFeedback" => intval($row->fullFeedback),
-	   "nbUnlockedTasksInitial" => intval($row->nbUnlockedTasksInitial),
-	   "subsetsSize" => intval($row->subsetsSize),
-      "teamID" => $row->teamID,
+      "name" => $_SESSION["name"],
+      "teamID" => $_SESSION["teamID"],
+      "nbMinutes" => $_SESSION["nbMinutes"],
+
+      "contestID" => $_SESSION["contestID"],
+      "contestName" => $_SESSION["contestName"],
+      "contestFolder" => $_SESSION["contestFolder"],
+      "contestOpen" => $_SESSION["contestOpen"],
+      "contestShowSolutions" => $_SESSION["contestShowSolutions"],
+      "contestVisibility" => $_SESSION["contestVisibility"],
+      "bonusScore" => $_SESSION["bonusScore"],
+      "allowTeamsOfTwo" => $_SESSION["allowTeamsOfTwo"],
+      "newInterface" => $_SESSION["newInterface"],
+      "nextQuestionAuto" => $_SESSION["nextQuestionAuto"],
+      "customIntro" => $_SESSION["customIntro"],
+      "fullFeedback" => $_SESSION["fullFeedback"],
+      "nbUnlockedTasksInitial" => $_SESSION["nbUnlockedTasksInitial"],
+      "subsetsSize" => $_SESSION["subsetsSize"],
       );
 }
 

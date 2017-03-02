@@ -110,6 +110,21 @@ function handleCreateTeam($db) {
    exitWithJson((object)array("success" => true, "teamID" => $teamID, "password" => $password));
 }
 
+function updateDynamoDBStartTime($db, $teamID) {
+   global $tinyOrm, $config;
+   if ($config->db->use == 'dynamoDB' && (!isset($_SESSION["mysqlOnly"]) || !$_SESSION["mysqlOnly"])) {
+      $stmt = $db->prepare("SELECT `startTime` FROM `team` WHERE `ID` = :teamID");
+      $stmt->execute(array("teamID" => $teamID));
+      $startTime = $stmt->fetchColumn();
+      try {
+         $tinyOrm->update('team', array('startTime' => $startTime), array('ID'=>$teamID));
+      } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
+         error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
+         error_log('DynamoDB error updating team for teamID: '.$teamID);
+      }
+   }
+}
+
 function handleLoadContestData($db) {
    global $tinyOrm, $config;
    if (!isset($_SESSION["teamID"])) {
@@ -128,17 +143,8 @@ function handleLoadContestData($db) {
    $teamID = $_SESSION["teamID"];
    $stmt = $db->prepare("UPDATE `team` SET `startTime` = UTC_TIMESTAMP() WHERE `ID` = :teamID AND `startTime` IS NULL");
    $stmt->execute(array("teamID" => $teamID));
-   if ($config->db->use == 'dynamoDB' && (!isset($_SESSION["mysqlOnly"]) || !$_SESSION["mysqlOnly"])) {
-      $stmt = $db->prepare("SELECT `startTime` FROM `team` WHERE `ID` = :teamID");
-      $stmt->execute(array("teamID" => $teamID));
-      $startTime = $stmt->fetchColumn();
-      try {
-         $tinyOrm->update('team', array('startTime' => $startTime), array('ID'=>$teamID));
-      } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
-         error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
-         error_log('DynamoDB error updating team for teamID: '.$teamID);
-      }
-   }
+   updateDynamoDBStartTime($db, $teamID);
+   
    $questionsData = getQuestions($db, $_SESSION["contestID"], $_SESSION["subsetsSize"], $teamID);
    $mode = null;
    if (isset($_SESSION['mysqlOnly']) && $_SESSION['mysqlOnly']) {
@@ -155,7 +161,6 @@ function handleLoadContestData($db) {
    }
    $answers = array();
    $scores = array();
-   //while ($row = $stmt->fetchObject()) {
    foreach($results as $row) {
       if (isset($row['answer'])) {
          $answers[$row['questionID']] = $row['answer'];
@@ -166,18 +171,25 @@ function handleLoadContestData($db) {
          $scores[$row['questionID']] = $row['ffScore'];
       }
    }
-   $stmt = $db->prepare("SELECT TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), `team`.`startTime`)) as `timeUsed`, `endTime` FROM `team` WHERE `ID` = ?");
-   $stmt->execute(array($teamID));
-   $row = $stmt->fetchObject();
-   $_SESSION["startTime"] = time() - intval($row->timeUsed);
-   if ($row->endTime != null) {
+   $remainingSeconds = getRemainingSeconds($db, $teamID, true);
+
+   if ($remainingSeconds <= 0) {
       $_SESSION["closed"] = true;
    } else {
       unset($_SESSION["closed"]);
    }
    addBackendHint("ClientIP.loadContestData:pass");
    addBackendHint(sprintf("Team(%s):loadContestData", escapeHttpValue($teamID)));
-   exitWithJson((object)array("success" => true, "questionsData" => $questionsData, 'scores' => $scores, "answers" => $answers, "timeUsed" => $row->timeUsed, "endTime" => $row->endTime, "teamPassword" => $_SESSION["teamPassword"]));
+   exitWithJson((object)array(
+      "success" => true,
+      "questionsData" => $questionsData,
+      'scores' => $scores,
+      "answers" => $answers,
+      "isTimed" => ($_SESSION["nbMinutes"] > 0),
+      "remainingSeconds" => $remainingSeconds,
+      "ended" => ($remainingSeconds <= 0) && ($_SESSION["nbMinutes"] > 0),
+      "teamPassword" => $_SESSION["teamPassword"]
+   ));
 }
 
 function handleCloseContest($db) {
@@ -193,7 +205,7 @@ function handleCloseContest($db) {
    $row = $stmt->fetchObject();
    addBackendHint("ClientIP.closeContest:pass");
    addBackendHint(sprintf("Team(%s):closeContest", escapeHttpValue($teamID)));
-   exitWithJson((object)array("success" => true, "endTime" => $row->endTime));
+   exitWithJson((object)array("success" => true));
 }
 
 function handleLoadSession() {
@@ -251,7 +263,7 @@ function handleCheckPassword($db) {
 
 function handleCheckGroupPassword($db, $password, $getTeams) {
    // Find a group whose code matches the given password.
-   $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, UTC_TIMESTAMP()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`visibility`, `contest`.`askEmail`, `contest`.`askZip`, `contest`.`askGenre`, `contest`.`askGrade`, `contest`.`askStudentId`, `contest`.`name` as `contestName` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
+   $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, UTC_TIMESTAMP()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`visibility`, `contest`.`askEmail`, `contest`.`askZip`, `contest`.`askGenre`, `contest`.`askGrade`, `contest`.`askStudentId`, `contest`.`name` as `contestName`, `contest`.`allowPauses` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
    $stmt = $db->prepare($query);
    $stmt->execute(array($password));
    $row = $stmt->fetchObject();
@@ -264,22 +276,8 @@ function handleCheckGroupPassword($db, $password, $getTeams) {
    }
    $groupID = $row->ID;
    $schoolID = $row->schoolID;
-   $contestID = $row->contestID;
-   $contestFolder = $row->folder;
-   $contestOpen = $row->open;
-   $contestShowSolutions = intval($row->showSolutions);
-   $contestVisibility = $row->visibility;
-   $name = $row->name;
-   $nbMinutes = intval($row->nbMinutes);
-   $bonusScore = intval($row->bonusScore);
-   $allowTeamsOfTwo = intval($row->allowTeamsOfTwo);
-   $newInterface = intval($row->newInterface);
-   $customIntro = $row->customIntro;
-   $fullFeedback = intval($row->fullFeedback);
-   $nextQuestionAuto = intval($row->nextQuestionAuto);
-   $nbUnlockedTasksInitial = intval($row->nbUnlockedTasksInitial);
-   $subsetsSize = intval($row->subsetsSize);
    $isPublic = intval($row->isPublic);
+
    if ($row->startTime === null) {
       $nbMinutesElapsed = 0;
    } else {
@@ -293,47 +291,38 @@ function handleCheckGroupPassword($db, $password, $getTeams) {
    if (isset($_SESSION['mysqlOnly'])) {
       unset($_SESSION['mysqlOnly']);
    }
+   $_SESSION["name"] = $row->name;
    $_SESSION["groupID"] = $groupID;
    $_SESSION["groupCode"] = $password;
-   $_SESSION["contestName"] = $row->contestName;
    $_SESSION["schoolID"] = $schoolID;
-   $_SESSION["contestID"] = $contestID;
-   $_SESSION["contestFolder"] = $contestFolder;
-   $_SESSION["contestOpen"] = $contestOpen;
-   $_SESSION["contestShowSolutions"] = $contestShowSolutions;
-   $_SESSION["contestVisibility"] = $contestVisibility;
-   $_SESSION["nbMinutes"] = $nbMinutes;
-   $_SESSION["bonusScore"] = $bonusScore;
-   $_SESSION["allowTeamsOfTwo"] = $allowTeamsOfTwo;
-   $_SESSION["newInterface"] = $newInterface;
-   $_SESSION["customIntro"] = $customIntro;
-   $_SESSION["fullFeedback"] = $fullFeedback;
-   $_SESSION["nextQuestionAuto"] = $nextQuestionAuto;
-   $_SESSION["nbUnlockedTasksInitial"] = $nbUnlockedTasksInitial;
-   $_SESSION["subsetsSize"] = $subsetsSize;
-   $_SESSION["isPublic"] = $isPublic;
-   $_SESSION["groupClosed"] = (($nbMinutesElapsed > 60) && (!$isPublic));
+   $_SESSION["nbMinutes"] = intval($row->nbMinutes);
+   $_SESSION["isPublic"] = intval($row->isPublic);
+   $_SESSION["groupClosed"] = (($nbMinutesElapsed > 60) && (!$_SESSION["isPublic"]));
+
+   updateSessionWithContestInfos($row);
+
    addBackendHint("ClientIP.checkPassword:pass");
    addBackendHint(sprintf("Group(%s):checkPassword", escapeHttpValue($groupID)));
    exitWithJson((object)array(
       "success" => true,
-      "groupID" => $groupID,
-      "contestID" => $contestID,
-      "contestName" => $row->contestName,
-      "contestFolder" => $contestFolder,
-      "contestOpen" => $contestOpen,
-      "contestShowSolutions" => $contestShowSolutions,
-      "contestVisibility" => $contestVisibility,
-      "name" => $name,
+      "groupID" => $_SESSION["groupID"],
+      "nbMinutes" => $_SESSION["nbMinutes"],
+      "contestID" => $_SESSION["contestID"],
+      "contestName" => $_SESSION["contestName"],
+      "contestFolder" => $_SESSION["contestFolder"],
+      "contestOpen" => $_SESSION["contestOpen"],
+      "contestShowSolutions" => $_SESSION["contestShowSolutions"],
+      "contestVisibility" => $_SESSION["contestVisibility"],
+      "bonusScore" => $_SESSION["bonusScore"],
+      "allowTeamsOfTwo" => $_SESSION["allowTeamsOfTwo"],
+      "newInterface" => $_SESSION["newInterface"],
+      "nextQuestionAuto" => $_SESSION["nextQuestionAuto"],
+      "customIntro" => $_SESSION["customIntro"],
+      "fullFeedback" => $_SESSION["fullFeedback"],
+      "nbUnlockedTasksInitial" => $_SESSION["nbUnlockedTasksInitial"],
+      "subsetsSize" => $_SESSION["subsetsSize"],
+      "name" => $_SESSION["name"],
       "teams" => $teams,
-      "nbMinutes" => $nbMinutes,
-      "bonusScore" => $bonusScore,
-      "allowTeamsOfTwo" => $allowTeamsOfTwo,
-      "newInterface" => $newInterface,
-      "customIntro" => $customIntro,
-      "fullFeedback" => $fullFeedback,
-      "nbUnlockedTasksInitial" => $nbUnlockedTasksInitial,
-      "subsetsSize" => $subsetsSize,
       'bRecovered' => $row->bRecovered,
       "nbMinutesElapsed" => $nbMinutesElapsed,
       "askEmail" => !!intval($row->askEmail),
@@ -353,21 +342,67 @@ function handleCheckTeamPassword($db, $password) {
    exitWithJson($result);
 }
 
-function handleGetRemainingTime($db) {
+function getRemainingSeconds($db, $teamID, $restartIfEnded = false) {
+   $stmt = $db->prepare("SELECT (`nbMinutes` * 60) - TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), `team`.`startTime`)) as `remainingSeconds`, ".
+      "`endTime`, ".
+      "(`nbMinutes` * 60) - TIME_TO_SEC(TIMEDIFF(`team`.`endTime`, `team`.`startTime`)) as `remainingSecondsBeforePause`, ".
+      "`extraMinutes` ".
+      "FROM `team` WHERE `ID` = ?");
+   $stmt->execute(array($teamID));
+   $row = $stmt->fetchObject();
+   if (!$row) {
+      return 0;
+   }
+   $remainingSeconds = $row->remainingSeconds;
+   $pausesAdded = 0;
+   $update = false;
+   if ($row->endTime != null) {
+      if (!$restartIfEnded) {
+         return 0;
+      }
+      if ($_SESSION["contestShowSolutions"]) {
+         return 0;
+      }
+      if ($remainingSeconds < 0) {
+         if (!$_SESSION["allowPauses"]) {
+            return 0;
+         }
+      }
+      $pausesAdded = 1;
+      $remainingSeconds = $row->remainingSecondsBeforePause;
+      $update = true;
+   }
+   if ($remainingSeconds < 0) {
+      $remainingSeconds = 0;
+   }
+   if ($row->extraMinutes != null) {
+      $remainingSeconds += $row->extraMinutes * 60;
+      $update = true;
+   }
+   if ($update) {
+      $stmt2 = $db->prepare("UPDATE `team` SET ".
+         "`endTime` = NULL, ".
+         "`nbMinutes` = `nbMinutes` + IFNULL(`extraMinutes`,0), ".
+         "`startTime` = DATE_SUB(UTC_TIMESTAMP(), INTERVAL ((`nbMinutes` * 60) - :remainingSeconds) SECOND), ".
+         "`extraMinutes` = NULL, ".
+         "`nbPauses` = `nbPauses` + :pausesAdded ".
+         "WHERE `ID` = :teamID");
+      $stmt2->execute(array("teamID" => $teamID, "remainingSeconds" => $remainingSeconds, "pausesAdded" => $pausesAdded));
+      updateDynamoDBStartTime($db, $teamID);
+   }
+   return $remainingSeconds;
+}
+
+
+function handleGetRemainingSeconds($db) {
    if (!isset($_SESSION["nbMinutes"]) || !isset($_SESSION['teamID'])) {
       exitWithJson((object)array("success" => false));
    }
    $teamID = $_SESSION['teamID'];
-   $stmt = $db->prepare("SELECT TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), `team`.`startTime`)) as `timeUsed` FROM `team` WHERE `ID` = ?");
-   $stmt->execute(array($teamID));
-   $row = $stmt->fetchObject();
-   if (!$row) {
-      exitWithJson((object)array("success" => false));
-   }
-   $remainingTime = (60 * $_SESSION["nbMinutes"]) - $row->timeUsed;
+   $remainingSeconds = getRemainingSeconds($db, $teamID);
    addBackendHint("ClientIP.getRemainingTime:pass");
    addBackendHint(sprintf("Team(%s):getRemainingTime", escapeHttpValue($teamID)));
-   exitWithJson((object)array("success" => true, 'remainingTime' => $remainingTime));
+   exitWithJson((object)array("success" => true, 'remainingSeconds' => $remainingSeconds));
 }
 
 function handleRecoverGroup($db) {
@@ -402,10 +437,9 @@ function handleRecoverGroup($db) {
       'code' => $_POST['groupCode'],
    ));
    $_SESSION["groupID"] = $groupID;
-   $_SESSION["startTime"] = time(); // warning: SQL and PHP server must be in sync...
    $_SESSION["closed"] = false;
    $_SESSION["groupClosed"] = false;
-   exitWithJson((object)array("success" => true, "startTime" => $_SESSION["startTime"]));
+   exitWithJson((object)array("success" => true));
 }
 
 if (!isset($_POST["action"])) {
@@ -441,8 +475,8 @@ if ($action === "loadContestData") {
    handleLoadContestData($db);
 }
 
-if ($action === "getRemainingTime") {
-   handleGetRemainingTime($db);
+if ($action === "getRemainingSeconds") {
+   handleGetRemainingSeconds($db);
 }
 
 if ($action === "closeContest") {
