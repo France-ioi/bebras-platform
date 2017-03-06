@@ -76,8 +76,9 @@
          <p data-i8n="[html]others_retry"></p>
       </div>
 	  <div id="selectLanguage" style="display:none">
+       <p id="extraMessage" style="font-weight: bold"></p>
 		 <p>
-			Quel langage souhaitez-vous utiliser pour ce concours ?
+			Vous êtes prêt à démarrer le deuxième tour ? Choisssez votre langage :
 		 </p>
 		 <br/>
 		 <p>
