@@ -1496,7 +1496,9 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
          if ((data.contestID == "412528966787346538") && (language == undefined)) {
             $("#" + curStep).hide();
             $("#selectLanguage").show();
-            $("#extraMessage").html(data.extraMessage);
+            if (data.extraMessage != undefined) {
+               $("#extraMessage").html(data.extraMessage);
+            }
          } else {
             groupWasChecked(data, curStep, groupCode, getTeams, isPublic);
          }
@@ -1664,9 +1666,6 @@ function initContestData(data) {
    customIntro = $("<textarea/>").html(data.customIntro).text();
    contestOpen = !!parseInt(data.contestOpen);
    contestVisibility = data.contestVisibility;
-   if (data.extraMessage != "") {
-      alert(data.extraMessage);
-   }
    contestShowSolutions = !!parseInt(data.contestShowSolutions);
    $('#mainNav').hide();
    if (newInterface) {
