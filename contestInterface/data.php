@@ -209,6 +209,7 @@ function handleCloseContest($db) {
 }
 
 function handleLoadSession() {
+   global $config;
    $sid = session_id();
    // If the session is new or closed, just return the SID.
    if (!isset($_SESSION["teamID"]) || isset($_SESSION["closed"])) {
@@ -218,9 +219,14 @@ function handleLoadSession() {
    // Otherwise, data from the session is also returned.
    addBackendHint("ClientIP.loadSession:found");
    addBackendHint(sprintf("SessionId(%s):loadSession", escapeHttpValue($sid)));
+   $message = "Voulez-vous reprendre l'épreuve commencée ?";
+   if ($config->defaultLanguage == "es") {
+      $message = "¿Desea reiniciar la prueba comenzada anteriormente?";
+   }
    exitWithJson(array(
       "success" => true,
       "teamID" => $_SESSION["teamID"],
+      "message" => $message,
       "nbMinutes" => $_SESSION["nbMinutes"],
       "bonusScore" => $_SESSION["bonusScore"],
       "allowTeamsOfTwo" => $_SESSION["allowTeamsOfTwo"],
