@@ -227,7 +227,7 @@
    <p data-i18n="[html]password_warning">
    </p>
    <p>
-   Code d'accès : <span id="teamPassword" class="selectable" style="font-size:2em"></span>
+   <span data-i18n="access_code"></span> <span id="teamPassword" class="selectable" style="font-size:2em"></span>
    </p>
          <div class="divInput">
             <button type="button" data-i18n="password_confirm" id="buttonConfirmTeamPassword" onclick="confirmTeamPassword()"></button>
@@ -242,8 +242,8 @@
    <div class="oldInterface">
       <div class="questionListHeader">
          <table class="chrono" width="95%">
-            <tr class="header_time"><td class="fullFeedback">Temps&nbsp;: </td><td><span class='minutes'></span>:<span class='seconds'></span></td></tr>
-            <tr><td class="fullFeedback">Score&nbsp;:</td><td><span class='scoreTotalFullFeedback'></span></td></tr>
+            <tr class="header_time"><td class="fullFeedback" data-i18n="remaining_time"></td><td><span class='minutes'></span>:<span class='seconds'></span></td></tr>
+            <tr><td class="fullFeedback" data-i18n="current_score"></td><td><span class='scoreTotalFullFeedback'></span></td></tr>
          </table>
          <p></p>
          <div class="scoreBonus" style="display:none"><b data-i18n="questions_bonus"></b><br/></div>
@@ -274,10 +274,10 @@
             <tr>
                <td class="header_logo" data-i18n="[html]top_image_new"></td>
                <td class="header_score">Score&nbsp;:<br/><b><span class='scoreTotalFullFeedback'></span></b></td>
-               <td class="header_time" id="header_time">Temps restant&nbsp;: <br/><b><span class='minutes'></span>:<span class='seconds'></span></b></td>
-               <td class="header_rank" style="display:none">Classement&nbsp; <br/><b><span class="rank" width="95%"></span></b></td>
+               <td class="header_time" id="header_time"><span data-i18n="remaining_time_long"></span> <br/><b><span class='minutes'></span>:<span class='seconds'></span></b></td>
+               <td class="header_rank" style="display:none"><span data-i18n="rank"></span> <br/><b><span class="rank" width="95%"></span></b></td>
                <td class="header_button">
-                 <input class="button_return_list" type="button" value="Retour à la liste des questions" onclick="backToList()" />
+                 <button class="button_return_list" type="button" data-i18n="return_to_list" onclick="backToList()" ></button>
                </td>
             </tr>
          </table>
