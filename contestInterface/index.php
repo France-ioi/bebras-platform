@@ -273,7 +273,7 @@
          <table class="header_table">
             <tr>
                <td class="header_logo" data-i18n="[html]top_image_new"></td>
-               <td class="header_score">Score&nbsp;:<br/><b><span class='scoreTotalFullFeedback'></span></b></td>
+               <td class="header_score"><span data-i18n="current_score"></span><br/><b><span class='scoreTotalFullFeedback'></span></b></td>
                <td class="header_time" id="header_time"><span data-i18n="remaining_time_long"></span> <br/><b><span class='minutes'></span>:<span class='seconds'></span></b></td>
                <td class="header_rank" style="display:none"><span data-i18n="rank"></span> <br/><b><span class="rank" width="95%"></span></b></td>
                <td class="header_button">
