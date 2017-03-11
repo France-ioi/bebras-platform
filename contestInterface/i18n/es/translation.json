@@ -142,5 +142,7 @@
     "remaining_time": "Tiempo: ",
     "remaining_time_long": "Tempo restante:",
     "current_score": "Puntuación:",
-    "return_to_list": "Regresar a la lista de preguntas"
+    "return_to_list": "Regresar a la lista de preguntas",
+    "point": "punto",
+    "points": "puntos"
 }

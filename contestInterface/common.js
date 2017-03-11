@@ -2202,9 +2202,11 @@ function computeFullFeedbackScore() {
       }
    }
    if (newInterface) {
-      var strScore = ffTeamScore + " point";
+      var strScore = ffTeamScore + " ";
       if (ffTeamScore > 1) {
-         strScore += "s";
+         strScore += t("points");
+      } else  {
+         strScore += t("point");
       }
       $(".scoreTotalFullFeedback").html(strScore);
    } else {

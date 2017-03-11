@@ -137,5 +137,7 @@
     "left_title": "<img src=\"images/castor_small.png\"/>",
     "right_title": "",
     "top_image": "<img src=\"images/castor_small.png\" style=\"width:65px\" />",
-    "top_image_new": "<img class=\"header_logo_img\" src=\"images/castor_small.png\" />"
+    "top_image_new": "<img class=\"header_logo_img\" src=\"images/castor_small.png\" />",
+    "point": "point",
+    "points": "points"
 }
