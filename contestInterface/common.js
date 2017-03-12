@@ -925,7 +925,7 @@ var TimeManager = {
          function(data) {
             if (data.success) {
                var remainingSeconds = self.getRemainingSeconds();
-               TimeManager.timeStart = TimeManager.timeStart + data.remainingSeconds - remainingSeconds;
+               TimeManager.timeStart = TimeManager.timeStart + parseInt(data.remainingSeconds) - remainingSeconds;
             } else {
                TimeManager.simpleTimeAdjustment();
             }
