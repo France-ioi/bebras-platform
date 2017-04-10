@@ -43,7 +43,7 @@ $stmt->execute();
 
 echo "<html>
 <meta charset='utf-8'>
-<body><style>table tr td { border: solid black 1px; padding:2px; }</style><p>Vous trouverez ci-dessous les résultats de vos équipes pour le tour 2. Les équipes qui ont obtenu 500 points ou plus sont qualifiées pour le tour 3, dont l'objectif est de sélectionner les finalistes.</p><p>L'épreuve d'1h30 doit avoir lieu sous la surveillance d'un enseignant, <b>qui transmet le code d'accès à l'équipe au début de l'épreuve</b>.</p><p>Les membres de l'équipe doivent s'assurer de disposer de leur identifiant et mot de passe personnels qu'ils auront revérifiés avant l'épreuve.</p><table cellspacing=0><tr><td>Membres de l'équipe</td><td>Score<br/>tour 2</td><td>Qualification<br/>tour 3</td><td>Score au 3ème tour</td><td>Rang national</td><td>Rang grande région</td><td>Rang académie</td></tr>";
+<body><style>table tr td { border: solid black 1px; padding:2px; }</style><p>Vous trouverez ci-dessous les résultats de vos équipes pour les tours 2 et 3.</p><table cellspacing=0><tr><td>Membres de l'équipe</td><td>Score<br/>tour 2</td><td>Qualification<br/>tour 3</td><td>Score au 3ème tour</td><td>Rang national</td><td>Rang grande région</td><td>Rang académie</td></tr>";
 
 while ($row = $stmt->fetchObject()) {
    $result = "Non qualifiée";
