@@ -25,16 +25,17 @@ while ($row = $stmt->fetchObject()) {
 
 //echo implode($foreignIDs, ',');
 
-$query = "SELECT GROUP_CONCAT(CONCAT('<br/>', firstName, ' ', lastName, ' (', userName , ')')) as users, IFNULL(totalScore,0) as score, participations.access_code, participations.score as score3, participations.rank_regional, participations.rank_national, participations.big_region, participations.rank_big_regional, participations.region FROM ".
-"(SELECT teams.team_id, SUM(maxScore) totalScore FROM (".
+$query = "SELECT GROUP_CONCAT(CONCAT('<br/>', firstName, ' ', lastName, ' (', userName , ')')) as users, IFNULL(totalScore,0) as score, participations.access_code, participations.score as score3, participations.rank_regional, participations.rank_national, participations.rank_big_regional, regions.name as region, regions.big_region_name as big_region FROM ".
+"(SELECT teams.team_id, teams.region_id, SUM(maxScore) totalScore FROM (".
 "SELECT attempts.participation_id, round_task_id, MAX(answers.score) as maxScore FROM attempts JOIN answers ON answers.attempt_id = attempts.id WHERE started_at > '2017-01-01' ".
 "GROUP BY round_task_id, participation_id ".
 ") att ".
 "JOIN participations ON (participations.id = participation_id AND participations.round_id = 6) ".
-"RIGHT JOIN (SELECT DISTINCT team_id FROM users WHERE foreign_id in (".implode($foreignIDs, ",").")) as teams ON teams.team_id = participations.team_id ".
+"RIGHT JOIN (SELECT DISTINCT team_id, region_id FROM users JOIN teams ON teams.id = team_id WHERE foreign_id in (".implode($foreignIDs, ",").")) as teams ON teams.team_id = participations.team_id ".
 "GROUP BY participation_id ".
 ") as teamRes ".
 "JOIN users ON teamRes.team_id = users.team_id ".
+"JOIN regions ON regions.id = teamRes.region_id ".
 "LEFT JOIN participations ON (teamRes.team_id = participations.team_id AND participations.round_id = 7) ".
 "GROUP BY users.team_id";
 
