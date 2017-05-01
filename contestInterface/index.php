@@ -78,7 +78,7 @@
 	  <div id="selectLanguage" style="display:none">
        <p id="extraMessage" style="font-weight: bold"></p>
 		 <p>
-			Vous êtes prêt à démarrer le deuxième tour ? Choisssez votre langage :
+			Vous êtes prêt à démarrer le troisième tour ? Choisssez votre langage :
 		 </p>
 		 <br/>
 		 <p>
