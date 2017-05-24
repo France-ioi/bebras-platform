@@ -1,4 +1,4 @@
-<html><style>.borders tr td {
+<html><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><style>.borders tr td {
    border: solid black 1px;
    padding-left: 5px;
    padding-right: 5px;
@@ -16,6 +16,9 @@
 .green td {
    background-color: lightgreen;
 }
+.blue td {
+   background-color: #8080FF;
+}
 </style><body>
 
 <?php
@@ -23,7 +26,7 @@
 require_once("../shared/common.php");
 require_once("commonAdmin.php");
 
-function displayScores($contestIDs, $minForOrange, $minForGreen) {
+function displayScores($contestIDs, $minForOrange, $minForGreen, $minForBlue) {
    global $db;
 
    $query = "SELECT team.score, count(*) as nb, contestant.grade FROM contestant JOIN team ON team.ID = contestant.teamID JOIN `group` ON team.groupID = `group`.ID WHERE team.participationType = 'Official' AND contestID IN (".implode($contestIDs, ',').") AND contestant.grade > 0 GROUP BY contestant.grade, team.score";
@@ -74,6 +77,9 @@ function displayScores($contestIDs, $minForOrange, $minForGreen) {
       if ($score >= $minForGreen) {
          $class = "green";
       }
+      if ($score >= $minForBlue) {
+         $class = "blue";
+      }
       $row = "<tr class='".$class."'><td>".$score."</td>";
       foreach ($grades as $grade => $gradeName) {
          $row .= "<td>";
@@ -111,10 +117,13 @@ if (!isset($_SESSION["userID"])) {
 */
 
 
-displayScores(array("283704875576424463", "423169985941254889", "989302451917244420"), 100, 200);
-
 echo "<p>Catégorie orange :</p>";
-displayScores(array("54582481688917144", "519967720615750538", "807333481808931576"), 0, 100);
+displayScores(array("124236500942177376", "151709596466921552", "175448842785562190"), 0, 100, 400);
+
+
+
+echo "<p>Catégorie verte :</p>";
+displayScores(array("424393866218438188", "195702159164266914", "452484155216195876"), 0, 0, 70);
 
 
 ?>

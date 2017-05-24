@@ -103,15 +103,17 @@ foreach($awarded as $contestant) {
       echo '<div class="page-break"></div>';
    }
 
+   $firstLine = $strings['award_print_first_line'];
    $secondLine = $strings['award_print_second_line'];
    $thirdLine = $strings['award_print_third_line'];
    $contests3rdRound = array("124236500942177376", "151709596466921552", "175448842785562190", "424393866218438188", "195702159164266914", "452484155216195876");
    if (in_array($currentContestID , $contests3rdRound)) {
-      $secondLine = "Qualification en 1/2 finale du concours Algoréa";
-      $thirdLine = "Utilisable sur concours.algorea.org";
+      $firstLine = "Qualification en 1/2 finale du concours Algoréa";
+      $secondLine = "Utilisable sur concours.algorea.org";
+      $thirdLine = "Date du concours : du 28 mai au 12 juin 2017";
    }
    echo '<div class="label"><div class="labelContent">';
-   echo '<p class="title">'.$strings['award_print_first_line'].'</p>';
+   echo '<p class="title">'.$firstLine.'</p>';
    echo '<p class="name">'.$contestant->firstName.' '.$contestant->lastName.'</p>';
    echo '<p class="schoolName">'.$contestant->name.'</p>'; // name of the school
    echo '<p>code confidentiel: <span class="code">'.$contestant->algoreaCode.'</span></p>';
