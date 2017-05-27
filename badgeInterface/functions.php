@@ -26,10 +26,11 @@ function getRequiredParam($key) {
    no match is found. */
 function verifyCode($badgeName, $code) {
   global $db;
-  $stmt = $db->prepare('select contestant.lastName as sLastName, contestant.firstName as sFirstName, contestant.genre as genre, contestant.email as sEmail, contestant.zipcode as sZipcode from contestant
+  $stmt = $db->prepare('select contestant.lastName as sLastName, contestant.firstName as sFirstName, contestant.genre as genre, contestant.email as sEmail, contestant.zipcode as sZipcode, algorea_registration.franceioiID from contestant
     join team on team.ID = contestant.teamID
     join `group` on `group`.ID = team.groupID
     join contest on contest.ID = `group`.contestID
+    LEFT JOIN algorea_registration ON algorea_registration.code = :code
     where algoreaCode = :code and contest.badgeName = :badgeName;');
   $stmt->execute(['code' => $code, 'badgeName' => $badgeName]);
 
