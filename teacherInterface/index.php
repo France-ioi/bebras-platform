@@ -1,6 +1,7 @@
 <?php
   include('./config.php');
   header('Content-type: text/html');
+  global $config;
 ?><!DOCTYPE html>
 <html>
 <head>
@@ -17,7 +18,7 @@
   <div id="headerGroup">
     <h1 id="headerH1" data-i18n="title"></h1>
     <h2 id="headerH2" data-i18n="[html]subtitle"></h2>
-    <button type="button" id="logoutLink" style="display:none;" onclick="logout()" class="btn"><span data-i18n="logout"></span></button>
+    <button type="button" id="logoutLink" style="display:none;" onclick="auth.logout()" class="btn"><span data-i18n="logout"></span></button>
     <p id="login_link_to_home" data-i18n="[html]login_link_to_home"></p>
   </div>
 </div>
@@ -50,22 +51,27 @@
       </div>
 
       <div id="login_form" class="dialog" style="display:none">
-         <h2 data-i18n="login_teacher_wannabe_admin"></h2>
-         <a href="#" onclick="newUser()" data-i18n="login_register"></a>
-         <h2 data-i18n="login_are_you_admin"></h2>
-         <p data-i18n="login"></p>
-         <div id="divInput" class="formWrapper">
-            <label><span data-i18n="login_email" class="label"></span> <input id="email" type="text"></label>
-            <label><span data-i18n="login_password" class="label"></span> <input id="password" type="password" onkeypress="if (event.keyCode == 13) {login();  return false;}"></label>
-            <button type="button" data-i18n="login_connexion" id="buttonLogin" onclick="login()" class="btn btn-default"></button><br />
-         </div>
-         <div id="login_error" style="color:red"></div>
-         <h2 data-i18n="login_lost_password"></h2>
-         <div class="formWrapper">
-            <label><span data-i18n="login_input_email" class="label"></span> <input id="recoverEmail" type="text"></label>
-            <button type="button" data-i18n="login_get_new_password" id="buttonRecover" onclick="recover()" class="btn btn-default"></button>
-         </div>
-      </div>
+        <?php if(!$config->login_module_client) { ?>
+          <h2 data-i18n="login_teacher_wannabe_admin"></h2>
+          <a href="#" onclick="newUser()" data-i18n="login_register"></a>
+          <h2 data-i18n="login_are_you_admin"></h2>
+          <p data-i18n="login"></p>
+          <div id="divInput" class="formWrapper">
+              <label><span data-i18n="login_email" class="label"></span> <input id="email" type="text"></label>
+              <label><span data-i18n="login_password" class="label"></span> <input id="password" type="password" onkeypress="if (event.keyCode == 13) {login();  return false;}"></label>
+        <?php } ?>
+          <button type="button" data-i18n="login_connexion" id="buttonLogin" onclick="auth.login()" class="btn btn-default"></button>
+          <br />
+          <div id="login_error" style="color:red"></div>
+        <?php if(!$config->login_module_client) { ?>
+          </div>
+            <h2 data-i18n="login_lost_password"></h2>
+            <div class="formWrapper">
+              <label><span data-i18n="login_input_email" class="label"></span> <input id="recoverEmail" type="text"></label>
+              <button type="button" data-i18n="login_get_new_password" id="buttonRecover" onclick="recover()" class="btn btn-default"></button>
+            </div>
+      <?php } ?>
+    </div>
 
       <div id="admin_view" style="display:none">
          <div id="filters"></div>
@@ -92,7 +98,7 @@
                <tr><td><b data-i18n="users_official_email"></b></td><td id="user-officialEmail"></td></tr>
                <tr><td><b data-i18n="users_alternative_email"></b></td><td id="user-alternativeEmail"></td></tr>
             </table>
-            <button type="button" onclick="editUser()" data-i18n="edit_user" class="btn btn-default"></button>
+            <button id="buttonEditUser" type="button" onclick="auth.profile()" data-i18n="edit_user" class="btn btn-default"></button>
             <div>
                <button type="button" id="buttonRefreshUsers" style="display:none" data-i18n="refresh_list" onclick="refreshGrid('user')" class="btn btn-default"></button>
                <button type="button" id="linkExportUsers" style="display:none" onclick="exportCSV('user')" data-i18n="export_to_csv" class="btn btn-default"></button>
@@ -244,7 +250,7 @@
       <p data-i18n="schools_search_text">
       </p>
       <table id="grid_school_search"><tbody><tr><td/></tr></tbody></table>
-      <div id="pager_school_search"></div> 
+      <div id="pager_school_search"></div>
       <button type="button" data-i18n="school_select" onclick="selectSchool()"></button>
       <p>
          <span data-i18n="schools_create_text"></span>
@@ -256,7 +262,6 @@
    </div>
 </form>
 <?php
-   global $config;
    $language = $config->defaultLanguage;
    $countryCode = $config->teacherInterface->countryCode;
    $domainCountryCode = $config->teacherInterface->domainCountryCode;
@@ -275,6 +280,7 @@
    script_tag('/bower_components/jstz/index.js');
    script_tag('/regions/' . strtoupper($countryCode) . '/regions.js');
    script_tag('/admin.js');
+   script_tag('/login_module/auth.js');
 ?>
 <script>
    window.config = <?= json_encode([
@@ -290,6 +296,8 @@
       'customStringsName' => $config->customStringsName,
       'allowCertificates' => $config->certificates->allow,
       'useAlgoreaCodes' => $config->teacherInterface->useAlgoreaCodes,
+      'base_url' => $config->teacherInterface->baseUrl,
+      'native_auth' => !$config->login_module_client
    ]) ?>;
    init();
 </script>

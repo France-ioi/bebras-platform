@@ -53,3 +53,14 @@ $config->contestPresentationURL = 'http://castor-informatique.fr/';
 $config->contestOfficialURL = 'http://concours.castor-informatique.fr/';
 $config->contestBackupURL = '';
 $config->useCustomStrings = false; // see README
+
+/* Login module integration
+false value to switch into old authentication system:
+$config->login_module_client = false;
+*/
+$config->login_module_client = [
+        'id' => '',
+        'secret' => '',
+        'base_url' => '',
+        'redirect_uri' => $config->teacherInterface->baseUrl.'login_module/callback_oauth.php',
+];
