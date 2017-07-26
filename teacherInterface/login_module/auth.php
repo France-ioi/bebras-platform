@@ -48,7 +48,7 @@ function setUserSession($row) {
 
 function createUpdateUser($db, $user) {
     $row = makeUserObject($user);
-    $query = "SELECT * FROM `user` WHERE `ID` = ?";
+    $query = "SELECT * FROM `user` WHERE `externalID` = ?";
     $stmt = $db->prepare($query);
     $stmt->execute([$row->ID]);
     if($stmt->fetchObject()) {
@@ -62,7 +62,7 @@ function createUpdateUser($db, $user) {
 
 function makeUserObject($user) {
     $res = [
-        'ID' => $user['id'],
+        'externalID' => $user['id'],
         'firstName' => $user['first_name'],
         'lastName' => $user['last_name'],
         'isOwnOfficialEmail' => 1,
