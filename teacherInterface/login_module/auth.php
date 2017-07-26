@@ -47,16 +47,17 @@ function setUserSession($row) {
 
 
 function createUpdateUser($db, $user) {
-    $row = makeUserObject($user);
+    $obj = makeUserObject($user);
     $query = "SELECT * FROM `user` WHERE `externalID` = ?";
     $stmt = $db->prepare($query);
-    $stmt->execute([$row->externalID]);
-    if($stmt->fetchObject()) {
-        updateUser($db, $row);
+    $stmt->execute([$obj->externalID]);
+    if($row = $stmt->fetchObject()) {
+        $obj->ID = $row->ID;
+        updateUser($db, $obj);
     } else {
-        $row->ID = createUser($db, $row);
+        $obj->ID = createUser($db, $obj);
     }
-    return $row;
+    return $obj;
 }
 
 
