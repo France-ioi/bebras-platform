@@ -50,7 +50,7 @@ function createUpdateUser($db, $user) {
     $row = makeUserObject($user);
     $query = "SELECT * FROM `user` WHERE `externalID` = ?";
     $stmt = $db->prepare($query);
-    $stmt->execute([$row->ID]);
+    $stmt->execute([$row->externalID]);
     if($stmt->fetchObject()) {
         updateUser($db, $row);
     } else {
@@ -88,12 +88,12 @@ function createUser($db, $row) {
     $stmt = $db->prepare("
         INSERT INTO
             `user`
-            (`ID`, `lastLoginDate`, `firstName`, `lastName`, `officialEmail`, `officialEmailValidated`, `alternativeEmail`, `alternativeEmailValidated`, `comment`, `gender`)
+            (`externalID`, `lastLoginDate`, `firstName`, `lastName`, `officialEmail`, `officialEmailValidated`, `alternativeEmail`, `alternativeEmailValidated`, `comment`, `gender`)
         VALUES
-            (:ID, UTC_TIMESTAMP(), :firstName, :lastName, :officialEmail, :officialEmailValidated, :alternativeEmail, :alternativeEmailValidated, :comment, :gender)
+            (:externalID, UTC_TIMESTAMP(), :firstName, :lastName, :officialEmail, :officialEmailValidated, :alternativeEmail, :alternativeEmailValidated, :comment, :gender)
     ");
     $stmt->execute([
-        'ID' => $row->ID,
+        'externalID' => $row->externalID,
         'firstName' => $row->firstName,
         'lastName' => $row->lastName,
         'officialEmail' => $row->officialEmail,
@@ -122,10 +122,10 @@ function updateUser($db, $row) {
             `comment` = :comment,
             `gender` = :gender
         WHERE
-            `ID` = :ID
+            `externalID` = :externalID
     ");
     $stmt->execute([
-        'ID' => $row->ID,
+        'externalID' => $row->externalID,
         'firstName' => $row->firstName,
         'lastName' => $row->lastName,
         'officialEmail' => $row->officialEmail,

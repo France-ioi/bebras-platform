@@ -29,10 +29,11 @@ try {
         if(platform && platform['auth'] && platform.auth['callbackProfile']) {
             platform.auth.callbackProfile(<?=json_encode($result)?>);
         }
-        window.close();
         if(!platform || platform === window) {
             // If we get there, we weren't in a popup and we can redirect
             window.location = '<?php echo $config->teacherInterface->baseUrl ?>';
+        } else {
+            window.close();
         }
     </script>
 </body>
