@@ -15,6 +15,7 @@
     "login_input_email": "Saisissez votre adresse électronique :",
     "login_get_new_password": "Obtenir un nouveau mot de passe",
     "login_connexion": "Connexion",
+    "login_module_access_denied": "Accès refusé",
     "help_title": "Explications",
     "groups_title": "Groupes",
     "users_title": "Coordinateur",

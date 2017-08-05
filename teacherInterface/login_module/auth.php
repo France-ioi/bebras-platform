@@ -52,9 +52,11 @@ function createUpdateUser($db, $user) {
     $stmt = $db->prepare($query);
     $stmt->execute([$obj->externalID]);
     if($row = $stmt->fetchObject()) {
+        validateUserAccess($user, $row);
         $obj->ID = $row->ID;
         updateUser($db, $obj);
     } else {
+        validateUserAccess($user);
         $obj->ID = createUser($db, $obj);
     }
     return $obj;
@@ -136,4 +138,14 @@ function updateUser($db, $row) {
         'comment' => $row->comment,
         'gender' => $row->gender
    ]);
+}
+
+
+function validateUserAccess($login_module_user, $bebras_user = null) {
+    global $config;
+    $manual_access = $bebras_user && $bebras_user->manualAccess > 0;
+    $is_teacher = strtoupper($login_module_user['country_code']) == strtoupper($config->teacherInterface->countryCode) && $login_module_user['role'] == 'teacher';
+    if(!$is_teacher && !$manual_access) {
+        throw new Exception('login_module_access_denied');
+    }
 }

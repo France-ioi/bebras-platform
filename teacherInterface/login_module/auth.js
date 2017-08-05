@@ -33,7 +33,7 @@ function initAuth(config) {
                 warningUsers(result.schoolUsers);
                 return;
             }
-            $("#login_error").html(result.message);
+            $("#login_error").html(i18n.t(result.message));
         },
 
         logout: function() {
