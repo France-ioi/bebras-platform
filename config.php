@@ -89,7 +89,7 @@ date_default_timezone_set($config->timezone);
 if (is_readable(__DIR__.'/config_local.php')) {
    include_once __DIR__.'/config_local.php';
 }
-if (is_dir(__DIR__.'/config')) {
+if (is_readable(__DIR__.'/config/index.php')) {
    include_once __DIR__.'/config/index.php';
 }
 
