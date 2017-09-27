@@ -211,11 +211,16 @@ function inArray(arr, value) {
  */
 var platform = {
    updateHeight: function(height, success, error) {
-      if (height < 700) {
-        height = 700;
-      }
-      questionIframe.setHeight(height);
-      if (success) {success();}
+      this.updateDisplay({height: height}, success, error);
+   },
+   updateDisplay: function(data, success, error) {
+      if(data.height) {
+        if (height < 700) {
+          height = 700;
+        }
+        questionIframe.setHeight(height);
+     }
+     if (success) {success();}
    },
    openUrl: function(url) {
       // not used here
@@ -665,19 +670,19 @@ var questionIframe = {
                  }, logError);
               }
               task.getHeight(function(height) {
-                 platform.updateHeight(height);
+                 platform.updateDisplay({height: height});
               }, logError);
            }, logError);
         }, logError);
         // Iframe height "hack" TODO: why two timers?
         setTimeout(function() {
            task.getHeight(function(height) {
-              platform.updateHeight(height);
+              platform.updateDisplay({height: height});
            }, logError);
         }, 500);
         setTimeout(function() {
            task.getHeight(function(height) {
-              platform.updateHeight(height);
+              platform.updateDisplay({height: height});
            }, logError);
         }, 1000);
 
@@ -2356,7 +2361,7 @@ function loadSolutions(data) {
             return;
          }
          questionIframe.task.getHeight(function(height) {
-            platform.updateHeight(height);
+            platform.updateDisplay({height: height});
             if (questionIframe.loaded) {
                questionIframe.task.unload(function() {
                   questionIframe.loadQuestion({'task': true, 'solution': true, 'grader': true}, currentQuestionKey, function(){});
