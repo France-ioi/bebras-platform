@@ -1719,7 +1719,7 @@ function loadPublicGroups() {
    $.post("data.php", {action: 'loadPublicGroups'},
       function(data) {
            //$("#classroomGroups").show();
-         if (data.groups.length !== 0) {
+         if ((data.groups.length !== 0) && (data.groups.length < 10)) { // Temporary limit for fr platform
             $("#listPublicGroups").html(getPublicGroupsList(data.groups));
          }
          $("#contentPublicGroups").show();
