@@ -2637,6 +2637,10 @@ function getParameterByName(name) {
 $(document).on('ready', function() {
    var teamParam = getParameterByName('team');
    if (teamParam !== '') {
+      /* remove team from url to avoid restarting after a reload */
+      var oldUrl = document.location.href;
+      var newUrl = oldUrl.replace(/(team=[^&]*)/, '');
+      window.history.pushState('', document.title, newUrl);
       window.checkGroupFromCode("CheckGroup", teamParam, false, false);
    } else {
       init();
