@@ -1505,7 +1505,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
                $("#extraMessage").html(data.extraMessage);
             }
          } else {
-            groupWasChecked(data, curStep, groupCode, getTeams, isPublic);
+            groupWasChecked(data, curStep, groupCode, getTeams, data.isPublic);
          }
       }, "json").done(function() { Utils.enableButton("button" + curStep); });
 };
