@@ -1,7 +1,7 @@
 <?php
 
 if (!isset($_POST['errormsg'])) {
-	echo json_encode(['success' => false, 'error' => 'missing errormsg argument']);
+	die(json_encode(['success' => false, 'error' => 'missing errormsg argument']));
 }
 
 require_once("../shared/common.php");
