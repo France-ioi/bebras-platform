@@ -2,7 +2,7 @@
     "logout": "Logout",
     "title": "Bebras Contest",
     "subtitle": " Contest platform - <span style='color:red;font-weight:bold'>COORDINATOR ACCESS</span>",
-    "announcement": "         <p>You can now access each student's ranking.</p>          <p>Here are some numbers for each level:          <table border=1 cellspacing=0 cellpadding=5><tr><td></td><td>6th/7th grade</td><td>8th/9th grade</td><td>10th/11th grade</td><td>12th/13th grade</td></tr>          <tr><td>Maximum score</td><td>182</td><td>176</td><td>179</td><td>191</td></tr/>          <tr><td>Number of participants</td><td>43647</td><td>32017</td><td>7273</td><td>7867</td></tr>          </table>          <p>Please note that you can access the detailed answers and scores of a student by utilising her personal code on the <a target=&quot;blank&quot; href=&quot;http://concours.castor-informatique.fr&quot;>contest page</a></p>          </table>",
+    "announcement": "",
     "loading": "Loading …",
     "invalid_link": "The link you followed is invalid.",
     "login_register": "Register now!",
