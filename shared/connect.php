@@ -54,6 +54,10 @@ if ($config->db->dynamoSessions) {
    // registering the dynamodb session handler performs some useless operations
    // in session!
    if (!isset($noSessions) || !$noSessions) {
+      $table_name = $config->db->dynamoDBPrefix . 'sessions';
+      if(gettype($config->db->dynamoSessions) == 'string') {
+         $table_name = $config->db->dynamoSessions;
+      }
       $sessionHandler = SessionHandler::fromClient($dynamoDB, array(
          'table_name'       => $config->db->dynamoDBPrefix . 'sessions',
       ));

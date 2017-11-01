@@ -3,8 +3,8 @@
 // Database
 $config->db->use = 'mysql';
 $config->db->testMode = false;
-$config->db->dynamoSessions = false;
-$config->db->dynamoDBPrefix = ''; // prefix for team and team_question
+$config->db->dynamoSessions = false; // true to use dynamoDB sessions, string to use a specific table
+$config->db->dynamoDBPrefix = ''; // prefix for sessions, team and team_question
 
 // MySQL
 $config->db->mysql->host = '127.0.0.1';
