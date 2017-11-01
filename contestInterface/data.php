@@ -223,8 +223,13 @@ function handleLoadSession() {
    if ($config->defaultLanguage == "es") {
       $message = "¿Desea reiniciar la prueba comenzada anteriormente?";
    }
+   $config = array(
+      "imagesURLReplacements" => $config->imagesURLReplacements,
+      "imagesURLReplacementsNonStatic" => $config->imagesURLReplacementsNonStatic
+      );
    exitWithJson(array(
       "success" => true,
+      "config" => $config,
       "teamID" => $_SESSION["teamID"],
       "message" => $message,
       "nbMinutes" => $_SESSION["nbMinutes"],
