@@ -629,6 +629,17 @@ function explicitCSVRequest(&$request) {
    // removing userID
    if (isset($request['model']['fields']['userID']) && $request['model']['mainTable'] !== 'school') {
       unset($request['model']['fields']['userID']);
+      unset($request['fields']['userID']);
+      $toDelete = -1;
+      foreach ($request['fields'] as $ID => $fieldName) {
+         if ($fieldName == "userID") {
+            $toDelete = $ID;
+            break;
+         }
+      }
+      if ($toDelete >= 0) {
+         array_splice($request['fields'], $ID, 1);
+      }
    }
    if (!$_SESSION["isAdmin"] && isset($request['model']['fields']['groupField'])) {
       $request['model']['fields']['groupField'] = array("tableName" => "group", "fieldName" => "name");
