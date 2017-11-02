@@ -109,7 +109,7 @@
                <h2 data-i18n="schools_list"></h2>
                <div>
                   <button type="button" id="buttonRefreshSchools" style="display:none" data-i18n="refresh_list" onclick="refreshGrid('school')" class="btn btn-default"></button>
-                  <button onclick="exportCSV('school')" data-i18n="export_to_csv" class="btn btn-default"></button>
+                  <button type="button" onclick="exportCSV('school')" data-i18n="export_to_csv" class="btn btn-default"></button>
                   <div class="gridTable">
                      <table id="grid_school"><tbody><tr><td/></tr></tbody></table>
                      <div id="pager_school"></div>
