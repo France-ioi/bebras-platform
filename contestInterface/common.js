@@ -539,7 +539,7 @@ var questionIframe = {
       this.inject('window.onbeforeunload = function() {return "' + t("error_reloading_iframe") + '";};');
 
       this.inject('window.onerror = window.parent.onerror;');
-      this.inject('window.config = window.parent.config;');
+      //this.inject('window.config = window.parent.config;');
 
       // Inject localized strings
       this.inject('var t = function(item) {return item;}; function setTranslate(translateFun) { t = translateFun; }');
@@ -612,13 +612,15 @@ var questionIframe = {
                     that.switchToNonStatic = true; \n\
                 } \n\
             } \n\
-            for(var i=0; i<window.config.imagesURLReplacements.length; i++) { \n\
-                srcImage = srcImage.replace(window.config.imagesURLReplacements[i][0], window.config.imagesURLReplacements[i][1]); \n\
-            } \n\
+            //for(var i=0; i<window.config.imagesURLReplacements.length; i++) { \n\
+            //    srcImage = srcImage.replace(window.config.imagesURLReplacements[i][0], window.config.imagesURLReplacements[i][1]); \n\
+           // } \n\
             if (that.switchToNonStatic) { \n\
-                for(var i=0; i<window.config.imagesURLReplacementsNonStatic.length; i++) { \n\
-                    srcImage = srcImage.replace(window.config.imagesURLReplacementsNonStatic[i][0], window.config.imagesURLReplacements[i][1]); \n\
-                } \n\
+                  srcImage = srcImage.replace("static1.france-ioi.org", "concours1.castor-informatique.fr"); \n\
+                  srcImage = srcImage.replace("static2.france-ioi.org", "concours2.castor-informatique.fr"); \n\
+                //for(var i=0; i<window.config.imagesURLReplacementsNonStatic.length; i++) { \n\
+                //    srcImage = srcImage.replace(window.config.imagesURLReplacementsNonStatic[i][0], window.config.imagesURLReplacements[i][1]); \n\
+                //} \n\
                 that.newUrlImages[that.imagesToPreload[that.nbImagesLoaded]] = srcImage; \n\
             } \n\
             that.loadingImages[that.nbImagesLoaded].src = srcImage; \n\
