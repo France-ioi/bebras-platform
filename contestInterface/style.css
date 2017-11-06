@@ -185,7 +185,7 @@ a {
 #divClosed {
    display:none;
    position:absolute;
-   top:200px;
+   top:300px;
    left:245px;
    width:800px;
    border: solid black 1px;
