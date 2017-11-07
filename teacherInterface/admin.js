@@ -1819,6 +1819,14 @@ function computeTotalScoresContest() {
    computeScores(selectedContestID, null, 0);
 }
 
+function displayScoresGroup() {
+   if (selectedGroupID === "0" || selectedGroupID === undefined) {
+      jqAlert(t("select_group"));
+   } else {
+      window.open("detailsGroup.php?groupID=" + selectedGroupID,'_new');
+   }
+}
+
 function gradeGroup() {
    if (!checkGroupSelectedAndConfirm()) {
       return;
