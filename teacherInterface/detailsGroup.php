@@ -37,7 +37,7 @@ $query = "SELECT `group`.`startTime`, team.password, `team_question`.ffScore, te
 "LEFT JOIN team_question ON (team_question.teamID = team.ID AND team_question.questionID = question.ID) ".
 "WHERE `group`.ID = :groupID ".
 "GROUP BY team.ID, question.ID ".
-"ORDER BY team.ID, contest_question.`order`";
+"ORDER BY `group`.ID, team.startTime DESC, contest_question.`order`";
 
 $stmt = $db->prepare($query);
 $stmt->execute(['groupID' => $groupID]);
@@ -75,14 +75,19 @@ foreach ($groups as $group) {
    echo "</tr>";
    foreach ($group["teams"] as $teamID => $team) {
       echo "<tr><td><a href='http://concours.castor-informatique.fr?team=".$team["password"]."' target='_blank'>[ouvrir]</a> ".$team["contestants"]."</td>";
+      $score = 0;
       foreach ($team["questions"] as $questionName => $ffScore) {
          if ($ffScore == null) {
             echo "<td>-</td>";
          } else {
             echo "<td class='score' title='".$questionName."'>".$ffScore."</td>";
+            $score += $ffScore;
          }
       }
-      echo "<td class='score'><b>".$team["score"]."</b></td>";
+      if ($team["score"] != null) {
+         $score = $team["score"];
+      }
+      echo "<td class='score'><b>".$score."</b></td>";
       echo "</tr>";
    }
    echo "</table><br/><br>";
