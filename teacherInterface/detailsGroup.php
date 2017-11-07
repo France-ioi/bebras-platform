@@ -63,7 +63,7 @@ foreach ($groups as $group) {
       break;
    }
    echo "<p>Participé le : ".$group["startTime"]." (UTC)</p>";
-   echo "<p>Attention : les scores affichés ne seront définitifs qu'après l'annonce officielle des résultats.</p>";
+   echo "<p>Attention : <ul><li>Pour des raisons techniques, l'affichage des scores détaillés est temporairement désactivé pour les participations effectuées pendant la période du concours, mais sera réactivé ensuite.<li>Pour le concours lui-même, les scores affichés ne seront définitifs qu'après l'annonce officielle des résultats.</li></ul></p>";
    echo "<table cellspacing=0><tr><th class='rotate'><div><span>Équipe</span></div></th>";
    foreach ($group["teams"] as $teamID => $team) {
       foreach ($team["questions"] as $questionName => $question) {
