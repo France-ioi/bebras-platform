@@ -15,14 +15,22 @@ if (!isset($_GET["groupID"])) {
 
 $groupID = $_GET["groupID"];
 
-echo "<style>table tr td { border: solid black 1px; min-width: 40px; } table tr:first-child td { border: none } ".
-".score { text-align: right; } ".
-"th.rotate {  height: 140px;   white-space: nowrap; } ".
-"th.rotate > div {   transform: translate(10px, 51px) rotate(315deg);  width: 30px; }".
-"th.rotate > div > span {   border-bottom: 1px solid #ccc;   padding: 5px 10px; }".
-"tr:hover { background-color: #ffff99; } ".
-"</style>";
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
+<style>
+table tr td { border: solid black 1px; min-width: 40px; }
+table tr:first-child td { border: none }
+.score { text-align: right; }
+th.rotate {  height: 140px;   white-space: nowrap; }
+th.rotate > div {   transform: translate(10px, 51px) rotate(315deg);  width: 30px; }
+th.rotate > div > span {   border-bottom: 1px solid #ccc;   padding: 5px 10px; }
+tr:hover { background-color: #ffff99; }
+</style>
+<?php
 //.vertical-text {	transform: rotate(-45deg); 	transform-origin: left bottom 0; overflow:}</style>";
 
 $query = "SELECT `group`.`startTime`, team.password, `team_question`.ffScore, team.score, ".
