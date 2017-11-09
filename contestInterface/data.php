@@ -210,15 +210,11 @@ function handleCloseContest($db) {
 
 function handleLoadSession() {
    global $config;
-   $clientConfig = array(
-      "imagesURLReplacements" => $config->imagesURLReplacements,
-      "imagesURLReplacementsNonStatic" => $config->imagesURLReplacementsNonStatic
-      );
    $sid = session_id();
    // If the session is new or closed, just return the SID.
    if (!isset($_SESSION["teamID"]) || isset($_SESSION["closed"])) {
       addBackendHint("ClientIP.loadSession:new");
-      exitWithJson(['success' => true, "SID" => $sid, "config" => $clientConfig]);
+      exitWithJson(['success' => true, "SID" => $sid]);
    }
    // Otherwise, data from the session is also returned.
    addBackendHint("ClientIP.loadSession:found");
@@ -229,7 +225,6 @@ function handleLoadSession() {
    }
    exitWithJson(array(
       "success" => true,
-      "config" => $clientConfig,
       "teamID" => $_SESSION["teamID"],
       "message" => $message,
       "nbMinutes" => $_SESSION["nbMinutes"],
@@ -454,6 +449,14 @@ function handleRecoverGroup($db) {
    exitWithJson((object)array("success" => true));
 }
 
+function handleGetConfig() {
+   $clientConfig = array(
+      "imagesURLReplacements" => $config->imagesURLReplacements,
+      "imagesURLReplacementsNonStatic" => $config->imagesURLReplacementsNonStatic
+      );
+   exitWithJson($clientConfig);
+}
+
 if (!isset($_POST["action"])) {
    exitWithJsonFailure("Aucune action fournie");
 }
@@ -497,6 +500,10 @@ if ($action === "closeContest") {
 
 if ($action === 'recoverGroup') {
    handleRecoverGroup($db);
+}
+
+if ($action === 'getConfig') {
+   handleGetConfig($db);
 }
 
 exitWithJsonFailure("Action inconnue");

@@ -539,7 +539,6 @@ var questionIframe = {
       this.inject('window.onbeforeunload = function() {return "' + t("error_reloading_iframe") + '";};');
 
       this.inject('window.onerror = window.parent.onerror;');
-      this.inject('window.config = window.parent.config;');
 
       // Inject localized strings
       this.inject('var t = function(item) {return item;}; function setTranslate(translateFun) { t = translateFun; }');
@@ -649,9 +648,15 @@ var questionIframe = {
       // No more global css file
       //this.addCssFile(contestsRoot + '/' + contestFolder + '/contest_' + contestID + '.css');
 
-      // Call image preloading
-      this.addJsFile(window.contestsRoot + '/' + contestFolder + '/contest_' + contestID + '.js', callback);
-      
+      // Get configuration
+      $.post("data.php", {action: 'getConfig'},
+         function(data) {
+            window.config = data.config;
+            this.inject('window.config = window.parent.config;');
+            // Call image preloading
+            this.addJsFile(window.contestsRoot + '/' + contestFolder + '/contest_' + contestID + '.js', callback);
+         }, "json");
+
       var border = "border: 1px solid #000000;";
       if (newInterface) {
          border = "";
@@ -1700,7 +1705,6 @@ function loadSession() {
    $.post("data.php", {SID: SID, action: 'loadSession'},
       function(data) {
          SID = data.SID;
-         window.config = data.config;
          if (data.teamID) {
             if (!confirm(data.message)) { // t("restart_previous_contest") json not loaded yet!
                destroySession();
