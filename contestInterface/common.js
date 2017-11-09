@@ -2494,6 +2494,9 @@ Loader.prototype.assemble = function() {
    self.log('A');
    setTimeout(function() {
       var data = self.parts.join('');
+      for(var i=0; i<window.config.imagesURLReplacements.length; i++) {
+         data = data.replace(new RegExp(window.config.imagesURLReplacements[i][0], 'g'), window.config.imagesURLReplacements[i][1]);
+      }
       self.promise.resolve(data);
    }, 100);
 };
