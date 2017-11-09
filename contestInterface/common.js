@@ -649,12 +649,13 @@ var questionIframe = {
       //this.addCssFile(contestsRoot + '/' + contestFolder + '/contest_' + contestID + '.css');
 
       // Get configuration
+      var that = this;
       $.post("data.php", {action: 'getConfig'},
          function(data) {
             window.config = data.config;
-            this.inject('window.config = window.parent.config;');
+            that.inject('window.config = window.parent.config;');
             // Call image preloading
-            this.addJsFile(window.contestsRoot + '/' + contestFolder + '/contest_' + contestID + '.js', callback);
+            that.addJsFile(window.contestsRoot + '/' + contestFolder + '/contest_' + contestID + '.js', callback);
          }, "json");
 
       var border = "border: 1px solid #000000;";
