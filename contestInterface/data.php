@@ -450,11 +450,12 @@ function handleRecoverGroup($db) {
 }
 
 function handleGetConfig() {
+   global $config;
    $clientConfig = array(
       "imagesURLReplacements" => $config->imagesURLReplacements,
       "imagesURLReplacementsNonStatic" => $config->imagesURLReplacementsNonStatic
       );
-   exitWithJson($clientConfig);
+   exitWithJson(["success" => true, "config" => $clientConfig]);
 }
 
 if (!isset($_POST["action"])) {
