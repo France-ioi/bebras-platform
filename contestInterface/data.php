@@ -210,11 +210,15 @@ function handleCloseContest($db) {
 
 function handleLoadSession() {
    global $config;
+   $clientConfig = array(
+      "imagesURLReplacements" => $config->imagesURLReplacements,
+      "imagesURLReplacementsNonStatic" => $config->imagesURLReplacementsNonStatic
+      );
    $sid = session_id();
    // If the session is new or closed, just return the SID.
    if (!isset($_SESSION["teamID"]) || isset($_SESSION["closed"])) {
       addBackendHint("ClientIP.loadSession:new");
-      exitWithJson(['success' => true, "SID" => $sid]);
+      exitWithJson(['success' => true, "SID" => $sid, "config" => $clientConfig]);
    }
    // Otherwise, data from the session is also returned.
    addBackendHint("ClientIP.loadSession:found");
@@ -223,13 +227,9 @@ function handleLoadSession() {
    if ($config->defaultLanguage == "es") {
       $message = "¿Desea reiniciar la prueba comenzada anteriormente?";
    }
-   $config = array(
-      "imagesURLReplacements" => $config->imagesURLReplacements,
-      "imagesURLReplacementsNonStatic" => $config->imagesURLReplacementsNonStatic
-      );
    exitWithJson(array(
       "success" => true,
-      "config" => $config,
+      "config" => $clientConfig,
       "teamID" => $_SESSION["teamID"],
       "message" => $message,
       "nbMinutes" => $_SESSION["nbMinutes"],
