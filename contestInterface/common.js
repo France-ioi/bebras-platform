@@ -1328,6 +1328,7 @@ function loadContestData(contestID, contestFolder, groupPassword)
                return;
             }
             $("#divCheckGroup").hide();
+            $('#mainNav').hide();
 
             function oldLoader() {
                $.get(window.contestsRoot + '/' + contestFolder + "/contest_" + contestID + ".html", function(content) {
@@ -1489,7 +1490,6 @@ window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic) 
          }
       }
       $("#div" + curStep).hide();
-      $('#mainNav').hide();
       hideLoginFields(data);
       if (curStep === "CheckGroup") {
          if (isPublic) {
@@ -1500,6 +1500,7 @@ window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic) 
          } else {
             window.setNbContestants(1);
          }
+         $('#mainNav').hide();
       } else {
          fillListTeams(data.teams);
          $("#divRelogin").show();
@@ -1703,7 +1704,6 @@ function initContestData(data) {
    contestOpen = !!parseInt(data.contestOpen);
    contestVisibility = data.contestVisibility;
    contestShowSolutions = !!parseInt(data.contestShowSolutions);
-   $('#mainNav').hide();
    if (newInterface) {
       $("#question-iframe-container").addClass("newInterfaceIframeContainer");
       $(".oldInterface").html("").hide();

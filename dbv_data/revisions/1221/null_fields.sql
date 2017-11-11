@@ -1,4 +1,4 @@
-ALTER TABLE `team` CHANGE `startTime` `startTime` DATETIME NULL;
+ALTER TABLE `team` CHANGE `startTime` `startTime` DATETIME NULL DEFAULT NULL;
 ALTER TABLE `team` CHANGE `cached_contestants` `cached_contestants` VARCHAR(300) CHARACTER SET utf8 COLLATE utf8_general_ci NULL;
 ALTER TABLE `team` CHANGE `nbContestants` `nbContestants` TINYINT(1) NULL;
 ALTER TABLE `team` CHANGE `iVersion` `iVersion` INT(11) NULL;
