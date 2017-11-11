@@ -1186,6 +1186,24 @@ function updateUnlockedLevels(sortedQuestionIDs, updatedQuestionKey, contestEnde
    }
 }
 
+function startContestTime(data) {
+   $.post("data.php", {SID: SID, action: "startTimer", teamID: teamID},
+      function(dataStartTimer) {
+         var contestData = {
+            ended: dataStartTimer.ended,
+            remainingSeconds: dataStartTimer.remainingSeconds,
+            questionsData: data.questionsData,
+            scores: data.scores,
+            answers: data.answers,
+            isTimed: data.isTimed,
+            teamPassword: data.teamPassword           
+         };
+         setupContest(contestData);
+      },
+      "json"
+   );
+}
+
 /*
  * Setup of the contest when the group has been selected, contestants identified,
  * the team's password given to the students, and the images preloaded
@@ -1314,7 +1332,7 @@ function loadContestData(contestID, contestFolder, groupPassword)
             function oldLoader() {
                $.get(window.contestsRoot + '/' + contestFolder + "/contest_" + contestID + ".html", function(content) {
                   $('#divQuestionsContent').html(content);
-                  setupContest(data);
+                  startContestTime(data);
                });
             }
 
@@ -1325,7 +1343,7 @@ function loadContestData(contestID, contestFolder, groupPassword)
                var loader = new Loader(window.contestsRoot + '/' + contestFolder + '/', log_fn);
                loader.run().done(function(content) {
                   $('#divQuestionsContent').html(content);
-                  setupContest(data);
+                  startContestTime(data);
                }).fail(function() {
                   oldLoader();
                });

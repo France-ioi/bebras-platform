@@ -1,0 +1,10 @@
+ALTER TABLE `team` CHANGE `startTime` `startTime` DATETIME NULL;
+ALTER TABLE `team` CHANGE `cached_contestants` `cached_contestants` VARCHAR(300) CHARACTER SET utf8 COLLATE utf8_general_ci NULL;
+ALTER TABLE `team` CHANGE `nbContestants` `nbContestants` TINYINT(1) NULL;
+ALTER TABLE `team` CHANGE `iVersion` `iVersion` INT(11) NULL;
+ALTER TABLE `contestant` CHANGE `grade` `grade` INT(11) NULL;
+ALTER TABLE `contestant` CHANGE `firstName` `firstName` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL;
+ALTER TABLE `contestant` CHANGE `lastName` `lastName` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL;
+ALTER TABLE `contestant` CHANGE `studentID` `studentID` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL;
+ALTER TABLE `contestant` CHANGE `cached_schoolID` `cached_schoolID` BIGINT(20) NULL;
+ALTER TABLE `contestant` CHANGE `iVersion` `iVersion` INT(11) NULL;

@@ -89,7 +89,7 @@ function handleCreateTeam($db) {
    $_SESSION["teamID"] = $teamID;
    $_SESSION["teamPassword"] = $password;
    foreach ($contestants as $contestant) {
-      if (!isset($contestant["grade"])) {
+      if ((!isset($contestant["grade"])) || ($contestant["grade"] == '')) {
          $contestant["grade"] = -2;
       }
       if (!isset($contestant["genre"])) {
@@ -125,6 +125,27 @@ function updateDynamoDBStartTime($db, $teamID) {
    }
 }
 
+function handleStartTimer($db) {
+   $teamID = $_SESSION["teamID"];
+   $stmt = $db->prepare("UPDATE `team` SET `startTime` = UTC_TIMESTAMP() WHERE `ID` = :teamID AND `startTime` IS NULL");
+   $stmt->execute(array("teamID" => $teamID));
+   updateDynamoDBStartTime($db, $teamID);
+
+   $remainingSeconds = getRemainingSeconds($db, $teamID, true);
+
+   if ($remainingSeconds <= 0) {
+      $_SESSION["closed"] = true;
+   } else {
+      unset($_SESSION["closed"]);
+   }
+
+   exitWithJson((object)array(
+      "success" => true,
+      "remainingSeconds" => $remainingSeconds,
+      "ended" => ($remainingSeconds <= 0) && ($_SESSION["nbMinutes"] > 0)
+   ));
+}
+
 function handleLoadContestData($db) {
    global $tinyOrm, $config;
    if (!isset($_SESSION["teamID"])) {
@@ -141,9 +162,8 @@ function handleLoadContestData($db) {
       reloginTeam($db, $password, $_POST["teamID"]);
    }
    $teamID = $_SESSION["teamID"];
-   $stmt = $db->prepare("UPDATE `team` SET `startTime` = UTC_TIMESTAMP() WHERE `ID` = :teamID AND `startTime` IS NULL");
+   $stmt = $db->prepare("UPDATE `team` SET `createTime` = UTC_TIMESTAMP() WHERE `ID` = :teamID AND `createTime` IS NULL");
    $stmt->execute(array("teamID" => $teamID));
-   updateDynamoDBStartTime($db, $teamID);
    
    $questionsData = getQuestions($db, $_SESSION["contestID"], $_SESSION["subsetsSize"], $teamID);
    $mode = null;
@@ -171,13 +191,7 @@ function handleLoadContestData($db) {
          $scores[$row['questionID']] = $row['ffScore'];
       }
    }
-   $remainingSeconds = getRemainingSeconds($db, $teamID, true);
 
-   if ($remainingSeconds <= 0) {
-      $_SESSION["closed"] = true;
-   } else {
-      unset($_SESSION["closed"]);
-   }
    addBackendHint("ClientIP.loadContestData:pass");
    addBackendHint(sprintf("Team(%s):loadContestData", escapeHttpValue($teamID)));
    exitWithJson((object)array(
@@ -186,8 +200,6 @@ function handleLoadContestData($db) {
       'scores' => $scores,
       "answers" => $answers,
       "isTimed" => ($_SESSION["nbMinutes"] > 0),
-      "remainingSeconds" => $remainingSeconds,
-      "ended" => ($remainingSeconds <= 0) && ($_SESSION["nbMinutes"] > 0),
       "teamPassword" => $_SESSION["teamPassword"]
    ));
 }
@@ -489,6 +501,10 @@ if ($action === "createTeam") {
 
 if ($action === "loadContestData") {
    handleLoadContestData($db);
+}
+
+if ($action == "startTimer") {
+   handleStartTimer($db);
 }
 
 if ($action === "getRemainingSeconds") {
