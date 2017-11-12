@@ -39,6 +39,13 @@ var delaySendingAttempts = 60000;
 var nbSubmissions = 0;
 var t = i18n.t;
 
+function getParameterByName(name) {
+   name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+   var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+       results = regex.exec($window.location.toString());
+   return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
 var logToConsole = function(logStr) {
   if (window.console) {
     console.error(logStr);
@@ -653,7 +660,7 @@ var questionIframe = {
 
       // Get configuration
       var that = this;
-      $.post("data.php", {action: 'getConfig'},
+      $.post("data.php", {action: 'getConfig', p: getParameterByName('p')},
          function(data) {
             window.config = data.config;
             that.inject('window.config = window.parent.config;');
@@ -2520,7 +2527,14 @@ Loader.prototype.assemble = function() {
          data = data.replace(new RegExp(window.config.imagesURLReplacements[i][0], 'g'), window.config.imagesURLReplacements[i][1]);
       }
       if(window.config.upgradeToHTTPS) {
-         data = data.replace(/http:\/\//g, "https://");
+         if(window.config.upgradeToHTTPS.length) {
+            for(var i=0; i<window.config.upgradeToHTTPS.length; i++) {
+               var uthDomain = window.config.upgradeToHTTPS[i];
+               data = data.replace(new RegExp('http://' + uthDomain, 'g'), 'https://' + uthDomain);
+            }
+         } else {
+            data = data.replace(/http:\/\//g, "https://");
+         }
       }
       self.promise.resolve(data);
    }, 100);

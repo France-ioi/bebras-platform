@@ -6,9 +6,9 @@ if (preg_match('/(?i)msie [5-7]/',$_SERVER['HTTP_USER_AGENT'])) {
     $config->teacherInterface->sAssetsStaticPath = $config->teacherInterface->sAbsoluteStaticPathOldIE;
 }
 
-if (isset($_GET['p']) && $_GET['p'] == '1') {
-	$config->teacherInterface->sAssetsStaticPath = $config->contestInterface->sAssetsStaticPathNoS3;
-	$config->teacherInterface->sAbsoluteStaticPath = $config->contestInterface->sAbsoluteStaticPathNoS3;
+if ((isset($_GET['p']) && $_GET['p'] == '1') || (isset($_POST['p']) && $_POST['p'] == '1')) {
+    $config->teacherInterface->sAssetsStaticPath = $config->contestInterface->sAssetsStaticPathNoS3;
+    $config->teacherInterface->sAbsoluteStaticPath = $config->contestInterface->sAbsoluteStaticPathNoS3;
     $config->imagesURLReplacements = array_merge($config->imagesURLReplacements, $config->imagesURLReplacementsNonStatic);
 }
 
