@@ -1005,6 +1005,7 @@ var TimeManager = {
 
 window.selectMainTab = function(tabName) {
    if (tabName == 'home') {
+      $("#publicContestExplanation").html(t("tab_public_contests_score_explanation"));
       loadPublicGroups();
    }
    var tabNames = ["school", "home", "continue", "results", "contests"];
