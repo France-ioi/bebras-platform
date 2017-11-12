@@ -622,6 +622,9 @@ var questionIframe = {
                 } \n\
                 that.newUrlImages[that.imagesToPreload[that.nbImagesLoaded]] = srcImage; \n\
             } \n\
+            if(window.config.upgradeToHTTPS) { \n\
+                srcImage = srcImage.replace(/^http:/, 'https:'); \n\
+            } \n\
             that.loadingImages[that.nbImagesLoaded].src = srcImage; \n\
         } else { \n\
             ImagesLoader.loadHandler(); \n\

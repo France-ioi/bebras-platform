@@ -465,7 +465,8 @@ function handleGetConfig() {
    global $config;
    $clientConfig = array(
       "imagesURLReplacements" => $config->imagesURLReplacements,
-      "imagesURLReplacementsNonStatic" => $config->imagesURLReplacementsNonStatic
+      "imagesURLReplacementsNonStatic" => $config->imagesURLReplacementsNonStatic,
+      "upgardeToHTTPS" => $config->upgradeToHTTPS
       );
    exitWithJson(["success" => true, "config" => $clientConfig]);
 }
