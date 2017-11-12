@@ -1,6 +1,7 @@
 <?php
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 
+include_once("config.php");
 include_once("../shared/common.php");
 include_once("../shared/tinyORM.php");
 include_once("common_contest.php");
@@ -466,7 +467,7 @@ function handleGetConfig() {
    $clientConfig = array(
       "imagesURLReplacements" => $config->imagesURLReplacements,
       "imagesURLReplacementsNonStatic" => $config->imagesURLReplacementsNonStatic,
-      "upgardeToHTTPS" => $config->upgradeToHTTPS
+      "upgradeToHTTPS" => $config->upgradeToHTTPS
       );
    exitWithJson(["success" => true, "config" => $clientConfig]);
 }

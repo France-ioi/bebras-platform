@@ -623,7 +623,7 @@ var questionIframe = {
                 that.newUrlImages[that.imagesToPreload[that.nbImagesLoaded]] = srcImage; \n\
             } \n\
             if(window.config.upgradeToHTTPS) { \n\
-                srcImage = srcImage.replace(/^http:/, 'https:'); \n\
+                srcImage = srcImage.replace(/^http:/, "https:"); \n\
             } \n\
             that.loadingImages[that.nbImagesLoaded].src = srcImage; \n\
         } else { \n\
@@ -2518,6 +2518,9 @@ Loader.prototype.assemble = function() {
       var data = self.parts.join('');
       for(var i=0; i<window.config.imagesURLReplacements.length; i++) {
          data = data.replace(new RegExp(window.config.imagesURLReplacements[i][0], 'g'), window.config.imagesURLReplacements[i][1]);
+      }
+      if(window.config.upgradeToHTTPS) {
+         data = data.replace(/http:\/\//g, "https://");
       }
       self.promise.resolve(data);
    }, 100);
