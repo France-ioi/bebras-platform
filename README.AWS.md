@@ -45,6 +45,11 @@ Before generating a contest, you also need to:
    - set `teacherInterface->sAbsoluteStaticPath` in `config_local.php` to the absolute
      path of your bucket (without the final `contest/` directory)
 
+Set the metadata Cache-Control to "max-age=43200, public" to indicate to
+proxy-caches that they can share the files to every client requesting them.
+`teacherInterface/generateContest.php` should already do that for files from
+generated contests.
+
 ## CloudFront (advised)
 
 In order to boost access perfomance to your S3 files, you can create a
