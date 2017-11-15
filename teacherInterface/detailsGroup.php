@@ -45,7 +45,7 @@ $query = "SELECT `group`.`startTime`, team.password, `team_question`.ffScore, te
 "LEFT JOIN team_question ON (team_question.teamID = team.ID AND team_question.questionID = question.ID) ".
 "WHERE `group`.ID = :groupID ".
 "GROUP BY team.ID, question.ID ".
-"ORDER BY `group`.ID, team.startTime DESC, contest_question.`order`";
+"ORDER BY `group`.ID, team.startTime DESC, team.ID, contest_question.`order`";
 
 $stmt = $db->prepare($query);
 $stmt->execute(['groupID' => $groupID]);
