@@ -55,14 +55,12 @@ while ($row = $stmt->fetchObject()) {
    if (!isset($groups[$row->groupID])) {
       $groups[$row->groupID] = array("name" => $row->groupName, "startTime" => $row->startTime, "teams" => array());
    }
-   $group = &$groups[$row->groupID];
-   if (!isset($group["teams"][$row->teamID])) {
-      $group["teams"][$row->teamID] = array("contestants" => $row->contestants, "password" => $row->password, "score" => $row->score, "questions" => array());
+   $groupRef = &$groups[$row->groupID];
+   if (!isset($groupRef["teams"][$row->teamID])) {
+      $groupRef["teams"][$row->teamID] = array("contestants" => $row->contestants, "password" => $row->password, "score" => $row->score, "questions" => array());
    }
-   $team = &$group["teams"][$row->teamID];
-   $team["questions"][$row->questionName] = $row->ffScore;
+   $groupRef["teams"][$row->teamID]["questions"][$row->questionName] = $row->ffScore;
 }
-
 
 foreach ($groups as $group) {
    echo "<h2>Groupe ".$group["name"]."</h2>";
