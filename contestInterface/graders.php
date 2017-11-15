@@ -1,6 +1,7 @@
 <?php 
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 
+require_once "config.php";
 require_once "../shared/common.php";
 require_once "common_contest.php";
 use Aws\S3\S3Client;
