@@ -33,7 +33,7 @@ tr:hover { background-color: #ffff99; }
 <?php
 //.vertical-text {	transform: rotate(-45deg); 	transform-origin: left bottom 0; overflow:}</style>";
 
-$query = "SELECT `group`.`startTime`, team.password, `team_question`.ffScore, team.score, ".
+$query = "SELECT `group`.`startTime`, team.password, `team_question`.ffScore, team_question.score AS tqScore, team.score, ".
 "GROUP_CONCAT(CONCAT(firstName, ' ', lastName, ' ') SEPARATOR ', ') as contestants, ".
 "`group`.name as groupName, question.name as questionName, ".
 "`group`.ID as groupID, team.ID as teamID, question.ID as questionID ".
@@ -59,7 +59,11 @@ while ($row = $stmt->fetchObject()) {
    if (!isset($groupRef["teams"][$row->teamID])) {
       $groupRef["teams"][$row->teamID] = array("contestants" => $row->contestants, "password" => $row->password, "score" => $row->score, "questions" => array());
    }
-   $groupRef["teams"][$row->teamID]["questions"][$row->questionName] = $row->ffScore;
+   $score = $row->tqScore;
+   if ($score === null) {
+      $score = $row->ffScore;
+   }
+   $groupRef["teams"][$row->teamID]["questions"][$row->questionName] = $score;
 }
 
 foreach ($groups as $group) {
