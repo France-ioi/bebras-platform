@@ -86,6 +86,24 @@ $config->imagesURLReplacements = array();
 $config->imagesURLReplacementsNonStatic = array();
 $config->upgradeToHTTPS = false;
 
+// team_question transfer script
+$config->transferTeamQuestion = (object) array(
+    // Number of teams to load from SQL on each update chunk
+    'nbTeamsPerChunk' => 2000,
+    // Number of seconds to sleep between each update chunk
+    'sleepSecs' => 15,
+    // Minimum number of teams to trigger an update (to avoid infinite loops)
+    'nbMinTeams' => 50,
+    // startTime criteria to select a team for update
+    'startTimeLimit' => "NOW() - INTERVAL 3 hour",
+    // startTime source SQL table
+    'dateTable' => 'team',
+    // team_question source DynamoDB table; if null, will be replaced by
+    // $config->db->dynamoDBPrefix.'team_question' at execution time
+    'srcTable' => null,
+    // team_question destination SQL table
+    'dstTable' => 'team_question');
+
 $config->validationMailBody = "Bonjour,\r\n\r\nPour valider votre inscription en tant que coordinateur pour le concours Castor, ouvrez le lien suivant dans votre navigateur  : \r\n\r\n%s\r\n\r\nN'hésitez pas à nous contacter si vous rencontrez des difficultés.\r\n\r\nCordialement,\r\n-- \r\nL'équipe du Castor Informatique";
 $config->validationMailTitle = "Castor Informatique : validation d'inscription";
 
