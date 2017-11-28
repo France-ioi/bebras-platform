@@ -211,10 +211,13 @@
        <option value="-1" data-i18n="grade_-1"></option>
        <option value="4" data-i18n="grade_4"></option>
        <option value="5" data-i18n="grade_5"></option>
-       <option value="6" data-i18n="grade_6"></option>
+       <option value="6" data-i18n="grade_6_special"></option>
        <option value="7" data-i18n="grade_7"></option>
+       <option value="7" data-i18n="grade_7_special"></option>
        <option value="8" data-i18n="grade_8"></option>
+       <option value="8" data-i18n="grade_8_special"></option>
        <option value="9" data-i18n="grade_9"></option>
+       <option value="9" data-i18n="grade_9_special"></option>
        <option value="10" data-i18n="grade_10"></option>
        <option value="13" data-i18n="grade_10_pro"></option>
        <option value="11" data-i18n="grade_11"></option>
