@@ -211,7 +211,7 @@
        <option value="-1" data-i18n="grade_-1"></option>
        <option value="4" data-i18n="grade_4"></option>
        <option value="5" data-i18n="grade_5"></option>
-       <option value="6" data-i18n="grade_5"></option>
+       <option value="6" data-i18n="grade_6"></option>
        <option value="16" data-i18n="grade_6_special"></option>
        <option value="7" data-i18n="grade_7"></option>
        <option value="17" data-i18n="grade_7_special"></option>
