@@ -771,7 +771,25 @@ var questionIframe = {
       // Load js modules
       $('.js-module-'+questionKey).each(function() {
          var jsModuleId = 'js-module-'+$(this).attr('data-content');
-         questionIframe.addJsContent($('#'+jsModuleId).attr('data-content'));
+         var jsModuleDiv = $('#'+jsModuleId);
+         if(jsModuleDiv.length) {
+            questionIframe.addJsContent(jsModuleDiv.attr('data-content'));
+         } else {
+            // This module was split in parts, fetch each part
+            var jsModulePart = 0;
+            var jsContent = '';
+            jsModuleDiv = $('#'+jsModuleId+'_0');
+            while(jsModuleDiv.length) {
+               jsContent += jsModuleDiv.attr('data-content');
+               jsModulePart += 1;
+               jsModuleDiv = $('#'+jsModuleId+'_'+jsModulePart);
+            }
+            if(jsContent) {
+               questionIframe.addJsContent(jsContent);
+            } else {
+               logError('Unable to find JS module ' + jsModuleId);
+            }
+         }
       });
 
       this.addJsContent('window.contestsRoot = "'+window.contestsRoot+'";');
