@@ -273,10 +273,11 @@ function handleCheckPassword($db) {
 
    // Check common.js version
    $commonJsVersion = isset($_POST['commonJsVersion']) ? intval($_POST['commonJsVersion']) : 0;
+   $commonJsTimestamp = isset($_POST['commonJsTimestamp']) ? $_POST['commonJsTimestamp'] : '[none]';
    $timestamp = isset($_POST['timestamp']) ? $_POST['timestamp'] : '[none]';
 
    if($commonJsVersion < $config->minimumCommonJsVersion) {
-      $errormsg = "Mauvaise version de common.js : client ".$commonJsVersion." < minimum ".$config->minimumCommonJsVersion." (timestamp ".$timestamp.").";
+      $errormsg = "Mauvaise version de common.js : client ".$commonJsVersion." < minimum ".$config->minimumCommonJsVersion." (server timestamp ".$timestamp.", common.js loaded at ".$commonJsTimestamp.").";
       $stmt = $db->prepare('insert into error_log (date, message) values (UTC_TIMESTAMP(), :errormsg);');
       $stmt->execute(['errormsg' => $errormsg]);
       unset($stmt);

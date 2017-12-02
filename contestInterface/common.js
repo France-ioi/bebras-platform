@@ -4,7 +4,10 @@
 // *** Version of this file
 // It will be checked against config.php's minimumCommonJsVersion; increment
 // this version on each important change, and modify config.php accordingly.
-var commonJsVersion = 1;
+var commonJsVersion = 2;
+
+// Timestamp of common.js initial loading, sent on checkPassword too
+var commonJsTimestamp = Date();
 
 var contestID;
 var contestFolder;
@@ -1554,7 +1557,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
    Utils.disableButton("button" + curStep);
    $('#recoverGroup').hide();
    $("#" + curStep + "Result").html('');
-   $.post("data.php", {SID: SID, action: "checkPassword", password: groupCode, getTeams: getTeams, language: language, commonJsVersion: commonJsVersion, timestamp: window.timestamp},
+   $.post("data.php", {SID: SID, action: "checkPassword", password: groupCode, getTeams: getTeams, language: language, commonJsVersion: commonJsVersion, timestamp: window.timestamp, commonJsTimestamp: commonJsTimestamp},
       function(data) {
          if (!data.success) {
             if (data.message) {

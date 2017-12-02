@@ -11,7 +11,7 @@ $config->maintenanceUntil = null; // maintenance end time (null if no maintenanc
 // Minimum common.js version required by the platform
 // Increment this each time common.js has an important modification; modify the
 // version number at the beginning of common.js too.
-$config->minimumCommonJsVersion = 1;
+$config->minimumCommonJsVersion = 2;
 
 $config->timestamp = false;
 $config->faviconfile = 'favicon.ico';
