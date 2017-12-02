@@ -276,7 +276,7 @@ function handleCheckPassword($db) {
    $timestamp = isset($_POST['timestamp']) ? $_POST['timestamp'] : '[none]';
 
    if($commonJsVersion < $config->minimumCommonJsVersion) {
-      $errormsg = "Mauvaise version de common.js : client " . $commonJsVersion " < minimum ".$config->minimumCommonJsVersion." (timestamp ".$timestamp.").";
+      $errormsg = "Mauvaise version de common.js : client ".$commonJsVersion." < minimum ".$config->minimumCommonJsVersion." (timestamp ".$timestamp.").";
       $stmt = $db->prepare('insert into error_log (date, message) values (UTC_TIMESTAMP(), :errormsg);');
       $stmt->execute(['errormsg' => $errormsg]);
       unset($stmt);
