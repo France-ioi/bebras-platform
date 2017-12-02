@@ -266,8 +266,28 @@ function handleDestroySession() {
 }
 
 function handleCheckPassword($db) {
+   global $config;
+
    addFailureBackendHint("ClientIP.checkPassword:fail");
    addFailureBackendHint("ClientIP.error");
+
+   // Check common.js version
+   $commonJsVersion = isset($_POST['commonJsVersion']) ? intval($_POST['commonJsVersion']) : 0;
+   $timestamp = isset($_POST['timestamp']) ? $_POST['timestamp'] : '[none]';
+
+   if($commonJsVersion < $config->minimumCommonJsVersion) {
+      $errormsg = "Mauvaise version de common.js : client " . $commonJsVersion " < minimum ".$config->minimumCommonJsVersion." (timestamp ".$timestamp.").";
+      $stmt = $db->prepare('insert into error_log (date, message) values (UTC_TIMESTAMP(), :errormsg);');
+      $stmt->execute(['errormsg' => $errormsg]);
+      unset($stmt);
+      $userMsg = "Vous utilisez une ancienne version de l'interface, veuillez rafraîchir la page. Si cela ne règle pas le problème, essayez de vider votre cache.";
+      if(isset($config->contestBackupURL)) {
+         $userMsg .= " Vous pouvez aussi essayer le domaine alternatif du concours http://" . $config->contestBackupURL . ".";
+      }
+      // Disabled for now while tests are done
+      // exitWithJsonFailure($userMsg);
+   }
+
    if (!isset($_POST["password"])) {
       exitWithJsonFailure("Mot de passe manquant");
    }

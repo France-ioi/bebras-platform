@@ -1,6 +1,11 @@
  /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 !function () {
 
+// *** Version of this file
+// It will be checked against config.php's minimumCommonJsVersion; increment
+// this version on each important change, and modify config.php accordingly.
+var commonJsVersion = 1;
+
 var contestID;
 var contestFolder;
 var contestVisibility;
@@ -1531,7 +1536,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
    Utils.disableButton("button" + curStep);
    $('#recoverGroup').hide();
    $("#" + curStep + "Result").html('');
-   $.post("data.php", {SID: SID, action: "checkPassword", password: groupCode, getTeams: getTeams, language: language},
+   $.post("data.php", {SID: SID, action: "checkPassword", password: groupCode, getTeams: getTeams, language: language, commonJsVersion: commonJsVersion, timestamp: window.timestamp},
       function(data) {
          if (!data.success) {
             if (data.message) {
