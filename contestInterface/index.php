@@ -382,6 +382,7 @@
   window.contestsRoot = <?= json_encode(upgrade_url($config->teacherInterface->sAbsoluteStaticPath.'/contests')) ?>;
   window.sAbsoluteStaticPath = <?= json_encode(upgrade_url($config->teacherInterface->sAbsoluteStaticPath.'/')) ?>;
   window.sAssetsStaticPath = <?= json_encode(upgrade_url($config->teacherInterface->sAssetsStaticPath.'/')) ?>;
+  window.timestamp = <?= $config->timestamp ?>;
   try {
     i18n.init(<?= json_encode([
       'lng' => $config->defaultLanguage,
