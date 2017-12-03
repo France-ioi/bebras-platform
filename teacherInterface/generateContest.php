@@ -403,6 +403,8 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
       // If the content is too long, split it in parts
       if(strlen($strContent) < 65000) {
          $strModule = '<div class="js-module" id="js-module-'.$name.'" data-content="'.$strContent.'"></div>'."\n";
+         $strQuestions .= $strModule;
+         contestAddContent($strModule, $nameParts, $buffer, $numPart, false);
       } else {
          $strContentPart = 0;
          while(strlen($strContent) > 0) {
@@ -410,10 +412,10 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
             $strContent = substr($strContent, 65000);
             $strModule = '<div class="js-module" id="js-module-'.$name.'_'.$strContentPart.'" data-part="' . $strContentPart . '" data-content="'.$strContentExcept.'"></div>'."\n";
             $strContentPart += 1;
+            $strQuestions .= $strModule;
+            contestAddContent($strModule, $nameParts, $buffer, $numPart, false);
          }
       }
-      $strQuestions .= $strModule;
-      contestAddContent($strModule, $nameParts, $buffer, $numPart, false);
    }
 
    // Compile css modules
