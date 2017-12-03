@@ -401,7 +401,7 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
    foreach ($jsModulesRes as $name => $content) {
       $strContent = htmlspecialchars($content, ENT_COMPAT, 'UTF-8');
       // If the content is too long, split it in parts
-      if(strlen($strContent) > 65000) {
+      if(strlen($strContent) < 65000) {
          $strModule = '<div class="js-module" id="js-module-'.$name.'" data-content="'.$strContent.'"></div>'."\n";
       } else {
          $strContentPart = 0;
