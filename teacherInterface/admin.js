@@ -1076,6 +1076,9 @@ function continueLogUser() {
          jqAlert(t('admin_cannot_delete_school'));
       });
    } else {
+      loadContestants();
+      loadTeams();
+      loadListGroups();
       //if (loggedUser.allowMultipleSchools === "1") {
          //$("#singleSchool").hide();
          //$("#multipleSchools").show();
@@ -1100,17 +1103,12 @@ function continueLogUser() {
       }      
       $("#tabs-questions").hide();
       $("#tabs-contests").hide();
+      if (state === 'normal') {
+         loadListAwards();
+      }
    }
    $("#admin_view").tabs();
    $("#admin_view").show();
-   loadListGroups();
-   if (state !== 'contest') {
-      loadContestants();
-      loadTeams();
-   }
-   if (state === 'normal') {
-      loadListAwards();
-   }
    initDeleteButton("group");
 }
 
