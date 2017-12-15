@@ -114,7 +114,7 @@ font-family: 'Varela Round', sans-serif;
       <br/>
       <div style="border:solid black 1px;margin:auto;padding:5px;text-align:left;width:600px;">
          <p><b>Option</b> : n'imprimer les diplômes que pour :</p>
-         <p><input type="checkbox" id="qualifiedOnly" onchange="updateNbDiplomas()"></input>Les élèves ayant obtenu <span id="qualificationText"></span></p>
+         <!--<p><input type="checkbox" id="qualifiedOnly" onchange="updateNbDiplomas()"></input>Les élèves ayant obtenu <span id="qualificationText"></span></p>-->
          <p><input type="checkbox" id="topRankedOnly" onchange="updateNbDiplomas()"></input>Les élèves étant dans les <input type="number" id="minRankPercentile" style="width:40px;text-align:center" value="50" onchange="updateNbDiplomas()"/></input>% mieux classés de leur catégorie</p>
          <p>Diplômes à imprimer : <span id="printedCertificates"></span> sur <span id="totalCertificates"></span>
       </div>
