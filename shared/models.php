@@ -38,10 +38,10 @@ $tablesModels = array (
          "rank" => array("type" => "int"),
          "schoolRank" => array("type" => "int"),
          "algoreaCode" => array("type" => "string"),
+         "algoreaCategory" => array("type" => "string"),
          "saniValid" => array("type" => "int", "access" => array("write" => array("generator", "admin"), "read" => array("admin"))),
          "orig_firstName" => array("type" => "string"),
-         "orig_lastName" => array("type" => "string"),
-         "algoreaCode" => array("type" => "string")
+         "orig_lastName" => array("type" => "string")
       ),
       "hasHistory" => false
    ),
@@ -285,7 +285,9 @@ $viewsModels = array(
          "city" => array("tableName" => "school"),
          "name" => array("tableName" => "school"),
          "algoreaCode" => array(),
+         "algoreaCategory" => array(),
          "franceioiID" => array("tableName" => "algorea_registration"),
+         "groupName" => array("tableName" => "group", "fieldName" => "name")
       ),
       "filters" => array(
          "groupField" => $fieldGroupFilter,
@@ -293,6 +295,7 @@ $viewsModels = array(
          "printable" => array("joins" => array("contest"), "condition" => "`[PREFIX]contest`.`printCodes` = 1", "ignoreValue" => true),
          "showable" => array("joins" => array("contest"), "condition" => "`[PREFIX]contest`.`showResults` = 1", "ignoreValue" => true),
          "schoolID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`schoolID` = :[PREFIX_FIELD]schoolID"),
+         "groupID" => array("joins" => array("team"), "condition" => "(`team`.`groupID` = :[PREFIX_FIELD]groupID)"),
          "userID" => array("joins" => array("user_user"), "condition" => "(`group`.`userID` = :[PREFIX_FIELD]userID OR (`[PREFIX]user_user`.`targetUserID` = :[PREFIX_FIELD]userID AND `[PREFIX]user_user`.`accessType` <> 'none'))"),
          "ownerUserID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`userID` = :[PREFIX_FIELD]ownerUserID"),
          "awarded" => array("joins" => array("group", 'team', 'award_threshold'), "ignoreValue" => true, "condition" => "(`[PREFIX]team`.`participationType` = 'Official' and `[PREFIX]contestant`.`rank` is not null and `[PREFIX]award_threshold`.`minScore` <= [PREFIX]team.score)")
@@ -301,7 +304,6 @@ $viewsModels = array(
          array('field' => 'name'),
          array('field' => 'contestID'),
          array('field' => 'groupField'),
-         array('field' => 'rank'),
          array('field' => 'lastName'),
          array('field' => 'firstName'),
       )

@@ -277,6 +277,7 @@ function initModels(isLogged) {
             city: {hidden: true, visible: false, hiddenlg: true},
             name: {hidden: true, visible: false, hiddenlg: true},
             algoreaCode: {hidden: true, visible: false, hiddenlg: true},
+            algoreaCategory: {label: t("contestant_category_label"), editable: false, search: true, width: 130},
             loginID: {label: t("awards_loginID_label"), editable: false, search: false, width:130, sortable: false}
          }
       },
@@ -2210,6 +2211,20 @@ function printGroupCertificates() {
    window.open("printCertificatesPdf.php?schoolID="+group.schoolID+"&contestID="+group.contestID+"&groupID=" + groupID, "printGroup" + groupID, 'width=700,height=600,menubar=yes,status=yes,toolbar=yes,scrollbars=yes,resizable=yes');
 }
 
+function printGroupAwards() {
+   var groupID = jQuery("#grid_group").jqGrid('getGridParam','selrow');
+   if (groupID === null) {
+      jqAlert(t("warning_no_group_selected"));
+      return;
+   }
+   var group = groups[groupID];
+   if (group.participationType != 'Official' || group.contestPrintCertificates != 1) {
+      jqAlert(t("group_print_awards_impossible"));
+      return;
+   }
+   window.open("awardsPrint.php?schoolID="+group.schoolID+"&contestID="+group.contestID+"&groupID=" + groupID, "printGroup" + groupID, 'width=700,height=600,menubar=yes,status=yes,toolbar=yes,scrollbars=yes,resizable=yes');
+}
+
 function printSchoolCertificates(contestID) {
    var schoolID = jQuery("#grid_school").jqGrid('getGridParam','selrow');
    if (schoolID === null) {
@@ -2217,6 +2232,16 @@ function printSchoolCertificates(contestID) {
       return false;
    }
    window.open("printCertificatesPdf.php?schoolID="+schoolID+"&contestID="+contestID, "printSchool" + schoolID, 'width=700,height=600,menubar=yes,status=yes,toolbar=yes,scrollbars=yes,resizable=yes');
+   return false;
+}
+
+function printSchoolAwards() {
+   var schoolID = jQuery("#grid_school").jqGrid('getGridParam','selrow');
+   if (schoolID === null) {
+      jqAlert(t("warning_no_school_selected"));
+      return false;
+   }
+   window.open("awardsPrint.php?schoolID="+schoolID, "printSchool" + schoolID, 'width=700,height=600,menubar=yes,status=yes,toolbar=yes,scrollbars=yes,resizable=yes');
    return false;
 }
 

@@ -27,6 +27,12 @@ $request["filters"] = array('awarded' => true, 'printable' => true);
 if (!$_SESSION["isAdmin"]) {
    $request["filters"]["userID"] = $_SESSION["userID"];
 }
+if (isset($_GET["groupID"])) {
+   $request["filters"]["groupID"] = $_GET["groupID"];
+}
+if (isset($_GET["schoolID"])) {
+   $request["filters"]["schoolID"] = $_GET["schoolID"];
+}
 $request['orders'] = $model['orders'];
 $result = selectRows($db, $request);
 $awarded = $result['items'];
@@ -75,10 +81,24 @@ if (!count($awarded)) {
        text-align: center;
     }
     .page-break  {
-       clear: left;
+       clear: both;
        display:block;
        page-break-after:always;
        outline: 0px;
+    }
+    .awardsTable {
+       page-break-before:always;
+       page-break-after:always;
+       padding-top: 10px;
+       padding-bottom: 10px;
+       clear: both;
+    }
+    .awardsTable tr td {
+       border: solid black 1px;
+       padding: 3px;
+    }
+    .awardsTable tr:first-child td {
+       font-weight: bold;
     }
     </style>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -90,19 +110,29 @@ if (!count($awarded)) {
 $currentYear = date("Y");
 $currentSchoolID = null;
 $currentContestID = null;
+$currentGroupField = null;
 $nbLabelsOnPage = 0;
+$strCertificates = '<br/>';
+$strTableHeader = '<table cellpadding=0 cellspacing=0 class="awardsTable"><tr><td>Groupe</td><td>Prénom</td><td>Nom</td><td>Code de participant Algoréa</td><td>Catégorie Algoréa</td></tr>';
+$strTable = $strTableHeader;
 foreach($awarded as $contestant) {
    if ($currentSchoolID == null) {
       $currentSchoolID = $contestant->schoolID;
       $currentContestID = $contestant->contestID;
+      $currentGroupField = $contestant->groupField;
    }
-   if ($contestant->schoolID != $currentSchoolID || $contestant->contestID != $currentContestID) {
+   if ($contestant->schoolID != $currentSchoolID || $contestant->contestID != $currentContestID || $contestant->groupField != $currentGroupField) {
       $currentSchoolID = $contestant->schoolID;
       $currentContestID = $contestant->contestID;
+      $currentGroupField = $contestant->groupField;
       $nbLabelsOnPage = 0;
-      echo '<div class="page-break"></div>';
+      $strTable .= "</table>";
+      echo $strTable;
+      echo $strCertificates;
+      $strCertificates = '<br/>';
+      $strTable = $strTableHeader;
    }
-
+   $strTable .= '<tr>';
    $firstLine = $strings['award_print_first_line'];
    $secondLine = $strings['award_print_second_line'];
    $thirdLine = $strings['award_print_third_line'];
@@ -112,20 +142,32 @@ foreach($awarded as $contestant) {
       $secondLine = "Utilisable sur concours.algorea.org";
       $thirdLine = "Date du concours : du 28 mai au 12 juin 2017";
    }
-   echo '<div class="label"><div class="labelContent">';
-   echo '<p class="title">'.$firstLine.'</p>';
-   echo '<p class="name">'.$contestant->firstName.' '.$contestant->lastName.'</p>';
-   echo '<p class="schoolName">'.$contestant->name.'</p>'; // name of the school
-   echo '<p>code confidentiel: <span class="code">'.$contestant->algoreaCode.'</span></p>';
-   echo '<p class="small">'.$secondLine.'</p>';
-   echo '<p class="small">'.$thirdLine.'</p>';
-   echo '</div></div>';
+   $strCertificates .= '<div class="label"><div class="labelContent">';
+   $strCertificates .= '<p class="title">'.$firstLine.'</p>';
+   $strCertificates .= '<p class="name">'.$contestant->firstName.' '.$contestant->lastName.'</p>';
+   $strTable .= '<td>'.$contestant->groupName.'</td>';
+   $strTable .= '<td>'.$contestant->firstName.'</td>';
+   $strTable .= '<td>'.$contestant->lastName.'</td>';
+   $strTable .= '<td>'.$contestant->algoreaCode.'</td>';
+   $strTable .= '<td>'.$contestant->algoreaCategory.'</td>';
+   $strCertificates .= '<p class="schoolName">'.$contestant->name.'</p>'; // name of the school
+   $strCertificates .= '<p>code confidentiel: <span class="code">'.$contestant->algoreaCode.'</span></p>';
+   if ($contestant->algoreaCategory) {
+      $strCertificates .= '<p>catégorie: <span class="code">'.$contestant->algoreaCategory.'</span></p>';
+   }
+   $strCertificates .= '<p class="small">'.$secondLine.'</p>';
+   $strCertificates .= '<p class="small">'.$thirdLine.'</p>';
+   $strCertificates .= '</div></div>';
    $nbLabelsOnPage += 1;
+   $strTable .= '</tr>';
    if ($nbLabelsOnPage >= 8) {
       $nbLabelsOnPage = 0;
-      echo '<div class="page-break"></div>';
+      $strCertificates .= '<div class="page-break">&nbsp;</div><br/>';
    }
 }
+$strTable .= '</table>';
+echo $strTable;
+echo $strCertificates;
 
 ?>
 

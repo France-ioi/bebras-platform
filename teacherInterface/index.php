@@ -122,6 +122,9 @@
                <h2 id="school_print_certificates_title" data-i18n="school_print_certificates_title"></h2>
                <p id="school_print_certificates_help" data-i18n="school_print_certificates_help"></p>
                <div id="school_print_certificates_contests" class=""></div>
+               <h2 id="school_print_awards_title" data-i18n="school_print_awards_title"></h2>
+               <p id="school_print_awards_help" data-i18n="school_print_awards_help"></p>
+               <button type="button" id="buttonPrintAwards_school" onclick="printSchoolAwards()" data-i18n="school_print_awards" class="btn btn-default"></button>
             </div>
             <div data-i18n="[html]colleagues"></div>
             <div class="gridTable">
@@ -145,15 +148,18 @@
             <button type="button" id="buttonGradeSelected_group" data-i18n="groups_grade_selected" onclick="gradeGroup()" class="btn btn-default"></button>
             <button type="button" id="buttonDisplaySelected_group" onclick="displayScoresGroup()" class="btn btn-default" value="test">Afficher les résultats détaillés</button>
             <div id="gradeGroupState" style="display:none;"></div>
-            <h2 id="group_print_certificates_title" data-i18n="group_print_certificates_title"></h2>
-            <p id="group_print_certificates_help" data-i18n="group_print_certificates_help"></p>
-            <button type="button" id="buttonPrintCertificates_group" onclick="printGroupCertificates()" data-i18n="group_print_certificates" class="btn btn-default"></button>
             <h2 data-i18n="groups_sheet_title"></h2>
             <p data-i18n="[html]groups_sheet_intro"></p>
             <ul>
                <li><button type="button" id="printNotice_group" data-i18n="groups_sheet_button_print" onclick="printGroup()" class="btn btn-default"></button></li>
                <li><button type="button" id="printNotice_groupAll" data-i18n="groups_sheet_button_print_all" onclick="printGroupAll()" class="btn btn-default"></button></li>
             </ul>
+            <h2 id="group_print_certificates_title" data-i18n="group_print_certificates_title"></h2>
+            <p id="group_print_certificates_help" data-i18n="group_print_certificates_help"></p>
+            <button type="button" id="buttonPrintCertificates_group" onclick="printGroupCertificates()" data-i18n="group_print_certificates" class="btn btn-default"></button>
+            <h2 id="group_print_awards_title" data-i18n="group_print_awards_title"></h2>
+            <p id="group_print_awards_help" data-i18n="group_print_awards_help"></p>
+            <button type="button" id="buttonPrintAwards_group" onclick="printGroupAwards()" data-i18n="group_print_awards" class="btn btn-default"></button>
          </div>
 
          <div id="tabs-teams">
@@ -225,7 +231,7 @@
                <p id="noPersonalCode" data-i18n="[html]awards_personal_code_nocode"></p>
                <p id="withPersonalCode" data-i18n="[html]awards_personal_code_withcode"></p>
             </div>
-            <p style="display:none;text-align:center;" id="linkExportAlgoreaCodes" data-i18n="[html]generate_algorea_codes"></p>
+            <p style="display:none;" id="linkExportAlgoreaCodes" data-i18n="[html]generate_algorea_codes"></p>
             <button type="button" id="linkExportAwards1" onclick="exportCSV('award1')" data-i18n="export_to_csv" class="btn btn-default"></button>
             <div class="gridTable">
                <table id="grid_award1"><tbody><tr><td/></tr></tbody></table>
