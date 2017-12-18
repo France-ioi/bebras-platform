@@ -49,7 +49,6 @@ if (!count($awarded)) {
     body, td {
       font-family: Arial, sans-serif;
       font-size: 12px;
-      width: 16cm;
       margin-left: 1.5cm;
     }
     p {
@@ -68,7 +67,7 @@ if (!count($awarded)) {
       font-weight:bold;
     }
     .label{
-       width: 8cm;
+       width: 45%;
        height: 6cm;
        padding: 0 0 0 0;
        margin-right: 0;
