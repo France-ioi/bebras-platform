@@ -10,7 +10,7 @@ function generateAlgoreaCodes($db, $contestID) {
       join team on contestant.teamID = team.ID
       join `group` on `group`.ID = team.groupID
       join award_threshold on award_threshold.nbContestants = team.nbContestants and award_threshold.contestID = :contestID and award_threshold.gradeID = contestant.grade and award_threshold.awardID = 1
-      set algoreaCode =  CONCAT(CONCAT('', FLOOR(RAND()*10000000)), CONCAT('', FLOOR(RAND()*10000000)))
+      set algoreaCode =  CONCAT(CONCAT('a', FLOOR(RAND()*10000000)), CONCAT('', FLOOR(RAND()*10000000)))
       where
       group.contestID = :contestID and
       team.participationType = 'Official' and
