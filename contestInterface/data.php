@@ -51,6 +51,15 @@ function handleCreateTeam($db) {
       error_log("Hack attempt ? trying to create team on closed group ".$_SESSION["groupID"]);
       exitWithJsonFailure("Groupe fermé");
    }
+   if (isset($_POST["contestID"])) {
+      if ($_SESSION["contestID"] != $_POST["contestID"]) {
+         $_SESSION["contestID"] = $_POST["contestID"];
+         $stmt = $db->prepare("SELECT `folder` FROM contest WHERE ID = ?");
+         $stmt->execute(array($_SESSION["contestID"]));
+         $row = $stmt->fetchObject();
+         $_SESSION["contestFolder"] = $row->folder;
+      }
+   }
    // $_SESSION['userCode'] is set by optional password handling function,
    // see comments of createTeamFromUserCode in common_contest.php.
    $groupID = $_SESSION["groupID"];
@@ -62,8 +71,8 @@ function handleCreateTeam($db) {
    unset($_SESSION["userCode"]);
    unset($_SESSION["userCodeGroupCode"]);
    $teamID = getRandomID();
-   $stmt = $db->prepare("INSERT INTO `team` (`ID`, `groupID`, `password`, `nbMinutes`) VALUES (?, ?, ?, ?)");
-   $stmt->execute(array($teamID, $groupID, $password, $_SESSION["nbMinutes"]));
+   $stmt = $db->prepare("INSERT INTO `team` (`ID`, `groupID`, `password`, `nbMinutes`, `contestID`) VALUES (?, ?, ?, ?, ?)");
+   $stmt->execute(array($teamID, $groupID, $password, $_SESSION["nbMinutes"], $_SESSION["contestID"]));
    if ($config->db->use == 'dynamoDB') {
       try {
          $tinyOrm->insert('team', array(
@@ -345,6 +354,15 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "")
 
    updateSessionWithContestInfos($row);
 
+   $query = "SELECT contest.ID as contestID, contest.folder, contest.name, contest.language, contest.categoryColor, contest.customIntro ".
+      "FROM contest WHERE parentContestID = :contestID";
+   $stmt = $db->prepare($query);
+   $stmt->execute(array("contestID" => $row->contestID));
+   $childrenContests = array();
+   while ($rowChild = $stmt->fetchObject()) {
+      $childrenContests[] = $rowChild;
+   };
+
    addBackendHint("ClientIP.checkPassword:pass");
    addBackendHint(sprintf("Group(%s):checkPassword", escapeHttpValue($groupID)));
    exitWithJson((object)array(
@@ -375,7 +393,8 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "")
       "askGrade" => !!intval($row->askGrade),
       "askStudentId" => !!intval($row->askStudentId),
       "extraMessage" => $extraMessage,
-      "isPublic" => $isPublic));
+      "isPublic" => $isPublic,
+      "childrenContests" => $childrenContests));
 }
 
 function handleCheckTeamPassword($db, $password) {

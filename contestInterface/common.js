@@ -46,6 +46,10 @@ var hasDisplayedContestStats = false;
 var delaySendingAttempts = 60000;
 var nbSubmissions = 0;
 var t = i18n.t;
+var childrenContests = [];
+var selectedLanguage = "";
+var selectedCategory = "";
+var groupCheckedData = null;
 
 function getParameterByName(name) {
    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -793,6 +797,7 @@ var questionIframe = {
                logError('Unable to find JS module ' + jsModuleId);
             }
          }
+         questionIframe.addJsContent($('#'+jsModuleId).attr('data-content'));
       });
 
       this.addJsContent('window.contestsRoot = "'+window.contestsRoot+'";');
@@ -1412,9 +1417,9 @@ window.setNbImagesLoaded = function(content) {
 /*
  * Called when starting a contest by providing a group code on the main page.
 */
-window.checkGroup = function(language) {
+window.checkGroup = function() {
    var groupCode = $("#groupCode").val();
-   return window.checkGroupFromCode("CheckGroup", groupCode, false, false, language);
+   return window.checkGroupFromCode("CheckGroup", groupCode, false, false);
 };
 
 window.recoverGroup = function() {
@@ -1506,8 +1511,8 @@ var hideLoginFields = function(postData) {
    }
 };
 
-window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic) {
-   initContestData(data);
+window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, contestID) {
+   initContestData(data, contestID);
    $("#headerH2").html(data.name);
    $("#login_link_to_home").hide();
    if (data.teamID !== undefined) { // The password of the team was provided directly
@@ -1567,17 +1572,93 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
             }
             return;
          }
-         if ((data.contestID == "412528966787346538") && (language == undefined)) {
+         
+         if ((data.childrenContests != undefined) && (data.childrenContests.length != 0)) {
+            childrenContests = data.childrenContests;
+            groupCheckedData = {
+               data: data,
+               curStep: curStep,
+               groupCode: groupCode,
+               getTeams: getTeams,
+               isPublic: data.isPublic
+            };
             $("#" + curStep).hide();
-            $("#selectLanguage").show();
-            if (data.extraMessage != undefined) {
-               $("#extraMessage").html(data.extraMessage);
-            }
+            offerCategories();
+            //if (data.extraMessage != undefined) {
+            //   $("#extraMessage").html(data.extraMessage);
+            //}
          } else {
             groupWasChecked(data, curStep, groupCode, getTeams, data.isPublic);
          }
       }, "json").done(function() { Utils.enableButton("button" + curStep); });
 };
+
+window.selectLanguage = function(language) {
+   selectedLanguage = language;
+   $("#selectLanguage").hide();
+   openContestForCategoryAndLanguage()
+}
+
+window.selectCategory = function(category) {
+   selectedCategory = category;
+   $("#selectCategory").hide();
+   offerLanguages();
+}
+
+window.openContestForCategoryAndLanguage = function() {
+   for (var iChild = 0; iChild < childrenContests.length; iChild++) {
+      var child = childrenContests[iChild];
+      if ((child.language == selectedLanguage) && (child.categoryColor == selectedCategory)) {
+         contestID = child.contestID;
+         contestFolder = child.folder;
+         customIntro = child.customIntro;
+         groupWasChecked(groupCheckedData.data, groupCheckedData.curStep, groupCheckedData.groupCode, groupCheckedData.getTeams, groupCheckedData.isPublic, contestID);
+         return;
+      }
+   }
+}
+
+window.offerCategories = function() {
+   var categories = {};
+   var nbCategories = 0;
+   var lastCategory;
+   $(".categoryChoice").hide();
+   for (var iChild = 0; iChild < childrenContests.length; iChild++) {
+      var child = childrenContests[iChild];
+      if (categories[child.categoryColor] == undefined) {
+         categories[child.categoryColor] = true;
+         nbCategories++;
+         lastCategory = child.categoryColor;
+         $("#cat_" + child.categoryColor).show();
+      }
+   }
+   if (nbCategories > 1) {
+      $("#selectCategory").show();
+   } else {
+      selectCategory(lastCategory);
+   }
+}
+
+window.offerLanguages = function() {
+   var languages = {};
+   var nbLanguages = 0;
+   $(".languageChoice").hide();
+   var lastLanguage = "";
+   for (var iChild = 0; iChild < childrenContests.length; iChild++) {
+      var child = childrenContests[iChild];
+      if (languages[child.language] == undefined) {
+         languages[child.language] = true;
+         nbLanguages++;
+         lastLanguage = child.language;
+         $("#lang_" + child.language).show();
+      }
+   }
+   if (nbLanguages > 1) {
+      $("#selectLanguage").show();
+   } else {
+      selectLanguage(lastLanguage);
+   }
+}
 
 /*
  * Validates student's information form
@@ -1627,7 +1708,7 @@ window.validateLoginForm = function() {
  * Creates a new team using contestants information
 */
 function createTeam(contestants) {
-   $.post("data.php", {SID: SID, action: "createTeam", contestants: contestants},
+   $.post("data.php", {SID: SID, action: "createTeam", contestants: contestants, contestID: contestID},
       function(data) {
          teamID = data.teamID;
          teamPassword = data.password;
@@ -1729,9 +1810,12 @@ function getPublicGroupsList(groups) {
    return strGroups;
 }
 
-function initContestData(data) {
-   contestID = data.contestID;
-   contestFolder = data.contestFolder;
+function initContestData(data, newContestID) {
+   if (newContestID == null) {
+      contestID = data.contestID;
+      contestFolder = data.contestFolder;
+      customIntro = $("<textarea/>").html(data.customIntro).text();
+   }
    updateContestName(data.contestName);
    fullFeedback = parseInt(data.fullFeedback);
    nextQuestionAuto = parseInt(data.nextQuestionAuto);

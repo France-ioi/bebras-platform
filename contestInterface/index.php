@@ -78,21 +78,37 @@
 	  <div id="selectLanguage" style="display:none">
        <p id="extraMessage" style="font-weight: bold"></p>
 		 <p>
-			Vous êtes prêt à démarrer le troisième tour ? Choisssez votre langage :
+			Choisssez votre langage :
 		 </p>
 		 <br/>
-		 <p>
-			 <button type="button" id="buttonBlockly" onclick="checkGroup('blockly')">Blockly</button> <b>Ce que nous vous conseillons pour ce concours.</b>
+		 <p class="languageChoice" id="lang_blockly">
+			 <button type="button" onclick="selectLanguage('blockly')">Blockly</button> <b>Ce que nous vous conseillons pour ce concours.</b>
 		 </p>
 		 <br/>
-		 <p>
-			 <button type="button" id="buttonBlockly" onclick="checkGroup('scratch')">Scratch</button> Si vous avez l'habitude de Scratch.<br/>
+		 <p class="languageChoice" id="lang_scratch">
+			 <button type="button" onclick="selectLanguage('scratch')">Scratch</button> Si vous avez l'habitude de Scratch.<br/>
           Attention : ne fonctionne bien qu'avec les navigateurs Google Chrome ou Mozilla Firefox récents.
 		 </p>
 		 <br/>
-		 <p>
-			 <button type="button" id="buttonPython" onclick="checkGroup('python')">Python</button> Si vous maîtrisez bien ce langage.<br/>
+		 <p class="languageChoice" id="lang_python">
+			 <button type="button" onclick="selectLanguage('python')">Python</button> Si vous maîtrisez bien ce langage.<br/>
           Attention : ne fonctionne bien qu'avec les navigateurs Google Chrome ou Mozilla Firefox récents.
+		 </p>
+	  </div>
+	  <div id="selectCategory" style="display:none">
+       <p id="extraMessageCategory" style="font-weight: bold"></p>
+		 <p>
+			 Choisssez votre catégorie :
+		 </p>
+		 <br/>
+		 <p class="categoryChoice" id="cat_blanche">
+			 <button type="button" onclick="selectCategory('blanche')">Blanche</button>
+		 </p>
+		 <p class="categoryChoice" id="cat_jaune">
+			 <button type="button" onclick="selectCategory('jaune')">Jaune</button>
+		 </p>
+		 <p class="categoryChoice" id="cat_orange">
+			 <button type="button" onclick="selectCategory('orange')">Orange</button>
 		 </p>
 	  </div>
   </div>
