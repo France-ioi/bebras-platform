@@ -54,6 +54,21 @@ $config->contestOfficialURL = 'http://concours.castor-informatique.fr/';
 $config->contestBackupURL = '';
 $config->useCustomStrings = false; // see README
 
+// Timestamp for URLs
+// If defined, ?v=[timestamp] will be added to all URLs.
+//$config->timestamp = 1000000000;
+
+// Should we upgrade contest URLs (resources) to HTTPS client-side?
+// If true, upgrade all URLs; if an array, upgrade all URLs from these domains
+//$config->upgradeToHTTPS = false;
+
+// Minimum common.js version
+// Allows to avoid denying users with an old common.js version; however, it is
+// preferable to not change this configuration except if you know what you're
+// doing.
+//$config->minimumCommonJsVersion = 2;
+
+
 /*
 $config->login_module_client = [
     'id' => '7',
