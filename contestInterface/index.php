@@ -111,6 +111,14 @@
 			 <button type="button" onclick="selectCategory('orange')">Orange</button>
 		 </p>
 	  </div>
+	  <div id="selectContest" style="display:none">
+		 <p>
+			 Choisssez votre séquence :
+		 </p>
+		 <br/>
+       <div id="selectContestItems">
+       </div>
+	  </div>
   </div>
 
   <div id="tab-continue" style="display:none" class="tabContent">

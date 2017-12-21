@@ -49,6 +49,7 @@ var t = i18n.t;
 var childrenContests = [];
 var selectedLanguage = "";
 var selectedCategory = "";
+var selectedTheme = "";
 var groupCheckedData = null;
 
 function getParameterByName(name) {
@@ -1596,7 +1597,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
 window.selectLanguage = function(language) {
    selectedLanguage = language;
    $("#selectLanguage").hide();
-   openContestForCategoryAndLanguage()
+   offerContests();
 }
 
 window.selectCategory = function(category) {
@@ -1605,10 +1606,11 @@ window.selectCategory = function(category) {
    offerLanguages();
 }
 
-window.openContestForCategoryAndLanguage = function() {
+window.selectContest = function(ID) {
+   $("#selectContest").hide();
    for (var iChild = 0; iChild < childrenContests.length; iChild++) {
       var child = childrenContests[iChild];
-      if ((child.language == selectedLanguage) && (child.categoryColor == selectedCategory)) {
+      if (child.contestID == ID) {
          contestID = child.contestID;
          contestFolder = child.folder;
          customIntro = child.customIntro;
@@ -1616,6 +1618,7 @@ window.openContestForCategoryAndLanguage = function() {
          return;
       }
    }
+   alert("ID " + ID + " non trouvé");
 }
 
 window.offerCategories = function() {
@@ -1657,6 +1660,30 @@ window.offerLanguages = function() {
       $("#selectLanguage").show();
    } else {
       selectLanguage(lastLanguage);
+   }
+}
+
+window.offerContests = function() {
+   var selectHtml = "";
+   var lastContestID = "";
+   var nbContests = 0;
+   for (var iChild = 0; iChild < childrenContests.length; iChild++) {
+      var child = childrenContests[iChild];
+      if ((selectedCategory == child.categoryColor) &&
+          (selectedLanguage == child.language)) {
+         lastContestID = child.contestID;
+         selectHtml += '<p class="contestChoice">' +
+            '<button type="button" onclick="selectContest(\'' + child.contestID + '\')">' + child.name + '</button>' +
+            '</p>';
+         nbContests++;
+      }
+   }
+   if (nbContests > 1) {
+      $("#selectContestItems").html(selectHtml);
+      $("#selectContest").show();
+   }
+   else {
+      selectContest(lastContestID);
    }
 }
 
