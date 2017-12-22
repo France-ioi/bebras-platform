@@ -217,10 +217,7 @@
     </div>
 
     <div id="selectContest" style="display:none">
-      <p>
-        Choisssez votre séquence :
-      </p>
-      <br/>
+      <p>Choisssez votre séquence :</p>
       <div id="selectContestItems">
       </div>
     </div>
