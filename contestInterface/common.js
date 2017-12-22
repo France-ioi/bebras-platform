@@ -47,9 +47,10 @@ var delaySendingAttempts = 60000;
 var nbSubmissions = 0;
 var t = i18n.t;
 var childrenContests = [];
-var selectedLanguage = "";
 var preSelectedCategory = "";
 var selectedCategory = "";
+var preSelectedLanguage = "";
+var selectedLanguage = "";
 var selectedTheme = "";
 var groupCheckedData = null;
 
@@ -1614,10 +1615,20 @@ window.selectCategory = function() {
    }
 };
 
-window.selectLanguage = function(language) {
-   selectedLanguage = language;
-   $("#selectLanguage").slideUp();
-   offerContests();
+$('.languageSelector').click(function(event) {
+   var target = $(event.currentTarget);
+   var language = target.data('language');
+   preSelectedLanguage = language;
+   $('.languageSelector.selectorCell').removeClass('selected');
+   $('.languageSelector.selectorCell[data-language="'+ language + '"]').addClass('selected');
+});
+
+window.selectLanguage = function() {
+   selectedLanguage = preSelectedLanguage;
+   if (selectedLanguage.length) {
+     $("#selectLanguage").slideUp();
+     offerContests();
+   }
 }
 
 window.selectContest = function(ID) {

@@ -705,3 +705,38 @@ table td ul:first-child{
   top: 10px;
   background: #000;
 }
+.selector_arrowUp span::before {
+  left: 0;
+  margin-top: -16px;
+  border-width: 0 16px 16px;
+  border-color: #000 transparent;
+  border-style: solid;
+}
+.selector_arrowUp span::after {
+  left: 10px;
+  width: 12px;
+  height: 16px;
+  margin-top: 0;
+  background-color: #000
+}
+
+.languageTable {
+  border: 1px solid #ccc;
+  box-shadow: 5px 5px 8px #eee;
+  margin: 2em auto;
+  width: 100%;
+}
+.languageTable th,
+.languageTable td {
+  width: 230px;
+  border: 1px solid #777;
+  padding: 10px;
+}
+
+.languageSelector.selectorCell {
+  line-height: 32px;
+  text-align: center;
+}
+.languageSelector.languageDescription {
+  font-size: 12px;
+}

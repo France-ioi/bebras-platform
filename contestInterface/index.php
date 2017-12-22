@@ -164,23 +164,56 @@
 
     <div id="selectLanguage" style="display:none">
       <p id="extraMessage" style="font-weight: bold"></p>
-      <p>
-        Choisssez votre langage :
-      </p>
-      <br/>
-      <p class="languageChoice" id="lang_blockly">
-        <button type="button" onclick="selectLanguage('blockly')">Blockly</button> <b>Ce que nous vous conseillons pour ce concours.</b>
-      </p>
-      <br/>
-      <p class="languageChoice" id="lang_scratch">
-        <button type="button" onclick="selectLanguage('scratch')">Scratch</button> Si vous avez l'habitude de Scratch.<br/>
-        Attention : ne fonctionne bien qu'avec les navigateurs Google Chrome ou Mozilla Firefox récents.
-      </p>
-      <br/>
-      <p class="languageChoice" id="lang_python">
-        <button type="button" onclick="selectLanguage('python')">Python</button> Si vous maîtrisez bien ce langage.<br/>
-        Attention : ne fonctionne bien qu'avec les navigateurs Google Chrome ou Mozilla Firefox récents.
-      </p>
+      <p class="stepName">Choisssez votre langage :</p>
+      <p>Si vous n'êtes pas sûr, nous vous recommandons Blockly.</p>
+      <table class="languageTable">
+        <tbody>
+          <tr>
+            <th class="languageSelector" data-language="blockly">Blockly</th>
+            <th class="languageSelector" data-language="scratch">Scratch</th>
+            <th class="languageSelector" data-language="python">Python</th>
+          </tr>
+          <tr>
+            <td class="languageSelector" data-language="blockly">
+              <img src="images/blockly.png" alt="exemple d'utilisation de Blockly">
+            </td>
+            <td class="languageSelector" data-language="scratch">
+              <img src="images/scratch.png" alt="exemple d'utilisation de Scratch">
+            </td>
+            <td class="languageSelector" data-language="python">
+              <img src="images/python.png" alt="exemple d'utilisation de Python">
+            </td>
+          </tr>
+          <tr>
+            <td class="languageSelector languageDescription" data-language="blockly">
+              <p><strong>Ce que nous vous conseillons pour ce concours.</strong></p>
+            </td>
+            <td class="languageSelector languageDescription" data-language="scratch">
+              <p>Si vous avez l'habitude de Scratch.</p>
+              <p>Attention : ne fonctionne bien qu'avec les navigateurs Google Chrome ou Mozilla Firefox récents.</p>
+            </td>
+            <td class="languageSelector languageDescription" data-language="python">
+              <p>Si vous maîtrisez bien ce langage.</p>
+              <p>Attention : ne fonctionne bien qu'avec les navigateurs Google Chrome ou Mozilla Firefox récents.</p>
+            </td>
+          </tr>
+          <tr>
+            <td class="languageSelector selectorCell" data-language="blockly">
+              <div class="selector_arrowUp" ><span> </span></div>
+               
+            </td>
+            <td class="languageSelector selectorCell" data-language="scratch">
+              <div class="selector_arrowUp" ><span> </span></div>
+               
+            </td>
+            <td class="languageSelector selectorCell" data-language="python">
+              <div class="selector_arrowUp" ><span> </span></div>
+               
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <button type="button" class="btn btn-default" onclick="selectLanguage()">Valider</button>
     </div>
 
     <div id="selectContest" style="display:none">
