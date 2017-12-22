@@ -4,6 +4,7 @@
   -o-user-select: none;
   user-select: none;
   -khtml-user-select: none;
+  box-sizing: border-box;
 }
 
 body {
@@ -459,4 +460,125 @@ a {
 }
 .icon_stars {
   margin: 0.3em;
+}
+
+/* Inspired by Bootstrap interface elements */
+.btn {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+.btn-group {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+.btn-group-vertical>.btn,
+.btn-group>.btn {
+  position: relative;
+  float: left;
+}
+.btn-group .btn+.btn,
+.btn-group .btn+.btn-group,
+.btn-group .btn-group+.btn,
+.btn-group .btn-group+.btn-group {
+  margin-left: -1px;
+}
+.btn-group>.btn:first-child {
+  margin-left: 0;
+}
+.btn-group>.btn:first-child:not(:last-child) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group>.btn:last-child:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group>.btn:not(:first-child):not(:last-child) {
+  border-radius: 0;
+}
+.btn-group>.btn.active,
+.btn-group>.btn:active,
+.btn-group>.btn:focus,
+.btn-group>.btn:hover {
+  z-index: 2;
+}
+.btn.btn-xs {
+    padding: 1px 5px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #337ab7;
+  border-color: #2e6da4;
+}
+.btn-primary:hover {
+  color: #fff;
+  background-color: #286090;
+  border-color: #204d74;
+}
+.btn-default {
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+}
+.btn-default:hover {
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
+.btn-icon {
+  font-family: 'Courier New', Inconsolata, 'Roboto Mono', 'PT Mono', 'Ubuntu', monospace;
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  height: 34px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #555;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+  -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+@media (min-width: 768px) {
+  .form-inline .form-group {
+    display: inline-block;
+    margin-bottom: 0;
+    vertical-align: middle;
+  }
+  .form-inline .form-control {
+    display: inline-block;
+    width: auto;
+    vertical-align: middle;
+  }
 }
