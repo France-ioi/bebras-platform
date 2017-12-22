@@ -85,9 +85,9 @@
       <p>Choisssez votre catégorie :</p>
 
       <table class="colorCategories">
-        <tr class="colorCategory white categoryChoice" id="cat_blanche">
-          <td class="tableSelector" data-category="blanche">
-            <div class="tableSelector_arrowForward" ><span> </span></div>
+        <tr class="colorCategory white categoryChoice categorySelector" id="cat_blanche" data-category="blanche">
+          <td class="selectorCell">
+            <div class="selector_arrowForward" ><span> </span></div>
           </td>
           <td class="colorCategoryTitle">Catégorie blanche</td>
           <td>
@@ -100,9 +100,9 @@
           <td></td>
         </tr>
 
-        <tr class="colorCategory yellow categoryChoice" id="cat_jaune">
-          <td class="tableSelector" data-category="jaune">
-            <div class="tableSelector_arrowForward" ><span> </span></div>
+        <tr class="colorCategory yellow categoryChoice categorySelector" id="cat_jaune" data-category="jaune">
+          <td class="selectorCell">
+            <div class="selector_arrowForward" ><span> </span></div>
           </td>
           <td class="colorCategoryTitle">Catégorie jaune</td>
           <td>
@@ -115,9 +115,9 @@
           <td></td>
         </tr>
 
-        <tr class="colorCategory orange categoryChoice" id="cat_orange">
-          <td class="tableSelector" data-category="orange">
-            <div class="tableSelector_arrowForward" ><span> </span></div>
+        <tr class="colorCategory orange categoryChoice categorySelector" id="cat_orange" data-category="orange">
+          <td class="selectorCell">
+            <div class="selector_arrowForward" ><span> </span></div>
           </td>
           <td class="colorCategoryTitle">Catégorie orange</td>
           <td>
@@ -130,9 +130,9 @@
           <td></td>
         </tr>
 
-        <tr class="colorCategory green categoryChoice" id="cat_verte">
-          <td class="tableSelector" data-category="verte">
-            <div class="tableSelector_arrowForward" ><span> </span></div>
+        <tr class="colorCategory green categoryChoice categorySelector" id="cat_verte" data-category="verte">
+          <td class="selectorCell">
+            <div class="selector_arrowForward" ><span> </span></div>
           </td>
           <td class="colorCategoryTitle">Catégorie verte</td>
           <td>
@@ -144,9 +144,9 @@
           <td></td>
         </tr>
 
-        <tr class="colorCategory blue categoryChoice" id="cat_bleue">
-          <td class="tableSelector" data-category="bleue">
-            <div class="tableSelector_arrowForward" ><span> </span></div>
+        <tr class="colorCategory blue categoryChoice categorySelector" id="cat_bleue" data-category="bleue">
+          <td class="selectorCell">
+            <div class="selector_arrowForward" ><span> </span></div>
           </td>
           <td class="colorCategoryTitle">Catégorie bleue</td>
           <td>

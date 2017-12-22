@@ -1598,11 +1598,11 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
 };
 
 
-$('.tableSelector').click(function(event) {
-   var target = $(event.target);
+$('.categorySelector').click(function(event) {
+   var target = $(event.currentTarget);
    var category = target.data('category');
    preSelectedCategory = category;
-   $('.tableSelector').removeClass('selected');
+   $('.categorySelector').removeClass('selected');
    target.addClass('selected');
 });
 
