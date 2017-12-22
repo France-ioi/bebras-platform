@@ -723,8 +723,7 @@ table td ul:first-child{
 .languageTable {
   border: 1px solid #ccc;
   box-shadow: 5px 5px 8px #eee;
-  margin: 2em auto;
-  width: 100%;
+  margin: 2em 0;
 }
 .languageTable th,
 .languageTable td {
@@ -732,7 +731,9 @@ table td ul:first-child{
   border: 1px solid #777;
   padding: 10px;
 }
-
+.languageTable td img {
+  max-width: 100%;
+}
 .languageSelector.selectorCell {
   line-height: 32px;
   text-align: center;

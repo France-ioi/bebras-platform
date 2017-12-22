@@ -1619,8 +1619,8 @@ $('.languageSelector').click(function(event) {
    var target = $(event.currentTarget);
    var language = target.data('language');
    preSelectedLanguage = language;
-   $('.languageSelector.selectorCell').removeClass('selected');
-   $('.languageSelector.selectorCell[data-language="'+ language + '"]').addClass('selected');
+   $('.languageSelector').removeClass('selected');
+   $('.languageSelector[data-language="'+ language + '"]').addClass('selected');
 });
 
 window.selectLanguage = function() {
@@ -1670,7 +1670,7 @@ window.offerCategories = function() {
 window.offerLanguages = function() {
    var languages = {};
    var nbLanguages = 0;
-   $(".languageChoice").hide();
+   $(".languageSelector").hide();
    var lastLanguage = "";
    for (var iChild = 0; iChild < childrenContests.length; iChild++) {
       var child = childrenContests[iChild];
@@ -1678,7 +1678,7 @@ window.offerLanguages = function() {
          languages[child.language] = true;
          nbLanguages++;
          lastLanguage = child.language;
-         $("#lang_" + child.language).show();
+         $(".languageSelector[data-language='" + child.language + "']").show();
       }
    }
    if (nbLanguages > 1) {
