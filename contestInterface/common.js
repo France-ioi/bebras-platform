@@ -48,6 +48,7 @@ var nbSubmissions = 0;
 var t = i18n.t;
 var childrenContests = [];
 var selectedLanguage = "";
+var preSelectedCategory = "";
 var selectedCategory = "";
 var selectedTheme = "";
 var groupCheckedData = null;
@@ -1596,11 +1597,22 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
       }, "json").done(function() { Utils.enableButton("button" + curStep); });
 };
 
-window.selectCategory = function(category) {
-   selectedCategory = category;
-   $("#selectCategory").slideUp();
-   offerLanguages();
-}
+
+$('.tableSelector').click(function(event) {
+   var target = $(event.target);
+   var category = target.data('category');
+   preSelectedCategory = category;
+   $('.tableSelector').removeClass('selected');
+   target.addClass('selected');
+});
+
+window.selectCategory = function() {
+   selectedCategory = preSelectedCategory;
+   if (selectedCategory.length) {
+     $("#selectCategory").slideUp();
+     offerLanguages();
+   }
+};
 
 window.selectLanguage = function(language) {
    selectedLanguage = language;

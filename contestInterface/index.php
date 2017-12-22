@@ -82,19 +82,84 @@
 
     <div id="selectCategory" style="display:none">
       <p id="extraMessageCategory" style="font-weight: bold"></p>
-      <p>
-        Choisssez votre catégorie :
-      </p>
-      <br/>
-      <p class="categoryChoice" id="cat_blanche">
-        <button type="button" onclick="selectCategory('blanche')">Blanche</button>
-      </p>
-      <p class="categoryChoice" id="cat_jaune">
-        <button type="button" onclick="selectCategory('jaune')">Jaune</button>
-      </p>
-      <p class="categoryChoice" id="cat_orange">
-        <button type="button" onclick="selectCategory('orange')">Orange</button>
-      </p>
+      <p>Choisssez votre catégorie :</p>
+
+      <table class="colorCategories">
+        <tr class="colorCategory white categoryChoice" id="cat_blanche">
+          <td class="tableSelector" data-category="blanche">
+            <div class="tableSelector_arrowForward" ><span> </span></div>
+          </td>
+          <td class="colorCategoryTitle">Catégorie blanche</td>
+          <td>
+             <ul>
+                <li>séquences d'instructions</li>
+                <li>appels de fonctions simples</li>
+                <li>boucles répéter simples</li>
+             </ul>
+          </td>
+          <td></td>
+        </tr>
+
+        <tr class="colorCategory yellow categoryChoice" id="cat_jaune">
+          <td class="tableSelector" data-category="jaune">
+            <div class="tableSelector_arrowForward" ><span> </span></div>
+          </td>
+          <td class="colorCategoryTitle">Catégorie jaune</td>
+          <td>
+            <ul>
+              <li>instructions conditionnelles</li>
+              <li>boucles répéter imbriquées</li>
+              <li>imbrication de boucles et d'instructions conditionnelles</li>
+            </ul>
+          </td>
+          <td></td>
+        </tr>
+
+        <tr class="colorCategory orange categoryChoice" id="cat_orange">
+          <td class="tableSelector" data-category="orange">
+            <div class="tableSelector_arrowForward" ><span> </span></div>
+          </td>
+          <td class="colorCategoryTitle">Catégorie orange</td>
+          <td>
+            <ul>
+              <li>variables</li>
+              <li>opérateurs arithmétiques et booléens</li>
+              <li>boucles "tant que"</li>
+            </ul>
+          </td>
+          <td></td>
+        </tr>
+
+        <tr class="colorCategory green categoryChoice" id="cat_verte">
+          <td class="tableSelector" data-category="verte">
+            <div class="tableSelector_arrowForward" ><span> </span></div>
+          </td>
+          <td class="colorCategoryTitle">Catégorie verte</td>
+          <td>
+            <ul>
+               <li>création de fonctions</li>
+               <li>tableaux, listes et chaînes de caractères</li>
+            </ul>
+          </td>
+          <td></td>
+        </tr>
+
+        <tr class="colorCategory blue categoryChoice" id="cat_bleue">
+          <td class="tableSelector" data-category="bleue">
+            <div class="tableSelector_arrowForward" ><span> </span></div>
+          </td>
+          <td class="colorCategoryTitle">Catégorie bleue</td>
+          <td>
+             <ul>
+               <li>fonctions récursives</li>
+               <li>tableaux avancés</li>
+               <li>structures de données</li>
+             </ul>
+          </td>
+          <td></td>
+        </tr>
+      </table>
+      <button type="button" class="btn btn-default" onclick="selectCategory()">Valider</button>
     </div>
 
     <div id="selectLanguage" style="display:none">
