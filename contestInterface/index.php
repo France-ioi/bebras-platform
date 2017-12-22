@@ -61,13 +61,15 @@
     <p>Pour <b>voir votre score détaillé</b> si vous avez participé au concours 2012, cliquez sur "Continuer le concours" et saisissez votre code personnel fourni au début de l'épreuve. Vous aurez aussi accès aux réponses et à une <b>correction détaillée</b> en dessous de chaque question.</p>
     <h3>Vous démarrez un concours en classe, pour la première fois ?</h3>
     -->
-    <p data-i18n="[html]tab_start_contest_enter_code"><br />
-      <div class="divInput">
-        <input id="groupCode" type="text"/>
-        &nbsp;&nbsp;&nbsp;<button type="button" id="buttonCheckGroup" onclick="checkGroup()" data-i18n="tab_start_contest_start_button"></button>
-        <br /><span id="CheckGroupResult" style="color:red"></span>
-      </div>
-    </p>
+    <div id="submitParticipationCode">
+      <p data-i18n="[html]tab_start_contest_enter_code"><br />
+        <div class="divInput">
+          <input id="groupCode" type="text"/>
+          &nbsp;&nbsp;&nbsp;<button type="button" id="buttonCheckGroup" onclick="checkGroup()" data-i18n="tab_start_contest_start_button"></button>
+          <br /><span id="CheckGroupResult" style="color:red"></span>
+        </div>
+      </p>
+    </div>
     <div id="recoverGroup" style="display:none;">
       <p data-i18n="[html]group_session_expired_recover"></p>
       <input id="recoverGroupPass" type="password"/>
@@ -75,6 +77,24 @@
       <br><span id="recoverGroupResult" style="color:red"></span>
       <p data-i8n="[html]others_retry"></p>
     </div>
+
+    <div id="selectCategory" style="display:none">
+      <p id="extraMessageCategory" style="font-weight: bold"></p>
+      <p>
+        Choisssez votre catégorie :
+      </p>
+      <br/>
+      <p class="categoryChoice" id="cat_blanche">
+        <button type="button" onclick="selectCategory('blanche')">Blanche</button>
+      </p>
+      <p class="categoryChoice" id="cat_jaune">
+        <button type="button" onclick="selectCategory('jaune')">Jaune</button>
+      </p>
+      <p class="categoryChoice" id="cat_orange">
+        <button type="button" onclick="selectCategory('orange')">Orange</button>
+      </p>
+    </div>
+
     <div id="selectLanguage" style="display:none">
       <p id="extraMessage" style="font-weight: bold"></p>
       <p>
@@ -95,22 +115,7 @@
         Attention : ne fonctionne bien qu'avec les navigateurs Google Chrome ou Mozilla Firefox récents.
       </p>
     </div>
-    <div id="selectCategory" style="display:none">
-      <p id="extraMessageCategory" style="font-weight: bold"></p>
-      <p>
-        Choisssez votre catégorie :
-      </p>
-      <br/>
-      <p class="categoryChoice" id="cat_blanche">
-        <button type="button" onclick="selectCategory('blanche')">Blanche</button>
-      </p>
-      <p class="categoryChoice" id="cat_jaune">
-        <button type="button" onclick="selectCategory('jaune')">Jaune</button>
-      </p>
-      <p class="categoryChoice" id="cat_orange">
-        <button type="button" onclick="selectCategory('orange')">Orange</button>
-      </p>
-    </div>
+
     <div id="selectContest" style="display:none">
       <p>
         Choisssez votre séquence :

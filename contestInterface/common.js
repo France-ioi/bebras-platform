@@ -1572,6 +1572,8 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
                $("#" + curStep + "Result").html(t("invalid_code"));
             }
             return;
+         } else {
+          $("#submitParticipationCode").slideUp();
          }
          
          if ((data.childrenContests != undefined) && (data.childrenContests.length != 0)) {
@@ -1594,20 +1596,20 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
       }, "json").done(function() { Utils.enableButton("button" + curStep); });
 };
 
-window.selectLanguage = function(language) {
-   selectedLanguage = language;
-   $("#selectLanguage").hide();
-   offerContests();
-}
-
 window.selectCategory = function(category) {
    selectedCategory = category;
-   $("#selectCategory").hide();
+   $("#selectCategory").slideUp();
    offerLanguages();
 }
 
+window.selectLanguage = function(language) {
+   selectedLanguage = language;
+   $("#selectLanguage").slideUp();
+   offerContests();
+}
+
 window.selectContest = function(ID) {
-   $("#selectContest").hide();
+   $("#selectContest").slideUp();
    for (var iChild = 0; iChild < childrenContests.length; iChild++) {
       var child = childrenContests[iChild];
       if (child.contestID == ID) {
