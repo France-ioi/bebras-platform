@@ -63,18 +63,20 @@
     -->
     <div id="submitParticipationCode">
       <p data-i18n="[html]tab_start_contest_enter_code"><br />
-        <div class="divInput">
-          <input id="groupCode" type="text"/>
-          &nbsp;&nbsp;&nbsp;<button type="button" id="buttonCheckGroup" onclick="checkGroup()" data-i18n="tab_start_contest_start_button"></button>
-          <br /><span id="CheckGroupResult" style="color:red"></span>
+        <div class="divInput form-inline">
+          <input id="groupCode" type="text" class="form-control" />
+          <button type="button" id="buttonCheckGroup" onclick="checkGroup()" data-i18n="tab_start_contest_start_button" class="btn btn-primary"></button>
+          <div><span id="CheckGroupResult" style="color:red"></span></div>
         </div>
       </p>
     </div>
     <div id="recoverGroup" style="display:none;">
       <p data-i18n="[html]group_session_expired_recover"></p>
-      <input id="recoverGroupPass" type="password"/>
-      &nbsp;&nbsp;&nbsp;<button type="button" id="buttonRecoverGroup" onclick="recoverGroup()" data-i18n="submitPass"></button>
-      <br><span id="recoverGroupResult" style="color:red"></span>
+      <div class="divInput form-inline">
+        <input id="recoverGroupPass" type="password" class="form-control" />
+        <button type="button" id="buttonRecoverGroup" onclick="recoverGroup()" data-i18n="submitPass" class="btn btn-default"></button>
+        <div><span id="recoverGroupResult" style="color:red"></span></div>
+      </div>
       <p data-i8n="[html]others_retry"></p>
     </div>
 
