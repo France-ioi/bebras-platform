@@ -227,8 +227,8 @@
     <div class="tabTitle" data-i18n="general_continue_contest"></div>
       <p><span data-i18n="tab_view_results_access_code"></span>
          <div class="divInput">
-            <input id="interruptedPassword" type="password">
-            &nbsp;&nbsp;&nbsp;<button type="button" id="buttonInterrupted" onclick="checkPasswordInterrupted()" data-i18n="tab_view_results_view_results_button"></button>
+            <input id="interruptedPassword" type="password" class="form-control">
+            <button type="button" id="buttonInterrupted" class="btn btn-default" onclick="checkPasswordInterrupted()" data-i18n="tab_view_results_view_results_button"></button>
             <br/><span id="InterruptedResult" style="color:red"></span>
           </div>
       </p>
@@ -243,8 +243,8 @@
          <p data-i18n="tab_view_ask_password_to_teacher"></p>
          <p>
             <div class="divInput">
-                   <input id="groupPassword" type="password">
-                   &nbsp;&nbsp;&nbsp;<button type="button" id="buttonRelogin" onclick="relogin()" data-i18n="tab_view_restart_contest"></button>
+                   <input id="groupPassword" type="password" class="form-control">
+                   <button type="button" id="buttonRelogin" class="btn btn-default" onclick="relogin()" data-i18n="tab_view_restart_contest"></button>
                    <br/><span id="ReloginResult" style="color:red"></span>
              </div>
          </p>
@@ -255,7 +255,7 @@
     <div class="tabTitle" data-i18n="general_view_results"></div>
     <p data-i18n="tab_view_results_access_code"></p>
     <div class="divInput">
-      <input id="interruptedPassword" type="password">&nbsp;&nbsp;&nbsp;<button type="button" id="buttonInterrupted" onclick="checkPasswordInterrupted()" data-i18n="tab_view_results_view_results_button"></button>
+      <input id="interruptedPassword" type="password" class="form-control"><button type="button" id="buttonInterrupted" class="btn btn-default" onclick="checkPasswordInterrupted()" data-i18n="tab_view_results_view_results_button"></button>
       <br/><span id="InterruptedResult" style="color:red"></span>
     </div>
     <p data-i18n="tab_view_results_info_1"></p>
@@ -268,7 +268,7 @@
       <select id="selectTeam"><option value='0' data-i18n="tab_view_select_team"></option></select>
       <p data-i18n="tab_view_ask_password_to_teacher"></p>
       <div class="divInput">
-        <input id="groupPassword" type="password">&nbsp;&nbsp;&nbsp;<button type="button" id="buttonRelogin" onclick="relogin()" data-i18n="tab_view_restart_contest"></button>
+        <input id="groupPassword" type="password" class="form-control"><button type="button" id="buttonRelogin" class="btn btn-default" onclick="relogin()" data-i18n="tab_view_restart_contest"></button>
         <br/><span id="ReloginResult" style="color:red"></span>
       </div>
     </div>
@@ -283,8 +283,8 @@
 <div id="divCheckNbContestants" style="display:none" class="dialog">
   <p data-i18n="nb_contestants_question"></p>
   <div class="divInput">
-    <button type="button" onclick="setNbContestants(1)" data-i18n="nb_contestants_one"></button>
-    &nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onclick="setNbContestants(2)" data-i18n="nb_contestants_two"></button>
+    <button type="button" onclick="setNbContestants(1)" class="btn btn-default" data-i18n="nb_contestants_one"></button>
+    <button type="button" onclick="setNbContestants(2)" class="btn btn-default" data-i18n="nb_contestants_two" style="margin-left: 10px;"></button>
   </div>
 </div>
 <div id="divLogin" style="display:none" class="dialog">
