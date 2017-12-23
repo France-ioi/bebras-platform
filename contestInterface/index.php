@@ -213,6 +213,7 @@
           </tr>
         </tbody>
       </table>
+      <button type="button" class="btn btn-default">Retour à l'étape précédente</button>
       <button type="button" class="btn btn-default" onclick="selectLanguage()">Valider</button>
     </div>
 
@@ -220,6 +221,7 @@
       <p>Choisssez votre séquence :</p>
       <div id="selectContestItems">
       </div>
+      <button type="button" class="btn btn-default">Retour à l'étape précédente</button>
     </div>
   </div>
 
