@@ -1654,17 +1654,13 @@ $('.categorySelector').click(function(event) {
 });
 
 $('#selectCategoryButton').click(function(event) {
-   selectedCategory = preSelectedCategory;
-   if (selectedCategory.length) {
-     $("#selectCategory").slideUp();
-     offerLanguages();
-   }
+   selectCategory(preSelectedCategory);
 });
 
 $('#backToCategorySelection').click(function(event) {
-  $("#selectCategory").slideDown();
-  $("#selectLanguage").slideUp();
-  offerCategories();
+   $("#selectCategory").slideDown();
+   $("#selectLanguage").slideUp();
+   offerCategories();
 });
 
 $('.languageSelector').click(function(event) {
@@ -1677,18 +1673,31 @@ $('.languageSelector').click(function(event) {
 });
 
 $('#selectLanguageButton').click(function(event) {
-  selectedLanguage = preSelectedLanguage;
-   if (selectedLanguage.length) {
-     $("#selectLanguage").slideUp();
-     offerContests();
-   }
+   selectLanguage(preSelectedLanguage);
 });
 
+function selectCategory(category) {
+   if (category.length == 0) {
+      return;
+   }
+   selectedCategory = category;
+   $("#selectCategory").slideUp();
+   offerLanguages();
+}
+
+function selectLanguage(language) {
+   if (language.length == 0) {
+      return;
+   }
+   selectedLanguage = language;
+   $("#selectLanguage").slideUp();
+   offerContests();
+}
 
 $('#backToLanguageSelection').click(function(event) {
-  $("#selectLanguage").slideDown();
-  $("#selectContest").slideUp();
-  offerLanguages();
+   $("#selectLanguage").slideDown();
+   $("#selectContest").slideUp();
+   offerLanguages();
 });
  
 window.selectContest = function(ID) {
