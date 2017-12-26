@@ -1615,6 +1615,11 @@ window.selectCategory = function() {
    }
 };
 
+$('#backToCategorySelection').click(function(event) {
+  $("#selectCategory").slideDown();
+  $("#selectLanguage").slideUp();
+  offerCategories();
+});
 $('.languageSelector').click(function(event) {
    var target = $(event.currentTarget);
    var language = target.data('language');
@@ -1630,6 +1635,12 @@ window.selectLanguage = function() {
      offerContests();
    }
 }
+
+$('#backToLanguageSelection').click(function(event) {
+  $("#selectLanguage").slideDown();
+  $("#selectContest").slideUp();
+  offerLanguages();
+});
 
 window.selectContest = function(ID) {
    $("#selectContest").slideUp();

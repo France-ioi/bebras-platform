@@ -213,7 +213,7 @@
           </tr>
         </tbody>
       </table>
-      <button type="button" class="btn btn-default">Retour à l'étape précédente</button>
+      <button type="button" class="btn btn-default" id="backToCategorySelection">Retour à l'étape précédente</button>
       <button type="button" class="btn btn-default" onclick="selectLanguage()">Valider</button>
     </div>
 
@@ -221,9 +221,9 @@
       <p>Choisssez votre séquence :</p>
       <div id="selectContestItems">
       </div>
-      <button type="button" class="btn btn-default">Retour à l'étape précédente</button>
+      <button type="button" class="btn btn-default" id="backToLanguageSelection">Retour à l'étape précédente</button>
     </div>
-  </div>
+  </div><!-- #tab-school -->
 
   <div id="tab-continue" style="display:none" class="tabContent">
     <div class="tabTitle" data-i18n="general_continue_contest"></div>
