@@ -803,7 +803,7 @@ var questionIframe = {
                logError('Unable to find JS module ' + jsModuleId);
             }
          }
-         questionIframe.addJsContent($('#'+jsModuleId).attr('data-content'));
+         //questionIframe.addJsContent($('#'+jsModuleId).attr('data-content'));
       });
 
       this.addJsContent('window.contestsRoot = "'+window.contestsRoot+'";');
