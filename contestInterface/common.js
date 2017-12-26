@@ -51,8 +51,11 @@ var preSelectedCategory = "";
 var selectedCategory = "";
 var preSelectedLanguage = "";
 var selectedLanguage = "";
-var selectedTheme = "";
+var selectedCategory = "";
 var groupCheckedData = null;
+var contestants = {};
+var teamMateHasRegistration = {1: false, 2: false};
+
 
 function getParameterByName(name) {
    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -1514,6 +1517,42 @@ var hideLoginFields = function(postData) {
    }
 };
 
+window.hasRegistration = function(teamMate, hasReg) {
+   $("#LoginResult").html("");
+   teamMateHasRegistration[teamMate] = hasReg;
+   $("#hasReg" + teamMate + "Yes").removeClass("selected");
+   $("#hasReg" + teamMate + "No").removeClass("selected");
+   $("#yesRegistrationCode" + teamMate).hide();
+   $("#noRegistrationCode" + teamMate).hide();
+   if(hasReg) {
+      $("#hasReg" + teamMate + "Yes").addClass("selected");
+      $("#yesRegistrationCode" + teamMate).show();
+   } else {
+      $("#hasReg" + teamMate + "No").addClass("selected");
+      $("#noRegistrationCode" + teamMate).show();
+   }
+}
+
+window.validateRegistrationCode = function(teamMate) {
+   $("#LoginResult").html("");
+   var code = $("#registrationCode" + teamMate).val().trim().toLowerCase();
+   $("#errorRegistrationCode" + teamMate).html();
+   $.post("data.php", {SID: SID, action: "checkRegistration", code: code},
+      function(data) {
+         if (data.success) {
+            var contestant = {
+                "registrationCode": code,
+                "firstName": data.firstName,
+                "lastName": data.lastName
+            };
+            contestants[teamMate] = contestant;
+            $("#errorRegistrationCode" + teamMate).html("Bienvenue " + data.firstName + " " + data.lastName);
+         } else {
+            $("#errorRegistrationCode" + teamMate).html("code inconnu");
+         }
+      }, "json");
+}
+
 window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, contestID) {
    initContestData(data, contestID);
    $("#headerH2").html(data.name);
@@ -1524,7 +1563,7 @@ window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, 
       teamPassword = groupCode;
       loadContestData(contestID, contestFolder);
    } else {
-      if ((data.nbMinutesElapsed > 30) && (!data.isPublic) && (!getTeams)) {
+      if ((data.nbMinutesElapsed > 30) && (!data.isPublic) && (!data.isGenerated) && (!getTeams)) {
          if (parseInt(data.bRecovered)) {
             alert(t("group_session_expired"));
             //window.location = t("contest_url");
@@ -1544,6 +1583,12 @@ window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, 
             $("#divCheckNbContestants").show();
          } else {
             window.setNbContestants(1);
+         }
+         if ((data.registrationData != undefined) && (data.registrationData.code != undefined)) {
+            contestants[1] = { registrationCode :  data.registrationData.code };
+            $("#registrationCode1").val(data.registrationData.code);
+            hasRegistration(1, true);
+            $("#errorRegistrationCode1").html("Bienvenue " + data.registrationData.firstName + " " + data.registrationData.lastName);
          }
          $('#mainNav').hide();
       } else {
@@ -1577,7 +1622,8 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
          } else {
           $("#submitParticipationCode").slideUp();
          }
-         
+
+        // TODO : handle registration Data
          if ((data.childrenContests != undefined) && (data.childrenContests.length != 0)) {
             childrenContests = data.childrenContests;
             groupCheckedData = {
@@ -1598,7 +1644,6 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
       }, "json").done(function() { Utils.enableButton("button" + curStep); });
 };
 
-
 $('.categorySelector').click(function(event) {
    var target = $(event.currentTarget);
    var category = target.data('category');
@@ -1618,7 +1663,7 @@ $('#selectCategoryButton').click(function(event) {
 
 $('#backToCategorySelection').click(function(event) {
   $("#selectCategory").slideDown();
-  $("#selectLanguage").slideUp();
+  $("#selectContest").slideUp();
   offerCategories();
 });
 
@@ -1639,12 +1684,13 @@ $('#selectLanguageButton').click(function(event) {
    }
 });
 
+
 $('#backToLanguageSelection').click(function(event) {
   $("#selectLanguage").slideDown();
-  $("#selectContest").slideUp();
+  $("#selectCategory").slideUp();
   offerLanguages();
 });
-
+ 
 window.selectContest = function(ID) {
    $("#selectContest").slideUp();
    for (var iChild = 0; iChild < childrenContests.length; iChild++) {
@@ -1712,7 +1758,7 @@ window.offerContests = function() {
           (selectedLanguage == child.language)) {
          lastContestID = child.contestID;
          selectHtml += '<p class="contestChoice">' +
-            '<button type="button" onclick="selectContest(\'' + child.contestID + '\')" class="btn btn-default">' + child.name + '</button>' +
+            '<button type="button" onclick="selectContest(\'' + child.contestID + '\')">' + child.name + '</button>' +
             '</p>';
          nbContests++;
       }
@@ -1731,39 +1777,51 @@ window.offerContests = function() {
  * then creates team
 */
 window.validateLoginForm = function() {
-   var contestants = {};
+   $("#LoginResult").html("");
    for (var iContestant = 1; iContestant <= nbContestants; iContestant++) {
-      var contestant = {
-         "lastName" : $.trim($("#lastName" + iContestant).val()),
-         "firstName" : $.trim($("#firstName" + iContestant).val()),
-         "genre" : $("input[name='genre" + iContestant + "']:checked").val(),
-         "grade" : $("#grade" + iContestant).val(),
-         "email" : $.trim($("#email" + iContestant).val()),
-         "zipCode" : $.trim($("#zipCode" + iContestant).val()),
-         "studentId" : $.trim($("#studentId" + iContestant).val())
-      };
-      contestants[iContestant] = contestant;
-      if (!contestant.lastName && !fieldsHidden.lastName) {
-         $("#LoginResult").html(t("lastname_missing"));
-         return;
-      } else if (!contestant.firstName && !fieldsHidden.firstName) {
-         $("#LoginResult").html(t("firstname_missing"));
-         return;
-      } else if (!contestant.genre && !fieldsHidden.genre) {
-         $("#LoginResult").html(t("genre_missing"));
-         return;
-      } else if (!contestant.email && !fieldsHidden.email) {
-         $("#LoginResult").html(t("email_missing"));
-         return;
-      } else if (!contestant.zipCode && !fieldsHidden.zipCode) {
-         $("#LoginResult").html(t("zipCode_missing"));
-         return;
-      } else if (!contestant.studentId && !fieldsHidden.studentId) {
-         $("#LoginResult").html(t("studentId_missing"));
-         return;
-      } else if (!contestant.grade && !fieldsHidden.grade) {
-         $("#LoginResult").html(t("grade_missing"));
-         return;
+      var strTeamMate = "Équipier " + iContestant + " : ";
+      if (teamMateHasRegistration[iContestant]) {
+         if ((contestants[iContestant] == undefined) || (contestants[iContestant].registrationCode == undefined)) {
+            $("#LoginResult").html(strTeamMate + "entrez et validez le code");
+            return;
+         }
+         if ((contestants[3 - iContestant] != undefined) &&
+             (contestants[3 - iContestant].registrationCode == contestants[iContestant].registrationCode)) {
+            $("#LoginResult").html("Les deux codes ne peuvent pas être identiques !");
+         }
+      } else {
+         var contestant = {
+            "lastName" : $.trim($("#lastName" + iContestant).val()),
+            "firstName" : $.trim($("#firstName" + iContestant).val()),
+            "genre" : $("input[name='genre" + iContestant + "']:checked").val(),
+            "grade" : $("#grade" + iContestant).val(),
+            "email" : $.trim($("#email" + iContestant).val()),
+            "zipCode" : $.trim($("#zipCode" + iContestant).val()),
+            "studentId" : $.trim($("#studentId" + iContestant).val())
+         };
+         contestants[iContestant] = contestant;
+         if (!contestant.lastName && !fieldsHidden.lastName) {
+            $("#LoginResult").html(strTeamMate + t("lastname_missing"));
+            return;
+         } else if (!contestant.firstName && !fieldsHidden.firstName) {
+            $("#LoginResult").html(strTeamMate + t("firstname_missing"));
+            return;
+         } else if (!contestant.genre && !fieldsHidden.genre) {
+            $("#LoginResult").html(strTeamMate + t("genre_missing"));
+            return;
+         } else if (!contestant.email && !fieldsHidden.email) {
+            $("#LoginResult").html(strTeamMate + t("email_missing"));
+            return;
+         } else if (!contestant.zipCode && !fieldsHidden.zipCode) {
+            $("#LoginResult").html(strTeamMate + t("zipCode_missing"));
+            return;
+         } else if (!contestant.studentId && !fieldsHidden.studentId) {
+            $("#LoginResult").html(strTeamMate + t("studentId_missing"));
+            return;
+         } else if (!contestant.grade && !fieldsHidden.grade) {
+            $("#LoginResult").html(strTeamMate + t("grade_missing"));
+            return;
+         }
       }
    }
    Utils.disableButton("buttonLogin"); // do not re-enable

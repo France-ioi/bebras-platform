@@ -39,6 +39,30 @@ function handleLoadPublicGroups($db) {
    exitWithJson(array("success" => true, "groups" => $groups));
 }
 
+function getGroupForSubContest($db, $oldGroupID, $newContestID) {
+   $query = "SELECT `group`.`ID`, `group`.`code` FROM `group` JOIN `group` `oldGroup` ON (`group`.`grade` = `oldGroup`.`grade` AND `group`.`schoolID` = `oldGroup`.`schoolID` AND `group`.`userID` = `oldGroup`.`userID`) WHERE `oldGroup`.ID = :oldGroupID AND `group`.`contestID` = :newContestID AND `group`.`parentGroupID` = :oldGroupID";
+   $stmt = $db->prepare($query);
+   $stmt->execute(array("oldGroupID" => $oldGroupID, "newContestID" => $newContestID));
+   $row = $stmt->fetchObject();
+   if ($row) {
+      return array("code" => $row->code, "ID" => $row->ID);
+   } else {
+      $groupCode = genAccessCode($db);
+      $groupPassword = genAccessCode($db);
+      $groupID = getRandomID();
+      $query = "INSERT INTO `group` (`ID`, `name`, `contestID`, `schoolID`, `userID`, `grade`, `expectedStartTime`, `startTime`, `code`, `password`, `isGenerated`, nbStudents, nbStudentsEffective, nbTeamsEffective, parentGroupID) ".
+         "SELECT :groupID, LEFT(CONCAT(IF(`oldGroup`.`isGenerated`, CONCAT(CONCAT('Indiv ', `oldGroup`.`grade`), ' '), CONCAT(`oldGroup`.`name`, '/')), `contest`.`name`), 50), :contestID, `oldGroup`.`schoolID`, `oldGroup`.`userID`, `oldGroup`.`grade`, NOW(), NOW(), :groupCode, :password, 1, 0, 0, 0, :oldGroupID FROM `contest`, `group` `oldGroup` WHERE `contest`.`ID` = :contestID AND `oldGroup`.`ID` = :oldGroupID";
+      $stmt = $db->prepare($query);
+      $stmt->execute(array(
+         "contestID" => $newContestID,
+         "oldGroupID" => $oldGroupID,
+         "groupID" => $groupID,
+         "groupCode" => $groupCode,
+         "password" => $groupPassword));
+      return array("code" => $groupCode, "ID" => $groupID);
+   }
+}
+
 function handleCreateTeam($db) {
    global $tinyOrm, $config;
    if (!isset($_POST["contestants"])) {
@@ -58,6 +82,8 @@ function handleCreateTeam($db) {
          $stmt->execute(array($_SESSION["contestID"]));
          $row = $stmt->fetchObject();
          $_SESSION["contestFolder"] = $row->folder;
+         $groupData = getGroupForSubContest($db, $_SESSION["groupID"], $_SESSION["contestID"]);
+         $_SESSION["groupID"] = $groupData["ID"];
       }
    }
    // $_SESSION['userCode'] is set by optional password handling function,
@@ -99,21 +125,32 @@ function handleCreateTeam($db) {
    $_SESSION["teamID"] = $teamID;
    $_SESSION["teamPassword"] = $password;
    foreach ($contestants as $contestant) {
-      if ((!isset($contestant["grade"])) || ($contestant["grade"] == '')) {
-         $contestant["grade"] = -2;
+      if (isset($contestant["registrationCode"])) {
+         $stmt = $db->prepare("INSERT INTO `contestant` (`ID`, `lastName`, `firstName`, `genre`, `grade`, `studentId`, `teamID`, `cached_schoolID`, `saniValid`, `email`, `zipCode`, `registrationID`)
+         SELECT :contestantID, `lastName`, `firstName`, `genre`, `grade`, `studentId`, :teamID, `schoolID`, 1, `email`, `zipCode`, `ID`
+         FROM `algorea_registration` WHERE `algorea_registration`.`code` = :code");
+         $stmt->execute(array(
+            "contestantID" => getRandomID(),
+            "code" => $contestant["registrationCode"],
+            "teamID" => $teamID
+         ));
+      } else {
+         if ((!isset($contestant["grade"])) || ($contestant["grade"] == '')) {
+            $contestant["grade"] = -2;
+         }
+         if (!isset($contestant["genre"])) {
+            $contestant["genre"] = 0;
+         }
+         if (!isset($contestant["studentId"])) {
+            $contestant["studentId"] = "";
+         }
+         list($contestant["firstName"], $contestant["lastName"], $saniValid, $trash) =
+            DataSanitizer::formatUserNames($contestant["firstName"], $contestant["lastName"]);
+         $stmt = $db->prepare("
+            INSERT INTO `contestant` (`ID`, `lastName`, `firstName`, `genre`, `grade`, `studentId`, `teamID`, `cached_schoolID`, `saniValid`, `email`, `zipCode`)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+         $stmt->execute(array(getRandomID(), $contestant["lastName"], $contestant["firstName"], $contestant["genre"], $contestant["grade"], $contestant["studentId"], $teamID, $_SESSION["schoolID"], $saniValid, $contestant["email"], $contestant["zipCode"]));
       }
-      if (!isset($contestant["genre"])) {
-         $contestant["genre"] = 0;
-      }
-      if (!isset($contestant["studentId"])) {
-         $contestant["studentId"] = "";
-      }
-      list($contestant["firstName"], $contestant["lastName"], $saniValid, $trash) =
-         DataSanitizer::formatUserNames($contestant["firstName"], $contestant["lastName"]);
-      $stmt = $db->prepare("
-         INSERT INTO `contestant` (`ID`, `lastName`, `firstName`, `genre`, `grade`, `studentId`, `teamID`, `cached_schoolID`, `saniValid`, `email`, `zipCode`)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-      $stmt->execute(array(getRandomID(), $contestant["lastName"], $contestant["firstName"], $contestant["genre"], $contestant["grade"], $contestant["studentId"], $teamID, $_SESSION["schoolID"], $saniValid, $contestant["email"], $contestant["zipCode"]));
    }
    addBackendHint(sprintf("ClientIP.createTeam:%s", $_SESSION['isPublic'] ? 'public' : 'private'));
    addBackendHint(sprintf("Group(%s):createTeam", escapeHttpValue($groupID)));
@@ -310,13 +347,61 @@ function handleCheckPassword($db) {
    // Search for a group matching the entered password, and if found create
    // a team in that group (and end the request).
    handleCheckGroupPassword($db, $password, $getTeams);
+
+   handleGroupFromRegistrationCode($db, $password);
+
    // If no matching group was found, look for a team with the entered password.
    handleCheckTeamPassword($db, $password);
 }
 
-function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "") {
+function getRegistrationData($db, $code) {
+   $query = "SELECT `ID`, `code`, `category`, `firstName`, `lastName`, `genre`, `grade`, `studentID`, `email`, `zipCode`, IFNULL(`schoolID`, 0) as `schoolID`, IFNULL(`userID`, 0) as `userID` ".
+      "FROM `algorea_registration` WHERE `code` = :code";
+   $stmt = $db->prepare($query);
+   $stmt->execute(array("code" => $code));
+   return $stmt->fetchObject();
+}
+
+function createGroupForContestAndRegistrationCode($db, $code, $contestID) {
+   $groupCode = genAccessCode($db);
+   $groupPassword = genAccessCode($db);
+   $groupID = getRandomID();
+   $query = "INSERT INTO `group` (`ID`, `name`, `contestID`, `schoolID`, `userID`, `grade`, `expectedStartTime`, `startTime`, `code`, `password`, `isGenerated`, nbStudents, nbStudentsEffective, nbTeamsEffective) ".
+      "SELECT :groupID, LEFT(CONCAT(CONCAT(CONCAT('Indiv', `algorea_registration`.`grade`), ' '), `contest`.`name`), 50), :contestID, `algorea_registration`.`schoolID`, `algorea_registration`.`userID`, `algorea_registration`.`grade`, NOW(), NOW(), :groupCode, :password, 1, 0, 0, 0 FROM `contest`, `algorea_registration` WHERE `contest`.`ID` = :contestID AND `algorea_registration`.`code` = :code";
+   $stmt = $db->prepare($query);
+   $stmt->execute(array(
+      "contestID" => $contestID,
+      "code" => $code,
+      "groupID" => $groupID,
+      "groupCode" => $groupCode,
+      "password" => $groupPassword));
+   return array("code" => $groupCode, "ID" => $groupID);
+}
+
+function handleGroupFromRegistrationCode($db, $code) {
+   $registrationData = getRegistrationData($db, $code);
+   if (!$registrationData) {
+      return;
+   }
+   addBackendHint("ClientIP.checkPassword:pass");
+   addBackendHint(sprintf("Group(%s):checkPassword", escapeHttpValue($registrationData->ID))); // TODO : check hint
+   $contestID = "904759992228101325"; // hard-coded
+   $query = "SELECT `code` FROM `group` WHERE `contestID` = :contestID AND `schoolID` = :schoolID AND `userID` = :userID AND `grade` = :grade";
+   $stmt = $db->prepare($query);
+   $stmt->execute(array("contestID" => $contestID, "schoolID" => $registrationData->schoolID, "userID" => $registrationData->userID, "grade" => $registrationData->grade));
+   $rowGroup = $stmt->fetchObject();
+   if (!$rowGroup) {
+      $groupData = createGroupForContestAndRegistrationCode($db, $code, $contestID);
+      $groupCode = $groupData["code"];
+   } else {
+      $groupCode = $rowGroup->code;
+   }
+   handleCheckGroupPassword($db, $groupCode, false, "", $registrationData);
+}
+
+function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "", $registrationData = []) {
    // Find a group whose code matches the given password.
-   $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, UTC_TIMESTAMP()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`visibility`, `contest`.`askEmail`, `contest`.`askZip`, `contest`.`askGenre`, `contest`.`askGrade`, `contest`.`askStudentId`, `contest`.`name` as `contestName`, `contest`.`allowPauses` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
+   $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, UTC_TIMESTAMP()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`visibility`, `contest`.`askEmail`, `contest`.`askZip`, `contest`.`askGenre`, `contest`.`askGrade`, `contest`.`askStudentId`, `contest`.`name` as `contestName`, `contest`.`allowPauses`, `group`.`isGenerated` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
    $stmt = $db->prepare($query);
    $stmt->execute(array($password));
    $row = $stmt->fetchObject();
@@ -330,6 +415,7 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "")
    $groupID = $row->ID;
    $schoolID = $row->schoolID;
    $isPublic = intval($row->isPublic);
+   $isGenerated = intval($row->isGenerated);
 
    if ($row->startTime === null) {
       $nbMinutesElapsed = 0;
@@ -350,7 +436,9 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "")
    $_SESSION["schoolID"] = $schoolID;
    $_SESSION["nbMinutes"] = intval($row->nbMinutes);
    $_SESSION["isPublic"] = intval($row->isPublic);
-   $_SESSION["groupClosed"] = (($nbMinutesElapsed > 60) && (!$_SESSION["isPublic"]));
+   $_SESSION["isGenerated"] = intval($row->isGenerated);
+   $_SESSION["groupClosed"] = (($nbMinutesElapsed > 60) && (!$_SESSION["isPublic"]) && (!$_SESSION["isGenerated"]));
+   $_SESSION["registrationData"] = $registrationData;
 
    updateSessionWithContestInfos($row);
 
@@ -394,7 +482,10 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "")
       "askStudentId" => !!intval($row->askStudentId),
       "extraMessage" => $extraMessage,
       "isPublic" => $isPublic,
-      "childrenContests" => $childrenContests));
+      "isGenerated" => $isGenerated,
+      "childrenContests" => $childrenContests,
+      "registrationData" => $registrationData   
+   ));
 }
 
 function handleCheckTeamPassword($db, $password) {
@@ -404,6 +495,17 @@ function handleCheckTeamPassword($db, $password) {
       addBackendHint(sprintf("Team(%s):checkPassword", escapeHttpValue($result->teamID)));
    }
    exitWithJson($result);
+}
+
+function handleCheckRegistrationCode($db) {
+   $code = $_POST["code"];
+   $registrationData = getRegistrationData($db, $code);
+   if (!$registrationData) {
+      exitWithJson((object)array("success" => false));
+   } else {
+      $registrationData->success = true;
+      exitWithJson($registrationData);
+   }
 }
 
 function getRemainingSeconds($db, $teamID, $restartIfEnded = false) {
@@ -567,6 +669,10 @@ if ($action === 'recoverGroup') {
 
 if ($action === 'getConfig') {
    handleGetConfig($db);
+}
+
+if ($action === 'checkRegistration') {
+   handleCheckRegistrationCode($db);
 }
 
 exitWithJsonFailure("Action inconnue");

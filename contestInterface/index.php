@@ -294,108 +294,145 @@
 </div>
 
 <div id="divLogin" style="display:none" class="dialog">
-  <div class="tabContent">
-    <div class="form-inline">
-      <p id="login-input-firstName-1">
-        <label data-i18n="[html]login_input_firstname"></label>
-        <input id="firstName1" type="text" autocomplete="off" class="form-control" /></p>
-      <p id="login-input-lasttName-1">
-        <label data-i18n="[html]login_input_lastname"></label>
-        <input id="lastName1" type="text" autocomplete="off" class="form-control" /></p>
-      <p id="login-input-email-1">
-        <label data-i18n="[html]login_input_email"></label>
-        <input id="email1" type="text" autocomplete="off" class="form-control" /></p>
-      <p id="login-input-zipCode-1">
-        <label data-i18n="[html]login_input_zipCode"></label>
-        <input id="zipCode1" type="text" autocomplete="off" class="form-control" /></p>
-      <div id="login-input-genre-1">
-        <span data-i18n="login_ask_gender"></span>
-        <div class="divInput">
-          <input type="radio" id="genre1_female" name="genre1" value="1" autocomplete="off"><label for="genre1_female" data-i18n="login_female"></label>
-          <br /><input type="radio" id="genre1_male" name="genre1" value="2" autocomplete="off"><label for="genre1_male" data-i18n="login_male"></label>
-        </div>
-      </div>
-      <p id="login-input-grade-1">
-        <span data-i18n="grade_question"></span>
-        <select id="grade1">
-         <option value="" data-i18n="grade_select" selected></option>
-         <option value="-1" data-i18n="grade_-1"></option>
-         <option value="4" data-i18n="grade_4"></option>
-         <option value="5" data-i18n="grade_5"></option>
-         <option value="6" data-i18n="grade_6"></option>
-         <option value="6" data-i18n="grade_16"></option>
-         <option value="7" data-i18n="grade_7"></option>
-         <option value="7" data-i18n="grade_17"></option>
-         <option value="8" data-i18n="grade_8"></option>
-         <option value="8" data-i18n="grade_18"></option>
-         <option value="9" data-i18n="grade_9"></option>
-         <option value="9" data-i18n="grade_19"></option>
-         <option value="10" data-i18n="grade_10"></option>
-         <option value="13" data-i18n="grade_13"></option>
-         <option value="11" data-i18n="grade_11"></option>
-         <option value="14" data-i18n="grade_14"></option>
-         <option value="12" data-i18n="grade_12"></option>
-         <option value="15" data-i18n="grade_15"></option>
-         <option value="-4" data-i18n="grade_-4">Autre</option>
-        </select></p>
-      <p id="login-input-studentId-1">
-        <label data-i18n="[html]login_input_studentId"></label>
-        <input id="studentId1" type="text" autocomplete="off" class="form-control" /></p>
-    </div>
-    <div id="contestant2" style="display:none" class="form-inline">
-      <p><b data-i18n="login_teammate"></b></p>
-      <p id="login-input-firstName-2">
-        <label data-i18n="[html]login_input_firstname"></label>
-        <input id="firstName2" type="text" autocomplete="off" class="form-control" /></p>
-      <p id="login-input-lasttName-2">
-        <label data-i18n="[html]login_input_lastname"></label>
-        <input id="lastName2" type="text" autocomplete="off" class="form-control" /></p>
-      <p id="login-input-email-2">
-        <label data-i18n="[html]login_input_email"></label>
-        <input id="email2" type="text" autocomplete="off" class="form-control" /></p>
-      <p id="login-input-zipCode-2">
-        <span data-i18n="[html]login_input_zipCode"></span>
-        <input id="zipCode2" type="text" autocomplete="off" class="form-control" /></p>
-      <div id="login-input-genre-2">
-        <span data-i18n="login_ask_gender"></span>
-        <div class="divInput">
-          <input type="radio" id="genre2_female" name="genre2" value="1" autocomplete="off"/><label for="genre2_female" data-i18n="login_female"></label>
-          <br /><input type="radio" id="genre2_male" name="genre2" value="2" autocomplete="off"/><label for="genre2_male" data-i18n="login_male"></label>
-        </div>
-      </div>
-      <p id="login-input-grade-2">
-        <span data-i18n="grade_question"></span>
-        <select id="grade2">
-          <option value="" data-i18n="grade_select" selected></option>
-          <option value="-1" data-i18n="grade_-1"></option>
-          <option value="4" data-i18n="grade_4"></option>
-          <option value="5" data-i18n="grade_5"></option>
-          <option value="6" data-i18n="grade_6"></option>
-          <option value="7" data-i18n="grade_7"></option>
-          <option value="8" data-i18n="grade_8"></option>
-          <option value="9" data-i18n="grade_9"></option>
-          <option value="10" data-i18n="grade_10"></option>
-          <option value="13" data-i18n="grade_13"></option>
-          <option value="11" data-i18n="grade_11"></option>
-          <option value="14" data-i18n="grade_14"></option>
-          <option value="12" data-i18n="grade_12"></option>
-          <option value="15" data-i18n="grade_15"></option>
-          <option value="16" data-i18n="grade_16"></option>
-          <option value="17" data-i18n="grade_17"></option>
-          <option value="18" data-i18n="grade_18"></option>
-          <option value="19" data-i18n="grade_19"></option>
-          <option value="-4" data-i18n="grade_-4">Autre</option>
-        </select>
-      </p>
-      <p id="login-input-studentId-2">
-        <label data-i18n="[html]login_input_studentId"></label>
-        <input id="studentId2" type="text" autocomplete="off" class="form-control" /></p>
-    </div>
-    <div>
-      <button type="button" id="buttonLogin" onclick="validateLoginForm()" data-i18n="login_start_contest" class="btn btn-default"></button>
-      <div><span id="LoginResult" style="color:red"></span></div>
-    </div>
-  </div>
+<style>
+   .login_box {
+      width:500px;
+   }
+   .login_box tr td {
+      border: solid black 1px;
+      padding: 20px;
+   }
+   .login_box tr:first-child {
+      background-color: #EEF;
+   }
+   .login_box tr:first-child td {
+      padding: 5px;
+   }
+   .yesno {
+      padding-left: 10px;
+      padding-right: 10px;
+   }
+   .yesno.selected {
+      border-bottom: solid black 4px;
+   }
+</style>
+   <p>
+   <table class="login_box" cellspacing=0>
+   <tr>
+      <td style="text-align:center"><p><b data-i18n="login_teammate"></b><b> 1</b></p></td>
+   </tr>
+   <tr>
+      <td style="min-height:100px">
+         <p>Avez-vous votre code de participant ?
+            <span class='yesno' onclick='hasRegistration(1, true)' id="hasReg1Yes">Oui</span>
+            <span class='yesno' onclick='hasRegistration(1, false)' id="hasReg1No">Non</span>
+         </p>
+         <br/>
+         <div id="yesRegistrationCode1" style="text-align:center;display:none">
+            <p id="login-input-registrationCode-1"> <span data-i18n="[html]login_input_registrationCode"></span> <input id="registrationCode1" type="text" autocomplete="off" /></p>
+            <p><i>(Une lettre puis une douzaine de chiffres)</i></p>
+            <input type='button' value="Valider ce code" onclick="validateRegistrationCode(1)" />
+            <p>
+            <span id="errorRegistrationCode1" style="color:red;font-weight:bold"></span>
+            </p>
+         </div>
+         <div id="noRegistrationCode1" style="display:none">
+            <p id="login-input-firstName-1"> <span data-i18n="[html]login_input_firstname"></span> <input id="firstName1" type="text" autocomplete="off" /></p>
+            <p id="login-input-lasttName-1"> <span data-i18n="[html]login_input_lastname"></span> <input id="lastName1" type="text" autocomplete="off" /></p>
+            <p id="login-input-email-1"> <span data-i18n="[html]login_input_email"></span> <input id="email1" type="text" autocomplete="off" /></p>
+            <p id="login-input-zipCode-1"> <span data-i18n="[html]login_input_zipCode"></span> <input id="zipCode1" type="text" autocomplete="off" /></p>
+            <div id="login-input-genre-1"> <span data-i18n="login_ask_gender"></span> <br/>
+               <div class="divInput">
+                  <input type="radio" id="genre1_female" name="genre1" value="1" autocomplete="off"><label for="genre1_female" data-i18n="login_female"></label>
+                  <br><input type="radio" id="genre1_male" name="genre1" value="2" autocomplete="off"><label for="genre1_male" data-i18n="login_male"></label>
+               </div>
+            </div>
+            <p id="login-input-grade-1"> <span data-i18n="grade_question"></span> <select id="grade1">
+                <option value="" data-i18n="grade_select" selected></option>
+                <option value="-1" data-i18n="grade_-1"></option>
+                <option value="4" data-i18n="grade_4"></option>
+                <option value="5" data-i18n="grade_5"></option>
+                <option value="6" data-i18n="grade_6"></option>
+                <option value="6" data-i18n="grade_16"></option>
+                <option value="7" data-i18n="grade_7"></option>
+                <option value="7" data-i18n="grade_17"></option>
+                <option value="8" data-i18n="grade_8"></option>
+                <option value="8" data-i18n="grade_18"></option>
+                <option value="9" data-i18n="grade_9"></option>
+                <option value="9" data-i18n="grade_19"></option>
+                <option value="10" data-i18n="grade_10"></option>
+                <option value="13" data-i18n="grade_13"></option>
+                <option value="11" data-i18n="grade_11"></option>
+                <option value="14" data-i18n="grade_14"></option>
+                <option value="12" data-i18n="grade_12"></option>
+                <option value="15" data-i18n="grade_15"></option>
+                <option value="-4" data-i18n="grade_-4">Autre</option>
+            </select> </p>
+            <p id="login-input-studentId-1"> <span data-i18n="[html]login_input_studentId"></span> <input id="studentId1" type="text" autocomplete="off" /></p>
+          </div>
+       </td>
+   </tr>
+   </table>
+   </p>
+   <p>
+   <table class="login_box" cellspacing=0 id="contestant2" style="display:none">
+   <tr>
+      <td style="text-align:center"><p><b data-i18n="login_teammate"></b><b> 2</b></p></td>
+   </tr>
+   <tr>
+      <td style="min-height:100px">
+         <p>Avez-vous votre code de participant ?
+            <span class='yesno' onclick='hasRegistration(2, true)' id="hasReg2Yes">Oui</span>
+            <span class='yesno' onclick='hasRegistration(2, false)' id="hasReg2No">Non</span></p>
+         </p>
+         <br/>
+         <div id="yesRegistrationCode2" style='text-align:center;display:none'>
+            <p id="login-input-registrationCode-2"> <span data-i18n="[html]login_input_registrationCode"></span> <input id="registrationCode2" type="text" autocomplete="off" /></p>
+            <p><i>(Une lettre puis une douzaine de chiffres)</i></p>
+            <input type='button' value="Valider ce code" onclick="validateRegistrationCode(2)"/>
+            <p>
+            <span id="errorRegistrationCode2" style="color:red;font-weight:bold"></span>
+            </p>
+         </div>
+         <div id="noRegistrationCode2" style="display:none">
+            <p id="login-input-firstName-2"> <span data-i18n="[html]login_input_firstname"></span> <input id="firstName2" type="text" autocomplete="off" /></p>
+            <p id="login-input-lasttName-2"> <span data-i18n="[html]login_input_lastname"></span> <input id="lastName2" type="text" autocomplete="off" /></p>
+            <p id="login-input-email-2"> <span data-i18n="[html]login_input_email"></span> <input id="email2" type="text" autocomplete="off" /></p>
+            <p id="login-input-zipCode-2"> <span data-i18n="[html]login_input_zipCode"></span> <input id="zipCode2" type="text" autocomplete="off" /></p>
+            <div id="login-input-genre-2"> <span data-i18n="login_ask_gender"></span> <br/>
+               <div class="divInput">
+                  <input type="radio" id="genre2_female" name="genre2" value="1" autocomplete="off"><label for="genre2_female" data-i18n="login_female"></label>
+                  <br><input type="radio" id="genre2_male" name="genre2" value="2" autocomplete="off"><label for="genre2_male" data-i18n="login_male"></label>
+               </div>
+            </div>
+            <p id="login-input-grade-2"> <span data-i18n="grade_question"></span> <select id="grade2">
+                <option value="" data-i18n="grade_select" selected></option>
+                <option value="-1" data-i18n="grade_-1"></option>
+                <option value="4" data-i18n="grade_4"></option>
+                <option value="5" data-i18n="grade_5"></option>
+                <option value="6" data-i18n="grade_6"></option>
+                <option value="6" data-i18n="grade_16"></option>
+                <option value="7" data-i18n="grade_7"></option>
+                <option value="7" data-i18n="grade_17"></option>
+                <option value="8" data-i18n="grade_8"></option>
+                <option value="8" data-i18n="grade_18"></option>
+                <option value="9" data-i18n="grade_9"></option>
+                <option value="9" data-i18n="grade_19"></option>
+                <option value="10" data-i18n="grade_10"></option>
+                <option value="13" data-i18n="grade_13"></option>
+                <option value="11" data-i18n="grade_11"></option>
+                <option value="14" data-i18n="grade_14"></option>
+                <option value="12" data-i18n="grade_12"></option>
+                <option value="15" data-i18n="grade_15"></option>
+                <option value="-4" data-i18n="grade_-4">Autre</option>
+            </select> </p>
+            <p id="login-input-studentId-2"> <span data-i18n="[html]login_input_studentId"></span> <input id="studentId2" type="text" autocomplete="off" /></p>
+          </div>
+       </td>
+   </tr>
+   </table>
+   </p>
+   <p><button type="button" id="buttonLogin" onclick="validateLoginForm()" data-i18n="login_start_contest"></button>&nbsp;<span id="LoginResult" style="color:red;font-weight:bold"></span></p>
 </div><!-- #divLogin -->
 
 <div id="divPassword" style="display:none" class="dialog">

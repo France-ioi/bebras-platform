@@ -56,7 +56,7 @@ $config->useCustomStrings = false; // see README
 
 // Timestamp for URLs
 // If defined, ?v=[timestamp] will be added to all URLs.
-//$config->timestamp = 1000000000;
+$config->timestamp = 1000000000;
 
 // Should we upgrade contest URLs (resources) to HTTPS client-side?
 // If true, upgrade all URLs; if an array, upgrade all URLs from these domains
