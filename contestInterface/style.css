@@ -551,6 +551,25 @@ a {
   font-family: 'Courier New', Inconsolata, 'Roboto Mono', 'PT Mono', 'Ubuntu', monospace;
 }
 
+select {
+  padding: 6px 12px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.42857143;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: #333;
+  background-color: #fff;
+}
+
+
 .form-control {
   display: block;
   width: 100%;
