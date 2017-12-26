@@ -399,18 +399,19 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
    $strQuestions .= "\n";
 
    foreach ($jsModulesRes as $name => $content) {
-      $strContent = htmlspecialchars($content, ENT_COMPAT, 'UTF-8');
       // If the content is too long, split it in parts
-      if(strlen($strContent) < 65000) {
+      if(strlen($content) < 65000) {
+         $strContent = htmlspecialchars($content, ENT_COMPAT, 'UTF-8');
          $strModule = '<div class="js-module" id="js-module-'.$name.'" data-content="'.$strContent.'"></div>'."\n";
          $strQuestions .= $strModule;
          contestAddContent($strModule, $nameParts, $buffer, $numPart, false);
       } else {
          $strContentPart = 0;
-         while(strlen($strContent) > 0) {
-            $strContentExcept = substr($strContent, 0, 65000);
-            $strContent = substr($strContent, 65000);
-            $strModule = '<div class="js-module" id="js-module-'.$name.'_'.$strContentPart.'" data-part="' . $strContentPart . '" data-content="'.$strContentExcept.'"></div>'."\n";
+         while(strlen($content) > 0) {
+            $contentExcept = substr($content, 0, 65000);
+            $content = substr($content, 65000);
+            $strContent = htmlspecialchars($contentExcept, ENT_COMPAT, 'UTF-8');
+            $strModule = '<div class="js-module" id="js-module-'.$name.'_'.$strContentPart.'" data-part="' . $strContentPart . '" data-content="'.$strContent.'"></div>'."\n";
             $strContentPart += 1;
             $strQuestions .= $strModule;
             contestAddContent($strModule, $nameParts, $buffer, $numPart, false);
