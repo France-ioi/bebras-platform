@@ -256,9 +256,10 @@
   <div id="tab-results" style="display:none" class="tabContent">
     <div class="tabTitle" data-i18n="general_view_results"></div>
     <p data-i18n="tab_view_results_access_code"></p>
-    <div class="divInput">
-      <input id="interruptedPassword" type="password" class="form-control"><button type="button" id="buttonInterrupted" class="btn btn-default" onclick="checkPasswordInterrupted()" data-i18n="tab_view_results_view_results_button"></button>
-      <br/><span id="InterruptedResult" style="color:red"></span>
+    <div class="divInput form-inline">
+      <input id="interruptedPassword" type="password" class="form-control">
+      <button type="button" id="buttonInterrupted" class="btn btn-default" onclick="checkPasswordInterrupted()" data-i18n="tab_view_results_view_results_button"></button>
+      <div><span id="InterruptedResult" style="color:red"></span></div>
     </div>
     <p data-i18n="tab_view_results_info_1"></p>
     <p><b data-i18n="tab_view_results_info_2"></b></p>
@@ -267,14 +268,17 @@
     <p data-i18n="tab_view_results_info_4"></p>
     <div id="divRelogin" style="display:none">
       <p data-i18n="tab_view_select_team_in_list"></p>
-      <select id="selectTeam"><option value='0' data-i18n="tab_view_select_team"></option></select>
-      <p data-i18n="tab_view_ask_password_to_teacher"></p>
       <div class="divInput">
-        <input id="groupPassword" type="password" class="form-control"><button type="button" id="buttonRelogin" class="btn btn-default" onclick="relogin()" data-i18n="tab_view_restart_contest"></button>
-        <br/><span id="ReloginResult" style="color:red"></span>
+        <select id="selectTeam"><option value='0' data-i18n="tab_view_select_team"></option></select>
+      </div>
+      <p data-i18n="tab_view_ask_password_to_teacher"></p>
+      <div class="divInput form-inline">
+        <input id="groupPassword" type="password" class="form-control">
+        <button type="button" id="buttonRelogin" class="btn btn-default" onclick="relogin()" data-i18n="tab_view_restart_contest"></button>
+        <div><span id="ReloginResult" style="color:red"></span></div>
       </div>
     </div>
-  </div>
+  </div><!-- #tab-results -->
 
   <div id="tab-contests" style="display:none" class="tabContent">
     <div class="tabTitle" data-i18n="general_view_other_contests"></div>
