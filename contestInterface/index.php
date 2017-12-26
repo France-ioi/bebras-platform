@@ -62,13 +62,12 @@
     <h3>Vous démarrez un concours en classe, pour la première fois ?</h3>
     -->
     <div id="submitParticipationCode">
-      <p data-i18n="[html]tab_start_contest_enter_code"><br />
-        <div class="divInput form-inline">
-          <input id="groupCode" type="text" class="form-control" />
-          <button type="button" id="buttonCheckGroup" onclick="checkGroup()" data-i18n="tab_start_contest_start_button" class="btn btn-primary"></button>
-          <div><span id="CheckGroupResult" style="color:red"></span></div>
-        </div>
-      </p>
+      <p class="stepName" data-i18n="[html]tab_start_contest_enter_code"></p>
+      <div class="divInput form-inline">
+        <input id="groupCode" type="text" class="form-control" />
+        <button type="button" id="buttonCheckGroup" onclick="checkGroup()" data-i18n="tab_start_contest_start_button" class="btn btn-primary"></button>
+        <div><span id="CheckGroupResult" style="color:red"></span></div>
+      </div>
     </div>
     <div id="recoverGroup" style="display:none;">
       <p data-i18n="[html]group_session_expired_recover"></p>
