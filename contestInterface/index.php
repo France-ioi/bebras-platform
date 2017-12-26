@@ -159,7 +159,7 @@
           <td></td>
         </tr>
       </table>
-      <button type="button" class="btn btn-default" onclick="selectCategory()">Valider</button>
+      <button type="button" class="btn btn-default" id="selectCategoryButton" disabled>Valider</button>
     </div>
 
     <div id="selectLanguage" style="display:none">
@@ -214,7 +214,7 @@
         </tbody>
       </table>
       <button type="button" class="btn btn-default" id="backToCategorySelection">Retour à l'étape précédente</button>
-      <button type="button" class="btn btn-default" onclick="selectLanguage()">Valider</button>
+      <button type="button" class="btn btn-default" id="selectLanguageButton" disabled>Valider</button>
     </div>
 
     <div id="selectContest" style="display:none">

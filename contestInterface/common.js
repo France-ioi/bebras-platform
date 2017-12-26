@@ -1605,36 +1605,39 @@ $('.categorySelector').click(function(event) {
    preSelectedCategory = category;
    $('.categorySelector').removeClass('selected');
    target.addClass('selected');
+   $('#selectCategoryButton').attr('disabled', false);
 });
 
-window.selectCategory = function() {
+$('#selectCategoryButton').click(function(event) {
    selectedCategory = preSelectedCategory;
    if (selectedCategory.length) {
      $("#selectCategory").slideUp();
      offerLanguages();
    }
-};
+});
 
 $('#backToCategorySelection').click(function(event) {
   $("#selectCategory").slideDown();
   $("#selectLanguage").slideUp();
   offerCategories();
 });
+
 $('.languageSelector').click(function(event) {
    var target = $(event.currentTarget);
    var language = target.data('language');
    preSelectedLanguage = language;
    $('.languageSelector').removeClass('selected');
    $('.languageSelector[data-language="'+ language + '"]').addClass('selected');
+   $('#selectLanguageButton').attr('disabled', false);
 });
 
-window.selectLanguage = function() {
-   selectedLanguage = preSelectedLanguage;
+$('#selectLanguageButton').click(function(event) {
+  selectedLanguage = preSelectedLanguage;
    if (selectedLanguage.length) {
      $("#selectLanguage").slideUp();
      offerContests();
    }
-}
+});
 
 $('#backToLanguageSelection').click(function(event) {
   $("#selectLanguage").slideDown();
