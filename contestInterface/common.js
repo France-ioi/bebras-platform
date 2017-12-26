@@ -1663,7 +1663,7 @@ $('#selectCategoryButton').click(function(event) {
 
 $('#backToCategorySelection').click(function(event) {
   $("#selectCategory").slideDown();
-  $("#selectContest").slideUp();
+  $("#selectLanguage").slideUp();
   offerCategories();
 });
 
@@ -1687,7 +1687,7 @@ $('#selectLanguageButton').click(function(event) {
 
 $('#backToLanguageSelection').click(function(event) {
   $("#selectLanguage").slideDown();
-  $("#selectCategory").slideUp();
+  $("#selectContest").slideUp();
   offerLanguages();
 });
  
