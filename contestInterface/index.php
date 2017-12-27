@@ -212,15 +212,15 @@
           </tr>
         </tbody>
       </table>
-      <button type="button" class="btn btn-default" id="backToCategorySelection">Retour à l'étape précédente</button>
       <button type="button" class="btn btn-default" id="selectLanguageButton" disabled>Valider</button>
+      <button type="button" class="btn btn-default" id="backToCategorySelection">Retour</button>
     </div>
 
     <div id="selectContest" style="display:none">
       <p>Choisssez votre séquence :</p>
       <div id="selectContestItems">
       </div>
-      <button type="button" class="btn btn-default" id="backToLanguageSelection">Retour à l'étape précédente</button>
+      <button type="button" class="btn btn-default" id="backToLanguageSelection">Retour</button>
     </div>
   </div><!-- #tab-school -->
 
