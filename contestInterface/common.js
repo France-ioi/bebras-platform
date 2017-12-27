@@ -1484,14 +1484,20 @@ function fillListTeams(teams) {
  * alone or in a team of two students.
 */
 var nbContestants;
-window.setNbContestants = function(nb) {
-   nbContestants = nb;
+
+$(".nbContestants").click(function(event) {
+   var target = $(event.currentTarget);
+   nbContestants = target.data('nbcontestants');
+   $(".nbContestants").removeClass('selected');
+   target.addClass('selected');
    if (nbContestants === 2) {
       $("#contestant2").show();
    }
+   if (nbContestants !== 2) {
+      $("#contestant2").hide();
+   }
    $("#divLogin").show();
-   $("#divCheckNbContestants").hide();
-};
+});
 
 var fieldsHidden = {};
 
@@ -1851,7 +1857,8 @@ function createTeam(contestants) {
       function(data) {
          teamID = data.teamID;
          teamPassword = data.password;
-         $("#divLogin").hide();
+         //$("#divLogin").hide();
+         $("#divCheckNbContestants").hide();
          $("#teamPassword").html(data.password);
          $("#divPassword").show();
       }, "json");

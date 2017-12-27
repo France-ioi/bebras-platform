@@ -558,6 +558,10 @@ a {
 .btn-icon {
   font-family: 'Courier New', Inconsolata, 'Roboto Mono', 'PT Mono', 'Ubuntu', monospace;
 }
+.btn.selected {
+  background-color: #2381bd;
+  color: #fff;
+}
 .btn.disabled,
 .btn[disabled],
 fieldset[disabled] .btn {
@@ -820,7 +824,4 @@ table td ul:first-child{
 .yesno {
   padding-left: 10px;
   padding-right: 10px;
-}
-.yesno.selected {
-  border-bottom: solid black 4px;
 }
