@@ -585,6 +585,26 @@ select {
   background-color: #fff;
 }
 
+.panel {
+  margin-bottom: 20px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+  box-shadow: 0 1px 1px rgba(0,0,0,.05);
+}
+.panel-head {
+  padding: 10px 15px;
+  border-bottom: 1px solid transparent;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  color: #333;
+  background-color: #f5f5f5;
+  border-color: #ddd;
+}
+.panel-body {
+  padding: 15px;
+}
 
 .form-control {
   display: block;
@@ -775,4 +795,26 @@ table td ul:first-child{
 }
 .languageSelector.languageDescription {
   font-size: 12px;
+}
+
+
+/* Login box */
+.login_box.panel {
+  float: left;
+  margin-right: 20px;
+  width: 500px;
+}
+.login_box .panel-head {
+  background-color: #EEF;
+  text-align: center;
+}
+.login_box .panel-body {
+  min-height: 100px;
+}
+.yesno {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.yesno.selected {
+  border-bottom: solid black 4px;
 }
