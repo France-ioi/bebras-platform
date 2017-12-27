@@ -166,6 +166,7 @@ a {
 }
 .tabContent {
   float: left;
+  margin-bottom: 40px;
 }
 .questionListHeader {
    width:195px;
