@@ -29,6 +29,14 @@ a {
    font-weight: bold;
    text-decoration: none;
 }
+.clearfix {
+  clear: both;
+}
+.clearfix::before,
+.clearfix::after {
+  content: "";
+  display: table;
+}
 
 .chrono {
   font-size: 2em;
