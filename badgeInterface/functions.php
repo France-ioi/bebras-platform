@@ -26,7 +26,7 @@ function getRequiredParam($key) {
    no match is found. */
 function verifyCode($badgeName, $code) {
   global $db;
-  $stmt = $db->prepare('select contestant.lastName as sLastName, contestant.firstName as sFirstName, contestant.genre as genre, contestant.email as sEmail, contestant.zipcode as sZipcode, algorea_registration.franceioiID from contestant
+  $stmt = $db->prepare('select contestant.lastName as sLastName, contestant.firstName as sFirstName, contestant.genre as genre, contestant.email as sEmail, contestant.zipcode as sZipcode, algorea_registration.franceioiID, algorea_registration.category from contestant
     join team on team.ID = contestant.teamID
     join `group` on `group`.ID = team.groupID
     join contest on contest.ID = `group`.contestID
@@ -42,6 +42,10 @@ function verifyCode($badgeName, $code) {
 
   $contestant['sSex'] = ($contestant['genre'] == 2 ? 'Male' : 'Female');
   unset($contestant['genre']);
+
+  // Data is transmitted everywhere along the badge
+  $contestant['data'] = ['category' => $contestant['category']];
+  unset($contestant['category']);
 
   return $contestant;
 }
