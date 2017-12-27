@@ -788,10 +788,15 @@ table td ul:first-child{
 }
 .languageTable td img {
   max-width: 100%;
+  display: block;
+  margin: 0 auto;
 }
 .languageSelector.selectorCell {
   line-height: 32px;
   text-align: center;
+}
+.languageSelector.selected {
+  background: #ffffdd;
 }
 .languageSelector.languageDescription {
   font-size: 12px;
