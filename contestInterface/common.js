@@ -1773,7 +1773,7 @@ window.offerContests = function() {
           (selectedLanguage == child.language)) {
          lastContestID = child.contestID;
          selectHtml += '<p class="contestChoice">' +
-            '<button type="button" onclick="selectContest(\'' + child.contestID + '\')">' + child.name + '</button>' +
+            '<button type="button" onclick="selectContest(\'' + child.contestID + '\')" class="btn btn-default">' + child.name + '</button>' +
             '</p>';
          nbContests++;
       }
