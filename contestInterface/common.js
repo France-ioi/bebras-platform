@@ -1734,6 +1734,9 @@ window.offerCategories = function() {
    } else {
       selectCategory(lastCategory);
    }
+   $('html, body').animate({
+     scrollTop: $('#tab-school .tabTitle').offset().top
+   }, 250);
 }
 
 window.offerLanguages = function() {
@@ -1755,6 +1758,9 @@ window.offerLanguages = function() {
    } else {
       selectLanguage(lastLanguage);
    }
+   $('html, body').animate({
+     scrollTop: $('#tab-school .tabTitle').offset().top
+   }, 250);
 }
 
 window.offerContests = function() {
