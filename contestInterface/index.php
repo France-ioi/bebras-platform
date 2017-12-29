@@ -507,7 +507,7 @@
    </span>
 </div>
 
-<div id="question-iframe-container" autocomplete="off">
+<div id="question-iframe-container" style="display:none" autocomplete="off">
    <div class="newInterface" style="width:770px;margin:auto;text-align:left;padding: 10px 0 10px">
       <span class="questionTitle" style="padding-right: 20px"></span><span id="questionStars"></span>
    </div>

@@ -275,10 +275,11 @@ a {
    text-align: left;
    font-weight: normal;
 }
-.divInput {
-     padding-left: 100px;
+@media screen and (min-width: 768px) {
+  .divInput {
+       padding-left: 100px;
+  }
 }
-
 .questionScores, .questionScores td {
    border: solid black 1px;
 }
@@ -630,7 +631,11 @@ select {
   -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
   transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
-
+@media (max-width: 767px) {
+  .form-inline {
+    text-align: center;
+  }
+}
 @media (min-width: 768px) {
   .form-inline .form-group {
     display: inline-block;
