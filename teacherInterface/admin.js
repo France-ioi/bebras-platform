@@ -200,6 +200,9 @@ function getGroupsColModel() {
          nbStudents: {label: t("group_nbStudents_label"), longLabel: t("group_nbStudents_long_label"), editable: true, required: true, edittype: "text", subtype:"positiveint", width: 100, comment: t("group_nbStudents_comment")},
          userID: {hidden: true, visible: false, hiddenlg: true},
          contestPrintCertificates: {hidden: true, visible: false, hiddenlg: true},
+         minCategory: {label: t("group_minCategory_label"), width: 100},
+         maxCategory: {label: t("group_maxCategory_label"), width: 100},
+         language: {label: t("group_language_label"), width: 100},
       }
    };
    return model;
@@ -1410,6 +1413,45 @@ function objectHasProperties(object) {
    return false;
 }
 
+function groupFormShowContestDetails(contestID) {
+   var categories = {};
+   var languages = {};
+   var strCategories = "";
+   var strLanguages = "";
+   for (var subContestID in contests) {
+      var subContest = contests[subContestID];
+      if (subContest.parentContestID == contestID) {
+         if (subContest.categoryColor != "") {
+            if (!categories[subContest.categoryColor]) {
+               categories[subContest.categoryColor] = true;
+               strCategories += "<option value='" + subContest.categoryColor + "'>" + subContest.categoryColor + "</option>";
+            }
+         }
+         if (subContest.language != "") {
+            if (!languages[subContest.language]) {
+               languages[subContest.language] = true;
+               strLanguages += "<option value='" + subContest.language + "'>" + subContest.language + "</option>";
+            }
+         }
+      }
+   }
+   if (strCategories != "") {
+      strCategories = "<br/><p>Catégorie minumum : <select id='group_minCategory'><option value=''>Aucune</option>" + strCategories + "</select></p>"
+                        + "<p>Catégorie maximum : <select id='group_maxCategory'><option value=''>Aucune</option>" + strCategories + "</select></p>";
+   }
+   if (strLanguages != "") {
+      strLanguages = "<br/><p>Langage de programmation : <select id='group_language'><option value=''>Libre</option>" + strLanguages + "</select></p>";
+   }
+   $("#contestParams").html(strCategories + strLanguages);
+}
+
+function groupFormHandleContestChange() {
+   $("#group_contestID").change(function() {
+      var contestID = $("#group_contestID").val();
+      groupFormShowContestDetails(contestID);
+   });
+}
+
 function newGroup() {
    if (isAdmin()) {
       jqAlert(t('admin_cannot_create_group'));
@@ -1420,6 +1462,7 @@ function newGroup() {
       return;
    }
    newForm("group", t("create_group"), t("create_group_comment"));
+   groupFormHandleContestChange();
 }
 
 function newContestQuestion() {
@@ -2130,6 +2173,9 @@ function newForm(modelName, title, message) {
             }
          }
          html += "</select>";
+         if (modelName == "group" && fieldName == "contestID") {
+            html += "<div id='contestParams'></div>";
+         }
       } else if (field.edittype === "ac-email") {
          html += "<input type='text' id='" + fieldId + "' "+requiredString+"/>@";
          html += "<select id='" + fieldId + "_domain'>";
@@ -2177,6 +2223,14 @@ function loadOneRecord(tableName, recordID, callback) {
    );
 }
 
+function editGroupDetails(group) {
+   groupFormHandleContestChange();
+   groupFormShowContestDetails(group.contestID);
+   $("#group_minCategory").val(group.minCategory);
+   $("#group_maxCategory").val(group.maxCategory);
+   $("#group_language").val(group.language   );
+}
+
 function editGroup() {
    var groupID = jQuery("#grid_group").jqGrid('getGridParam','selrow');
    if (groupID === null) {
@@ -2186,13 +2240,16 @@ function editGroup() {
    if (isAdmin()) {
       loadOneRecord("group", groupID, function(item) {
          editForm("group", t("edit_group"), item);
+         editGroupDetails(item);
       }).fail(jqGridDataFail);
 
    } else {
       if (groups[groupID].userID != loggedUser.ID) {
          jqAlert(t("only_group_creator_can_edit"));
+         return;
       } else {
          editForm("group", t("edit_group"), groups[groupID]);
+         editGroupDetails(groups[groupID])
       }
    }
 }

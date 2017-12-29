@@ -1,0 +1,2 @@
+ALTER TABLE `contest` ADD `description` TEXT NOT NULL AFTER `categoryColor`, ADD `imageURL` TEXT NOT NULL AFTER `description`;
+ALTER TABLE `history_contest` ADD `description` TEXT NOT NULL AFTER `categoryColor`, ADD `imageUrL` TEXT NOT NULL AFTER `description`;

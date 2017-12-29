@@ -82,6 +82,11 @@ $tablesModels = array (
          "certificateStringsName" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "startDate" => array("type" => "date", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "endDate" => array("type" => "date", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "parentContestID" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "categoryColor" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "language" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "description" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "imageURL" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
       )
    ),
    "contest_question" => array(
@@ -121,7 +126,10 @@ $tablesModels = array (
          "startTime" => array("type" => "date"),
          "noticePrinted" => array("type" => "int"),
          "isPublic" => array("type" => "int"),
-         "participationType" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user")))
+         "participationType" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user"))),
+         "minCategory" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user"))),
+         "maxCategory" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user"))),
+         "language" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user")))
       )
    ),
    "question" => array(
@@ -463,7 +471,10 @@ $viewsModels = array(
          "nbStudentsEffective" => array(),
          "nbStudents" => array(),
          "userID" => array("fieldName" => "userID", "tableName" => "group"),
-         "contestPrintCertificates" => array("fieldName" => "printCertificates", "tableName" => "contest")
+         "contestPrintCertificates" => array("fieldName" => "printCertificates", "tableName" => "contest"),
+         "minCategory" => array(),
+         "maxCategory" => array(),
+         "language" => array()
 //         "accessUserID" => array("fieldName" => "targetUserID", "tableName" => "user_user")
       ),
       "filters" => array(
@@ -630,6 +641,11 @@ $viewsModels = array(
          "printCertificates" => array(),
          "certificateStringsName" => array(),
          "printCodes" => array(),
+         "parentContestID" => array(),
+         "categoryColor" => array(),
+         "language" => array(),
+         "description" => array(),
+         "imageURL" => array(),
       ),
       "filters" => array(
          "statusNotHidden" => array(
