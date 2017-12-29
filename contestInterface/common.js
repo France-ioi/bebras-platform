@@ -1485,7 +1485,7 @@ function fillListTeams(teams) {
 */
 var nbContestants;
 
-function setNbContestants(nbContestants) {
+window.setNbContestants = function(nbContestants) {
    $(".nbContestants").removeClass('selected');
    if (nbContestants === 2) {
       $("#contestant2").show();
@@ -1499,7 +1499,7 @@ function setNbContestants(nbContestants) {
 $(".nbContestants").click(function(event) {
    var target = $(event.currentTarget);
    nbContestants = target.data('nbcontestants');
-   setNbContestants(nbContestants);
+   window.setNbContestants(nbContestants);
    target.addClass('selected');
 });
 
