@@ -1734,7 +1734,7 @@ window.offerCategories = function() {
       }
    }
    var allCategories = ["blanche", "jaune", "orange", "verte", "bleue"]; // TODO: do not hardcode
-   var minReached = false;
+   var minReached = (groupMinCategory == "");
    var maxReached = false;
    var nbCategories = 0;
    var lastCategory;

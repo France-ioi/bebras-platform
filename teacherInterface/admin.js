@@ -2129,7 +2129,7 @@ function getContestFromID(ID) {
    return null;
 }
 
-function newForm(modelName, title, message) {
+function newForm(modelName, title, message, item) {
    var js = "";
    var html = "<h2>" + title + "</h2>" + message +
       "<input type='hidden' id='" + modelName + "_ID' /><table>";
@@ -2168,10 +2168,15 @@ function newForm(modelName, title, message) {
             var optionsList = field.editoptions.value.split(";");
             for (var iOption = 0; iOption < optionsList.length; iOption++)  {
                var optionParts = optionsList[iOption].split(":");
-               if (fieldName == "contestID") {
+               if (fieldName == "contestID") {                  
                   var contest = getContestFromID(optionParts[0]);
-                  if (contest && contest.visibility == 'Hidden') {
-                     continue;
+                  if (contest) {
+                     if (contest.visibility == 'Hidden') {
+                        continue;
+                     }
+                     if ((contest.parentContestID != "0") && (contest.parentContestID != null) && ((item == null) || (item.contestID != contest.ID))) {
+                        continue;
+                     }
                   }
                }
                optionValue = optionParts[0];
@@ -2333,7 +2338,7 @@ function getDateFromSQL(dateSQL) {
 }
 
 function editForm(modelName, title, item) {
-   newForm(modelName, title, "");
+   newForm(modelName, title, "", item);
    $("#" + modelName + "_ID").val(item.ID);
    var fields = models[modelName].fields;
    for (var fieldName in fields) {
