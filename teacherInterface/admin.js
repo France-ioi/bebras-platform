@@ -1416,28 +1416,40 @@ function objectHasProperties(object) {
 function groupFormShowContestDetails(contestID) {
    var categories = {};
    var languages = {};
-   var strCategories = "";
-   var strLanguages = "";
    for (var subContestID in contests) {
       var subContest = contests[subContestID];
       if (subContest.parentContestID == contestID) {
          if (subContest.categoryColor != "") {
             if (!categories[subContest.categoryColor]) {
-               categories[subContest.categoryColor] = true;
-               strCategories += "<option value='" + subContest.categoryColor + "'>" + subContest.categoryColor + "</option>";
+               categories[subContest.categoryColor] = "<option value='" + subContest.categoryColor + "'>" + subContest.categoryColor + "</option>";
             }
          }
          if (subContest.language != "") {
             if (!languages[subContest.language]) {
-               languages[subContest.language] = true;
-               strLanguages += "<option value='" + subContest.language + "'>" + subContest.language + "</option>";
+               languages[subContest.language] = "<option value='" + subContest.language + "'>" + subContest.language + "</option>";
             }
          }
+      }
+   }
+   var strCategories = "";
+   var allCategories = ["blanche", "jaune", "orange", "verte", "bleue"];  // TODO: do not hardcode values
+   for (var iCategory = 0; iCategory < allCategories.length; iCategory++) {
+      var category = allCategories[iCategory];
+      if (categories[category] != undefined) {
+         strCategories += categories[category];
       }
    }
    if (strCategories != "") {
       strCategories = "<br/><p>Catégorie minumum : <select id='group_minCategory'><option value=''>Aucune</option>" + strCategories + "</select></p>"
                         + "<p>Catégorie maximum : <select id='group_maxCategory'><option value=''>Aucune</option>" + strCategories + "</select></p>";
+   }
+   var strLanguages = "";
+   var allLanguages = ["blockly", "scratch", "python"]; // TODO: do not hardcode values
+   for (var iLanguage = 0; iLanguage < allLanguages.length; iLanguage++) {
+      var language = allLanguages[iLanguage];
+      if (languages[language] != undefined) {
+         strLanguages += languages[language];
+      }
    }
    if (strLanguages != "") {
       strLanguages = "<br/><p>Langage de programmation : <select id='group_language'><option value=''>Libre</option>" + strLanguages + "</select></p>";

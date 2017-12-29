@@ -1629,6 +1629,9 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
           $("#submitParticipationCode").slideUp();
          }
 
+         groupMinCategory = data.minCategory;
+         groupMaxCategory = data.maxCategory;
+         groupLanguage = data.language;
         // TODO : handle registration Data
          if ((data.childrenContests != undefined) && (data.childrenContests.length != 0)) {
             childrenContests = data.childrenContests;
@@ -1723,16 +1726,33 @@ window.selectContest = function(ID) {
 
 window.offerCategories = function() {
    var categories = {};
-   var nbCategories = 0;
-   var lastCategory;
    $(".categoryChoice").hide();
    for (var iChild = 0; iChild < childrenContests.length; iChild++) {
       var child = childrenContests[iChild];
       if (categories[child.categoryColor] == undefined) {
          categories[child.categoryColor] = true;
+      }
+   }
+   var allCategories = ["blanche", "jaune", "orange", "verte", "bleue"]; // TODO: do not hardcode
+   var minReached = false;
+   var maxReached = false;
+   var nbCategories = 0;
+   var lastCategory;
+   for (var iCategory = 0; iCategory < allCategories.length; iCategory++) {
+      var category = allCategories[iCategory];
+      if (category == groupMinCategory) {
+         minReached = true;
+      }
+      if ((!minReached) || maxReached) {
+         categories[category] = false;
+      }
+      if (category == groupMaxCategory) {
+         maxReached = true;
+      }
+      if (categories[category]) {
          nbCategories++;
-         lastCategory = child.categoryColor;
-         $("#cat_" + child.categoryColor).show();
+         lastCategory = category;
+         $("#cat_" + category).show();
       }
    }
    if (nbCategories > 1) {
@@ -1750,8 +1770,11 @@ window.offerLanguages = function() {
    var nbLanguages = 0;
    $(".languageSelector").hide();
    var lastLanguage = "";
-   for (var iChild = 0; iChild < childrenContests.length; iChild++) {
+   for (var iChild = 0; iChild < childrenContests.length; iChild++) {      
       var child = childrenContests[iChild];
+      if (groupLanguage != "" && groupLanguage != child.language) {
+         continue;
+      }
       if (languages[child.language] == undefined) {
          languages[child.language] = true;
          nbLanguages++;
