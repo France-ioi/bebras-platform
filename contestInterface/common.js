@@ -1485,11 +1485,8 @@ function fillListTeams(teams) {
 */
 var nbContestants;
 
-$(".nbContestants").click(function(event) {
-   var target = $(event.currentTarget);
-   nbContestants = target.data('nbcontestants');
+function setNbContestants(nbContestants) {
    $(".nbContestants").removeClass('selected');
-   target.addClass('selected');
    if (nbContestants === 2) {
       $("#contestant2").show();
    }
@@ -1497,6 +1494,13 @@ $(".nbContestants").click(function(event) {
       $("#contestant2").hide();
    }
    $("#divLogin").show();
+}
+
+$(".nbContestants").click(function(event) {
+   var target = $(event.currentTarget);
+   nbContestants = target.data('nbcontestants');
+   setNbContestants(nbContestants);
+   target.addClass('selected');
 });
 
 var fieldsHidden = {};
