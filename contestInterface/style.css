@@ -167,6 +167,7 @@ a {
 .tabContent {
   float: left;
   margin-bottom: 40px;
+  max-width: 900px;
 }
 .questionListHeader {
    width:195px;
@@ -643,77 +644,6 @@ select {
   }
 }
 
-table {
-  border-collapse: collapse;
-}
-table td p:first-child,
-table td ul:first-child{
-    margin-top: 0;
-}
-
-/* Contest categories */
-.colorCategories {
-    border: 1px solid #ccc;
-    box-shadow: 5px 5px 8px #eee;
-    margin: 2em auto;
-    width: 100%;
-    text-align: left;
-}
-.colorCategories .colorCategory {
-    border-top: 1px solid #333;
-}
-.colorCategories .colorCategory:first-child {
-    border-top: none;
-}
-.colorCategories .colorCategoryTitle {
-    padding: 10px;
-    color: #000;
-    font-size: 1.2em;
-    width: 25%;
-    vertical-align: middle;
-}
-.colorCategory td {
-    padding: 10px;
-}
-.colorCategory.white td {
-    background-color: #fff;
-}
-.colorCategory.white .colorCategoryTitle {
-    background-color: #efefef;
-}
-.colorCategory.yellow td {
-    background-color: #ffffab;
-}
-.colorCategory.yellow .colorCategoryTitle {
-    background-color: #ffef00;
-}
-.colorCategory.orange td {
-    background-color: #fdd5a4;
-}
-.colorCategory.orange .colorCategoryTitle {
-    background-color: #ff8c00;
-}
-.colorCategory.green td {
-    background-color: #8ff38f;
-}
-.colorCategory.green .colorCategoryTitle {
-    background-color: #06d606;
-}
-.colorCategory.blue td {
-    background-color: #93beff;
-}
-.colorCategory.blue .colorCategoryTitle {
-    background-color: #0037ff;
-    color: #efefef;
-}
-
-.categorySelector {
-  cursor: pointer;
-}
-.categorySelector td.selectorCell {
-  background-color: transparent;
-  width: 60px;
-}
 
 /* Arrows */
 .selector_arrowForward,
@@ -780,33 +710,117 @@ table td ul:first-child{
   background-color: #000
 }
 
-.languageTable {
+table {
+  border-collapse: collapse;
+}
+table td p:first-child,
+table td ul:first-child{
+  margin-top: 0;
+}
+.selectorTable {
   border: 1px solid #ccc;
   box-shadow: 5px 5px 8px #eee;
   margin: 2em 0;
+  text-align: left;
+  vertical-align: middle;
 }
-.languageTable th,
-.languageTable td {
-  width: 230px;
+.selectorTable tr:hover td {
+  background-color: #EEF;
+}
+.selectorTable td {
   border: 1px solid #777;
   padding: 10px;
+  cursor: pointer;
 }
+.selectorTable td.selectorCell {
+  width: 60px;
+}
+.selectorTable .selectorTitle .btn {
+  font-size: 1.2em;
+}
+.selectorTable .description {
+  font-size: 12px;
+}
+
+/* Contest categories */
+.selectorTable.colorCategories td {
+  border: none;
+}
+.colorCategories .colorCategory {
+  border-top: 1px solid #333;
+}
+.colorCategories .colorCategory:first-child {
+  border-top: none;
+}
+.colorCategory.white td {
+  background-color: #fff;
+}
+.colorCategory.white .colorCategoryTitle {
+  background-color: #efefef;
+}
+.colorCategory.yellow td {
+  background-color: #ffffab;
+}
+.colorCategory.yellow .colorCategoryTitle {
+  background-color: #ffef00;
+}
+.colorCategory.orange td {
+  background-color: #fdd5a4;
+}
+.colorCategory.orange .colorCategoryTitle {
+  background-color: #ff8c00;
+}
+.colorCategory.green td {
+  background-color: #8ff38f;
+}
+.colorCategory.green .colorCategoryTitle {
+  background-color: #06d606;
+}
+.colorCategory.blue td {
+  background-color: #93beff;
+}
+.colorCategory.blue .colorCategoryTitle {
+  background-color: #0037ff;
+  color: #efefef;
+}
+.categorySelector td.selectorCell {
+  background-color: transparent;
+  width: 60px;
+}
+
+
 .languageTable td img {
   max-width: 100%;
   display: block;
   margin: 0 auto;
+  max-height: 80px;
 }
 .languageSelector.selectorCell {
-  line-height: 32px;
   text-align: center;
 }
 .languageSelector.selected {
-  background: #ffffdd;
+  /*background-color: #ffffdd;*/
 }
 .languageSelector.languageDescription {
   font-size: 12px;
 }
 
+/* Contest Items Select */
+
+.contestSelector .description {
+  margin: 0;
+  width: 70%;
+  display: inline-block;
+  padding-right: 40px;
+  text-align: justify;
+  vertical-align: middle;
+}
+.contestSelector img {
+  display: inline-block;
+  border-radius: 3px;
+  margin-right: 13px;
+  vertical-align: middle;
+}
 
 /* Login box */
 .login_box.panel {

@@ -83,12 +83,12 @@
       <p id="extraMessageCategory" style="font-weight: bold"></p>
       <p>Choisssez votre catégorie :</p>
 
-      <table class="colorCategories">
+      <table class="colorCategories selectorTable"><tbody>
         <tr class="colorCategory white categoryChoice categorySelector" id="cat_blanche" data-category="blanche">
           <td class="selectorCell">
             <div class="selector_arrowForward" ><span> </span></div>
           </td>
-          <td class="colorCategoryTitle">Catégorie blanche</td>
+          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie blanche →</button></td>
           <td>
              <ul>
                 <li>séquences d'instructions</li>
@@ -103,7 +103,7 @@
           <td class="selectorCell">
             <div class="selector_arrowForward" ><span> </span></div>
           </td>
-          <td class="colorCategoryTitle">Catégorie jaune</td>
+          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie jaune →</button></td>
           <td>
             <ul>
               <li>instructions conditionnelles</li>
@@ -118,7 +118,7 @@
           <td class="selectorCell">
             <div class="selector_arrowForward" ><span> </span></div>
           </td>
-          <td class="colorCategoryTitle">Catégorie orange</td>
+          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie orange →</button></td>
           <td>
             <ul>
               <li>variables</li>
@@ -133,7 +133,7 @@
           <td class="selectorCell">
             <div class="selector_arrowForward" ><span> </span></div>
           </td>
-          <td class="colorCategoryTitle">Catégorie verte</td>
+          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie verte →</button></td>
           <td>
             <ul>
                <li>création de fonctions</li>
@@ -147,7 +147,7 @@
           <td class="selectorCell">
             <div class="selector_arrowForward" ><span> </span></div>
           </td>
-          <td class="colorCategoryTitle">Catégorie bleue</td>
+          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie bleue →</button></td>
           <td>
              <ul>
                <li>fonctions récursives</li>
@@ -157,7 +157,7 @@
           </td>
           <td></td>
         </tr>
-      </table>
+      </tbody></table>
       <button type="button" class="btn btn-default" id="selectCategoryButton" disabled>Valider</button>
     </div>
 
@@ -165,61 +165,54 @@
       <p id="extraMessage" style="font-weight: bold"></p>
       <p class="stepName">Choisssez votre langage :</p>
       <p>Si vous n'êtes pas sûr, nous vous recommandons Blockly.</p>
-      <table class="languageTable">
-        <tbody>
-          <tr>
-            <th class="languageSelector" data-language="blockly">Blockly</th>
-            <th class="languageSelector" data-language="scratch">Scratch</th>
-            <th class="languageSelector" data-language="python">Python</th>
-          </tr>
-          <tr>
-            <td class="languageSelector" data-language="blockly">
-              <img src="images/blockly.png" alt="exemple d'utilisation de Blockly">
-            </td>
-            <td class="languageSelector" data-language="scratch">
-              <img src="images/scratch.png" alt="exemple d'utilisation de Scratch">
-            </td>
-            <td class="languageSelector" data-language="python">
-              <img src="images/python.png" alt="exemple d'utilisation de Python">
-            </td>
-          </tr>
-          <tr>
-            <td class="languageSelector languageDescription" data-language="blockly">
-              <p><strong>Ce que nous vous conseillons pour ce concours.</strong></p>
-            </td>
-            <td class="languageSelector languageDescription" data-language="scratch">
-              <p>Si vous avez l'habitude de Scratch.</p>
-              <p>Attention : ne fonctionne bien qu'avec les navigateurs Google Chrome ou Mozilla Firefox récents.</p>
-            </td>
-            <td class="languageSelector languageDescription" data-language="python">
-              <p>Si vous maîtrisez bien ce langage.</p>
-              <p>Attention : ne fonctionne bien qu'avec les navigateurs Google Chrome ou Mozilla Firefox récents.</p>
-            </td>
-          </tr>
-          <tr>
-            <td class="languageSelector selectorCell" data-language="blockly">
-              <div class="selector_arrowUp" ><span> </span></div>
-               
-            </td>
-            <td class="languageSelector selectorCell" data-language="scratch">
-              <div class="selector_arrowUp" ><span> </span></div>
-               
-            </td>
-            <td class="languageSelector selectorCell" data-language="python">
-              <div class="selector_arrowUp" ><span> </span></div>
-               
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <button type="button" class="btn btn-default" id="selectLanguageButton" disabled>Valider</button>
+      <table class="languageTable selectorTable"><tbody>
+        <tr>
+          <td class="languageSelector selectorCell" data-language="blockly">
+            <div class="selector_arrowForward" ><span> </span></div>
+          </td>
+          <td class="languageSelector selectorTitle" data-language="blockly"><button type="button" class="btn btn-default">Blockly →</button></td>
+          <td class="languageSelector" data-language="blockly">
+            <img src="images/blockly.png" alt="exemple d'utilisation de Blockly">
+          </td>
+          <td class="languageSelector languageDescription" data-language="blockly">
+            <p><strong>Ce que nous vous conseillons pour ce concours.</strong></p>
+          </td>
+        </tr>
+        <tr>
+          <td class="languageSelector selectorCell" data-language="scratch">
+            <div class="selector_arrowForward" ><span> </span></div>
+          </td>
+          <td class="languageSelector selectorTitle" data-language="scratch"><button type="button" class="btn btn-default">Scratch →</button></td>
+          <td class="languageSelector" data-language="scratch">
+            <img src="images/scratch.png" alt="exemple d'utilisation de Scratch">
+          </td>
+          <td class="languageSelector languageDescription" data-language="scratch">
+            <p>Si vous avez l'habitude de Scratch.</p>
+            <p>Attention : ne fonctionne bien qu'avec les navigateurs Google Chrome ou Mozilla Firefox récents.</p>
+          </td>
+        </tr>
+        <tr>
+          <td class="languageSelector selectorCell" data-language="python">
+            <div class="selector_arrowForward" ><span> </span></div>
+          </td>
+          <td class="languageSelector selectorTitle" data-language="python"><button type="button" class="btn btn-default">Python →</button></td>
+          <td class="languageSelector" data-language="python">
+            <img src="images/python.png" alt="exemple d'utilisation de Python">
+          </td>
+          <td class="languageSelector languageDescription" data-language="python">
+            <p>Si vous maîtrisez bien ce langage.</p>
+            <p>Attention : ne fonctionne bien qu'avec les navigateurs Google Chrome ou Mozilla Firefox récents.</p>
+          </td>
+        </tr>
+      </tbody></table>
+      <!--<button type="button" class="btn btn-default" id="selectLanguageButton" disabled>Valider</button>-->
       <button type="button" class="btn btn-default" id="backToCategorySelection">Retour</button>
     </div>
 
     <div id="selectContest" style="display:none">
       <p>Choisssez votre séquence :</p>
-      <div id="selectContestItems">
-      </div>
+      <table id="selectContestItems" class="selectorTable">
+      </table>
       <button type="button" class="btn btn-default" id="backToLanguageSelection">Retour</button>
     </div>
   </div><!-- #tab-school -->
