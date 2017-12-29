@@ -429,6 +429,7 @@
       <p><span id="LoginResult" style="color:red;font-weight:bold"></span></p>
     </div>
   </div><!-- #divLogin -->
+  <button type="button" class="btn btn-default" id="backToSelection">Retour</button>
 </div>
 
 <div id="divPassword" style="display:none" class="dialog">
