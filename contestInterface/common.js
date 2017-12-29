@@ -1708,12 +1708,13 @@ function selectLanguage(language) {
    offerContests();
 }
 
-$('#backToLanguageSelection').click(function(event) {
-   $("#selectLanguage").slideDown();
-   $("#selectContest").slideUp();
-   offerLanguages();
+$('.contestSelector').click(function(event) {
+   var target = $(event.currentTarget);
+   $('.contestSelector').removeClass('selected');
+   target.addClass('selected');
+   selectLanguage(target.data('contestid'));
 });
- 
+
 window.selectContest = function(ID) {
    $("#selectContest").delay(250).slideUp(400);
    for (var iChild = 0; iChild < childrenContests.length; iChild++) {
@@ -1749,6 +1750,7 @@ $('#backToSelection').click(function(event) {
    $("#divCheckNbContestants").hide();
    offerContests();
 });
+
 window.offerCategories = function() {
    var categories = {};
    $(".categoryChoice").hide();
