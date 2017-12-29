@@ -158,7 +158,6 @@
           <td></td>
         </tr>
       </tbody></table>
-      <button type="button" class="btn btn-default" id="selectCategoryButton" disabled>Valider</button>
     </div>
 
     <div id="selectLanguage" style="display:none">
@@ -205,7 +204,6 @@
           </td>
         </tr>
       </tbody></table>
-      <!--<button type="button" class="btn btn-default" id="selectLanguageButton" disabled>Valider</button>-->
       <button type="button" class="btn btn-default" id="backToCategorySelection">Retour</button>
     </div>
 
