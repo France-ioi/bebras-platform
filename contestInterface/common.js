@@ -1662,46 +1662,42 @@ function scrollToTop (el) {
    }, 250);
 }
 
+// Select contest category
 $('.categorySelector').click(function(event) {
    var target = $(event.currentTarget);
    var category = target.data('category');
    preSelectedCategory = category;
    $('.categorySelector').removeClass('selected');
    target.addClass('selected');
-   $('#selectCategoryButton').attr('disabled', false);
-});
-
-$('#selectCategoryButton').click(function(event) {
    selectCategory(preSelectedCategory);
 });
 
-$('#backToCategorySelection').click(function(event) {
-   $("#selectCategory").slideDown();
-   $("#selectLanguage").slideUp();
-   offerCategories();
-});
-
-$('.languageSelector').click(function(event) {
-   var target = $(event.currentTarget);
-   var language = target.data('language');
-   preSelectedLanguage = language;
-   $('.languageSelector').removeClass('selected');
-   $('.languageSelector[data-language="'+ language + '"]').addClass('selected');
-   $('#selectLanguageButton').attr('disabled', false);
-});
-
-$('#selectLanguageButton').click(function(event) {
-   selectLanguage(preSelectedLanguage);
-});
+// Save selected category
+/*$('#selectCategoryButton').click(function(event) {
+  selectCategory(preSelectedCategory);
+});*/
 
 function selectCategory(category) {
    if (category.length == 0) {
       return;
    }
    selectedCategory = category;
-   $("#selectCategory").slideUp();
+   $("#selectCategory").delay(250).slideUp(400);
    offerLanguages();
 }
+
+// Select contest language
+$('.languageSelector').click(function(event) {
+   var target = $(event.currentTarget);
+   var language = target.data('language');
+   preSelectedLanguage = language;
+   $('.languageSelector').removeClass('selected');
+   $('.languageSelector[data-language="'+ language + '"]').addClass('selected');
+   selectLanguage(preSelectedLanguage);
+});
+
+/*$('#selectLanguageButton').click(function(event) {
+});*/
 
 function selectLanguage(language) {
    if (language.length == 0) {
@@ -1733,6 +1729,26 @@ window.selectContest = function(ID) {
    alert("ID " + ID + " non trouvé");
 }
 
+// BACK BUTTONS
+$('#backToCategorySelection').click(function(event) {
+   $("#selectCategory").slideDown();
+   $("#selectLanguage").slideUp();
+   offerCategories();
+});
+
+$('#backToLanguageSelection').click(function(event) {
+   $("#selectLanguage").slideDown();
+   $("#selectContest").slideUp();
+   offerLanguages();
+});
+
+$('#backToSelection').click(function(event) {
+   $('#mainNav').show();
+   $("#divCheckGroup").show();
+   $("#selectContest").slideDown();
+   $("#divCheckNbContestants").hide();
+   offerContests();
+});
 window.offerCategories = function() {
    var categories = {};
    $(".categoryChoice").hide();
