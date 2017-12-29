@@ -1708,12 +1708,14 @@ function selectLanguage(language) {
    offerContests();
 }
 
-$('.contestSelector').click(function(event) {
-   var target = $(event.currentTarget);
-   $('.contestSelector').removeClass('selected');
-   target.addClass('selected');
-   selectLanguage(target.data('contestid'));
-});
+function setContestSelector() {
+   $('.contestSelector').click(function(event) {
+      var target = $(event.currentTarget);
+      $('.contestSelector').removeClass('selected');
+      target.addClass('selected');
+      selectContest(target.data('contestid'));
+   });
+}
 
 window.selectContest = function(ID) {
    $("#selectContest").delay(250).slideUp(400);
@@ -1824,15 +1826,19 @@ window.offerContests = function() {
       if ((selectedCategory == child.categoryColor) &&
           (selectedLanguage == child.language)) {
          lastContestID = child.contestID;
-         selectHtml += '<tr data-contestid="' + child.contestID + '" onclick="selectContest(\'' + child.contestID + '\')" class="contestSelector">' +
+         var contestImage = "";
+         if (child.imageURL != "") {
+            contestImage = '<img src="' + child.imageURL + '"/>';
+         }
+         selectHtml += '<tr data-contestid="' + child.contestID + '" class="contestSelector">' +
             '<td class="selectorCell">' +
               '<div class="selector_arrowForward" ><span> </span></div>' +
             '</td>' +
             '<td class="selectorTitle"><button type="button" class="btn btn-default">' + child.name + ' →</button></td>' +
             '<td class="contestDescription">' +
-              child.description + 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.' +
+              child.description +
             '</td><td class="contestImage">' +
-              '<img src="https://kids.nationalgeographic.com/content/dam/kids/photos/animals/Birds/H-P/mallard-male-standing.ngsversion.1396906974359.adapt.133.1.sqrcrop.jpg" src="' + child.imageURL + '"/></div>' +
+            contestImage +
             '</td></tr>';
          nbContests++;
       }
@@ -1840,6 +1846,7 @@ window.offerContests = function() {
    if (nbContests > 1) {
       $("#selectContestItems").html(selectHtml);
       $("#selectContest").show();
+      setContestSelector();
    }
    else {
       selectContest(lastContestID);
