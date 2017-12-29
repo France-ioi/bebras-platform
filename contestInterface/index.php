@@ -56,12 +56,12 @@
   </div>
 
   <div id="tab-school" class="tabContent">
-    <div class="tabTitle" data-i18n="general_start_contest"></div>
     <!--
     <p>Pour <b>voir votre score détaillé</b> si vous avez participé au concours 2012, cliquez sur "Continuer le concours" et saisissez votre code personnel fourni au début de l'épreuve. Vous aurez aussi accès aux réponses et à une <b>correction détaillée</b> en dessous de chaque question.</p>
     <h3>Vous démarrez un concours en classe, pour la première fois ?</h3>
     -->
     <div id="submitParticipationCode">
+      <div class="tabTitle" data-i18n="general_start_contest"></div>
       <p class="stepName" data-i18n="[html]tab_start_contest_enter_code"></p>
       <div class="divInput form-inline">
         <input id="groupCode" type="text" class="form-control" />
@@ -81,7 +81,7 @@
 
     <div id="selectCategory" style="display:none">
       <p id="extraMessageCategory" style="font-weight: bold"></p>
-      <p>Choisssez votre catégorie :</p>
+      <div class="tabTitle">Choissez votre catégorie</div>
 
       <table class="colorCategories selectorTable"><tbody>
         <tr class="colorCategory white categoryChoice categorySelector" id="cat_blanche" data-category="blanche">
@@ -163,7 +163,7 @@
 
     <div id="selectLanguage" style="display:none">
       <p id="extraMessage" style="font-weight: bold"></p>
-      <p class="stepName">Choisssez votre langage :</p>
+      <div class="tabTitle">Choissez votre langage :</div>
       <p>Si vous n'êtes pas sûr, nous vous recommandons Blockly.</p>
       <table class="languageTable selectorTable"><tbody>
         <tr>
@@ -210,7 +210,7 @@
     </div>
 
     <div id="selectContest" style="display:none">
-      <p>Choisssez votre séquence :</p>
+      <div class="tabTitle">Choissez votre séquence :</div>
       <table id="selectContestItems" class="selectorTable">
       </table>
       <button type="button" class="btn btn-default" id="backToLanguageSelection">Retour</button>
@@ -279,6 +279,7 @@
 </div>
 
 <div id="divCheckNbContestants" style="display:none" class="dialog">
+  <div class="tabTitle">Membres de votre équipe</div>
   <p>
     <span data-i18n="nb_contestants_question"></span>
     <span class="btn-group" style="margin-left: 20px;">
