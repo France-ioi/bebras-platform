@@ -80,6 +80,7 @@
     </div>
 
     <div id="selectCategory" style="display:none">
+      <div class="selection-breadcrumb"></div>
       <p id="extraMessageCategory" style="font-weight: bold"></p>
       <div class="tabTitle">Choisissez votre catégorie</div>
 
@@ -241,6 +242,7 @@
     </div>
 
     <div id="selectLanguage" style="display:none">
+      <div class="selection-breadcrumb"></div>
       <p id="extraMessage" style="font-weight: bold"></p>
       <div class="tabTitle">Choisissez votre langage :</div>
       <p>Si vous n'êtes pas sûr, nous vous recommandons Blockly.</p>
@@ -288,6 +290,7 @@
     </div>
 
     <div id="selectContest" style="display:none">
+      <div class="selection-breadcrumb"></div>
       <div class="tabTitle">Choisissez votre séquence :</div>
       <table id="selectContestItems" class="selectorTable">
       </table>
@@ -357,6 +360,7 @@
 </div>
 
 <div id="divCheckNbContestants" style="display:none" class="dialog">
+  <div class="selection-breadcrumb"></div>
   <div class="tabTitle">Membres de votre équipe</div>
   <p>
     <span data-i18n="nb_contestants_question"></span>
