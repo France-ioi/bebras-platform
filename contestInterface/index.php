@@ -157,6 +157,86 @@
           </td>
           <td></td>
         </tr>
+        <tr class="colorCategory white categoryChoice categorySelector" id="cat_cm1cm2" data-category="cm1cm2">
+          <td class="selectorCell">
+            <div class="selector_arrowForward" ><span> </span></div>
+          </td>
+          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie CM1 / CM2 →</button></td>
+          <td>
+            <p>Pour les élèves en fin de primaire.</p>
+          </td>
+          <td></td>
+        </tr>
+        <tr class="colorCategory white categoryChoice categorySelector" id="cat_6e5e" data-category="6e5e">
+          <td class="selectorCell">
+            <div class="selector_arrowForward" ><span> </span></div>
+          </td>
+          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie sixième / cinquième →</button></td>
+          <td>
+            <p>Pour les élèves en début de collège.</p>
+          </td>
+          <td></td>
+        </tr>
+        <tr class="colorCategory white categoryChoice categorySelector" id="cat_4e3e" data-category="4e3e">
+          <td class="selectorCell">
+            <div class="selector_arrowForward" ><span> </span></div>
+          </td>
+          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie quatrième / troisième →</button></td>
+          <td>
+            <p>Pour les élèves de fin de collège.</p>
+          </td>
+          <td></td>
+        </tr>
+        <tr class="colorCategory white categoryChoice categorySelector" id="cat_2depro" data-category="2depro">
+          <td class="selectorCell">
+            <div class="selector_arrowForward" ><span> </span></div>
+          </td>
+          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie seconde pro →</button></td>
+          <td>
+            <p>Pour les élèves de début de lycée professionnel.</p>
+          </td>
+          <td></td>
+        </tr>
+        <tr class="colorCategory white categoryChoice categorySelector" id="cat_2de" data-category="2de">
+          <td class="selectorCell">
+            <div class="selector_arrowForward" ><span> </span></div>
+          </td>
+          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie seconde →</button></td>
+          <td>
+            <p>Pour les élèves de début de lycée.</p>
+          </td>
+          <td></td>
+        </tr>
+        <tr class="colorCategory white categoryChoice categorySelector" id="cat_1reTalepro" data-category="1reTalepro">
+          <td class="selectorCell">
+            <div class="selector_arrowForward" ><span> </span></div>
+          </td>
+          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie première pro / terminale pro →</button></td>
+          <td>
+            <p>Pour les élèves de fin de lycée professionnel.</p>
+          </td>
+          <td></td>
+        </tr>
+        <tr class="colorCategory white categoryChoice categorySelector" id="cat_1reTale" data-category="1reTale">
+          <td class="selectorCell">
+            <div class="selector_arrowForward" ><span> </span></div>
+          </td>
+          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie première / terminale →</button></td>
+          <td>
+            <p>Pour les élèves de fin de lycée.</p>
+          </td>
+          <td></td>
+        </tr>
+        <tr class="colorCategory white categoryChoice categorySelector" id="cat_all" data-category="all">
+          <td class="selectorCell">
+            <div class="selector_arrowForward" ><span> </span></div>
+          </td>
+          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie tous défis →</button></td>
+          <td>
+            <p>Les défis de toutes les catégories.</p>
+          </td>
+          <td></td>
+        </tr>
       </tbody></table>
     </div>
 

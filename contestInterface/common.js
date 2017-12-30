@@ -1682,9 +1682,6 @@ $('.categorySelector').click(function(event) {
 });*/
 
 function selectCategory(category) {
-   if (category.length == 0) {
-      return;
-   }
    selectedCategory = category;
    $("#selectCategory").delay(250).slideUp(400);
    offerLanguages();
@@ -1704,9 +1701,6 @@ $('.languageSelector').click(function(event) {
 });*/
 
 function selectLanguage(language) {
-   if (language.length == 0) {
-      return;
-   }
    selectedLanguage = language;
    $("#selectLanguage").delay(250).slideUp(400);
    offerContests();
@@ -1766,7 +1760,7 @@ window.offerCategories = function() {
          categories[child.categoryColor] = true;
       }
    }
-   var allCategories = ["blanche", "jaune", "orange", "verte", "bleue"]; // TODO: do not hardcode
+   var allCategories = ["blanche", "jaune", "orange", "verte", "bleue", "cm1cm2", "6e5e", "4e3e", "2depro", "2de", "1reTalepro", "1reTale", "all"]; // TODO: do not hardcode
    var minReached = (groupMinCategory == "");
    var maxReached = false;
    var nbCategories = 0;
