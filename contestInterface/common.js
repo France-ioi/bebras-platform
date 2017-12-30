@@ -1731,6 +1731,7 @@ function setContestSelector() {
    $('.contestSelector').click(function(event) {
       var target = $(event.currentTarget);
       preSelectedContest = target.data('contestid').toString();
+      $('.contestSelector').removeClass('selected');
       target.addClass('selected');
       selectContest(preSelectedContest);
    });
