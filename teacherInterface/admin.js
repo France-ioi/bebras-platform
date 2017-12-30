@@ -1432,7 +1432,7 @@ function groupFormShowContestDetails(contestID) {
       }
    }
    var strCategories = "";
-   var allCategories = ["blanche", "jaune", "orange", "verte", "bleue"];  // TODO: do not hardcode values
+   var allCategories = ["blanche", "jaune", "orange", "verte", "bleue", "cm1cm2", "6e5e", "4e3e", "2depro", "2de", "1reTalepro", "1reTale", "all"];  // TODO: do not hardcode values
    for (var iCategory = 0; iCategory < allCategories.length; iCategory++) {
       var category = allCategories[iCategory];
       if (categories[category] != undefined) {
