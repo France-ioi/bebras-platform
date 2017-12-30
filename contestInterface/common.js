@@ -51,7 +51,7 @@ var preSelectedCategory = "";
 var selectedCategory = "";
 var preSelectedLanguage = "";
 var selectedLanguage = "";
-var preSelectedContest ="";
+var preSelectedContest = "";
 var selectedCategory = "";
 var groupCheckedData = null;
 var contestants = {};
@@ -1591,6 +1591,7 @@ window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, 
             window.setNbContestants(1);
             createTeam([{ lastName: "Anonymous", firstName: "Anonymous", genre: 2, email: null, zipCode: null}]);
          } else if (data.allowTeamsOfTwo == 1) {
+            setContestBreadcrumb();
             $("#divCheckNbContestants").show();
          } else {
             window.setNbContestants(1);
@@ -1662,12 +1663,31 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
 };
 
 
-function scrollToTop (el) {
+function scrollToTop(el) {
   // TODO: only animate when necessary,
   // ie when the content after is longer than the remaining window space
    $('html, body').animate({
      scrollTop: $(el).offset().top
    }, 250);
+}
+
+// Display contest selection breacrumb
+// display only manualy set elements, for now
+function setContestBreadcrumb() {
+   function contestName(contest) {
+      return contest.contestID === preSelectedContest;
+   };
+   var contestBreadcrumb = "";
+   if (preSelectedCategory.length) {
+      contestBreadcrumb += '<span>Catégorie : ' + selectedCategory + '</span> ';
+   }
+   if (preSelectedLanguage.length) {
+      contestBreadcrumb += '<span>Langage : ' + selectedLanguage + '</span> ';
+   }
+   if (preSelectedContest.length) {
+      contestBreadcrumb += '<span>Séquence : ' + childrenContests.find(contestName).name + '</span> ';
+   }
+   $('.selection-breadcrumb').html(contestBreadcrumb);
 }
 
 // Select contest category
@@ -1713,7 +1733,8 @@ function selectLanguage(language) {
 function setContestSelector() {
    $('.contestSelector').click(function(event) {
       var target = $(event.currentTarget);
-      preSelectedContest = target.data('contestid');
+      preSelectedContest = target.data('contestid').toString();
+      $('.contestSelector').removeClass('selected');
       target.addClass('selected');
       selectContest(preSelectedContest);
    });
@@ -1788,6 +1809,7 @@ window.offerCategories = function() {
       }
    }
    if (nbCategories > 1) {
+      setContestBreadcrumb();
       $("#selectCategory").show();
    } else {
       selectCategory(lastCategory);
@@ -1813,6 +1835,7 @@ window.offerLanguages = function() {
       }
    }
    if (nbLanguages > 1) {
+      setContestBreadcrumb();
       $("#selectLanguage").show();
    } else {
       selectLanguage(lastLanguage);
@@ -1852,6 +1875,7 @@ window.offerContests = function() {
       }
    }
    if (nbContests > 1) {
+      setContestBreadcrumb();
       $("#selectContestItems").html(selectHtml);
       $("#selectContest").show();
       setContestSelector();
