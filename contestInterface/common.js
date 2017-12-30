@@ -1633,6 +1633,9 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
          } else {
           $("#submitParticipationCode").delay(250).slideUp(400);
          }
+         $('#mainNav').hide();
+         $("#login_link_to_home").hide();
+         updateContestName(data.contestName);
 
          groupMinCategory = data.minCategory;
          groupMaxCategory = data.maxCategory;
@@ -1747,7 +1750,6 @@ $('#backToLanguageSelection').click(function(event) {
 });
 
 $('#backToSelection').click(function(event) {
-   $('#mainNav').show();
    $("#divCheckGroup").show();
    $("#selectContest").slideDown();
    $("#divCheckNbContestants").hide();
