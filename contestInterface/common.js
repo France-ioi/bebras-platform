@@ -2030,12 +2030,12 @@ function initContestData(data, newContestID) {
    contestVisibility = data.contestVisibility;
    contestShowSolutions = !!parseInt(data.contestShowSolutions);
    if (newInterface) {
-      $("#question-iframe-container").addClass("newInterfaceIframeContainer");
+      $("#question-iframe-container").addClass("newInterfaceIframeContainer").show();
       $(".oldInterface").html("").hide();
       $(".newInterface").show();
       window.backToList();
    } else {
-      $("#question-iframe-container").addClass("oldInterfaceIframeContainer");
+      $("#question-iframe-container").addClass("oldInterfaceIframeContainer").show();
       $(".newInterface").html("").hide();
       $(".oldInterface").show();
    }
