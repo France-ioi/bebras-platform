@@ -51,6 +51,7 @@ var preSelectedCategory = "";
 var selectedCategory = "";
 var preSelectedLanguage = "";
 var selectedLanguage = "";
+var preSelectedContest ="";
 var selectedCategory = "";
 var groupCheckedData = null;
 var contestants = {};
@@ -1709,25 +1710,27 @@ function selectLanguage(language) {
 function setContestSelector() {
    $('.contestSelector').click(function(event) {
       var target = $(event.currentTarget);
-      $('.contestSelector').removeClass('selected');
+      preSelectedContest = target.data('contestid');
       target.addClass('selected');
-      selectContest(target.data('contestid'));
+      selectContest(preSelectedContest);
    });
 }
 
 window.selectContest = function(ID) {
-   $("#selectContest").delay(250).slideUp(400);
-   for (var iChild = 0; iChild < childrenContests.length; iChild++) {
-      var child = childrenContests[iChild];
-      if (child.contestID == ID) {
-         contestID = child.contestID;
-         contestFolder = child.folder;
-         customIntro = child.customIntro;
-         groupWasChecked(groupCheckedData.data, groupCheckedData.curStep, groupCheckedData.groupCode, groupCheckedData.getTeams, groupCheckedData.isPublic, contestID);
-         return;
+   $("#selectContest").delay(250).slideUp(400).queue(function() {
+      $(this).dequeue();
+      for (var iChild = 0; iChild < childrenContests.length; iChild++) {
+         var child = childrenContests[iChild];
+         if (child.contestID == ID) {
+            contestID = child.contestID;
+            contestFolder = child.folder;
+            customIntro = child.customIntro;
+            groupWasChecked(groupCheckedData.data, groupCheckedData.curStep, groupCheckedData.groupCode, groupCheckedData.getTeams, groupCheckedData.isPublic, contestID);
+            return;
+         }
       }
-   }
-   alert("ID " + ID + " non trouvé");
+      alert("ID " + ID + " non trouvé");
+   });
 }
 
 // BACK BUTTONS
@@ -1828,7 +1831,12 @@ window.offerContests = function() {
          if (child.imageURL != "") {
             contestImage = '<img src="' + child.imageURL + '"/>';
          }
-         selectHtml += '<tr data-contestid="' + child.contestID + '" class="contestSelector">' +
+         var trClasses = "contestSelector";
+         /* use of == because contestID is a number, preSelectedContest a string */
+         if (child.contestID == preSelectedContest) {
+          trClasses = trClasses + ' selected';
+         }
+         selectHtml += '<tr data-contestid="' + child.contestID + '" class="' + trClasses + '">' +
             '<td class="selectorCell">' +
               '<div class="selector_arrowForward" ><span> </span></div>' +
             '</td>' +
