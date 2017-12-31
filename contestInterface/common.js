@@ -1642,7 +1642,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
          groupMaxCategory = data.maxCategory;
          groupLanguage = data.language;
         // TODO : handle registration Data
-         if ((data.childrenContests != undefined) && (data.childrenContests.length != 0)) {
+         if ((!getTeams) && (data.childrenContests != undefined) && (data.childrenContests.length != 0)) {
             childrenContests = data.childrenContests;
             groupCheckedData = {
                data: data,

@@ -7,8 +7,8 @@ include_once("../shared/tinyORM.php");
 include_once("common_contest.php");
 
 function getGroupTeams($db, $groupID) {
-   $stmt = $db->prepare("SELECT `team`.`ID`, `contestant`.`lastName`, `contestant`.`firstName` FROM `contestant` LEFT JOIN `team` ON `contestant`.`teamID` = `team`.`ID` WHERE `team`.`groupID` = ?");
-   $stmt->execute(array($groupID));
+   $stmt = $db->prepare("SELECT `team`.`ID`, `contestant`.`lastName`, `contestant`.`firstName` FROM `contestant` JOIN `team` ON `contestant`.`teamID` = `team`.`ID` JOIN `group` ON `team`.groupID = `group`.ID WHERE `team`.`groupID` = :groupID OR `group`.`parentGroupID` = :groupID");
+   $stmt->execute(array("groupID" => $groupID));
    $teams = array();
    while ($row = $stmt->fetchObject()) {
       if (!isset($teams[$row->ID])) {
