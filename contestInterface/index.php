@@ -515,6 +515,49 @@
   </div><!-- #divLogin -->
   <button type="button" class="btn btn-default" id="backToSelection">Retour</button>
 </div>
+<style>
+#pastParticipations tr:first-child td {
+   font-weight: bold;
+   background-color: #99c4e0;
+}
+
+#pastParticipations tr td {
+   border: solid black 1px;
+   padding: 5px;
+}
+
+#personalData tr td:first-child {
+   font-weight: bold;
+}
+</style>
+<div id="divPersonalPage" style="display:none">
+   <h2>Page personnelle</h2> 
+   <table id="personalData">
+      <tr><td>Nom :</td><td id="persoLastName"></td></tr>
+      <tr><td>Prénom :</td><td id="persoFirstName"></td></tr>
+      <tr><td>Classe :</td><td id="persoGrade"></td></tr>
+      <tr><td>Qualifié pour la catégorie :</td><td id="persoCategory"></td></tr>
+   </table>
+   <br/><br/>  
+   <table>
+      <tr>
+         <td><button type="button" id="buttonStartPreparation" onclick="startPreparation()" class="btn btn-primary">Démarrer une préparation</button></td>
+         <td style="width:50px">
+         <td><button type="button" id="buttonStartContest" onclick="startContest()" class="btn btn-primary disabled" disabled>Démarrer le concours</button></td>
+      </tr>
+   </table>
+   <br/>
+   <h3>Participations passées :</h3>
+   <table id="pastParticipations" cellspacing=0>
+      <tr>
+         <td>Épreuve</td>
+         <td>Date de participation</td>
+         <td>Équipe</td>
+         <td>Score</td>
+         <td>Accès</td>
+      </tr>
+   </table>
+</div>
 
 <div id="divPassword" style="display:none" class="dialog">
   <p data-i18n="[html]password_warning"></p>

@@ -383,9 +383,31 @@ function handleGroupFromRegistrationCode($db, $code) {
    if (!$registrationData) {
       return;
    }
+   $query = "SELECT IFNULL(tmp.score, 0) as score, IFNULL(tmp.sumScores, 0) as sumScores, tmp.password, tmp.startTime, tmp.contestName, ".
+       "GROUP_CONCAT(CONCAT(CONCAT(contestant.firstName, ' '), contestant.lastName)) as contestants ".
+       "FROM (SELECT team.ID as teamID, team.score, SUM(team_question.ffScore) as sumScores, team.password, team.startTime, contest.name as contestName ".
+       "FROM `contestant` ".
+       "JOIN team ON `contestant`.teamID = `team`.ID ".
+       "JOIN `group` ON team.groupID = `group`.ID ".
+       "JOIN `contest` ON `group`.contestID = `contest`.ID ".
+       "LEFT JOIN `team_question` ON team_question.teamID = team.ID ".
+       "WHERE contestant.registrationID = :registrationID ".
+       "AND team.startTime IS NOT NULL ".
+       "GROUP BY team.ID) tmp ".
+       "JOIN contestant ON tmp.teamID = contestant.teamID ".
+       "GROUP BY tmp.teamID ".
+       "ORDER BY tmp.startTime ASC";
+   $stmt = $db->prepare($query);
+   $stmt->execute(array("registrationID" => $registrationData->ID));
+   $participations = array();
+   while ($row = $stmt->fetchObject()) {
+      $participations[] = $row;
+   }
+   $registrationData->participations = $participations;
+       
    addBackendHint("ClientIP.checkPassword:pass");
    addBackendHint(sprintf("Group(%s):checkPassword", escapeHttpValue($registrationData->ID))); // TODO : check hint
-   $contestID = "904759992228101325"; // hard-coded
+   $contestID = "485926402649945250"; // hard-coded training contest
    $query = "SELECT `code` FROM `group` WHERE `contestID` = :contestID AND `schoolID` = :schoolID AND `userID` = :userID AND `grade` = :grade";
    $stmt = $db->prepare($query);
    $stmt->execute(array("contestID" => $contestID, "schoolID" => $registrationData->schoolID, "userID" => $registrationData->userID, "grade" => $registrationData->grade));

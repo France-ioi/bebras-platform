@@ -56,6 +56,7 @@ var selectedCategory = "";
 var groupCheckedData = null;
 var contestants = {};
 var teamMateHasRegistration = {1: false, 2: false};
+var personalPageData = null;
 
 
 function getParameterByName(name) {
@@ -1610,6 +1611,39 @@ window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, 
    }
 };
 
+window.showPersonalPage = function(data) {
+   personalPageData = data;
+   $("#divPersonalPage").show();
+   $("#persoLastName").html(data.registrationData.lastName);
+   $("#persoFirstName").html(data.registrationData.firstName);
+   $("#persoGrade").html(t("grade_" + data.registrationData.grade).toLowerCase());
+   $("#persoCategory").html(data.registrationData.category);
+   var htmlParticipations = "";
+   for (var iParticipation = 0; iParticipation < data.registrationData.participations.length; iParticipation++) {
+      var participation = data.registrationData.participations[iParticipation];
+      htmlParticipations += "<tr><td>" + participation.contestName + "</td>" +
+         "<td>" + participation.startTime + "</td>" +
+         "<td>" + participation.contestants + "</td>" +
+         "<td>" + Math.max(parseInt(participation.score), parseInt(participation.sumScores)) + "</td>" +
+         "<td><a href='" + location.pathname + "?team=" + participation.password + "' target='_blank'>ouvrir</a></td></tr>";
+   }
+   $("#pastParticipations").append(htmlParticipations);
+}
+
+window.startPreparation = function() {
+   updateContestName(personalPageData.contestName);
+   groupMinCategory = personalPageData.minCategory;
+   groupMaxCategory = personalPageData.maxCategory;
+   groupLanguage = personalPageData.language;
+   $("#divCheckGroup").show();
+   if (personalPageData.childrenContests.length > 0) {
+      $("#divPersonalPage").hide();
+      offerCategories(personalPageData);
+   } else {
+      groupWasChecked(personalPageData, "PersonalPage", personalPageData.registrationData.code, false, false);
+   }
+}
+
 /*
  * Checks if a group is valid and loads information about the group and corresponding contest,
  * curStep: indicates which step of the login process the students are currently at :
@@ -1636,26 +1670,31 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
          }
          $('#mainNav').hide();
          $("#login_link_to_home").hide();
+         $("#div" + curStep).hide();
+
+         childrenContests = data.childrenContests;
+         groupCheckedData = {
+            data: data,
+            curStep: curStep,
+            groupCode: groupCode,
+            getTeams: getTeams,
+            isPublic: data.isPublic
+         };
+
+
+         if (data.registrationData != undefined) {
+            window.showPersonalPage(data);
+            return;
+         }
          updateContestName(data.contestName);
 
          groupMinCategory = data.minCategory;
          groupMaxCategory = data.maxCategory;
          groupLanguage = data.language;
-        // TODO : handle registration Data
+         
          if ((!getTeams) && (data.childrenContests != undefined) && (data.childrenContests.length != 0)) {
-            childrenContests = data.childrenContests;
-            groupCheckedData = {
-               data: data,
-               curStep: curStep,
-               groupCode: groupCode,
-               getTeams: getTeams,
-               isPublic: data.isPublic
-            };
             $("#" + curStep).hide();
-            offerCategories();
-            //if (data.extraMessage != undefined) {
-            //   $("#extraMessage").html(data.extraMessage);
-            //}
+            offerCategories(data);
          } else {
             groupWasChecked(data, curStep, groupCode, getTeams, data.isPublic);
          }
@@ -1777,7 +1816,7 @@ $('#backToSelection').click(function(event) {
    offerContests();
 });
 
-window.offerCategories = function() {
+window.offerCategories = function(data) {
    var categories = {};
    $(".categoryChoice").hide();
    for (var iChild = 0; iChild < childrenContests.length; iChild++) {
