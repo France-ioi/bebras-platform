@@ -1753,17 +1753,15 @@ function scrollToTop(el) {
 
 // Display contest selection breacrumb
 function setContestBreadcrumb(val) {
-   function contestName(contest) {
-      return contest.contestID === preSelectedContest;
+   if (preSelectedCategory != "") {
+      contestBreadcrumb = '<span onclick="goToCategory()">Catégorie ' + selectedCategory + ' / </span> ';
    }
-   if (preSelectedCategory.length) {
-      contestBreadcrumb = '<span onclick="goToCategory()">Catégorie : ' + selectedCategory + ' / </span> ';
+   if (preSelectedLanguage != "") {
+      contestBreadcrumb += '<span onclick="goToLanguage()"> Langage ' + selectedLanguage + ' / </span> ';
    }
-   if (preSelectedLanguage.length) {
-      contestBreadcrumb += '<span onclick="goToLanguage()"> Langage : ' + selectedLanguage + ' / </span> ';
-   }
-   if (preSelectedContest.length) {
-      contestBreadcrumb += '<span onclick="goToSequence()"> Séquence : ' + childrenContests.find(contestName).name + '</span> ';
+   if (preSelectedContest != "") {
+      var contest = window.getContest(preSelectedContest);
+      contestBreadcrumb += '<span onclick="goToSequence()">' + contest.name + '</span> ';
    }
    $('#selection-breadcrumb').html(contestBreadcrumb);
 }
@@ -1816,6 +1814,8 @@ $('.categorySelector').click(function(event) {
 function selectCategory(category) {
    selectedCategory = category;
    $("#selectCategory").delay(250).slideUp(400);
+   preSelectedLanguage = "";
+   preSelectedContest = "";
    offerLanguages();
 }
 
@@ -1832,6 +1832,7 @@ $('.languageSelector').click(function(event) {
 function selectLanguage(language) {
    selectedLanguage = language;
    $("#selectLanguage").delay(250).slideUp(400);
+   preSelectedContest = "";
    offerContests();
 }
 
@@ -1845,20 +1846,23 @@ function setContestSelector() {
    });
 }
 
+window.getContest = function(ID) {
+   for (var iChild = 0; iChild < childrenContests.length; iChild++) {
+	   var child = childrenContests[iChild];
+	   if (child.contestID == ID) {
+		  return child;
+	   }
+   }
+}
+
 window.selectContest = function(ID) {
    $("#selectContest").delay(250).slideUp(400).queue(function() {
       $(this).dequeue();
-      for (var iChild = 0; iChild < childrenContests.length; iChild++) {
-         var child = childrenContests[iChild];
-         if (child.contestID == ID) {
-            contestID = child.contestID;
-            contestFolder = child.folder;
-            customIntro = child.customIntro;
-            groupWasChecked(groupCheckedData.data, groupCheckedData.curStep, groupCheckedData.groupCode, groupCheckedData.getTeams, groupCheckedData.isPublic, contestID);
-            return;
-         }
-      }
-      alert("ID " + ID + " non trouvé");
+      var contest = window.getContest(ID);
+      contestID = ID;
+      contestFolder = contest.folder;
+      customIntro = contest.customIntro;
+      groupWasChecked(groupCheckedData.data, groupCheckedData.curStep, groupCheckedData.groupCode, groupCheckedData.getTeams, groupCheckedData.isPublic, contestID);
    });
 }
 
