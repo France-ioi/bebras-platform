@@ -82,7 +82,7 @@
     <div id="selectCategory" style="display:none">
       <div class="selection-breadcrumb"></div>
       <p id="extraMessageCategory" style="font-weight: bold"></p>
-      <div class="tabTitle">Choisissez votre catégorie</div>
+      <div class="tabTitle">Choisissez la catégorie</div>
 
       <table class="colorCategories selectorTable"><tbody>
         <tr class="colorCategory white categoryChoice categorySelector" id="cat_blanche" data-category="blanche">
@@ -244,7 +244,7 @@
     <div id="selectLanguage" style="display:none">
       <div class="selection-breadcrumb"></div>
       <p id="extraMessage" style="font-weight: bold"></p>
-      <div class="tabTitle">Choisissez votre langage :</div>
+      <div class="tabTitle">Choisissez le langage :</div>
       <p>Si vous n'êtes pas sûr, nous vous recommandons Blockly.</p>
       <table class="languageTable selectorTable"><tbody>
         <tr>
@@ -291,7 +291,7 @@
 
     <div id="selectContest" style="display:none">
       <div class="selection-breadcrumb"></div>
-      <div class="tabTitle">Choisissez votre séquence :</div>
+      <div class="tabTitle">Choisissez la séquence :</div>
       <table id="selectContestItems" class="selectorTable">
       </table>
       <button type="button" class="btn btn-default" id="backToLanguageSelection">Retour</button>
@@ -547,7 +547,7 @@
       </tr>
    </table>
    <br/>
-   <h3>Participations passées :</h3>
+   <h3>Participations :</h3>
    <table id="pastParticipations" cellspacing=0>
       <tr>
          <td>Épreuve</td>

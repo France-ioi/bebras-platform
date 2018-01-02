@@ -3,6 +3,9 @@
 
 require_once '../shared/tinyORM.php';
 
+$allCategories = array("blanche", "jaune", "orange", "verte", "bleue", "cm1cm2", "6e5e", "4e3e", "2depro", "2de", "1reTalepro", "1reTale", "all");
+
+
 $backend_hints = array();
 $failure_backend_hints = array();
 
@@ -201,4 +204,48 @@ function reloginTeam($db, $password, $teamID) {
    $_SESSION["teamID"] = $teamID;
    $_SESSION["teamPassword"] = $row->password;
    $_SESSION["nbMinutes"] = intval($row->nbMinutes);
+}
+
+function updateTeamCategories($db, $teamID) {
+   $query = "SELECT `algorea_registration`.`ID`, `algorea_registration`.`category` ".
+      "FROM `contestant` ".
+      "JOIN `algorea_registration` ON `algorea_registration`.`ID` = `contestant`.`registrationID` ".
+      "WHERE `contestant`.`teamID` = :teamID";
+   $stmt = $db->prepare($query);
+   $stmt->execute(array("teamID" => $teamID));
+   $qualifiedCategories = array();
+   while ($row = $stmt->fetchObject()) {
+      updateRegisteredUserCategory($db, $row->ID, $row->category); 
+   }
+}
+
+function updateRegisteredUserCategory($db, $ID, $prevCategory) {
+   global $allCategories;
+   $query = "SELECT `contest`.`qualificationCategory` ".
+      "FROM `algorea_registration` ".
+      "JOIN `contestant` ON `contestant`.`registrationID` = `algorea_registration`.`ID` ".
+      "JOIN `team` ON `contestant`.`teamID` = `team`.`ID` ".
+      "JOIN `group` ON `group`.`ID` = `team`.`groupID` ".
+      "JOIN `contest` ON `contest`.`ID` = `group`.`contestID` ".
+      "WHERE `algorea_registration`.`ID` = :ID ".
+      "AND `team`.`score` >= `contest`.`qualificationScore` ".
+      "GROUP BY `contest`.`qualificationCategory`";
+   $stmt = $db->prepare($query);
+   $stmt->execute(array("ID" => $ID));
+   $qualifiedCategories = array();
+   while ($row = $stmt->fetchObject()) {
+      $qualifiedCategories[$row->qualificationCategory] = true;
+   }
+   $maxCategory = "";
+   foreach($allCategories as $category) {
+      if (($category == $prevCategory) || (isset($qualifiedCategories[$category]))) {
+         $maxCategory = $category;
+      }
+   }
+   if ($maxCategory != $prevCategory) {
+      $query = "UPDATE `algorea_registration` SET `category` = :category WHERE ID = :ID";
+      $stmt = $db->prepare($query);
+      $stmt->execute(array("ID" => $ID, "category" => $maxCategory));      
+   }
+   return $maxCategory;
 }

@@ -355,12 +355,16 @@ function handleCheckPassword($db) {
 }
 
 function getRegistrationData($db, $code) {
-   $query = "SELECT `ID`, `code`, `category`, `firstName`, `lastName`, `genre`, `grade`, `studentID`, `email`, `zipCode`, IFNULL(`schoolID`, 0) as `schoolID`, IFNULL(`userID`, 0) as `userID` ".
+   $query = "SELECT `ID`, `code`, `category`, `firstName`, `lastName`, `genre`, `grade`, `studentID`, `email`, `zipCode`, ".
+      "IFNULL(`schoolID`, 0) as `schoolID`, IFNULL(`userID`, 0) as `userID` ".
       "FROM `algorea_registration` WHERE `code` = :code";
    $stmt = $db->prepare($query);
    $stmt->execute(array("code" => $code));
    return $stmt->fetchObject();
 }
+
+
+
 
 function createGroupForContestAndRegistrationCode($db, $code, $contestID) {
    $groupCode = genAccessCode($db);
@@ -383,6 +387,8 @@ function handleGroupFromRegistrationCode($db, $code) {
    if (!$registrationData) {
       return;
    }
+   $registrationData->category = updateRegisteredUserCategory($db, $registrationData->ID, $registrationData->category);
+  
    $query = "SELECT IFNULL(tmp.score, 0) as score, IFNULL(tmp.sumScores, 0) as sumScores, tmp.password, tmp.startTime, tmp.contestName, ".
        "tmp.nbMinutes, tmp.remainingSeconds, ".
        "GROUP_CONCAT(CONCAT(CONCAT(contestant.firstName, ' '), contestant.lastName)) as contestants ".
