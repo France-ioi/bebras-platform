@@ -52,6 +52,7 @@ var selectedCategory = "";
 var preSelectedLanguage = "";
 var selectedLanguage = "";
 var preSelectedContest = "";
+var contestBreadcrumb = "";
 var selectedCategory = "";
 var groupCheckedData = null;
 var contestants = {};
@@ -1732,7 +1733,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
          groupMinCategory = data.minCategory;
          groupMaxCategory = data.maxCategory;
          groupLanguage = data.language;
-         
+
          if ((!getTeams) && (data.childrenContests != undefined) && (data.childrenContests.length != 0)) {
             $("#" + curStep).hide();
             offerCategories(data);
@@ -1741,7 +1742,6 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
          }
       }, "json").done(function() { Utils.enableButton("button" + curStep); });
 };
-
 
 function scrollToTop(el) {
   // TODO: only animate when necessary,
@@ -1752,38 +1752,66 @@ function scrollToTop(el) {
 }
 
 // Display contest selection breacrumb
-// display only manualy set elements, for now
-function setContestBreadcrumb() {
+function setContestBreadcrumb(val) {
    function contestName(contest) {
       return contest.contestID === preSelectedContest;
-   };
-   var contestBreadcrumb = "";
+   }
    if (preSelectedCategory.length) {
-      contestBreadcrumb += '<span>Catégorie : ' + selectedCategory + '</span> ';
+      contestBreadcrumb = '<span onclick="goToCategory()">Catégorie : ' + selectedCategory + ' / </span> ';
    }
    if (preSelectedLanguage.length) {
-      contestBreadcrumb += '<span>Langage : ' + selectedLanguage + '</span> ';
+      contestBreadcrumb += '<span onclick="goToLanguage()"> Langage : ' + selectedLanguage + ' / </span> ';
    }
    if (preSelectedContest.length) {
-      contestBreadcrumb += '<span>Séquence : ' + childrenContests.find(contestName).name + '</span> ';
+      contestBreadcrumb += '<span onclick="goToSequence()"> Séquence : ' + childrenContests.find(contestName).name + '</span> ';
    }
-   $('.selection-breadcrumb').html(contestBreadcrumb);
+   $('#selection-breadcrumb').html(contestBreadcrumb);
+}
+
+window.goToCategory = function() {
+   $('#selectLanguage').slideUp();
+   $('#selectContest').slideUp();
+   $('#divCheckNbContestants').slideUp();
+   $('#selectCategory').slideDown();
+   offerCategories();
+};
+
+window.goToLanguage = function() {
+   $('#selectCategory').slideUp();
+   $('#selectContest').slideUp();
+   $('#divCheckNbContestants').slideUp();
+   $('#selectLanguage').slideDown();
+   offerLanguages();
+};
+
+window.goToSequence = function() {
+   $('#selectCategory').slideUp();
+   $('#selectLanguage').slideUp();
+   $('#divCheckNbContestants').slideUp();
+   $('#selectContest').slideDown();
+   offerContests();
+};
+
+
+function offerContestSelectionPanels() {
+   setContestBreadcrumb("Catégorie");
+   offerCategories(personalPageData);
+   $('#divAccessContest').show();
 }
 
 // Select contest category
 $('.categorySelector').click(function(event) {
    var target = $(event.currentTarget);
    var category = target.data('category');
+   if (selectedCategory.length && selectedCategory !== preSelectedCategory) {
+      selectedLanguage = "";
+      selectedContest = "";
+   }
    preSelectedCategory = category;
    $('.categorySelector').removeClass('selected');
    target.addClass('selected');
    selectCategory(preSelectedCategory);
 });
-
-// Save selected category
-/*$('#selectCategoryButton').click(function(event) {
-  selectCategory(preSelectedCategory);
-});*/
 
 function selectCategory(category) {
    selectedCategory = category;
@@ -1800,9 +1828,6 @@ $('.languageSelector').click(function(event) {
    $('.languageSelector[data-language="'+ language + '"]').addClass('selected');
    selectLanguage(preSelectedLanguage);
 });
-
-/*$('#selectLanguageButton').click(function(event) {
-});*/
 
 function selectLanguage(language) {
    selectedLanguage = language;
@@ -1837,26 +1862,6 @@ window.selectContest = function(ID) {
    });
 }
 
-// BACK BUTTONS
-$('#backToCategorySelection').click(function(event) {
-   $("#selectCategory").slideDown();
-   $("#selectLanguage").slideUp();
-   offerCategories();
-});
-
-$('#backToLanguageSelection').click(function(event) {
-   $("#selectLanguage").slideDown();
-   $("#selectContest").slideUp();
-   offerLanguages();
-});
-
-$('#backToSelection').click(function(event) {
-   $("#divCheckGroup").show();
-   $("#selectContest").slideDown();
-   $("#divCheckNbContestants").hide();
-   offerContests();
-});
-
 window.offerCategories = function(data) {
    var categories = {};
    $(".categoryChoice").hide();
@@ -1889,7 +1894,6 @@ window.offerCategories = function(data) {
       }
    }
    if (nbCategories > 1) {
-      setContestBreadcrumb();
       $("#selectCategory").show();
    } else {
       selectCategory(lastCategory);
@@ -1902,7 +1906,7 @@ window.offerLanguages = function() {
    var nbLanguages = 0;
    $(".languageSelector").hide();
    var lastLanguage = "";
-   for (var iChild = 0; iChild < childrenContests.length; iChild++) {      
+   for (var iChild = 0; iChild < childrenContests.length; iChild++) {
       var child = childrenContests[iChild];
       if (groupLanguage != "" && groupLanguage != child.language) {
          continue;
@@ -1915,11 +1919,11 @@ window.offerLanguages = function() {
       }
    }
    if (nbLanguages > 1) {
-      setContestBreadcrumb();
       $("#selectLanguage").show();
    } else {
       selectLanguage(lastLanguage);
    }
+   setContestBreadcrumb("Langage");
    scrollToTop('#tab-school .tabTitle');
 }
 
@@ -1955,7 +1959,6 @@ window.offerContests = function() {
       }
    }
    if (nbContests > 1) {
-      setContestBreadcrumb();
       $("#selectContestItems").html(selectHtml);
       $("#selectContest").show();
       setContestSelector();
@@ -1963,6 +1966,7 @@ window.offerContests = function() {
    else {
       selectContest(lastContestID);
    }
+   setContestBreadcrumb("Séquence");
 }
 
 /*
