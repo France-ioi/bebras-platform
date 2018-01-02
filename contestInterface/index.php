@@ -551,8 +551,9 @@
    <table id="pastParticipations" cellspacing=0>
       <tr>
          <td>Épreuve</td>
-         <td>Date de participation</td>
+         <td>Date</td>
          <td>Équipe</td>
+         <td>Statut</td>
          <td>Score</td>
          <td>Accès</td>
       </tr>

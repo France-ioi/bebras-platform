@@ -384,8 +384,10 @@ function handleGroupFromRegistrationCode($db, $code) {
       return;
    }
    $query = "SELECT IFNULL(tmp.score, 0) as score, IFNULL(tmp.sumScores, 0) as sumScores, tmp.password, tmp.startTime, tmp.contestName, ".
+       "tmp.nbMinutes, tmp.remainingSeconds, ".
        "GROUP_CONCAT(CONCAT(CONCAT(contestant.firstName, ' '), contestant.lastName)) as contestants ".
-       "FROM (SELECT team.ID as teamID, team.score, SUM(team_question.ffScore) as sumScores, team.password, team.startTime, contest.name as contestName ".
+       "FROM (SELECT team.ID as teamID, team.score, SUM(team_question.ffScore) as sumScores, team.password, team.startTime, contest.name as contestName, ".
+       "team.nbMinutes, (team.`nbMinutes` * 60) - TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), `team`.`startTime`)) as remainingSeconds ".
        "FROM `contestant` ".
        "JOIN team ON `contestant`.teamID = `team`.ID ".
        "JOIN `group` ON team.groupID = `group`.ID ".

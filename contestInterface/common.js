@@ -72,6 +72,40 @@ var logToConsole = function(logStr) {
   }
 };
 
+window.toDate = function(dateStr, sep, fromServer) {
+   var dateOnly = dateStr.split(" ")[0];
+   var timeParts = dateStr.split(" ")[1].split(":");
+   var parts = dateOnly.split(sep);
+   if (fromServer) {
+      return new Date(Date.UTC(parts[0], parts[1] - 1, parts[2], timeParts[0], timeParts[1]));
+   }
+   return new Date(parts[2], parts[1] - 1, parts[0], timeParts[0], timeParts[1]);
+}
+
+
+window.dateToDisplay = function(d) {
+   var date = $.datepicker.formatDate("dd/mm/yy", d);
+   var h = d.getHours();
+   h = (h < 10) ? ("0" + h) : h ;
+
+   var m = d.getMinutes();
+   m = (m < 10) ? ("0" + m) : m ;
+
+   var s = d.getSeconds();
+   s = (s < 10) ? ("0" + s) : s ;
+
+   return date;// + " " + h + ":" + m + ":" + s;
+}
+
+window.utcDateFormatter = function(cellValue) {
+   if ((cellValue == undefined) || (cellValue == "0000-00-00 00:00:00") || (cellValue == "")) {
+      return "";
+   }
+   var localDate = window.toDate(cellValue, "-", true, true);
+   return window.dateToDisplay(localDate);
+}
+
+
 window.unlockAllLevels = function() {
    var sortedQuestionIDs = getSortedQuestionIDs(questionsData);
    for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
@@ -1621,9 +1655,16 @@ window.showPersonalPage = function(data) {
    var htmlParticipations = "";
    for (var iParticipation = 0; iParticipation < data.registrationData.participations.length; iParticipation++) {
       var participation = data.registrationData.participations[iParticipation];
+      var status;
+      if ((parseInt(participation.nbMinutes) == 0) || (parseInt(participation.remainingSeconds) > 0)) {
+         status = "En cours";
+      } else {
+         status = "Terminé";
+      }
       htmlParticipations += "<tr><td>" + participation.contestName + "</td>" +
-         "<td>" + participation.startTime + "</td>" +
+         "<td>" + window.utcDateFormatter(participation.startTime) + "</td>" +
          "<td>" + participation.contestants + "</td>" +
+         "<td>" + status + "</td>" +
          "<td>" + Math.max(parseInt(participation.score), parseInt(participation.sumScores)) + "</td>" +
          "<td><a href='" + location.pathname + "?team=" + participation.password + "' target='_blank'>ouvrir</a></td></tr>";
    }
