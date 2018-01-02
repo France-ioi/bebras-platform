@@ -649,7 +649,14 @@ select {
   }
 }
 
-
+/*
+*
+* CONTEST SELECTION
+*
+*/
+.contestSelection-tab {
+  margin-bottom: 40px;
+}
 /* Arrows */
 .selector_arrowForward,
 .selector_arrowUp {

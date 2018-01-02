@@ -78,224 +78,6 @@
       </div>
       <p data-i8n="[html]others_retry"></p>
     </div>
-
-    <div id="selectCategory" style="display:none">
-      <div class="selection-breadcrumb"></div>
-      <p id="extraMessageCategory" style="font-weight: bold"></p>
-      <div class="tabTitle">Choisissez la catégorie</div>
-
-      <table class="colorCategories selectorTable"><tbody>
-        <tr class="colorCategory white categoryChoice categorySelector" id="cat_blanche" data-category="blanche">
-          <td class="selectorCell">
-            <div class="selector_arrowForward" ><span> </span></div>
-          </td>
-          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie blanche →</button></td>
-          <td>
-             <ul>
-                <li>séquences d'instructions</li>
-                <li>appels de fonctions simples</li>
-                <li>boucles répéter simples</li>
-             </ul>
-          </td>
-          <td></td>
-        </tr>
-
-        <tr class="colorCategory yellow categoryChoice categorySelector" id="cat_jaune" data-category="jaune">
-          <td class="selectorCell">
-            <div class="selector_arrowForward" ><span> </span></div>
-          </td>
-          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie jaune →</button></td>
-          <td>
-            <ul>
-              <li>instructions conditionnelles</li>
-              <li>boucles répéter imbriquées</li>
-              <li>imbrication de boucles et d'instructions conditionnelles</li>
-            </ul>
-          </td>
-          <td></td>
-        </tr>
-
-        <tr class="colorCategory orange categoryChoice categorySelector" id="cat_orange" data-category="orange">
-          <td class="selectorCell">
-            <div class="selector_arrowForward" ><span> </span></div>
-          </td>
-          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie orange →</button></td>
-          <td>
-            <ul>
-              <li>variables</li>
-              <li>opérateurs arithmétiques et booléens</li>
-              <li>boucles "tant que"</li>
-            </ul>
-          </td>
-          <td></td>
-        </tr>
-
-        <tr class="colorCategory green categoryChoice categorySelector" id="cat_verte" data-category="verte">
-          <td class="selectorCell">
-            <div class="selector_arrowForward" ><span> </span></div>
-          </td>
-          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie verte →</button></td>
-          <td>
-            <ul>
-               <li>création de fonctions</li>
-               <li>tableaux, listes et chaînes de caractères</li>
-            </ul>
-          </td>
-          <td></td>
-        </tr>
-
-        <tr class="colorCategory blue categoryChoice categorySelector" id="cat_bleue" data-category="bleue">
-          <td class="selectorCell">
-            <div class="selector_arrowForward" ><span> </span></div>
-          </td>
-          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie bleue →</button></td>
-          <td>
-             <ul>
-               <li>fonctions récursives</li>
-               <li>tableaux avancés</li>
-               <li>structures de données</li>
-             </ul>
-          </td>
-          <td></td>
-        </tr>
-        <tr class="colorCategory white categoryChoice categorySelector" id="cat_cm1cm2" data-category="cm1cm2">
-          <td class="selectorCell">
-            <div class="selector_arrowForward" ><span> </span></div>
-          </td>
-          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie CM1 / CM2 →</button></td>
-          <td>
-            <p>Pour les élèves en fin de primaire.</p>
-          </td>
-          <td></td>
-        </tr>
-        <tr class="colorCategory white categoryChoice categorySelector" id="cat_6e5e" data-category="6e5e">
-          <td class="selectorCell">
-            <div class="selector_arrowForward" ><span> </span></div>
-          </td>
-          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie sixième / cinquième →</button></td>
-          <td>
-            <p>Pour les élèves en début de collège.</p>
-          </td>
-          <td></td>
-        </tr>
-        <tr class="colorCategory white categoryChoice categorySelector" id="cat_4e3e" data-category="4e3e">
-          <td class="selectorCell">
-            <div class="selector_arrowForward" ><span> </span></div>
-          </td>
-          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie quatrième / troisième →</button></td>
-          <td>
-            <p>Pour les élèves de fin de collège.</p>
-          </td>
-          <td></td>
-        </tr>
-        <tr class="colorCategory white categoryChoice categorySelector" id="cat_2depro" data-category="2depro">
-          <td class="selectorCell">
-            <div class="selector_arrowForward" ><span> </span></div>
-          </td>
-          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie seconde pro →</button></td>
-          <td>
-            <p>Pour les élèves de début de lycée professionnel.</p>
-          </td>
-          <td></td>
-        </tr>
-        <tr class="colorCategory white categoryChoice categorySelector" id="cat_2de" data-category="2de">
-          <td class="selectorCell">
-            <div class="selector_arrowForward" ><span> </span></div>
-          </td>
-          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie seconde →</button></td>
-          <td>
-            <p>Pour les élèves de début de lycée.</p>
-          </td>
-          <td></td>
-        </tr>
-        <tr class="colorCategory white categoryChoice categorySelector" id="cat_1reTalepro" data-category="1reTalepro">
-          <td class="selectorCell">
-            <div class="selector_arrowForward" ><span> </span></div>
-          </td>
-          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie première pro / terminale pro →</button></td>
-          <td>
-            <p>Pour les élèves de fin de lycée professionnel.</p>
-          </td>
-          <td></td>
-        </tr>
-        <tr class="colorCategory white categoryChoice categorySelector" id="cat_1reTale" data-category="1reTale">
-          <td class="selectorCell">
-            <div class="selector_arrowForward" ><span> </span></div>
-          </td>
-          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie première / terminale →</button></td>
-          <td>
-            <p>Pour les élèves de fin de lycée.</p>
-          </td>
-          <td></td>
-        </tr>
-        <tr class="colorCategory white categoryChoice categorySelector" id="cat_all" data-category="all">
-          <td class="selectorCell">
-            <div class="selector_arrowForward" ><span> </span></div>
-          </td>
-          <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie tous défis →</button></td>
-          <td>
-            <p>Les défis de toutes les catégories.</p>
-          </td>
-          <td></td>
-        </tr>
-      </tbody></table>
-    </div>
-
-    <div id="selectLanguage" style="display:none">
-      <div class="selection-breadcrumb"></div>
-      <p id="extraMessage" style="font-weight: bold"></p>
-      <div class="tabTitle">Choisissez le langage :</div>
-      <p>Si vous n'êtes pas sûr, nous vous recommandons Blockly.</p>
-      <table class="languageTable selectorTable"><tbody>
-        <tr>
-          <td class="languageSelector selectorCell" data-language="blockly">
-            <div class="selector_arrowForward" ><span> </span></div>
-          </td>
-          <td class="languageSelector selectorTitle" data-language="blockly"><button type="button" class="btn btn-default">Blockly →</button></td>
-          <td class="languageSelector" data-language="blockly">
-            <img src="images/blockly.png" alt="exemple d'utilisation de Blockly">
-          </td>
-          <td class="languageSelector languageDescription" data-language="blockly">
-            <p><strong>Ce que nous vous conseillons pour ce concours.</strong></p>
-          </td>
-        </tr>
-        <tr>
-          <td class="languageSelector selectorCell" data-language="scratch">
-            <div class="selector_arrowForward" ><span> </span></div>
-          </td>
-          <td class="languageSelector selectorTitle" data-language="scratch"><button type="button" class="btn btn-default">Scratch →</button></td>
-          <td class="languageSelector" data-language="scratch">
-            <img src="images/scratch.png" alt="exemple d'utilisation de Scratch">
-          </td>
-          <td class="languageSelector languageDescription" data-language="scratch">
-            <p>Si vous avez l'habitude de Scratch.</p>
-            <p>Attention : ne fonctionne bien qu'avec les navigateurs Google Chrome ou Mozilla Firefox récents.</p>
-          </td>
-        </tr>
-        <tr>
-          <td class="languageSelector selectorCell" data-language="python">
-            <div class="selector_arrowForward" ><span> </span></div>
-          </td>
-          <td class="languageSelector selectorTitle" data-language="python"><button type="button" class="btn btn-default">Python →</button></td>
-          <td class="languageSelector" data-language="python">
-            <img src="images/python.png" alt="exemple d'utilisation de Python">
-          </td>
-          <td class="languageSelector languageDescription" data-language="python">
-            <p>Si vous maîtrisez bien ce langage.</p>
-            <p>Attention : ne fonctionne bien qu'avec les navigateurs Google Chrome ou Mozilla Firefox récents.</p>
-          </td>
-        </tr>
-      </tbody></table>
-      <button type="button" class="btn btn-default" id="backToCategorySelection">Retour</button>
-    </div>
-
-    <div id="selectContest" style="display:none">
-      <div class="selection-breadcrumb"></div>
-      <div class="tabTitle">Choisissez la séquence :</div>
-      <table id="selectContestItems" class="selectorTable">
-      </table>
-      <button type="button" class="btn btn-default" id="backToLanguageSelection">Retour</button>
-    </div>
   </div><!-- #tab-school -->
 
   <div id="tab-continue" style="display:none" class="tabContent">
@@ -359,162 +141,377 @@
   </div>
 </div>
 
-<div id="divCheckNbContestants" style="display:none" class="dialog">
-  <div class="selection-breadcrumb"></div>
-  <div class="tabTitle">Membres de votre équipe</div>
-  <p>
-    <span data-i18n="nb_contestants_question"></span>
-    <span class="btn-group" style="margin-left: 20px;">
-      <button type="button" data-nbcontestants="1" class="btn btn-default nbContestants" data-i18n="nb_contestants_one"></button>
-      <button type="button" data-nbcontestants="2" class="btn btn-default nbContestants" data-i18n="nb_contestants_two"></button>
-    </span>
-  </p>
+<div id="divAccessContest" style="display:none">
+  <div id="selection-breadcrumb"></div>
+  <div id="selectCategory" class="contestSelection-tab">
+    <p id="extraMessageCategory" style="font-weight: bold"></p>
+    <div class="tabTitle">Choisissez la catégorie</div>
 
-  <div id="divLogin" style="display:none" class="dialog">
-    <div class="login_box panel">
-      <div class="panel-head"><b data-i18n="login_teammate"></b><b> 1</b></div>
-      <div class="panel-body">
-        <div>
-          <span>Avez-vous votre code de participant ?</span>
-          <span class='btn-group' style='margin-left: 10px;'>
-            <button type="button" class='btn btn-default yesno' onclick='hasRegistration(1, true)' id="hasReg1Yes">Oui</button>
-            <button type="button" class='btn btn-default yesno' onclick='hasRegistration(1, false)' id="hasReg1No">Non</button>
-          </span>
-        </div>
-        <div id="yesRegistrationCode1" style="text-align:center;display:none" class="form-inline">
-          <p id="login-input-registrationCode-1">
-            <span data-i18n="[html]login_input_registrationCode"></span>
-            <input id="registrationCode1" type="text" autocomplete="off" class="form-control" /></p>
-          <p><i>(Une lettre puis une douzaine de chiffres)</i></p>
-          <button type='button' onclick="validateRegistrationCode(1)" class="btn btn-default" >Valider ce code</button>
-          <p><span id="errorRegistrationCode1" style="color:red;font-weight:bold"></span></p>
-        </div>
-        <div id="noRegistrationCode1" style="display:none" class="form-inline">
-          <p id="login-input-firstName-1">
-            <span data-i18n="[html]login_input_firstname"></span>
-            <input id="firstName1" type="text" autocomplete="off" class="form-control" /></p>
-          <p id="login-input-lastName-1">
-            <span data-i18n="[html]login_input_lastname"></span>
-            <input id="lastName1" type="text" autocomplete="off" class="form-control" /></p>
-          <p id="login-input-email-1">
-            <span data-i18n="[html]login_input_email"></span>
-            <input id="email1" type="text" autocomplete="off" class="form-control" /></p>
-          <p id="login-input-zipCode-1">
-            <span data-i18n="[html]login_input_zipCode"></span>
-            <input id="zipCode1" type="text" autocomplete="off" class="form-control" /></p>
-          <div id="login-input-genre-1">
-            <span data-i18n="login_ask_gender"></span>
-            <br/>
-            <div class="divInput">
-              <input type="radio" id="genre1_female" name="genre1" value="1" autocomplete="off"><label for="genre1_female" data-i18n="login_female"></label>
-              <br /><input type="radio" id="genre1_male" name="genre1" value="2" autocomplete="off"><label for="genre1_male" data-i18n="login_male"></label>
-            </div>
+    <table class="colorCategories selectorTable"><tbody>
+      <tr class="colorCategory white categoryChoice categorySelector" id="cat_blanche" data-category="blanche">
+        <td class="selectorCell">
+          <div class="selector_arrowForward" ><span> </span></div>
+        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie blanche →</button></td>
+        <td>
+           <ul>
+              <li>séquences d'instructions</li>
+              <li>appels de fonctions simples</li>
+              <li>boucles répéter simples</li>
+           </ul>
+        </td>
+        <td></td>
+      </tr>
+
+      <tr class="colorCategory yellow categoryChoice categorySelector" id="cat_jaune" data-category="jaune">
+        <td class="selectorCell">
+          <div class="selector_arrowForward" ><span> </span></div>
+        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie jaune →</button></td>
+        <td>
+          <ul>
+            <li>instructions conditionnelles</li>
+            <li>boucles répéter imbriquées</li>
+            <li>imbrication de boucles et d'instructions conditionnelles</li>
+          </ul>
+        </td>
+        <td></td>
+      </tr>
+
+      <tr class="colorCategory orange categoryChoice categorySelector" id="cat_orange" data-category="orange">
+        <td class="selectorCell">
+          <div class="selector_arrowForward" ><span> </span></div>
+        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie orange →</button></td>
+        <td>
+          <ul>
+            <li>variables</li>
+            <li>opérateurs arithmétiques et booléens</li>
+            <li>boucles "tant que"</li>
+          </ul>
+        </td>
+        <td></td>
+      </tr>
+
+      <tr class="colorCategory green categoryChoice categorySelector" id="cat_verte" data-category="verte">
+        <td class="selectorCell">
+          <div class="selector_arrowForward" ><span> </span></div>
+        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie verte →</button></td>
+        <td>
+          <ul>
+             <li>création de fonctions</li>
+             <li>tableaux, listes et chaînes de caractères</li>
+          </ul>
+        </td>
+        <td></td>
+      </tr>
+
+      <tr class="colorCategory blue categoryChoice categorySelector" id="cat_bleue" data-category="bleue">
+        <td class="selectorCell">
+          <div class="selector_arrowForward" ><span> </span></div>
+        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie bleue →</button></td>
+        <td>
+           <ul>
+             <li>fonctions récursives</li>
+             <li>tableaux avancés</li>
+             <li>structures de données</li>
+           </ul>
+        </td>
+        <td></td>
+      </tr>
+      <tr class="colorCategory white categoryChoice categorySelector" id="cat_cm1cm2" data-category="cm1cm2">
+        <td class="selectorCell">
+          <div class="selector_arrowForward" ><span> </span></div>
+        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie CM1 / CM2 →</button></td>
+        <td>
+          <p>Pour les élèves en fin de primaire.</p>
+        </td>
+        <td></td>
+      </tr>
+      <tr class="colorCategory white categoryChoice categorySelector" id="cat_6e5e" data-category="6e5e">
+        <td class="selectorCell">
+          <div class="selector_arrowForward" ><span> </span></div>
+        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie sixième / cinquième →</button></td>
+        <td>
+          <p>Pour les élèves en début de collège.</p>
+        </td>
+        <td></td>
+      </tr>
+      <tr class="colorCategory white categoryChoice categorySelector" id="cat_4e3e" data-category="4e3e">
+        <td class="selectorCell">
+          <div class="selector_arrowForward" ><span> </span></div>
+        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie quatrième / troisième →</button></td>
+        <td>
+          <p>Pour les élèves de fin de collège.</p>
+        </td>
+        <td></td>
+      </tr>
+      <tr class="colorCategory white categoryChoice categorySelector" id="cat_2depro" data-category="2depro">
+        <td class="selectorCell">
+          <div class="selector_arrowForward" ><span> </span></div>
+        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie seconde pro →</button></td>
+        <td>
+          <p>Pour les élèves de début de lycée professionnel.</p>
+        </td>
+        <td></td>
+      </tr>
+      <tr class="colorCategory white categoryChoice categorySelector" id="cat_2de" data-category="2de">
+        <td class="selectorCell">
+          <div class="selector_arrowForward" ><span> </span></div>
+        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie seconde →</button></td>
+        <td>
+          <p>Pour les élèves de début de lycée.</p>
+        </td>
+        <td></td>
+      </tr>
+      <tr class="colorCategory white categoryChoice categorySelector" id="cat_1reTalepro" data-category="1reTalepro">
+        <td class="selectorCell">
+          <div class="selector_arrowForward" ><span> </span></div>
+        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie première pro / terminale pro →</button></td>
+        <td>
+          <p>Pour les élèves de fin de lycée professionnel.</p>
+        </td>
+        <td></td>
+      </tr>
+      <tr class="colorCategory white categoryChoice categorySelector" id="cat_1reTale" data-category="1reTale">
+        <td class="selectorCell">
+          <div class="selector_arrowForward" ><span> </span></div>
+        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie première / terminale →</button></td>
+        <td>
+          <p>Pour les élèves de fin de lycée.</p>
+        </td>
+        <td></td>
+      </tr>
+      <tr class="colorCategory white categoryChoice categorySelector" id="cat_all" data-category="all">
+        <td class="selectorCell">
+          <div class="selector_arrowForward" ><span> </span></div>
+        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie tous défis →</button></td>
+        <td>
+          <p>Les défis de toutes les catégories.</p>
+        </td>
+        <td></td>
+      </tr>
+    </tbody></table>
+  </div>
+
+  <div id="selectLanguage" style="display:none" class="contestSelection-tab">
+    <p id="extraMessage" style="font-weight: bold"></p>
+    <div class="tabTitle">Choisissez le langage :</div>
+    <p>Si vous n'êtes pas sûr, nous vous recommandons Blockly.</p>
+    <table class="languageTable selectorTable"><tbody>
+      <tr>
+        <td class="languageSelector selectorCell" data-language="blockly">
+          <div class="selector_arrowForward" ><span> </span></div>
+        </td>
+        <td class="languageSelector selectorTitle" data-language="blockly"><button type="button" class="btn btn-default">Blockly →</button></td>
+        <td class="languageSelector" data-language="blockly">
+          <img src="images/blockly.png" alt="exemple d'utilisation de Blockly">
+        </td>
+        <td class="languageSelector languageDescription" data-language="blockly">
+          <p><strong>Ce que nous vous conseillons pour ce concours.</strong></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="languageSelector selectorCell" data-language="scratch">
+          <div class="selector_arrowForward" ><span> </span></div>
+        </td>
+        <td class="languageSelector selectorTitle" data-language="scratch"><button type="button" class="btn btn-default">Scratch →</button></td>
+        <td class="languageSelector" data-language="scratch">
+          <img src="images/scratch.png" alt="exemple d'utilisation de Scratch">
+        </td>
+        <td class="languageSelector languageDescription" data-language="scratch">
+          <p>Si vous avez l'habitude de Scratch.</p>
+          <p>Attention : ne fonctionne bien qu'avec les navigateurs Google Chrome ou Mozilla Firefox récents.</p>
+        </td>
+      </tr>
+      <tr>
+        <td class="languageSelector selectorCell" data-language="python">
+          <div class="selector_arrowForward" ><span> </span></div>
+        </td>
+        <td class="languageSelector selectorTitle" data-language="python"><button type="button" class="btn btn-default">Python →</button></td>
+        <td class="languageSelector" data-language="python">
+          <img src="images/python.png" alt="exemple d'utilisation de Python">
+        </td>
+        <td class="languageSelector languageDescription" data-language="python">
+          <p>Si vous maîtrisez bien ce langage.</p>
+          <p>Attention : ne fonctionne bien qu'avec les navigateurs Google Chrome ou Mozilla Firefox récents.</p>
+        </td>
+      </tr>
+    </tbody></table>
+  </div>
+
+  <div id="selectContest" style="display:none" class="contestSelection-tab">
+    <div class="tabTitle">Choisissez la séquence :</div>
+    <table id="selectContestItems" class="selectorTable">
+    </table>
+  </div>
+
+  <div id="divCheckNbContestants" style="display:none" class="contestSelection-tab">
+    <div class="tabTitle">Membres de votre équipe</div>
+    <p>
+      <span data-i18n="nb_contestants_question"></span>
+      <span class="btn-group" style="margin-left: 20px;">
+        <button type="button" data-nbcontestants="1" class="btn btn-default nbContestants" data-i18n="nb_contestants_one"></button>
+        <button type="button" data-nbcontestants="2" class="btn btn-default nbContestants" data-i18n="nb_contestants_two"></button>
+      </span>
+    </p>
+
+    <div id="divLogin" style="display:none" class="dialog">
+      <div class="login_box panel">
+        <div class="panel-head"><b data-i18n="login_teammate"></b><b> 1</b></div>
+        <div class="panel-body">
+          <div>
+            <span>Avez-vous votre code de participant ?</span>
+            <span class='btn-group' style='margin-left: 10px;'>
+              <button type="button" class='btn btn-default yesno' onclick='hasRegistration(1, true)' id="hasReg1Yes">Oui</button>
+              <button type="button" class='btn btn-default yesno' onclick='hasRegistration(1, false)' id="hasReg1No">Non</button>
+            </span>
           </div>
-          <p id="login-input-grade-1">
-            <span data-i18n="grade_question"></span>
-            <select id="grade1">
-              <option value="" data-i18n="grade_select" selected></option>
-              <option value="-1" data-i18n="grade_-1"></option>
-              <option value="4" data-i18n="grade_4"></option>
-              <option value="5" data-i18n="grade_5"></option>
-              <option value="6" data-i18n="grade_6"></option>
-              <option value="6" data-i18n="grade_16"></option>
-              <option value="7" data-i18n="grade_7"></option>
-              <option value="7" data-i18n="grade_17"></option>
-              <option value="8" data-i18n="grade_8"></option>
-              <option value="8" data-i18n="grade_18"></option>
-              <option value="9" data-i18n="grade_9"></option>
-              <option value="9" data-i18n="grade_19"></option>
-              <option value="10" data-i18n="grade_10"></option>
-              <option value="13" data-i18n="grade_13"></option>
-              <option value="11" data-i18n="grade_11"></option>
-              <option value="14" data-i18n="grade_14"></option>
-              <option value="12" data-i18n="grade_12"></option>
-              <option value="15" data-i18n="grade_15"></option>
-              <option value="-4" data-i18n="grade_-4">Autre</option>
-            </select>
-          </p>
-          <p id="login-input-studentId-1">
-            <span data-i18n="[html]login_input_studentId"></span>
-            <input id="studentId1" type="text" autocomplete="off" class="form-control" /></p>
+          <div id="yesRegistrationCode1" style="text-align:center;display:none" class="form-inline">
+            <p id="login-input-registrationCode-1">
+              <span data-i18n="[html]login_input_registrationCode"></span>
+              <input id="registrationCode1" type="text" autocomplete="off" class="form-control" /></p>
+            <p><i>(Une lettre puis une douzaine de chiffres)</i></p>
+            <button type='button' onclick="validateRegistrationCode(1)" class="btn btn-default" >Valider ce code</button>
+            <p><span id="errorRegistrationCode1" style="color:red;font-weight:bold"></span></p>
+          </div>
+          <div id="noRegistrationCode1" style="display:none" class="form-inline">
+            <p id="login-input-firstName-1">
+              <span data-i18n="[html]login_input_firstname"></span>
+              <input id="firstName1" type="text" autocomplete="off" class="form-control" /></p>
+            <p id="login-input-lastName-1">
+              <span data-i18n="[html]login_input_lastname"></span>
+              <input id="lastName1" type="text" autocomplete="off" class="form-control" /></p>
+            <p id="login-input-email-1">
+              <span data-i18n="[html]login_input_email"></span>
+              <input id="email1" type="text" autocomplete="off" class="form-control" /></p>
+            <p id="login-input-zipCode-1">
+              <span data-i18n="[html]login_input_zipCode"></span>
+              <input id="zipCode1" type="text" autocomplete="off" class="form-control" /></p>
+            <div id="login-input-genre-1">
+              <span data-i18n="login_ask_gender"></span>
+              <br/>
+              <div class="divInput">
+                <input type="radio" id="genre1_female" name="genre1" value="1" autocomplete="off"><label for="genre1_female" data-i18n="login_female"></label>
+                <br /><input type="radio" id="genre1_male" name="genre1" value="2" autocomplete="off"><label for="genre1_male" data-i18n="login_male"></label>
+              </div>
+            </div>
+            <p id="login-input-grade-1">
+              <span data-i18n="grade_question"></span>
+              <select id="grade1">
+                <option value="" data-i18n="grade_select" selected></option>
+                <option value="-1" data-i18n="grade_-1"></option>
+                <option value="4" data-i18n="grade_4"></option>
+                <option value="5" data-i18n="grade_5"></option>
+                <option value="6" data-i18n="grade_6"></option>
+                <option value="6" data-i18n="grade_16"></option>
+                <option value="7" data-i18n="grade_7"></option>
+                <option value="7" data-i18n="grade_17"></option>
+                <option value="8" data-i18n="grade_8"></option>
+                <option value="8" data-i18n="grade_18"></option>
+                <option value="9" data-i18n="grade_9"></option>
+                <option value="9" data-i18n="grade_19"></option>
+                <option value="10" data-i18n="grade_10"></option>
+                <option value="13" data-i18n="grade_13"></option>
+                <option value="11" data-i18n="grade_11"></option>
+                <option value="14" data-i18n="grade_14"></option>
+                <option value="12" data-i18n="grade_12"></option>
+                <option value="15" data-i18n="grade_15"></option>
+                <option value="-4" data-i18n="grade_-4">Autre</option>
+              </select>
+            </p>
+            <p id="login-input-studentId-1">
+              <span data-i18n="[html]login_input_studentId"></span>
+              <input id="studentId1" type="text" autocomplete="off" class="form-control" /></p>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="login_box panel" cellspacing=0 id="contestant2" style="display:none">
-      <div class="panel-head"><b data-i18n="login_teammate"></b><b> 2</b></div>
-      <div class="panel-body">
-        <div>
-          <span>Avez-vous votre code de participant ?</span>
-          <span class='btn-group' style='margin-left: 10px;'>
-            <button type="button" class='btn btn-default yesno' onclick='hasRegistration(2, true)' id="hasReg2Yes">Oui</button>
-            <button type="button" class='btn btn-default yesno' onclick='hasRegistration(2, false)' id="hasReg2No">Non</button>
-          </span>
-        </div>
-        <div id="yesRegistrationCode2" style='text-align:center;display:none' class="form-inline">
-          <p id="login-input-registrationCode-2">
-            <span data-i18n="[html]login_input_registrationCode"></span>
-            <input id="registrationCode2" type="text" autocomplete="off" class="form-control" /></p>
-          <p><i>(Une lettre puis une douzaine de chiffres)</i></p>
-          <button type='button' onclick="validateRegistrationCode(2)" class="btn btn-default">Valider ce code</button>
-          <p><span id="errorRegistrationCode2" style="color:red;font-weight:bold"></span></p>
-        </div>
-        <div id="noRegistrationCode2" style="display:none" class="form-inline">
-          <p id="login-input-firstName-2">
-            <span data-i18n="[html]login_input_firstname"></span>
-            <input id="firstName2" type="text" autocomplete="off" class="form-control" /></p>
-          <p id="login-input-lastName-2">
-            <span data-i18n="[html]login_input_lastname"></span>
-            <input id="lastName2" type="text" autocomplete="off" class="form-control" /></p>
-          <p id="login-input-email-2">
-            <span data-i18n="[html]login_input_email"></span>
-            <input id="email2" type="text" autocomplete="off" class="form-control" /></p>
-          <p id="login-input-zipCode-2">
-            <span data-i18n="[html]login_input_zipCode"></span>
-            <input id="zipCode2" type="text" autocomplete="off" class="form-control" /></p>
-          <div id="login-input-genre-2">
-            <span data-i18n="login_ask_gender"></span>
-            <br />
-            <div class="divInput">
-              <input type="radio" id="genre2_female" name="genre2" value="1" autocomplete="off"><label for="genre2_female" data-i18n="login_female"></label>
-              <br /><input type="radio" id="genre2_male" name="genre2" value="2" autocomplete="off"><label for="genre2_male" data-i18n="login_male"></label>
-            </div>
+      <div class="login_box panel" cellspacing=0 id="contestant2" style="display:none">
+        <div class="panel-head"><b data-i18n="login_teammate"></b><b> 2</b></div>
+        <div class="panel-body">
+          <div>
+            <span>Avez-vous votre code de participant ?</span>
+            <span class='btn-group' style='margin-left: 10px;'>
+              <button type="button" class='btn btn-default yesno' onclick='hasRegistration(2, true)' id="hasReg2Yes">Oui</button>
+              <button type="button" class='btn btn-default yesno' onclick='hasRegistration(2, false)' id="hasReg2No">Non</button>
+            </span>
           </div>
-          <p id="login-input-grade-2">
-            <span data-i18n="grade_question"></span>
-            <select id="grade2">
-              <option value="" data-i18n="grade_select" selected></option>
-              <option value="-1" data-i18n="grade_-1"></option>
-              <option value="4" data-i18n="grade_4"></option>
-              <option value="5" data-i18n="grade_5"></option>
-              <option value="6" data-i18n="grade_6"></option>
-              <option value="6" data-i18n="grade_16"></option>
-              <option value="7" data-i18n="grade_7"></option>
-              <option value="7" data-i18n="grade_17"></option>
-              <option value="8" data-i18n="grade_8"></option>
-              <option value="8" data-i18n="grade_18"></option>
-              <option value="9" data-i18n="grade_9"></option>
-              <option value="9" data-i18n="grade_19"></option>
-              <option value="10" data-i18n="grade_10"></option>
-              <option value="13" data-i18n="grade_13"></option>
-              <option value="11" data-i18n="grade_11"></option>
-              <option value="14" data-i18n="grade_14"></option>
-              <option value="12" data-i18n="grade_12"></option>
-              <option value="15" data-i18n="grade_15"></option>
-              <option value="-4" data-i18n="grade_-4">Autre</option>
-            </select></p>
-          <p id="login-input-studentId-2">
-            <span data-i18n="[html]login_input_studentId"></span>
-            <input id="studentId2" type="text" autocomplete="off" class="form-control" /></p>
+          <div id="yesRegistrationCode2" style='text-align:center;display:none' class="form-inline">
+            <p id="login-input-registrationCode-2">
+              <span data-i18n="[html]login_input_registrationCode"></span>
+              <input id="registrationCode2" type="text" autocomplete="off" class="form-control" /></p>
+            <p><i>(Une lettre puis une douzaine de chiffres)</i></p>
+            <button type='button' onclick="validateRegistrationCode(2)" class="btn btn-default">Valider ce code</button>
+            <p><span id="errorRegistrationCode2" style="color:red;font-weight:bold"></span></p>
+          </div>
+          <div id="noRegistrationCode2" style="display:none" class="form-inline">
+            <p id="login-input-firstName-2">
+              <span data-i18n="[html]login_input_firstname"></span>
+              <input id="firstName2" type="text" autocomplete="off" class="form-control" /></p>
+            <p id="login-input-lastName-2">
+              <span data-i18n="[html]login_input_lastname"></span>
+              <input id="lastName2" type="text" autocomplete="off" class="form-control" /></p>
+            <p id="login-input-email-2">
+              <span data-i18n="[html]login_input_email"></span>
+              <input id="email2" type="text" autocomplete="off" class="form-control" /></p>
+            <p id="login-input-zipCode-2">
+              <span data-i18n="[html]login_input_zipCode"></span>
+              <input id="zipCode2" type="text" autocomplete="off" class="form-control" /></p>
+            <div id="login-input-genre-2">
+              <span data-i18n="login_ask_gender"></span>
+              <br />
+              <div class="divInput">
+                <input type="radio" id="genre2_female" name="genre2" value="1" autocomplete="off"><label for="genre2_female" data-i18n="login_female"></label>
+                <br /><input type="radio" id="genre2_male" name="genre2" value="2" autocomplete="off"><label for="genre2_male" data-i18n="login_male"></label>
+              </div>
+            </div>
+            <p id="login-input-grade-2">
+              <span data-i18n="grade_question"></span>
+              <select id="grade2">
+                <option value="" data-i18n="grade_select" selected></option>
+                <option value="-1" data-i18n="grade_-1"></option>
+                <option value="4" data-i18n="grade_4"></option>
+                <option value="5" data-i18n="grade_5"></option>
+                <option value="6" data-i18n="grade_6"></option>
+                <option value="6" data-i18n="grade_16"></option>
+                <option value="7" data-i18n="grade_7"></option>
+                <option value="7" data-i18n="grade_17"></option>
+                <option value="8" data-i18n="grade_8"></option>
+                <option value="8" data-i18n="grade_18"></option>
+                <option value="9" data-i18n="grade_9"></option>
+                <option value="9" data-i18n="grade_19"></option>
+                <option value="10" data-i18n="grade_10"></option>
+                <option value="13" data-i18n="grade_13"></option>
+                <option value="11" data-i18n="grade_11"></option>
+                <option value="14" data-i18n="grade_14"></option>
+                <option value="12" data-i18n="grade_12"></option>
+                <option value="15" data-i18n="grade_15"></option>
+                <option value="-4" data-i18n="grade_-4">Autre</option>
+              </select></p>
+            <p id="login-input-studentId-2">
+              <span data-i18n="[html]login_input_studentId"></span>
+              <input id="studentId2" type="text" autocomplete="off" class="form-control" /></p>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="clearfix">
-      <button type="button" id="buttonLogin" onclick="validateLoginForm()" data-i18n="login_start_contest" class="btn btn-default"></button>
-      <p><span id="LoginResult" style="color:red;font-weight:bold"></span></p>
-    </div>
-  </div><!-- #divLogin -->
-  <button type="button" class="btn btn-default" id="backToSelection">Retour</button>
-</div>
+      <div class="clearfix">
+        <button type="button" id="buttonLogin" onclick="validateLoginForm()" data-i18n="login_start_contest" class="btn btn-default"></button>
+        <p><span id="LoginResult" style="color:red;font-weight:bold"></span></p>
+      </div>
+    </div><!-- #divLogin -->
+  </div>
+</div><!-- #divCheckNbContestants -->
+
 <style>
 #pastParticipations tr:first-child td {
    font-weight: bold;

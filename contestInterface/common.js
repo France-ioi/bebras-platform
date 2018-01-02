@@ -1676,10 +1676,10 @@ window.startPreparation = function() {
    groupMinCategory = personalPageData.minCategory;
    groupMaxCategory = personalPageData.maxCategory;
    groupLanguage = personalPageData.language;
-   $("#divCheckGroup").show();
    if (personalPageData.childrenContests.length > 0) {
       $("#divPersonalPage").hide();
-      offerCategories(personalPageData);
+      offerContestSelectionPanels();
+      //offerCategories(personalPageData);
    } else {
       groupWasChecked(personalPageData, "PersonalPage", personalPageData.registrationData.code, false, false);
    }
