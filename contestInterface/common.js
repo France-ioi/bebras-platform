@@ -1736,6 +1736,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
 
          if ((!getTeams) && (data.childrenContests != undefined) && (data.childrenContests.length != 0)) {
             $("#" + curStep).hide();
+            $('#divAccessContest').show();
             offerCategories(data);
          } else {
             groupWasChecked(data, curStep, groupCode, getTeams, data.isPublic);
