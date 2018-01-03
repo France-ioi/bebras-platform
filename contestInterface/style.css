@@ -668,9 +668,8 @@ select {
 #selection-breadcrumb .breadcrumb-link:hover {
   text-decoration: underline;
 }
-#selection-breadcrumb .breadcrumb-separator::before {
-  content: "/";
-  margin: 0 10px;
+#selection-breadcrumb .breadcrumb-separator {
+  padding: 0 10px;
 }
 .contestSelection-tab {
   margin-bottom: 40px;
