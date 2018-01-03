@@ -512,21 +512,6 @@
   </div>
 </div><!-- #divCheckNbContestants -->
 
-<style>
-#pastParticipations tr:first-child td {
-   font-weight: bold;
-   background-color: #99c4e0;
-}
-
-#pastParticipations tr td {
-   border: solid black 1px;
-   padding: 5px;
-}
-
-#personalData tr td:first-child {
-   font-weight: bold;
-}
-</style>
 <div id="divPersonalPage" style="display:none">
    <h2>Page personnelle</h2> 
    <table id="personalData">

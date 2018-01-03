@@ -1754,14 +1754,14 @@ function scrollToTop(el) {
 // Display contest selection breacrumb
 function setContestBreadcrumb(val) {
    if (preSelectedCategory != "") {
-      contestBreadcrumb = '<span onclick="goToCategory()">Catégorie ' + selectedCategory + ' / </span> ';
+      contestBreadcrumb = '<span class="breadcrumb-item"><span class="breadcrumb-link" onclick="goToCategory()">Catégorie ' + selectedCategory + '</span></span>';
    }
    if (preSelectedLanguage != "") {
-      contestBreadcrumb += '<span onclick="goToLanguage()"> Langage ' + selectedLanguage + ' / </span> ';
+      contestBreadcrumb += '<span class="breadcrumb-item"><span class="breadcrumb-separator"></span><span class="breadcrumb-link" onclick="goToLanguage()">Langage ' + selectedLanguage + '</span></span>';
    }
    if (preSelectedContest != "") {
       var contest = window.getContest(preSelectedContest);
-      contestBreadcrumb += '<span onclick="goToSequence()">' + contest.name + '</span> ';
+      contestBreadcrumb += '<span class="breadcrumb-item"><span class="breadcrumb-separator"></span><span class="breadcrumb-link" onclick="goToSequence()">' + contest.name + '</span></span>';
    }
    $('#selection-breadcrumb').html(contestBreadcrumb);
 }

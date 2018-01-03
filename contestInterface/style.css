@@ -654,6 +654,24 @@ select {
 * CONTEST SELECTION
 *
 */
+#selection-breadcrumb {
+  background-color: #2381bd;
+  color: #fff;
+  margin-top: -1em;
+  margin-left: -20px;
+  padding: 5px 20px;
+  min-height: 29px;
+}
+#selection-breadcrumb .breadcrumb-link {
+  cursor: pointer;
+}
+#selection-breadcrumb .breadcrumb-link:hover {
+  text-decoration: underline;
+}
+#selection-breadcrumb .breadcrumb-separator::before {
+  content: "/";
+  margin: 0 10px;
+}
 .contestSelection-tab {
   margin-bottom: 40px;
 }
@@ -850,4 +868,28 @@ table td ul:first-child{
 .yesno {
   padding-left: 10px;
   padding-right: 10px;
+}
+
+/*
+*
+* PERSONAL PAGE
+*
+*/
+#divPersonalPage {
+  border-top: 29px solid #2381bd;
+  margin: -1em 20px 40px -20px;
+  padding-left: 20px;
+}
+#pastParticipations tr:first-child td {
+   font-weight: bold;
+   background-color: #99c4e0;
+}
+
+#pastParticipations tr td {
+   border: solid black 1px;
+   padding: 5px;
+}
+
+#personalData tr td:first-child {
+   font-weight: bold;
 }
