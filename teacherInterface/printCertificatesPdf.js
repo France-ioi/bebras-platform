@@ -369,7 +369,7 @@ function addContestantTableForGroup(content, contestantsData) {
 
 function getDisplayedScoreAndRank(diploma) {
    var scoreAndRank = [
-      "a obtenu " + diploma.score + " points";// sur " + diploma.contest.maxScore
+      "a obtenu " + diploma.score + " points"// sur " + diploma.contest.maxScore
    ];
    if (diploma.rank <= diploma.contestParticipants / 2) {
       scoreAndRank.push("la " + toOrdinal(diploma.rank) + " place sur " + diploma.contestParticipants);
