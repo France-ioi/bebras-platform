@@ -1629,6 +1629,7 @@ window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, 
          } else if (data.allowTeamsOfTwo == 1) {
             setContestBreadcrumb();
             $("#divCheckNbContestants").show();
+            $("#divAccessContest").show();
          } else {
             window.setNbContestants(1);
          }

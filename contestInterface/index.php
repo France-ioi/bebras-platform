@@ -143,7 +143,7 @@
 
 <div id="divAccessContest" style="display:none">
   <div id="selection-breadcrumb"></div>
-  <div id="selectCategory" class="contestSelection-tab">
+  <div id="selectCategory" class="contestSelection-tab" style="display:none">
     <p id="extraMessageCategory" style="font-weight: bold"></p>
     <div class="tabTitle">Choisissez la catégorie</div>
 
