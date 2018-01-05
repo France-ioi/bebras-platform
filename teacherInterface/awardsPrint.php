@@ -144,6 +144,9 @@ foreach($awarded as $contestant) {
    $strCertificates .= '<div class="label"><div class="labelContent">';
    $strCertificates .= '<p class="title">'.$firstLine.'</p>';
    $strCertificates .= '<p class="name">'.$contestant->firstName.' '.$contestant->lastName.'</p>';
+   if (isset($_GET["showGroup"]) {
+      $strCertificates .= '<p class="small">'.$contestant->groupName.'</p>';
+   }
    $strTable .= '<td>'.$contestant->groupName.'</td>';
    $strTable .= '<td>'.$contestant->firstName.'</td>';
    $strTable .= '<td>'.$contestant->lastName.'</td>';
