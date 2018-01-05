@@ -601,7 +601,7 @@ function explicitCSVRequest(&$request) {
    }
    // explicit gender
    if (isset($request['model']['fields']['genre'])) {
-      $request['model']['fields']['genre'] = array('sql' => "IF(`genre` = 1, 'F', 'M')", 'tableName' => 'contestant');
+      $request['model']['fields']['genre'] = array('sql' => "IF(`contestant`.`genre` = 1, 'F', 'M')", 'tableName' => 'contestant');
    }
    // replacing contestID with contestName
    if (isset($request['model']['fields']['contestID']) && $request['model']['mainTable'] != 'team') {
