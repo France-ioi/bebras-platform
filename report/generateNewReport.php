@@ -10,7 +10,7 @@ where
 team.participationType = \'Official\'
 and `group`.contestID = :contestID
 group by school.ID, contestant.grade');
-$stmt->execute(['contestID' => '455965778962240640']);
+$stmt->execute(['contestID' => '118456124984202960']);
 
 $bigRes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -26,7 +26,11 @@ $gradeCat = [
 	12 => 'lycee',
 	13 => 'lyceepro',
 	14 => 'lyceepro',
-	15 => 'lyceepro'
+	15 => 'lyceepro',
+	16  => 'college',
+	17  => 'college',
+	18  => 'college',
+	19  => 'college'
 ];
 
 $regionNames = [
