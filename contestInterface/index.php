@@ -539,13 +539,15 @@
 
 <div id="divPersonalPage" style="display:none">
    <h2>Page personnelle</h2> 
+   <p>
    <table id="personalData">
       <tr><td>Nom :</td><td id="persoLastName"></td></tr>
       <tr><td>Prénom :</td><td id="persoFirstName"></td></tr>
       <tr><td>Classe :</td><td id="persoGrade"></td></tr>
       <tr><td>Qualifié pour la catégorie :</td><td id="persoCategory"></td></tr>
    </table>
-   <br/><br/>  
+   </p>
+   <p>   
    <table>
       <tr>
          <td><button type="button" id="buttonStartPreparation" onclick="startPreparation()" class="btn btn-primary">Démarrer une préparation</button></td>
@@ -553,7 +555,11 @@
          <td><button type="button" id="buttonStartContest" onclick="startContest()" class="btn btn-primary" >Démarrer le concours</button></td>
       </tr>
    </table>
-   <br/>
+   </p>
+   <p id="contestAtHomePrevented" style="display:none">
+       Votre enseignant à indiqué que le concours officiel doit se faire en classe, avec un code de groupe.<br/>
+       Vous ne pouvez donc pas commencer le concours depuis cette interface, mais cous pouvez faire des préprations à la maison.
+   </p>
    <h3>Participations :</h3>
    <table id="pastParticipations" cellspacing=0>
       <tr>

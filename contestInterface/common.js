@@ -1654,6 +1654,10 @@ window.showPersonalPage = function(data) {
    $("#persoFirstName").html(data.registrationData.firstName);
    $("#persoGrade").html(t("grade_" + data.registrationData.grade).toLowerCase());
    $("#persoCategory").html(data.registrationData.category);
+   if (data.registrationData.allowContestAtHome == "0") {
+      $("#buttonStartContest").attr("disabled", "disabled");
+      $("#contestAtHomePrevented").show();
+   }
    var htmlParticipations = "";
    for (var iParticipation = 0; iParticipation < data.registrationData.participations.length; iParticipation++) {
       var participation = data.registrationData.participations[iParticipation];

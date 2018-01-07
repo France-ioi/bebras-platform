@@ -355,9 +355,11 @@ function handleCheckPassword($db) {
 }
 
 function getRegistrationData($db, $code) {
-   $query = "SELECT `ID`, `code`, `category`, `firstName`, `lastName`, `genre`, `grade`, `studentID`, `email`, `zipCode`, ".
-      "IFNULL(`schoolID`, 0) as `schoolID`, IFNULL(`userID`, 0) as `userID` ".
-      "FROM `algorea_registration` WHERE `code` = :code";
+   $query = "SELECT `algorea_registration`.`ID`, `code`, `category`, `firstName`, `lastName`, `genre`, `grade`, `studentID`, `email`, `zipCode`, ".
+      "IFNULL(`algorea_registration`.`schoolID`, 0) as `schoolID`, IFNULL(`algorea_registration`.  `userID`, 0) as `userID`, IFNULL(`school_user`.`allowContestAtHome`, 1) as `allowContestAtHome` ".
+      "FROM `algorea_registration` ".
+      "LEFT JOIN `school_user` ON (`school_user`.`schoolID` = `algorea_registration`.`schoolID` AND `school_user`.`userID` = `algorea_registration`.`userID`) ".
+      "WHERE `code` = :code";
    $stmt = $db->prepare($query);
    $stmt->execute(array("code" => $code));
    return $stmt->fetchObject();

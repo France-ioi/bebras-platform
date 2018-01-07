@@ -1,0 +1,2 @@
+ALTER TABLE `school_user` ADD `allowContestAtHome` TINYINT NOT NULL DEFAULT '1' AFTER `awardsReceivedYear`;
+ALTER TABLE `history_school_user` ADD `allowContestAtHome` TINYINT NOT NULL DEFAULT '1' AFTER `awardsReceivedYear`;
