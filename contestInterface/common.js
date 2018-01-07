@@ -1120,7 +1120,7 @@ function fillListQuestions(sortedQuestionIDs, questionsData)
    for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
       var questionID = sortedQuestionIDs[iQuestionID];
       var questionData = questionsData[questionID];
-      var encodedName = questionData.name.replace("'", "&rsquo;");
+      var encodedName = questionData.name.replace("'", "&rsquo;").split("[")[0];
 
       var strScore = "";
       if (fullFeedback) {
@@ -1152,7 +1152,7 @@ function fillListQuestionsNew(sortedQuestionIDs, questionsData)
    var iQuestionID, questionData;
    for (iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
       questionData = questionsData[sortedQuestionIDs[iQuestionID]];
-      var encodedName = questionData.name.replace("'", "&rsquo;");
+      var encodedName = questionData.name.replace("'", "&rsquo;").split("[")[0];
 
       strListQuestions += 
          "<span id='row_" + questionData.key + "' class='icon' onclick='selectQuestion(\"" + questionData.ID + "\", true)'>" +
@@ -2598,7 +2598,7 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
 
    var nextStep = function() {
       Tracker.trackData({dataType:"selectQuestion", teamID: teamID, questionKey: questionKey, clicked: clicked});
-      var questionName = questionData.name.replace("'", "&rsquo;");
+      var questionName = questionData.name.replace("'", "&rsquo;").split("[")[0];
       var minScore = questionData.minScore;
       var maxScore = questionData.maxScore;
       var noAnswerScore = questionData.noAnswerScore;
