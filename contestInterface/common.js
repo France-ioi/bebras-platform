@@ -1673,6 +1673,21 @@ window.showPersonalPage = function(data) {
    $("#pastParticipations").append(htmlParticipations);
 }
 
+window.startContest = function() {
+   $("#divPersonalPage").hide();
+   $("#divStartContest").show();
+}
+
+window.cancelStartContest = function() {
+   $("#divStartContest").hide();
+   $("#divPersonalPage").show();
+}
+
+window.reallyStartContest = function() {
+   $("#divStartContest").hide();
+   checkGroupFromCode("CheckGroup", personalPageData.registrationData.code, false, false, null, true);
+}
+
 window.startPreparation = function() {
    updateContestName(personalPageData.contestName);
    groupMinCategory = personalPageData.minCategory;
@@ -1695,11 +1710,11 @@ window.startPreparation = function() {
  * groupCode: a group code, or a team password
  * isPublic: is this a public group ?
 */
-window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, language) {
+window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, language, startOfficial) {
    Utils.disableButton("button" + curStep);
    $('#recoverGroup').hide();
    $("#" + curStep + "Result").html('');
-   $.post("data.php", {SID: SID, action: "checkPassword", password: groupCode, getTeams: getTeams, language: language, commonJsVersion: commonJsVersion, timestamp: window.timestamp, commonJsTimestamp: commonJsTimestamp},
+   $.post("data.php", {SID: SID, action: "checkPassword", password: groupCode, getTeams: getTeams, language: language, startOfficial: startOfficial, commonJsVersion: commonJsVersion, timestamp: window.timestamp, commonJsTimestamp: commonJsTimestamp},
       function(data) {
          if (!data.success) {
             if (data.message) {
@@ -1725,7 +1740,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
          };
 
 
-         if (data.registrationData != undefined) {
+         if ((data.registrationData != undefined) && (!data.isOfficialContest)) {
             window.showPersonalPage(data);
             return;
          }

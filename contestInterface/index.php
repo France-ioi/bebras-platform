@@ -511,6 +511,22 @@
     </div><!-- #divLogin -->
   </div>
 </div><!-- #divCheckNbContestants -->
+<div id="divStartContest" style="display:none">
+   <h2>Démarrer le concours Algoréa</h2>
+   <p>
+   Êtes-vous certain de vouloir commencer le concours officiel maintenant ?
+   </p>
+   <p>
+   Ne le commencez pas chez vous si votre enseignant a prévu de le faire en classe !
+   </p>
+   <table>
+      <tr>
+         <td>   <button type="button" onclick="reallyStartContest()" class="btn btn-primary">Oui, je commence maintenant</button></td>
+         <td style="width:50px">
+         <td><button type="button" onclick="cancelStartContest()" class="btn btn-primary">Non, je me suis trompé.</button></td>
+      </tr>
+   </table>
+</div>
 
 <div id="divPersonalPage" style="display:none">
    <h2>Page personnelle</h2> 
@@ -525,7 +541,7 @@
       <tr>
          <td><button type="button" id="buttonStartPreparation" onclick="startPreparation()" class="btn btn-primary">Démarrer une préparation</button></td>
          <td style="width:50px">
-         <td><button type="button" id="buttonStartContest" onclick="startContest()" class="btn btn-primary disabled" disabled>Démarrer le concours</button></td>
+         <td><button type="button" id="buttonStartContest" onclick="startContest()" class="btn btn-primary" >Démarrer le concours</button></td>
       </tr>
    </table>
    <br/>
