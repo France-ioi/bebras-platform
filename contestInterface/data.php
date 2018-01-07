@@ -416,6 +416,11 @@ function handleGroupFromRegistrationCode($db, $code) {
    addBackendHint("ClientIP.checkPassword:pass");
    addBackendHint(sprintf("Group(%s):checkPassword", escapeHttpValue($registrationData->ID))); // TODO : check hint
    $contestID = "485926402649945250"; // hard-coded training contest
+   $isOfficialContest = false;
+   if (isset($_POST["startOfficial"])) {
+      $contestID = "884044050337033997"; // hard-coded real contest
+      $isOfficialContest = true;
+   }
    $query = "SELECT `code` FROM `group` WHERE `contestID` = :contestID AND `schoolID` = :schoolID AND `userID` = :userID AND `grade` = :grade";
    $stmt = $db->prepare($query);
    $stmt->execute(array("contestID" => $contestID, "schoolID" => $registrationData->schoolID, "userID" => $registrationData->userID, "grade" => $registrationData->grade));
@@ -426,10 +431,10 @@ function handleGroupFromRegistrationCode($db, $code) {
    } else {
       $groupCode = $rowGroup->code;
    }
-   handleCheckGroupPassword($db, $groupCode, false, "", $registrationData);
+   handleCheckGroupPassword($db, $groupCode, false, "", $registrationData, $isOfficialContest);
 }
 
-function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "", $registrationData = null) {
+function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "", $registrationData = null, $isOfficialContest = false) {
    // Find a group whose code matches the given password.
    $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, UTC_TIMESTAMP()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`visibility`, `contest`.`askEmail`, `contest`.`askZip`, `contest`.`askGenre`, `contest`.`askGrade`, `contest`.`askStudentId`, `contest`.`name` as `contestName`, `contest`.`allowPauses`, `group`.`isGenerated`, `group`.`language`, `group`.`minCategory`, `group`.`maxCategory` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
    $stmt = $db->prepare($query);
@@ -520,7 +525,8 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "",
       "maxCategory" => $_SESSION["maxCategory"],
       "language" => $_SESSION["language"],
       "childrenContests" => $childrenContests,
-      "registrationData" => $registrationData   
+      "registrationData" => $registrationData,
+      "isOfficialContest" => $isOfficialContest
    ));
 }
 
