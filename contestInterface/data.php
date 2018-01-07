@@ -435,6 +435,8 @@ function handleGroupFromRegistrationCode($db, $code) {
 }
 
 function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "", $registrationData = null, $isOfficialContest = false) {
+   global $allCategories;
+   
    // Find a group whose code matches the given password.
    $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, UTC_TIMESTAMP()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`visibility`, `contest`.`askEmail`, `contest`.`askZip`, `contest`.`askGenre`, `contest`.`askGrade`, `contest`.`askStudentId`, `contest`.`name` as `contestName`, `contest`.`allowPauses`, `group`.`isGenerated`, `group`.`language`, `group`.`minCategory`, `group`.`maxCategory` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
    $stmt = $db->prepare($query);
@@ -486,7 +488,20 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "",
    $stmt->execute(array("contestID" => $row->contestID));
    $childrenContests = array();
    while ($rowChild = $stmt->fetchObject()) {
-      $childrenContests[] = $rowChild;
+      $discardCategory = false;
+      if ($isOfficialContest) {
+         foreach ($allCategories as $category) {
+            if ($rowChild->categoryColor == $category) {
+               break;
+            }
+            if ($registrationData->category == $category) {
+               $discardCategory = true;
+            }
+         }
+      }
+      if (!$discardCategory) {
+         $childrenContests[] = $rowChild;
+      }
    };
 
    addBackendHint("ClientIP.checkPassword:pass");
