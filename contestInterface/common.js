@@ -1658,7 +1658,9 @@ window.showPersonalPage = function(data) {
    for (var iParticipation = 0; iParticipation < data.registrationData.participations.length; iParticipation++) {
       var participation = data.registrationData.participations[iParticipation];
       var status;
-      if ((parseInt(participation.nbMinutes) == 0) || (parseInt(participation.remainingSeconds) > 0)) {
+      if (participation.startTime == null) {
+         status = "Non démarrée";
+      } else if ((parseInt(participation.nbMinutes) == 0) || (parseInt(participation.remainingSeconds) > 0)) {
          status = "En cours";
       } else {
          status = "Terminé";
@@ -1679,6 +1681,7 @@ window.startContest = function() {
 }
 
 window.cancelStartContest = function() {
+   $("#divAllContestsDone").hide();
    $("#divStartContest").hide();
    $("#divPersonalPage").show();
 }
@@ -1749,6 +1752,12 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
          groupMinCategory = data.minCategory;
          groupMaxCategory = data.maxCategory;
          groupLanguage = data.language;
+         
+         if (data.allContestsDone) {
+            $("#" + curStep).hide();
+            $("#divAllContestsDone").show();
+            return;
+         }
 
          if ((!getTeams) && (data.childrenContests != undefined) && (data.childrenContests.length != 0)) {
             $("#" + curStep).hide();

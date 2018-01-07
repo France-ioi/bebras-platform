@@ -528,6 +528,15 @@
    </table>
 </div>
 
+<div id="divAllContestsDone" style="display:none">
+   <h2>Concours déjà effectué</h2>
+   <p>
+   Vous avez déjà utilisé ce code pour faire le concours dans toutes les catégories auxquelles vous avez accès.
+   </p>
+   <button type="button" onclick="cancelStartContest()" class="btn btn-primary">Retour</button>
+</div>
+
+
 <div id="divPersonalPage" style="display:none">
    <h2>Page personnelle</h2> 
    <table id="personalData">

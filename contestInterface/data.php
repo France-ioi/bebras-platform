@@ -388,11 +388,11 @@ function handleGroupFromRegistrationCode($db, $code) {
       return;
    }
    $registrationData->category = updateRegisteredUserCategory($db, $registrationData->ID, $registrationData->category);
-  
-   $query = "SELECT IFNULL(tmp.score, 0) as score, IFNULL(tmp.sumScores, 0) as sumScores, tmp.password, tmp.startTime, tmp.contestName, ".
-       "tmp.nbMinutes, tmp.remainingSeconds, ".
+   
+   $query = "SELECT IFNULL(tmp.score, 0) as score, IFNULL(tmp.sumScores, 0) as sumScores, tmp.password, tmp.startTime, tmp.contestName, tmp.contestID, tmp.parentContestID, tmp.contestCategory, ".
+       "tmp.nbMinutes, tmp.remainingSeconds, tmp.teamID, ".
        "GROUP_CONCAT(CONCAT(CONCAT(contestant.firstName, ' '), contestant.lastName)) as contestants ".
-       "FROM (SELECT team.ID as teamID, team.score, SUM(team_question.ffScore) as sumScores, team.password, team.startTime, contest.name as contestName, ".
+       "FROM (SELECT team.ID as teamID, team.score, SUM(team_question.ffScore) as sumScores, team.password, team.startTime, contest.ID as contestID, contest.parentContestID, contest.name as contestName, contest.categoryColor as contestCategory, ".
        "team.nbMinutes, (team.`nbMinutes` * 60) - TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), `team`.`startTime`)) as remainingSeconds ".
        "FROM `contestant` ".
        "JOIN team ON `contestant`.teamID = `team`.ID ".
@@ -400,7 +400,6 @@ function handleGroupFromRegistrationCode($db, $code) {
        "JOIN `contest` ON `group`.contestID = `contest`.ID ".
        "LEFT JOIN `team_question` ON team_question.teamID = team.ID ".
        "WHERE contestant.registrationID = :registrationID ".
-       "AND team.startTime IS NOT NULL ".
        "GROUP BY team.ID) tmp ".
        "JOIN contestant ON tmp.teamID = contestant.teamID ".
        "GROUP BY tmp.teamID ".
@@ -481,13 +480,15 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "",
    $_SESSION["registrationData"] = $registrationData;
 
    updateSessionWithContestInfos($row);
-
+   
    $query = "SELECT contest.ID as contestID, contest.folder, contest.name, contest.language, contest.categoryColor, contest.customIntro, contest.imageURL, contest.description ".
       "FROM contest WHERE parentContestID = :contestID";
    $stmt = $db->prepare($query);
    $stmt->execute(array("contestID" => $row->contestID));
    $childrenContests = array();
+   $hadChildrenContests = false;
    while ($rowChild = $stmt->fetchObject()) {
+      $hadChildrenContests = true;
       $discardCategory = false;
       if ($isOfficialContest) {
          foreach ($allCategories as $category) {
@@ -498,11 +499,27 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "",
                $discardCategory = true;
             }
          }
+         foreach ($registrationData->participations as $participation) {
+            if (($participation->parentContestID == $row->contestID) && ($participation->contestCategory == $rowChild->categoryColor)) {
+               if ($participation->startTime == null) {
+                  $query = "DELETE contestant.* FROM `team` JOIN contestant ON team.ID = contestant.teamID WHERE team.ID = :teamID AND startTime IS NULL";
+                  $stmt2 = $db->prepare($query);
+                  $stmt2->execute(array("teamID" => $participation->teamID));
+                  $query = "DELETE FROM `team` WHERE ID = :teamID AND startTime IS NULL";
+                  $stmt2 = $db->prepare($query);
+                  $stmt2->execute(array("teamID" => $participation->teamID));
+               } else if ($participation->remainingSeconds < 0) {
+                  $discardCategory = true;
+               }
+               break;
+            }
+         }
       }
       if (!$discardCategory) {
          $childrenContests[] = $rowChild;
       }
    };
+   $allContestsDone = ((count($childrenContests) == 0) && $hadChildrenContests);
 
    addBackendHint("ClientIP.checkPassword:pass");
    addBackendHint(sprintf("Group(%s):checkPassword", escapeHttpValue($groupID)));
@@ -541,7 +558,8 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "",
       "language" => $_SESSION["language"],
       "childrenContests" => $childrenContests,
       "registrationData" => $registrationData,
-      "isOfficialContest" => $isOfficialContest
+      "isOfficialContest" => $isOfficialContest,
+      "allContestsDone" => $allContestsDone
    ));
 }
 
