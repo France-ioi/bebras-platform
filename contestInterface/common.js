@@ -2069,6 +2069,7 @@ function createTeam(contestants) {
          teamPassword = data.password;
          //$("#divLogin").hide();
          $("#divCheckNbContestants").hide();
+         $("#divAccessContest").hide();
          $("#teamPassword").html(data.password);
          $("#divPassword").show();
       }, "json");
