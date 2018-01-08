@@ -146,6 +146,10 @@
   <div id="selectCategory" class="contestSelection-tab" style="display:none">
     <p id="extraMessageCategory" style="font-weight: bold"></p>
     <div class="tabTitle">Choisissez la catégorie</div>
+    <div class="categoryWarning">
+    <p>Vous pouvez faire le concours plusieurs fois dans des catégories différentes si vous le souhaitez lors d'un même tour.</p>
+    <p>Ne choisissez la catégorie orange que si vous avez déjà une expérience en programmation, en particulier avec les variables.</p>
+    </div>
 
     <table class="colorCategories selectorTable"><tbody>
       <tr class="colorCategory white categoryChoice categorySelector" id="cat_blanche" data-category="blanche">
@@ -302,6 +306,7 @@
         <td></td>
       </tr>
     </tbody></table>
+    <p class="categoryWarning">La catégorie verte n'est pas encore disponible, elle le sera dans les prochains jours.</p>
   </div>
 
   <div id="selectLanguage" style="display:none" class="contestSelection-tab">

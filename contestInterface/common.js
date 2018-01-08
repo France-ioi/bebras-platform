@@ -1929,6 +1929,11 @@ window.offerCategories = function(data) {
    }
    if (nbCategories > 1) {
       $("#selectCategory").show();
+      if (data.isOfficialContest) {
+         $(".categoryWarning").show();
+      } else {
+         $(".categoryWarning").hide();
+      }
    } else {
       selectCategory(lastCategory);
    }
