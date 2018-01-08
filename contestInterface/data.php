@@ -422,7 +422,7 @@ function handleGroupFromRegistrationCode($db, $code) {
       $contestID = "884044050337033997"; // hard-coded real contest
       $isOfficialContest = true;
    }
-   $query = "SELECT `code` FROM `group` WHERE `contestID` = :contestID AND `schoolID` = :schoolID AND `userID` = :userID AND `grade` = :grade";
+   $query = "SELECT `code` FROM `group` WHERE `contestID` = :contestID AND `schoolID` = :schoolID AND `userID` = :userID AND `grade` = :grade AND isGenerated = 1";
    $stmt = $db->prepare($query);
    $stmt->execute(array("contestID" => $contestID, "schoolID" => $registrationData->schoolID, "userID" => $registrationData->userID, "grade" => $registrationData->grade));
    $rowGroup = $stmt->fetchObject();
