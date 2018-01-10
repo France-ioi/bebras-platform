@@ -1291,6 +1291,11 @@ function loadContests() {
       contests = items;
       if (!window.config.allowCertificates) {
          $('#buttonPrintCertificates_group').hide();
+         $('#buttonPrintCertificates_team').hide();
+         $('#group_print_certificates_help').hide();
+         $('#group_print_certificates_title').hide();
+         $('#team_print_certificates_help').hide();
+         $('#team_print_certificates_title').hide();
          $('#school_print_certificates_help').hide();
          $('#school_print_certificates_title').hide();
          return;
@@ -1307,6 +1312,11 @@ function loadContests() {
       contestList += "</ul>";
       if (nbContests == 0) {
          $('#buttonPrintCertificates_group').hide();
+         $('#buttonPrintCertificates_team').hide();
+         $('#group_print_certificates_help').hide();
+         $('#group_print_certificates_title').hide();
+         $('#team_print_certificates_help').hide();
+         $('#team_print_certificates_title').hide();
          $('#school_print_certificates_help').hide();
          $('#school_print_certificates_title').hide();
       } else {
@@ -2268,6 +2278,27 @@ function editGroup() {
          editForm("group", t("edit_group"), groups[groupID]);
          editGroupDetails(groups[groupID])
       }
+   }
+}
+
+function preparePrintTeamCertificates() {
+   var teamID = jQuery("#grid_team_view").jqGrid('getGridParam','selrow');
+   if (teamID === null) {
+      jqAlert(t("warning_no_team_selected"));
+      return;
+   }
+   loadOneRecord("team_view", teamID, function(team) {
+      teamToPrint = team;
+      $("#buttonDoPrintCertificates_team").html(team.contestants);
+      $("#buttonDoPrintCertificates_team").show();      
+   })  
+}
+
+function printTeamCertificates() {
+   if (teamToPrint.participationType != 'Official') {
+      jqAlert(t("team_print_certificates_impossible"));
+   } else {
+      window.open("printCertificatesPdf.php?schoolID="+teamToPrint.schoolID+"&contestID="+teamToPrint.contestID+"&teamID=" + teamToPrint.ID, "printTeam" + teamToPrint.ID, 'width=700,height=600,menubar=yes,status=yes,toolbar=yes,scrollbars=yes,resizable=yes');
    }
 }
 

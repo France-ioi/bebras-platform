@@ -106,7 +106,6 @@ font-family: 'Varela Round', sans-serif;
    </div>
 
    <div id="loaded" style="display:none;text-align:center">
-      <p style="font-size:18px"><b>Attention :</b> les classements ne sont pas encore définitifs, et ne le seront que fin décembre ou début janvier. Merci de n'imprimer les diplômes que si vous ne pouvez pas attendre !</p>
       <div style="width:600px;background:#EEE;border:solid black 1px;margin:auto">
          <p>La création d'un pdf peut prendre plusieurs secondes.</p>
          <p><b>Attention :</b> il est possible que le navigateur affiche une popup vous disant<br/>que la page ne répond plus et vous demandant si vous voulez continuer.<br/>Répondez oui car la préparation des diplômes peut prendre du temps.</p>
