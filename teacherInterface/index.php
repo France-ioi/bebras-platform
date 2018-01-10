@@ -171,7 +171,10 @@
                <div id="pager_team_view"></div>
             </div>
             <button type="button" id="buttonDeleteSelected_team_view" data-i18n="teams_delete_selected" style="display:none" class="btn btn-default"></button>
-         </div>
+             <h2 id="group_print_certificates_title" data-i18n="group_print_certificates_title"></h2>
+            <p id="team_print_certificates_help" data-i18n="team_print_certificates_help"></p>
+            <button type="button" id="buttonPrintCertificates_team" onclick="preparePrintTeamCertificates()" data-i18n="team_print_certificates" class="btn btn-default"></button> <button type="button" id="buttonDoPrintCertificates_team" onclick="printTeamCertificates()" class="btn btn-default" style="display:hidden"></button> 
+        </div>
 
          <div id="tabs-contestants">
             <div data-i18n="[html]contestants_intro"></div>

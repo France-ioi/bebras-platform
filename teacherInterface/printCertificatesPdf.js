@@ -580,6 +580,10 @@ function init() {
    if (groupID) {
       params['groupID'] = groupID;
    }
+   var teamID = getParameterByName('teamID');
+   if (teamID) {
+      params['teamID'] = teamID;
+   }
    params['official'] = true;
    loadAllData(params);
  }

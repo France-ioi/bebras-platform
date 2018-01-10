@@ -468,6 +468,9 @@ function selectRecords($db, $modelName, $recordID, $roles, $extraFilters = array
          if (isset($extraFilters["schoolID"])) {
             $request["filters"]["schoolID"] = $extraFilters["schoolID"];
          }
+         if (isset($extraFilters["teamID"])) {
+            $request["filters"]["teamID"] = $extraFilters["teamID"];
+         }
          if (isset($extraFilters["groupID"])) {
             $request["filters"]["groupID"] = $extraFilters["groupID"];
          }
@@ -688,7 +691,7 @@ if (isset($_REQUEST["oper"])) {
    } else if ($oper === "select") {
       selectRecords($db, $modelName, "0", $roles, $_REQUEST);
    } else if ($oper === "selectOne") {
-      if ($_SESSION["isAdmin"]) {
+      if (($_SESSION["isAdmin"])|| ($modelName == "team_view")) {
          selectRecords($db, $modelName, $_REQUEST["recordID"], $roles);
       }
    }

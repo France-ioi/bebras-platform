@@ -372,6 +372,7 @@ $viewsModels = array(
          "official" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`participationType` = 'Official'", 'ignoreValue' => true),
          "score" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`score` = :score"),
          "contestID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`contestID` = :contestID"),
+         "teamID" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`ID` = :teamID"),
          "groupID" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`groupID` = :groupID"),
          "schoolID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`schoolID` = :schoolID"),
          "userID" => array("joins" => array("user_user"), "condition" => "(`group`.`userID` = :userID OR (`[PREFIX]user_user`.`targetUserID` = :userID AND `[PREFIX]user_user`.`accessType` <> 'none'))"),
