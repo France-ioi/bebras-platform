@@ -26,12 +26,7 @@ function getRequiredParam($key) {
    no match is found. */
 function verifyCode($badgeName, $code) {
   global $db;
-  $stmt = $db->prepare('select contestant.lastName as sLastName, contestant.firstName as sFirstName, contestant.genre as genre, contestant.email as sEmail, contestant.zipcode as sZipcode, algorea_registration.franceioiID, algorea_registration.category from contestant
-    join team on team.ID = contestant.teamID
-    join `group` on `group`.ID = team.groupID
-    join contest on contest.ID = `group`.contestID
-    LEFT JOIN algorea_registration ON algorea_registration.code = :code
-    where algoreaCode = :code and contest.badgeName = :badgeName;');
+  $stmt = $db->prepare('SELECT algorea_registration.lastName as sLastName, algorea_registration.firstName as sFirstName, algorea_registration.genre as genre, algorea_registration.email as sEmail, algorea_registration.zipcode as sZipcode, algorea_registration.franceioiID, algorea_registration.category FROM algorea_registration, contest WHERE code = :code and contest.badgeName = :badgeName;');
   $stmt->execute(['code' => $code, 'badgeName' => $badgeName]);
 
   $contestant = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -53,58 +48,36 @@ function verifyCode($badgeName, $code) {
 /* Associate the user with ID idUser to the given (badgeName, code) pair. */
 function updateAlgoreaRegistration($badgeName, $code, $idUser) {
   global $db;
-  $stmt = $db->prepare('select algorea_registration.* from algorea_registration
-    join contestant on contestant.ID = algorea_registration.contestantID
-    join team on team.ID = contestant.teamID
-    join `group` on `group`.ID = team.groupID
-    join contest on contest.ID = `group`.contestID
-    where algoreaCode = :code and contest.badgeName = :badgeName;');
+  $stmt = $db->prepare('select algorea_registration.* from algorea_registration, contest
+    where code = :code and contest.badgeName = :badgeName;');
   $stmt->execute(['code' => $code, 'badgeName' => $badgeName]);
 
   $infos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-  if ($infos) {
-    if ($infos['franceioiID'] != $idUser) {
-      return ['success' => false, 'error' => 'code is already registered by someone else'];
-    }
-    return ['success' => true];
+  if (!$infos) {
+    return ['success' => false, 'error' => 'code is invalid'];
   }
-
-  $stmt = $db->prepare('select contestant.ID from contestant
-    join team on team.ID = contestant.teamID
-    join `group` on `group`.ID = team.groupID
-    join contest on contest.ID = `group`.contestID
-    where algoreaCode = :code and contest.badgeName = :badgeName;');
-  $stmt->execute(['code' => $code, 'badgeName' => $badgeName]);
-
-  $contestantID = $stmt->fetchColumn();
-
-  if (!$contestantID) {
-    return ['success' => false, 'error' => 'code is not valid'];
+  if (($infos['franceioiID'] != $idUser) && ($infos['franceioiID' != null)) {
+    return ['success' => false, 'error' => 'code is already registered by someone else'];
   }
-
-  $stmt = $db->prepare('insert into algorea_registration (code, contestantID, franceioiID) values (:code, :contestantID, :franceioiID);');
-  $stmt->execute(['code' => $code, 'contestantID' => $contestantID, 'franceioiID' => $idUser]);
+  $stmt = $db->prepare('UPDATE algorea_registration SET franceioiID = :franceioiID WHERE code = :code');
+  $stmt->execute(['code' => $code, 'franceioiID' => $idUser]);
   return ['success' => true];
 }
 
 /* Remove the association of a code with a franceioiID in algorea_registration */
 function removeByCode($badgeName, $code) {
   global $db;
-  $stmt = $db->prepare('select contestant.ID from contestant 
-    join team on team.ID = contestant.teamID
-    join `group` on `group`.ID = team.groupID
-    join contest on contest.ID = `group`.contestID
-    where algoreaCode = :code and contest.badgeName = :badgeName;');
+  $stmt = $db->prepare('SELECT algorea_registration.ID FROM algorea_registration, contest
+    WHERE algoreaCode = :code AND contest.badgeName = :badgeName');
   $stmt->execute(['code' => $code, 'badgeName' => $badgeName]);
 
-  $contestantID = $stmt->fetchColumn();
+  $registrationID = $stmt->fetchColumn();
 
-  if (!$contestantID) {
+  if (!$registrationID) {
     return ['success' => false, 'error' => 'code is not valid'];
   }
-
-  $stmt = $db->prepare('remove algorea_registration where contestantID = :contestantID and code = :code;');
-  $stmt->execute(['contestantID' => $contestantID, 'code' => $code]);
+  $stmt = $db->prepare('UPDATE algorea_registration SET franceioiID = NULL WHERE code = :code;');
+  $stmt->execute('code' => $code]);
   return ['success' => true];
 }

@@ -207,7 +207,7 @@ function reloginTeam($db, $password, $teamID) {
 }
 
 function updateTeamCategories($db, $teamID) {
-   $query = "SELECT `algorea_registration`.`ID`, `algorea_registration`.`category` ".
+   $query = "SELECT `algorea_registration`.`ID`, `algorea_registration`.`category` as `qualifiedCategory`, `algorea_registration`.`validatedCategory` ".
       "FROM `contestant` ".
       "JOIN `algorea_registration` ON `algorea_registration`.`ID` = `contestant`.`registrationID` ".
       "WHERE `contestant`.`teamID` = :teamID";
@@ -215,13 +215,13 @@ function updateTeamCategories($db, $teamID) {
    $stmt->execute(array("teamID" => $teamID));
    $qualifiedCategories = array();
    while ($row = $stmt->fetchObject()) {
-      updateRegisteredUserCategory($db, $row->ID, $row->category); 
+      updateRegisteredUserCategory($db, $row->ID, $row->qualifiedCategory, $row->validatedCategory); 
    }
 }
 
-function updateRegisteredUserCategory($db, $ID, $prevCategory) {
+function updateRegisteredUserCategory($db, $ID, $prevQualifiedCategory, $prevValidatedCategory) {
    global $allCategories;
-   $query = "SELECT `contest`.`qualificationCategory` ".
+   $query = "SELECT `contest`.`qualificationCategory`, `contest`.`validationCategory` ".
       "FROM `algorea_registration` ".
       "JOIN `contestant` ON `contestant`.`registrationID` = `algorea_registration`.`ID` ".
       "JOIN `team` ON `contestant`.`teamID` = `team`.`ID` ".
@@ -233,19 +233,28 @@ function updateRegisteredUserCategory($db, $ID, $prevCategory) {
    $stmt = $db->prepare($query);
    $stmt->execute(array("ID" => $ID));
    $qualifiedCategories = array();
+   $validatedCategories = array();
    while ($row = $stmt->fetchObject()) {
       $qualifiedCategories[$row->qualificationCategory] = true;
+      $validatedCategories[$row->validationCategory] = true;
    }
-   $maxCategory = "";
+   $maxQualifiedCategory = "";
+   $maxValidatedCategory = "";
    foreach($allCategories as $category) {
-      if (($category == $prevCategory) || (isset($qualifiedCategories[$category]))) {
-         $maxCategory = $category;
+      if (($category == $prevQualifiedCategory) || (isset($qualifiedCategories[$category]))) {
+         $maxQualifiedCategory = $category;
+      }
+      if (($category == $prevValidatedCategory) || (isset($validatedCategories[$category]))) {
+         $maxValidatedCategory = $category;
       }
    }
-   if ($maxCategory != $prevCategory) {
-      $query = "UPDATE `algorea_registration` SET `category` = :category WHERE ID = :ID";
+   if (($maxQualifiedCategory != $prevQualifiedCategory) || ($maxValidatedCategory != $prevValidatedCategory)) {
+      $query = "UPDATE `algorea_registration` SET `category` = :qualifiedCategory, `validatedCategory`= :validatedCategory WHERE ID = :ID";
       $stmt = $db->prepare($query);
-      $stmt->execute(array("ID" => $ID, "category" => $maxCategory));      
+      $stmt->execute(array("ID" => $ID,
+         "qualifiedCategory" => $maxQualifiedCategory,
+         "validatedCategory" => $maxValidatedCategory
+      ));
    }
-   return $maxCategory;
+   return array("qualifiedCategory" => $maxQualifiedCategory, "validatedCategory" => $maxValidatedCategory);
 }

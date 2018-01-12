@@ -355,7 +355,7 @@ function handleCheckPassword($db) {
 }
 
 function getRegistrationData($db, $code) {
-   $query = "SELECT `algorea_registration`.`ID`, `code`, `category`, `firstName`, `lastName`, `genre`, `grade`, `studentID`, `email`, `zipCode`, ".
+   $query = "SELECT `algorea_registration`.`ID`, `code`, `category` as `qualifiedCategory`, `validatedCategory`, `firstName`, `lastName`, `genre`, `grade`, `studentID`, `email`, `zipCode`, ".
       "IFNULL(`algorea_registration`.`schoolID`, 0) as `schoolID`, IFNULL(`algorea_registration`.  `userID`, 0) as `userID`, IFNULL(`school_user`.`allowContestAtHome`, 1) as `allowContestAtHome` ".
       "FROM `algorea_registration` ".
       "LEFT JOIN `school_user` ON (`school_user`.`schoolID` = `algorea_registration`.`schoolID` AND `school_user`.`userID` = `algorea_registration`.`userID`) ".
@@ -389,9 +389,12 @@ function handleGroupFromRegistrationCode($db, $code) {
    if (!$registrationData) {
       return;
    }
-   $registrationData->category = updateRegisteredUserCategory($db, $registrationData->ID, $registrationData->category);
+   $newCategories = updateRegisteredUserCategory($db, $registrationData->ID, $registrationData->qualifiedCategory, $registrationData->validatedCategory);
+   $registrationData->qualifiedCategory = $newCategories["qualifiedCategory"];
+   $registrationData->validatedCategory = $newCategories["validatedCategory"];
    
-   $query = "SELECT IFNULL(tmp.score, 0) as score, IFNULL(tmp.sumScores, 0) as sumScores, tmp.password, tmp.startTime, tmp.contestName, tmp.contestID, tmp.parentContestID, tmp.contestCategory, ".
+   
+   $query = "SELECT IFNULL(tmp.score, 0) as score, tmp.sumScores, tmp.password, tmp.startTime, tmp.contestName, tmp.contestID, tmp.parentContestID, tmp.contestCategory, ".
        "tmp.nbMinutes, tmp.remainingSeconds, tmp.teamID, ".
        "GROUP_CONCAT(CONCAT(CONCAT(contestant.firstName, ' '), contestant.lastName)) as contestants ".
        "FROM (SELECT team.ID as teamID, team.score, SUM(team_question.ffScore) as sumScores, team.password, team.startTime, contest.ID as contestID, contest.parentContestID, contest.name as contestName, contest.categoryColor as contestCategory, ".
@@ -497,7 +500,7 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "",
             if ($rowChild->categoryColor == $category) {
                break;
             }
-            if ($registrationData->category == $category) {
+            if ($registrationData->qualifiedCategory == $category) { // the contest's category is higher than the user's qualified category
                $discardCategory = true;
             }
          }
