@@ -16,10 +16,10 @@ function exitWithJsonFailure($message) {
 }
 
 function getRequiredParam($key) {
-  if (!array_key_exists($key, $_POST)) {
+  if (!array_key_exists($key, $_REQUEST)) {
     exitWithJsonFailure($key.' param is required');
   }
-  return $_POST[$key];
+  return $_REQUEST[$key];
 }
 
 /* Return the user details for the matching (badgeName, code) pair, or null if
@@ -57,7 +57,7 @@ function updateAlgoreaRegistration($badgeName, $code, $idUser) {
   if (!$infos) {
     return ['success' => false, 'error' => 'code is invalid'];
   }
-  if (($infos['franceioiID'] != $idUser) && ($infos['franceioiID' != null)) {
+  if (($infos['franceioiID'] != $idUser) && ($infos['franceioiID'] != null)) {
     return ['success' => false, 'error' => 'code is already registered by someone else'];
   }
   $stmt = $db->prepare('UPDATE algorea_registration SET franceioiID = :franceioiID WHERE code = :code');
@@ -78,6 +78,6 @@ function removeByCode($badgeName, $code) {
     return ['success' => false, 'error' => 'code is not valid'];
   }
   $stmt = $db->prepare('UPDATE algorea_registration SET franceioiID = NULL WHERE code = :code;');
-  $stmt->execute('code' => $code]);
+  $stmt->execute(array('code' => $code));
   return ['success' => true];
 }
