@@ -1653,7 +1653,7 @@ window.showPersonalPage = function(data) {
    $("#persoLastName").html(data.registrationData.lastName);
    $("#persoFirstName").html(data.registrationData.firstName);
    $("#persoGrade").html(t("grade_" + data.registrationData.grade).toLowerCase());
-   $("#persoCategory").html(data.registrationData.category);
+   $("#persoCategory").html(data.registrationData.qualifiedCategory);
    if (data.registrationData.allowContestAtHome == "0") {
       $("#buttonStartContest").attr("disabled", "disabled");
       $("#contestAtHomePrevented").show();
@@ -1669,11 +1669,18 @@ window.showPersonalPage = function(data) {
       } else {
          status = "Terminé";
       }
+      var score = "-";
+      if (participation.sumScores !== null) {
+         score = parseInt(participation.sumScores);
+         if (participation.score !== null) {
+            score = Math.max(score, parseInt(participation.score));
+         }
+      }
       htmlParticipations += "<tr><td>" + participation.contestName + "</td>" +
          "<td>" + window.utcDateFormatter(participation.startTime) + "</td>" +
          "<td>" + participation.contestants + "</td>" +
          "<td>" + status + "</td>" +
-         "<td>" + Math.max(parseInt(participation.score), parseInt(participation.sumScores)) + "</td>" +
+         "<td>" + score + "</td>" +
          "<td><a href='" + location.pathname + "?team=" + participation.password + "' target='_blank'>ouvrir</a></td></tr>";
    }
    $("#pastParticipations").append(htmlParticipations);
