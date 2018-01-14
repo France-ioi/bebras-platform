@@ -112,7 +112,7 @@ $currentContestID = null;
 $currentGroupField = null;
 $nbLabelsOnPage = 0;
 $strCertificates = '<br/>';
-$strTableHeader = '<table cellpadding=0 cellspacing=0 class="awardsTable"><tr><td>Groupe</td><td>Prénom</td><td>Nom</td><td>Code de participant Algoréa</td><td>Catégorie Algoréa</td></tr>';
+$strTableHeader = '<table cellpadding=0 cellspacing=0 class="awardsTable"><tr><td>Groupe</td><td>Prénom</td><td>Nom</td><td>Code de participant Algoréa</td><td>Qualification</td></tr>';
 $strTable = $strTableHeader;
 foreach($awarded as $contestant) {
    if ($currentSchoolID == null) {
@@ -155,7 +155,7 @@ foreach($awarded as $contestant) {
    $strCertificates .= '<p class="schoolName">'.$contestant->name.'</p>'; // name of the school
    $strCertificates .= '<p>code confidentiel: <span class="code">'.$contestant->algoreaCode.'</span></p>';
    if ($contestant->algoreaCategory) {
-      $strCertificates .= '<p>catégorie: <span class="code">'.$contestant->algoreaCategory.'</span></p>';
+      $strCertificates .= '<p>qualification : <span class="code">'.$contestant->algoreaCategory.'</span></p>';
    }
    $strCertificates .= '<p class="small">'.$secondLine.'</p>';
    $strCertificates .= '<p class="small">'.$thirdLine.'</p>';
