@@ -112,7 +112,7 @@ $currentContestID = null;
 $currentGroupField = null;
 $nbLabelsOnPage = 0;
 $strCertificates = '<br/>';
-$strTableHeader = '<table cellpadding=0 cellspacing=0 class="awardsTable"><tr><td>Groupe</td><td>Prénom</td><td>Nom</td><td>Code de participant Algoréa</td><td>Qualification</td></tr>';
+$strTableHeader = '<table cellpadding=0 cellspacing=0 class="awardsTable"><tr><td>Groupe</td><td>Prénom</td><td>Nom</td><td>Code de participant</td><td>Qualification</td></tr>';
 $strTable = $strTableHeader;
 foreach($awarded as $contestant) {
    if ($currentSchoolID == null) {
