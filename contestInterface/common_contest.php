@@ -221,15 +221,18 @@ function updateTeamCategories($db, $teamID) {
 
 function updateRegisteredUserCategory($db, $ID, $prevQualifiedCategory, $prevValidatedCategory) {
    global $allCategories;
-   $query = "SELECT `contest`.`qualificationCategory`, `contest`.`validationCategory` ".
+   $query = "SELECT `qualificationCategory`, `validationCategory`".
+      "FROM (SELECT `contest`.`qualificationCategory`, `contest`.`validationCategory`, `contest`.`qualificationScore`, SUM(team_question.ffScore) as sumScores, team.score ".
       "FROM `algorea_registration` ".
       "JOIN `contestant` ON `contestant`.`registrationID` = `algorea_registration`.`ID` ".
       "JOIN `team` ON `contestant`.`teamID` = `team`.`ID` ".
+      "JOIN `team_question` ON `team_question`.`teamID` = `team`.`ID` ".
       "JOIN `group` ON `group`.`ID` = `team`.`groupID` ".
       "JOIN `contest` ON `contest`.`ID` = `group`.`contestID` ".
       "WHERE `algorea_registration`.`ID` = :ID ".
-      "AND `team`.`score` >= `contest`.`qualificationScore` ".
-      "GROUP BY `contest`.`qualificationCategory`";
+      "GROUP BY `team`.`ID`) results ".
+      "WHERE (`results`.`score` >= `results`.`qualificationScore` OR `results`.`sumScores` >= `results`.`qualificationScore`)".
+      "GROUP BY `qualificationCategory`";
    $stmt = $db->prepare($query);
    $stmt->execute(array("ID" => $ID));
    $qualifiedCategories = array();

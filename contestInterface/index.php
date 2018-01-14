@@ -151,6 +151,7 @@
     <p>Ne choisissez la catégorie orange que si vous avez déjà une expérience en programmation, en particulier avec les variables.</p>
     </div>
 
+    <p class="categoryWarning"><b>Attention :</b> si vous débutez, et ne vous êtes pas déjà bien entraîné sur les boucles imbriquées et conditions. commencez par la catégorie blanche même si vous êtes qualifié en jaune ou orange.</p>
     <table class="colorCategories selectorTable"><tbody>
       <tr class="colorCategory white categoryChoice categorySelector" id="cat_blanche" data-category="blanche">
         <td class="selectorCell">
