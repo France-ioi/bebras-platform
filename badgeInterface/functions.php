@@ -26,7 +26,7 @@ function getRequiredParam($key) {
    no match is found. */
 function verifyCode($badgeName, $code) {
   global $db;
-  $stmt = $db->prepare('SELECT algorea_registration.lastName as sLastName, algorea_registration.firstName as sFirstName, algorea_registration.genre as genre, algorea_registration.email as sEmail, algorea_registration.zipcode as sZipcode, algorea_registration.franceioiID, algorea_registration.category FROM algorea_registration, contest WHERE code = :code and contest.badgeName = :badgeName;');
+  $stmt = $db->prepare('SELECT algorea_registration.lastName as sLastName, algorea_registration.firstName as sFirstName, algorea_registration.grade, algorea_registration.genre as genre, algorea_registration.email as sEmail, algorea_registration.zipcode as sZipcode, algorea_registration.franceioiID, algorea_registration.category FROM algorea_registration, contest WHERE code = :code and contest.badgeName = :badgeName;');
   $stmt->execute(['code' => $code, 'badgeName' => $badgeName]);
 
   $contestant = $stmt->fetch(PDO::FETCH_ASSOC);
