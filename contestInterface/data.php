@@ -425,6 +425,9 @@ function handleGroupFromRegistrationCode($db, $code) {
       $contestID = "884044050337033997"; // hard-coded real contest
       $isOfficialContest = true;
    }
+   if (isset($_SERVER['HTTP_HOST']) && ($_SERVER['HTTP_HOST'] == "chticode.algorea.org")) {
+      $contestID = "100001";
+   }
    $query = "SELECT `code` FROM `group` WHERE `contestID` = :contestID AND `schoolID` = :schoolID AND `userID` = :userID AND `grade` = :grade AND isGenerated = 1";
    $stmt = $db->prepare($query);
    $stmt->execute(array("contestID" => $contestID, "schoolID" => $registrationData->schoolID, "userID" => $registrationData->userID, "grade" => $registrationData->grade));
@@ -513,7 +516,7 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "",
                   $query = "DELETE FROM `team` WHERE ID = :teamID AND startTime IS NULL";
                   $stmt2 = $db->prepare($query);
                   $stmt2->execute(array("teamID" => $participation->teamID));
-               } else if ($participation->remainingSeconds < 0) {
+               } else if ($participation->remainingSeconds < (20 * $participation->nbMinutes)) {
                   $discardCategory = true;
                }
                break;
