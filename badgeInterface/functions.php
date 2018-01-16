@@ -26,7 +26,7 @@ function getRequiredParam($key) {
    no match is found. */
 function verifyCode($badgeName, $code) {
   global $db;
-  $stmt = $db->prepare('select contestant.lastName as sLastName, contestant.firstName as sFirstName, contestant.genre as genre, contestant.email as sEmail, contestant.zipcode as sZipcode, algorea_registration.franceioiID from contestant
+  $stmt = $db->prepare('select contestant.grade,contestant.lastName as sLastName, contestant.firstName as sFirstName, contestant.genre as genre, contestant.email as sEmail, contestant.zipcode as sZipcode, algorea_registration.franceioiID from contestant
     join team on team.ID = contestant.teamID
     join `group` on `group`.ID = team.groupID
     join contest on contest.ID = `group`.contestID
@@ -87,7 +87,7 @@ function updateAlgoreaRegistration($badgeName, $code, $idUser) {
 /* Remove the association of a code with a franceioiID in algorea_registration */
 function removeByCode($badgeName, $code) {
   global $db;
-  $stmt = $db->prepare('select contestant.ID from contestant 
+  $stmt = $db->prepare('select contestant.ID from contestant
     join team on team.ID = contestant.teamID
     join `group` on `group`.ID = team.groupID
     join contest on contest.ID = `group`.contestID
