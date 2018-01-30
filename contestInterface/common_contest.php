@@ -251,6 +251,9 @@ function updateRegisteredUserCategory($db, $ID, $prevQualifiedCategory, $prevVal
          $maxValidatedCategory = $category;
       }
    }
+   if (($maxQualifiedCategory == "") && ($prevQualifiedCategory != "")) {
+      $maxQualifiedCategory = $prevQualifiedCategory;
+   }
    if (($maxQualifiedCategory != $prevQualifiedCategory) || ($maxValidatedCategory != $prevValidatedCategory)) {
       $query = "UPDATE `algorea_registration` SET `category` = :qualifiedCategory, `validatedCategory`= :validatedCategory WHERE ID = :ID";
       $stmt = $db->prepare($query);
