@@ -11,8 +11,8 @@ if (!isset($_SESSION['userID'])) {
 
 function getPersonalCode($contestID) {
 	global $db;
-	$stmt = $db->prepare('select algoreaCode from contestant join team on team.ID = contestant.teamID join `group` on `group`.ID = team.groupID where contestant.userID = :userID and `group`.contestID = :contestID;');
-	$stmt->execute(['userID' => $_SESSION['userID'], 'contestID' => $contestID]);
+	$stmt = $db->prepare("SELECT `code` FROM `algorea_registration` WHERE userID = :userID AND `code` LIKE 'prof%'");
+	$stmt->execute(['userID' => $_SESSION['userID']]);
 	$res = $stmt->fetchColumn();
    if (!$res) {
       return 0;
@@ -25,7 +25,7 @@ function generateRandomCode() {
    srand(time() + rand());
    $charsAllowed = "0123456789";
    $base = 'prof';
-   $query = "SELECT ID as nb FROM contestant WHERE algoreaCode = :code;";
+   $query = "SELECT ID FROM algorea_registration WHERE code = :code;";
    $stmt = $db->prepare($query);
    while(true) {
       $code = $base;
@@ -52,35 +52,30 @@ function getPublicGroupID($contestID) {
 function createPersonalCode($contestID) {
 	global $db, $config;
 	$code = generateRandomCode();
-	$stmt = $db->prepare('select firstName, lastName, gender from user where ID = :userID;');
+	$stmt = $db->prepare('SELECT firstName, lastName, gender FROM user WHERE ID = :userID;');
 	$stmt->execute(['userID' => $_SESSION['userID']]);
 	$user = $stmt->fetch();
 	if (!$user) {
 		die(json_encode(array('success' => false, 'error' => "Error, cannot find user ID ".$_SESSION['userID']."!")));
 	}
 	$genre = $user['gender'] == 'F' ? 1 : 2;
+   /*
 	$groupID = getPublicGroupID($contestID);
 	if (!$groupID) {
 		die(json_encode(array('success' => false, 'error' => "Error, cannot find public group for current contest!")));
 	}
-	$teamID = getRandomID();
-	$contestantID = getRandomID();
-	$stmt = $db->prepare('insert into contestant (ID, firstName, lastName, genre, teamID, userID, algoreaCode) values (:ID, :firstName, :lastName, :genre, :teamID, :userID, :code);');
+   */
+	$registrationID = getRandomID();
+   // TODO: make category depend on contest ?
+	$stmt = $db->prepare("INSERT INTO `algorea_registration` (`ID`, `firstName`, `lastName`, `genre`, `userID`, `code`, `category`) VALUES ".
+       "(:ID, :firstName, :lastName, :genre, :userID, :code, 'round2');");
 	$stmt->execute([
-		'ID' => $contestantID,
+		'ID' => $registrationID,
 		'firstName' => $user['firstName'],
 		'lastName' => $user['lastName'],
 		'genre' => $genre,
-		'teamID' => $teamID,
 		'code' => $code,
 		'userID' => $_SESSION['userID'],
-	]);
-	$password = genAccessCode($db);
-	$stmt = $db->prepare('insert into team (ID, groupID, password) values (:teamID, :groupID, :password);');
-	$stmt->execute([
-		'groupID' => $groupID,
-		'teamID' => $teamID,
-		'password' => $password
 	]);
 	return $code;
 }
