@@ -37,8 +37,6 @@ AND `pixal`.`groups`.`sType` = 'Team'
 GROUP BY `pixal`.`users`.`ID`, `pixal`.`users_items`.`idItem`
 ORDER BY `pixal`.`groups`.ID ASC, `pixal`.`users_items`.`idItem` ASC";
 
-echo $_SESSION['userID'];
-
 $stmt = $db2->prepare($query);
 $stmt->execute(['userID' => $_SESSION['userID']]);
 
