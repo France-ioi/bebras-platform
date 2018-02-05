@@ -641,5 +641,5 @@ if ($action == "gradeContest") {
    script_tag('/gradeContest.js');
    echo "<p>Statut : <div id='gradeContestState'><span class='nbCurrent'></span><span class='current'></span><span class='gradeProcessing'></span></div></p>";
    echo "<iframe id='preview_question' src='' style='width:800px;height:800px;'></iframe>";
-   echo "<script>gradeContestsWithRefresh('".$contestID."');</script>";
+   echo "<script>gradeContestWithRefresh('".$contestID."');</script>";
 }
