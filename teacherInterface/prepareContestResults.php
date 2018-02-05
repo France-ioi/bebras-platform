@@ -19,7 +19,14 @@ include('./config.php');
 
 <?php
 
-if (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"]) {
+$pwdIsValid = false;
+if (isset($_GET["password"])) {
+   if (md5($_GET["password"]) == $config->teacherInterface->genericPasswordMd5) {
+      $pwdIsValid = true;
+   }
+}
+
+if (!$pwdIsValid && (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"])) {
    echo "This page is for admins only.";
    exit;
 }
