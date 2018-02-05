@@ -285,6 +285,7 @@
    script_tag('/bower_components/jstz/index.js');
    script_tag('/regions/' . strtoupper($countryCode) . '/regions.js');
    script_tag('/admin.js');
+   script_tag('/gradeContest.js');
 ?>
 <script>
    window.config = <?= json_encode([
