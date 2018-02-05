@@ -313,11 +313,9 @@ function computeScores(curContestID, curGroupID, packetNumber)
    }, 'json');
 }
 
-function gradeContestWithRefresh(contestsIDs) {
+function gradeContestWithRefresh(contestsID) {
    setTimeout(function() {
       location.reload();
    }, 1*60*1000);
-   for (var iContest = 0; iContest < contestsIDs.length; iContest++) {
-      loopGradeContest(contestIDs[iContest], null);
-   }
+   loopGradeContest(contestID, null);
 }
