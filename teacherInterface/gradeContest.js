@@ -316,6 +316,6 @@ function computeScores(curContestID, curGroupID, packetNumber)
 function gradeContestWithRefresh(contestID) {
    setTimeout(function() {
       location.reload();
-   }, 10*60*1000);
+   }, 5*60*1000);
    loopGradeContest(contestID, null);
 }
