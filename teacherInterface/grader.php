@@ -108,7 +108,7 @@ if (!$groupID) {
    }
    // if we use dynamodb, add answers we haven't seen yet:
    if ($config->db->use == 'dynamoDB') {
-      $query = 'SELECT team.ID FROM team WHERE `team`.`groupID` = ?;';
+      $query = 'SELECT team.ID FROM team WHERE `team`.`groupID` = ? LIMIT 0,1000';
       $stmt = $db->prepare($query);
       $stmt->execute(array($groupID));
       while ($teamID = $stmt->fetchColumn()) {
