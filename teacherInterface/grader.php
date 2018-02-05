@@ -82,7 +82,7 @@ if (!$groupID) {
 	   'WHERE `contest_question`.`contestID` = ? AND `group`.`contestID` = ? '.
 	   'AND `'.$teamQuestionTable.'`.`questionID` = ? '.
 	   'AND `'.$teamQuestionTable.'`.`score` IS NULL '.
-      'AND `'.$teamQuestionTable.'`.`scoreNeedsChecking` = 0';
+      'AND `'.$teamQuestionTable.'`.`scoreNeedsChecking` = 0 LIMIT 0,1000';
    $stmt = $db->prepare($query);
    $stmt->execute(array($contestID, $contestID, $questionID));
    while ($teamQuestion = $stmt->fetchObject()) {
