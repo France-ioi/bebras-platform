@@ -20,7 +20,7 @@
     "base64": "~0.3",
     "jquery": "~1.9",
     "jquery-ui": "~1.11",
-    "jquery-ui-touch-punch": "*",
+    "jquery-ui-touch-punch": "furf/jquery-ui-touch-punch",
     "i18next": "~1.10",
     "jQuery-ajaxTransport-XDomainRequest": "~1.0",
     "json3": "~3.3",
