@@ -5,6 +5,8 @@ require_once("../shared/common.php");
 require_once("commonAdmin.php");
 include('./config.php');
 
+// jquery 1.9 is required for IE6+ compatibility.
+script_tag('/bower_components/jquery/jquery.min.js');
 ?>
 <style>
 .queryResults tr td {
@@ -16,7 +18,14 @@ include('./config.php');
    background: #808080;
 }
 </style>
+<script>
+function markTeamAsTeacher(teamID) {
+   $.post("prepareContestResults.php", { markAsTeacher: teamID }, function() {
+      $("#markAsTeacher_" + teamID).hide();
+   });
+}
 
+</script>
 <?php
 
 if (isset($_GET["password"])) {
@@ -33,25 +42,35 @@ if (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"]) {
    exit;
 }
 
+
+if (isset($_POST["markAsTeacher"])) {
+   $query = "UPDATE contestant SET grade = -1 WHERE teamID = :teamID";
+   $stmt = $db->prepare($query);
+   $stmt->execute(array("teamID" => $_POST["markAsTeacher"]));
+   echo "Success";
+   exit;
+}
+
+
 if (!isset($_GET["contestID"])) {
    echo "contestID parameter is missing.";
    exit;
 }
 $contestID = $_GET["contestID"];
 
-if (!isset($_GET["rejectedGroupCode"])) {
-   echo "rejectedGroupCode parameter is missing.";
+if (!isset($_GET["discardedGroupCode"])) {
+   echo "discardedGroupCode parameter is missing.";
    exit;
 }
-$rejectedGroupCode = $_GET["rejectedGroupCode"];
+$discardedGroupCode = $_GET["discardedGroupCode"];
 
 $query = "SELECT `group`.name, ID FROM `group` WHERE `group`.code = :groupCode";
 $stmt = $db->prepare($query);
-$stmt->execute(array("groupCode" => $rejectedGroupCode));
-echo "<h2>Rejected group</h2>";
+$stmt->execute(array("groupCode" => $discardedGroupCode));
+echo "<h3>Discarded group</h3>";
 if ($row = $stmt->fetchObject()) {
    echo "<p>".$row->name."</p>";
-   $rejectedGroupID = $row->ID;
+   $discardedGroupID = $row->ID;
 } else {
    echo "<p>Invalide</p>";
    exit;
@@ -62,7 +81,7 @@ if (isset($_GET["action"])) {
    $action = $_GET["action"];
 }
 
-$startUrl = "?contestID=".$contestID."&rejectedGroupCode=".$rejectedGroupCode;
+$startUrl = "?contestID=".$contestID."&discardedGroupCode=".$discardedGroupCode;
 
 function execQueryAndShowNbRows($description, $query, $params) {
    global $db;
@@ -72,7 +91,7 @@ function execQueryAndShowNbRows($description, $query, $params) {
    echo "<p><b>".$description."</b> : ".$rowCount." rows affected.</p>";
 }
 
-function execSelectAndShowResults($description, $query, $params, $rowsOnly = false) {
+function execSelectAndShowResults($description, $query, $params, $rowsOnly = false, $extraFieldFunction = null) {
    global $db;
    $stmt = $db->prepare($query);
    $stmt->execute($params);
@@ -90,6 +109,9 @@ function execSelectAndShowResults($description, $query, $params, $rowsOnly = fal
    if (!$rowsOnly) {
       echo "</p><table cellspacing=0 class='queryResults'>";
       echo "<tr>";
+      if ($extraFieldFunction != null) {
+         echo "<td></td>";
+      }
       foreach ($row as $name => $value) {
          echo "<td>".$name."</td>";
       }
@@ -97,15 +119,32 @@ function execSelectAndShowResults($description, $query, $params, $rowsOnly = fal
    }
    while ($row != null) {
       echo "<tr>";
+      if ($extraFieldFunction != null) {
+         echo "<td>".$extraFieldFunction($row)."</td>";
+      }
       foreach ($row as $name => $value) {
          echo "<td>".htmlentities($value)."</td>";
       }
-      $row = $stmt->fetch(PDO::FETCH_ASSOC);
       echo "</tr>";
+      $row = $stmt->fetch(PDO::FETCH_ASSOC);
    }
    if (!$rowsOnly) {
       echo "</table>";
    }
+}
+
+function getListContestIDs($contestID) {
+   global $db;
+   $query = "SELECT contest.ID, contest.name
+      FROM contest
+      WHERE contest.ID = :contestID OR contest.parentContestID = :contestID";
+   $stmt = $db->prepare($query);
+   $stmt->execute(array("contestID" => $contestID));
+   $contestsIDs = array();
+   while ($row = $stmt->fetchObject()) {
+      $contestsIDs[] = $row->ID;
+   }
+   return $contestsIDs;
 }
 
 execSelectAndShowResults("Selected contest(s)", "
@@ -113,7 +152,7 @@ execSelectAndShowResults("Selected contest(s)", "
    array("contestID" => $contestID));
 
 
-echo "<h2><a href='".$startUrl."&action=showStats'>Some statistics</a></h2>";
+echo "<h3><a href='".$startUrl."&action=showStats'>Some statistics</a></h3>";
 if ($action == "showStats") {
    execSelectAndShowResults("Number of contestants", "
       SELECT team.participationType, count(*) FROM contestant
@@ -148,7 +187,7 @@ if ($action == "showStats") {
       array("contestID" => $contestID));
 }
 
-echo "<h2><a href='".$startUrl."&action=fixSubgroups'>Fix subgroups</a></h2>";
+echo "<h3><a href='".$startUrl."&action=fixSubgroups'>Fix subgroups</a></h3>";
 if ($action == "fixSubgroups") {
    execQueryAndShowNbRows("Mark groups startTime if subgroup has startTime", "
       UPDATE `group` gchild
@@ -195,7 +234,7 @@ if ($action == "fixSubgroups") {
       array("contestID" => $contestID));
 }
 
-echo "<h2><a href='".$startUrl."&action=computeGenres'>Automatically determine genre of students (if not asked during the contest)</a></h2>";
+echo "<h3><a href='".$startUrl."&action=computeGenres'>Automatically determine genre of students (if not asked during the contest)</a></h3>";
 if ($action == "computeGenres") {
 /*
    Queries done once on a contest where the student's genres are provided
@@ -288,24 +327,7 @@ if ($action == "computeGenres") {
       array());
 }
 
-echo "<h2><a href='".$startUrl."&action=hideInvalidParticipations'>Hide invalid participations in the rejected group</a></h2>";
-if ($action == "hideInvalidParticipations") {
-   
-   //ALTER TABLE `team` ADD `old_groupID` BIGINT NOT NULL AFTER `groupID`;
-
-   //TODO : what do we don with non-started groups ? 
-   #UPDATE `group` SET contestID = 961428730144625174 WHERE contestID = :contestID AND startTime IS NULL;
-
-   execQueryAndShowNbRows("Move to rejected group, teams created before today and that never started", "
-      UPDATE team JOIN `group` ON team.groupID = `group`.ID
-      JOIN `contest` ON `group`.contestID = contest.ID
-      SET old_groupID = groupID, groupID = :rejectedGroupID
-      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
-      AND (team.createTime IS NULL OR (team.createTime < DATE_SUB(NOW(), INTERVAL 1 DAY) AND team.startTime IS NULL))",
-      array("contestID" => $contestID, "rejectedGroupID" => $rejectedGroupID));
-}
-
-echo "<h2><a href='".$startUrl."&action=showUnofficialGroups'>Show infos about unofficial groups</a></h2>";
+echo "<h3><a href='".$startUrl."&action=showUnofficialGroups'>Check if unofficial groups should be official</a></h3>";
 if ($action == "showUnofficialGroups") {
    execSelectAndShowResults("Users that have more than 3 users in unofficial groups", "
       SELECT user.ID, user.officialEmail, user.alternativeEmail, count(*) as nbStudents
@@ -355,7 +377,7 @@ if ($action == "showUnofficialGroups") {
       UPDATE `team` JOIN `group` ON team.groupID = `group`.ID  SET team.participationType = 'Unofficial' WHERE `group`.code IN ('hy4dufwp');
 */
 
-echo "<h2><a href='".$startUrl."&action=resetIsOfficial'>Completely reset contestants official status, start with all teams set to the group participation type</a></h2>";
+echo "<h3><a href='".$startUrl."&action=resetIsOfficial'>Completely reset contestants official status, start with all teams set to the group participation type</a></h3>";
 if ($action == "resetIsOfficial") { 
    execQueryAndShowNbRows("Set contestant.tmpIsOfficial to NULL for all contestants", "
       UPDATE contestant
@@ -380,7 +402,271 @@ if ($action == "resetIsOfficial") {
    array("contestID" => $contestID));
 }      
 
-echo "<h2><a href='".$startUrl."&action=detectDuplicates'>Detect duplicate contestants and make some of them unofficial</a></h2>";
+
+function getContestQuestions($contestID) {
+   global $db;
+   $query = "SELECT question.ID, question.name
+      FROM question
+      JOIN contest_question ON question.ID = contest_question.questionID
+      JOIN contest ON contest_question.contestID = contest.ID
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)";
+      
+   $stmt = $db->prepare($query);
+   $stmt->execute(array("contestID" => $contestID));
+   $questions = array();
+   while ($row = $stmt->fetchObject()) {
+      $questions[] = $row;
+   }
+   return $questions;
+}
+
+echo "<h2>Grading</h2>";
+
+echo "<h3><a href='".$startUrl."&action=handleRecover'>Handle recovered answers</a></h3>";
+if ($action == "handleRecover") {
+   execQueryAndShowNbRows("Insert recovered answers", "
+      INSERT IGNORE INTO team_question (teamID, questionID, answer, score, ffScore, `date`)
+      SELECT teamID, questionID, answer, NULL, NULL, NOW()
+      FROM team_question_recover
+      JOIN team ON team_question_recover.teamID = team.ID
+      JOIN `group` ON team.groupID = `group`.ID
+      JOIN `contest` ON `group`.contestID = contest.ID
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)",
+      array("contestID" => $contestID));
+
+   execSelectAndShowResults("Number of answers to recover", "
+      SELECT count(*)
+      FROM team_question
+      JOIN team ON team_question.teamID = team.ID
+      JOIN `group` ON team.groupID = `group`.ID
+      JOIN `contest` ON `group`.contestID = contest.ID
+      JOIN team_question_recover ON (team_question.teamID = team_question_recover.teamID AND team_question.questionID = team_question_recover.questionID AND team_question.answer != team_question_recover.answer)
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)",
+      array("contestID" => $contestID));
+
+   execQueryAndShowNbRows("Update answers from recovered data", "
+      UPDATE team_question
+      JOIN team ON team_question.teamID = team.ID
+      JOIN `group` ON team.groupID = `group`.ID
+      JOIN `contest` ON `group`.contestID = contest.ID
+      JOIN team_question_recover ON (team_question.teamID = team_question_recover.teamID AND team_question.questionID = team_question_recover.questionID AND team_question.answer != team_question_recover.answer)
+      SET team_question.answer = team_question_recover.answer, team_question.score = NULL, team_question.date = NOW()
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)",
+      array("contestID" => $contestID));
+
+   execQueryAndShowNbRows("Reset score for recovered answers", "
+      UPDATE team_question
+      JOIN team ON team_question.teamID = team.ID
+      JOIN `group` ON team.groupID = `group`.ID
+      JOIN `contest` ON `group`.contestID = contest.ID
+      JOIN team_question_recover ON (team_question.teamID = team_question_recover.teamID AND team_question.questionID = team_question_recover.questionID )
+      SET team_question.score = NULL
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)",
+      array("contestID" => $contestID));
+}
+
+echo "<h3><a href='".$startUrl."&action=sumFFScores'>Compute temporary team scores (from ffScores) and maxDate  (may be slow)</a></h3>";
+if ($action == "sumFFScores") {
+
+   execQueryAndShowNbRows("Save score to ffScore when ffScore IS NULL, and compute maxDate for each team", "
+      UPDATE team
+      JOIN (
+         SELECT teamID, MAX(`date`) AS maxDate, SUM(ffScore) AS score
+         FROM team_question
+         JOIN team ON team.ID = team_question.teamID
+         JOIN `group` ON team.groupID = `group`.ID
+         JOIN `contest` ON `group`.contestID = contest.ID
+         WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+         GROUP BY team_question.teamID
+      ) tmp ON team.ID = tmp.teamID
+      SET team.tmpLastAnswerDate = maxDate, team.tmpScore = tmp.score",
+      array("contestID" => $contestID));
+}
+
+
+echo "<h3><a href='".$startUrl."&action=markRecomputeScores'>Mark questions to grade later (-1)</a></h3>";
+if ($action == "markRecomputeScores") {
+   execQueryAndShowNbRows("Set with NULL score to -1", "
+      UPDATE team_question
+      JOIN team ON team_question.teamID = team.ID
+      JOIN `contest` ON `team`.contestID = contest.ID
+      SET team_question.score = -1
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team_question.score IS NULL AND team_question.ffScore IS NOT NULL",
+      array("contestID" => $contestID));
+}
+
+
+/*
+Replaced with a change to regrading code so that only 1000 scores can be graded at once
+echo "<h3><a href='".$startUrl."&action=markRecomputeScoresGroups'>Mark groups of questions to grade now</a></h3>";
+if ($action == "markRecomputeScoresGroups") {
+   $questions = getContestQuestions($contestID);
+   foreach ($questions as $question) {
+      execQueryAndShowNbRows("Set with -1 score to NULL FOR top 10000", "
+         UPDATE team_question SET score = NULL WHERE score = -1 AND questionID = :questionID LIMIT 1000",
+         array("questionID" => $question->ID));
+   }
+}
+*/
+
+
+
+echo "<h3><a href='".$startUrl."&action=markAboveMinScore'>Mark teams above threshold to be recomputed</a></h3>";
+if ($action == "markAboveMinScore") {
+   if (!isset($_GET["minScore"])) {
+      echo "Parameter minScore is missing";
+      return;
+   }
+   $minScore = $_GET["minScore"];
+
+   execQueryAndShowNbRows("Set scores to recompute if team.tmpScore >= " + $minScore, "
+      UPDATE team_question
+      JOIN team ON team_question.teamID = team.ID
+      JOIN `contest` ON `team`.contestID = contest.ID
+      SET team_question.score = NULL
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team.score = -1
+      AND team_question.ffScore IS NOT NULL
+      AND team.tmpScore >= :minScore",
+      array("contestID" => $contestID, "minScore" => $minScore));
+}
+      
+
+
+echo "<h3><a href='".$startUrl."&action=gradeContest'>Recompute scores</a></h3>";
+if ($action == "gradeContest") {
+   $language = $config->defaultLanguage;
+   // JSON3 shim for IE6-9 compatibility.
+   script_tag('/bower_components/json3/lib/json3.min.js');
+   // Ajax CORS support for IE9 and lower.
+   script_tag('/bower_components/jQuery-ajaxTransport-XDomainRequest/jquery.xdomainrequest.min.js');
+   script_tag('/bower_components/jstz/index.js'); // no proper bower packaging, must be updated by hand (in bower.json)
+   script_tag('/bower_components/jquery-ui/jquery-ui.min.js');
+   script_tag('/bower_components/i18next/i18next.min.js');
+   script_tag('/bower_components/pem-platform/task-pr.js');
+   script_tag('/gradeContest.js');
+   echo "<p>Statut : <div id='gradeContestState'><span class='nbCurrent'></span><span class='current'></span><span class='gradeProcessing'></span></div></p>";
+   echo "<iframe id='preview_question' src='' style='width:800px;height:800px;'></iframe>";
+   echo "<script>gradeContestWithRefresh('".$contestID."');</script>";
+}
+
+echo "<h3><a href='".$startUrl."&action=showScoresToCompute'>Remaining scores to compute (ignoring -1)</a></h3>";
+if ($action == "showScoresToCompute") {
+   $contestsIDs = getListContestIDs($contestID);
+   $strContestsIDs = join(",", $contestsIDs);
+
+   execSelectAndShowResults("Count team_question with score IS NULL)", "
+      SELECT count(*) FROM team_question
+      JOIN team ON team_question.teamID = team.ID
+      WHERE team_question.score IS NULL
+      AND contestID IN (".$strContestsIDs.")",
+      array());
+}
+
+echo "<h3><a href='".$startUrl."&action=recomputeScores'>Show recomputation status for each question</a></h3>";
+if ($action == "recomputeScores") {
+   execQueryAndShowNbRows("Store contestID in team table", "
+      UPDATE team
+      JOIN `group` ON `team`.groupID = `group`.`ID`
+      JOIN `contest` ON `group`.contestID = contest.ID
+      SET team.contestID = `group`.contestID
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)",
+      array("contestID" => $contestID));
+
+   echo "<table class='queryResults'><tr><td style='width:300px'>Question</td><td>ID</td><td>Score</td><td>Nombre</td></tr>";
+   $questions = getContestQuestions($contestID);
+   foreach ($questions as $question) {
+      execSelectAndShowResults("Scores computation status", "
+         SELECT question.name, question.ID, IF(team_question.score<=0 OR team_question.score IS NULL, team_question.score, 'positive') as scoreType, count(*)
+         FROM team_question
+         JOIN question ON question.ID = team_question.questionID
+         JOIN team ON team_question.teamID = team.ID
+         JOIN `contest` ON `team`.contestID = contest.ID
+         WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+         AND team_question.questionID = :questionID
+         GROUP BY team_question.questionID, scoreType",
+         array("contestID" => $contestID, "questionID" => $question->ID), true);
+//         AND (team_question.score IS NULL OR team_question.score < 0)
+
+         }
+   echo "</table>";
+}
+
+
+echo "<h3><a href='".$startUrl."&action=showScoreAnomalies'>List score anomalies (score < ffScore) and (score > ffScore)</a></h3>";
+if ($action == "showScoreAnomalies") {
+   execSelectAndShowResults("List team_question where score < ffScore)", "
+      SELECT team_question.teamID, team_question.questionID, team_question.score, team_question.ffScore, team.password
+      FROM team_question
+      JOIN team ON team_question.teamID = team.ID
+      JOIN `group` ON `team`.groupID = `group`.`ID`
+      JOIN `contest` ON `group`.contestID = contest.ID
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team_question.score < team_question.ffScore
+      AND team_question.score >= 0
+      ORDER BY team.ID",
+      array("contestID" => $contestID));
+
+      execSelectAndShowResults("Team_questions where score is > ffScore", "
+      SELECT team_question.teamID, team_question.questionID, team_question.score, team_question.ffScore, team.password
+      FROM team_question
+      JOIN team ON team_question.teamID = team.ID
+      JOIN `group` ON `team`.groupID = `group`.`ID`
+      JOIN `contest` ON `group`.contestID = contest.ID
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team_question.score > team_question.ffScore
+      AND team_question.score >= 0
+      ORDER BY team.ID",
+      array("contestID" => $contestID));
+}
+
+echo "<h3><a href='".$startUrl."&action=fixScoreErrors'>After verification only: replace score with ffScore (and vice-versa when ffScore is null)</a></h3>";
+if ($action == "fixScoreErrors") {
+   execQueryAndShowNbRows("Reset score for recovered answers", "
+      UPDATE team_question
+      JOIN team ON team_question.teamID = team.ID
+      JOIN `group` ON `team`.groupID = `group`.`ID`
+      JOIN `contest` ON `group`.contestID = contest.ID
+      SET team_question.score = team_question.ffScore
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team_question.score < team_question.ffScore",
+      array("contestID" => $contestID));
+   
+   
+   execQueryAndShowNbRows("Save score to ffScore when ffScore IS NULL", "
+      UPDATE team_question
+      JOIN team ON team_question.teamID = team.ID
+      JOIN `group` ON `team`.groupID = `group`.`ID`
+      JOIN `contest` ON `group`.contestID = contest.ID
+      SET team_question.ffScore = team_question.score
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team_question.ffScore IS NULL
+      AND team_question.score IS NOT NULL",
+      array("contestID" => $contestID));
+}
+
+echo "<h2>Attempts that should be discarded</h2>";
+
+
+echo "<h3><a href='".$startUrl."&action=hideInvalidParticipations'>Hide invalid participations in the discarded group (never started)</a></h3>";
+if ($action == "hideInvalidParticipations") {
+   
+   //ALTER TABLE `team` ADD `old_groupID` BIGINT NOT NULL AFTER `groupID`;
+
+   //TODO : what do we don with non-started groups ? 
+   #UPDATE `group` SET contestID = 961428730144625174 WHERE contestID = :contestID AND startTime IS NULL;
+
+   execQueryAndShowNbRows("Move to discarded group, teams created before today and that never started", "
+      UPDATE team JOIN `group` ON team.groupID = `group`.ID
+      JOIN `contest` ON `group`.contestID = contest.ID
+      SET old_groupID = groupID, groupID = :discardedGroupID
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND (team.createTime IS NULL OR (team.createTime < DATE_SUB(NOW(), INTERVAL 1 DAY) AND team.startTime IS NULL))",
+      array("contestID" => $contestID, "discardedGroupID" => $discardedGroupID));
+}
+
+echo "<h3><a href='".$startUrl."&action=detectDuplicates'>Detect duplicate contestants and make some of them unofficial</a></h3>";
 if ($action == "detectDuplicates") {
    execQueryAndShowNbRows("Set tmpIsOfficial from NULL to 0 for contestants from unofficial groups", "
       UPDATE contestant
@@ -482,173 +768,376 @@ if ($action == "detectDuplicates") {
       array());  
 }
 
-echo "<h2><a href='".$startUrl."&action=handleRecover'>Handle recovered answers</a></h2>";
-if ($action == "handleRecover") {
-   execQueryAndShowNbRows("Insert recovered answers", "
-      INSERT IGNORE INTO team_question (teamID, questionID, answer, score, ffScore, `date`)
-      SELECT teamID, questionID, answer, NULL, NULL, NOW()
-      FROM team_question_recover
-      JOIN team ON team_question_recover.teamID = team.ID
-      JOIN `group` ON team.groupID = `group`.ID
+echo "<h3><a href='".$startUrl."&action=markFailed'>Mark as failed, former participations that seem to be failed attempts</a></h3>";
+if ($action == "markFailed") {
+
+   execQueryAndShowNbRows("Mark as failed if no answer is stored at all", "
+      UPDATE `team`
+      JOIN `group` ON `team`.`groupID` = `group`.ID
       JOIN `contest` ON `group`.contestID = contest.ID
-      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)",
+      SET duplicateType = 'failed'
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND tmpLastAnswerDate IS NULL
+      AND duplicateType = 'former'",
       array("contestID" => $contestID));
 
-   execSelectAndShowResults("Number of answers to recover", "
-      SELECT count(*)
-      FROM team_question
-      JOIN team ON team_question.teamID = team.ID
-      JOIN `group` ON team.groupID = `group`.ID
-      JOIN `contest` ON `group`.contestID = contest.ID
-      JOIN team_question_recover ON (team_question.teamID = team_question_recover.teamID AND team_question.questionID = team_question_recover.questionID AND team_question.answer != team_question_recover.answer)
-      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)",
-      array("contestID" => $contestID));
-
-   execQueryAndShowNbRows("Update answers from recovered data", "
-      UPDATE team_question
-      JOIN team ON team_question.teamID = team.ID
-      JOIN `group` ON team.groupID = `group`.ID
-      JOIN `contest` ON `group`.contestID = contest.ID
-      JOIN team_question_recover ON (team_question.teamID = team_question_recover.teamID AND team_question.questionID = team_question_recover.questionID AND team_question.answer != team_question_recover.answer)
-      SET team_question.answer = team_question_recover.answer, team_question.score = NULL, team_question.date = NOW()
-      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)",
-      array("contestID" => $contestID));
-
-   execQueryAndShowNbRows("Reset score for recovered answers", "
-      UPDATE team_question
-      JOIN team ON team_question.teamID = team.ID
-      JOIN `group` ON team.groupID = `group`.ID
-      JOIN `contest` ON `group`.contestID = contest.ID
-      JOIN team_question_recover ON (team_question.teamID = team_question_recover.teamID AND team_question.questionID = team_question_recover.questionID )
-      SET team_question.score = NULL
-      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)",
-      array("contestID" => $contestID));
-}
-
-function getContestQuestions($contestID) {
-   global $db;
-   $query = "SELECT question.ID, question.name
-      FROM question
-      JOIN contest_question ON question.ID = contest_question.questionID
-      JOIN contest ON contest_question.contestID = contest.ID
-      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)";
-      
-   $stmt = $db->prepare($query);
-   $stmt->execute(array("contestID" => $contestID));
-   $questions = array();
-   while ($row = $stmt->fetchObject()) {
-      $questions[] = $row;
-   }
-   return $questions;
-}
-
-echo "<h2><a href='".$startUrl."&action=recomputeScores'>Show recomputation status for each question</a></h2>";
-if ($action == "recomputeScores") {
-   execQueryAndShowNbRows("Store contestID in team table", "
+   execQueryAndShowNbRows("Mark as failed initial attempts that lasted less than 25 minutes", "
       UPDATE team
-      JOIN `group` ON `team`.groupID = `group`.`ID`
+      JOIN `group` ON `team`.`groupID` = `group`.ID
       JOIN `contest` ON `group`.contestID = contest.ID
-      SET team.contestID = `group`.contestID
-      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)",
+      SET duplicateType = 'failed'
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND duplicateType = 'former'
+      AND TIMEDIFF(tmpLastAnswerDate, team.startTime) < '00:25:00'",
       array("contestID" => $contestID));
 
-   echo "<table class='queryResults'><tr><td style='width:300px'>Question</td><td>Score</td><td>Nombre</td></tr>";
-   $questions = getContestQuestions($contestID);
-   foreach ($questions as $question) {
-      execSelectAndShowResults("Scores computation status", "
-         SELECT question.name, question.ID, team_question.score, count(*)
-         FROM team_question
-         JOIN question ON question.ID = team_question.questionID
-         JOIN team ON team_question.teamID = team.ID
-         JOIN `contest` ON `team`.contestID = contest.ID
+      
+   execQueryAndShowNbRows("Mark as failed second attempts that have a lower score than the first attempt", "
+      UPDATE team
+      JOIN (
+         SELECT t1.ID
+         FROM `team` t1
+         JOIN `group` ON `t1`.`groupID` = `group`.ID
+         JOIN `contest` ON `group`.contestID = contest.ID
+         JOIN contestant c1 ON c1.teamID = t1.ID
+         JOIN duplicate_contestants dc ON dc.contestant1ID = c1.ID
+         JOIN contestant c2 ON dc.contestant2ID = c2.ID
+         JOIN team t2 ON c2.teamID = t2.ID
          WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
-         AND team_question.questionID = :questionID
-         AND (team_question.score IS NULL OR team_question.score < 0)
-         GROUP BY team_question.questionID, team_question.score",
-         array("contestID" => $contestID, "questionID" => $question->ID), true);
-   }
-   echo "</table>";
-}
-
-echo "<h2><a href='".$startUrl."&action=markRecomputeScores'>Mark questions to grade later (-1)</a></h2>";
-if ($action == "markRecomputeScores") {
-   execQueryAndShowNbRows("Set with NULL score to -1", "
-      UPDATE team_question
-      JOIN team ON team_question.teamID = team.ID
-      JOIN `contest` ON `team`.contestID = contest.ID
-      SET team_question.score = -1
-      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
-      AND team_question.score IS NULL AND team_question.ffScore IS NOT NULL",
+         AND t1.score = 0
+         AND t1.duplicateType = 'latter'
+         AND t2.participationType = 'Official'
+         AND t2.score > 0
+      ) tmp ON team.ID = tmp.ID
+      SET team.duplicateType = 'failed'",
       array("contestID" => $contestID));
 }
 
+echo "<h3><a href='".$startUrl."&action=removeFailed'>Set 'failed' participations as unofficial and move them to the discarded group.</a></h3>";
+if ($action == "removeFailed") {
+   execQueryAndShowNbRows("Mark failed participations as unofficial", "
+      UPDATE team
+      JOIN `group` ON `team`.`groupID` = `group`.ID
+      JOIN `contest` ON `group`.contestID = contest.ID
+      SET team.participationType = 'Unofficial'
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team.duplicateType = 'failed'",
+      array("contestID" => $contestID));
+      
+   execQueryAndShowNbRows("Save original group of failed participations", "
+      UPDATE team
+      JOIN `group` ON `team`.`groupID` = `group`.ID
+      JOIN `contest` ON `group`.contestID = contest.ID
+      SET team.old_groupID = team.groupID
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team.duplicateType = 'failed'
+      AND team.groupID != :discardedGroupID",
+      array("contestID" => $contestID, "discardedGroupID" => $discardedGroupID));
+
+   execQueryAndShowNbRows("Save original group of failed participations", "
+      # on les déplace dans le groupe spécial
+      UPDATE team
+      JOIN `group` ON `team`.`groupID` = `group`.ID
+      JOIN `contest` ON `group`.contestID = contest.ID
+      SET team.groupID = :discardedGroupID
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team.duplicateType = 'failed'",
+      array("contestID" => $contestID, "discardedGroupID" => $discardedGroupID));
+}
+
+echo "<h3><a href='".$startUrl."&action=teachersWithDuplicates'>Show teachers with a lot of duplicate students.</a></h3>";
+if ($action == "teachersWithDuplicates") {
+   echo "Contact these teachers to understand what happened";
+   
+   execSelectAndShowResults("Teachers with more than 20 duplicate students", "
+      SELECT count(*) AS nb, userID, user.officialEmail, user.alternativeEmail
+      FROM team
+      JOIN `group` ON team.groupID = `group`.ID
+      JOIN `contest` ON `group`.contestID = contest.ID
+      JOIN user ON user.ID = `group`.userID
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND duplicateType = 'former'
+      GROUP BY userID
+      HAVING nb > 20",
+      array("contestID" => $contestID));
+}
+      
+echo "<h2>Handle incorrect grade issues. Make teachers unofficial</h2>";
+      
+echo "<h3><a href='".$startUrl."&action=wrongGrade'>Detect students that are in the wrong grade.</a></h3>";
+if ($action == "wrongGrade") {
+   echo "TODO: automate handling of these students.";
+   
+   execSelectAndShowResults("List students in the wrong grade", "
+      SELECT `group`.`ID`, `group`.`name`, team.ID, `group`.`grade`, c1.firstName, c1.lastName, c1.ID, c1.grade, c2.firstName, c2.lastName, c2.ID, c2.grade
+      FROM contestant c1 
+      JOIN team ON c1.teamID = team.ID
+      JOIN `group` ON `group`.ID = team.groupID
+      JOIN `contest` ON `group`.contestID = contest.ID
+      JOIN contestant c2 ON c2.teamID = team.ID AND c2.ID > c1.ID
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team.participationType = 'Official'
+      AND ABS(c1.grade - c2.grade) > 2",
+      array("contestID" => $contestID));      
+}
+
+echo "<h3><a href='".$startUrl."&action=otherGrade'>List users with grade 'other'.</a></h3>";
+if ($action == "otherGrade") {
+   execSelectAndShowResults("List participations with grades 'other' in official groups", "
+      SELECT firstName, lastName, contestant.grade,`group`.grade, team.nbContestants, team.ID
+      FROM contestant
+      JOIN team ON contestant.teamID = team.ID
+      JOIN `group` ON `group`.ID = team.groupID
+      JOIN `contest` ON `group`.contestID = contest.ID
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND group.participationType = 'Official'
+      AND contestant.grade = -4",
+      array("contestID" => $contestID));
+}
+
+function linkToMarkTeamAsTeacher($row) {
+   return "<button type='button' id='markAsTeacher_".$row["teamID"]."' onclick='markTeamAsTeacher(\"".$row["teamID"]."\")'>Mark as teacher</button>";
+}
+      
+echo "<h3><a href='".$startUrl."&action=fakeTeams'>Detect test participations, or teachers participations.</a></h3>";
+if ($action == "fakeTeams") {
+   execSelectAndShowResults("List participations with names like 'prof', 'test', 'essai', 'techo', 'maths'", "
+      SELECT firstName, lastName, `contestant`.grade as contestantGrade, `group`.`grade` as groupGrade, `group`.name as groupName, teamID
+      FROM team
+      JOIN `group` ON team.groupID = `group`.ID
+      JOIN `contest` ON `group`.contestID = contest.ID
+      JOIN contestant ON team.ID = contestant.teamID
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team.participationType = 'Official'
+      AND contestant.grade != -1
+      AND (contestant.firstName LIKE '%prof%'
+         OR contestant.firstName LIKE '%test%'
+         OR contestant.firstName LIKE '%essai%'
+         OR contestant.firstName LIKE '%techno%'
+         OR contestant.firstName LIKE '%maths%'
+         OR contestant.firstName LIKE '%toto%'
+
+         OR contestant.lastName LIKE '%prof%'
+         OR contestant.lastName LIKE '%test%'
+         OR contestant.lastName LIKE '%essai%'
+         OR contestant.lastName LIKE '%techno%'
+         OR contestant.lastName LIKE '%maths%'
+         OR contestant.lastName LIKE '%toto%'
+      )",
+      array("contestID" => $contestID), false, "linkToMarkTeamAsTeacher");
+}
 
 
-echo "<h2><a href='".$startUrl."&action=markRecomputeScoresGroups'>Mark groups of questions to grade now</a></h2>";
-if ($action == "markRecomputeScoresGroups") {
-   $questions = getContestQuestions($contestID);
-   foreach ($questions as $question) {
-      execQueryAndShowNbRows("Set with -1 score to NULL FOR top 10000", "
-         UPDATE team_question SET score = NULL WHERE score = -1 AND questionID = :questionID LIMIT 1000",
-         array("questionID" => $question->ID));
+echo "<h3><a href='".$startUrl."&action=teachersUnofficial'>Mark teachers as unofficial.</a></h3>";
+if ($action == "teachersUnofficial") {
+   execQueryAndShowNbRows("Mark teacher participations as unofficial", "
+      UPDATE contestant
+      JOIN team ON team.ID = contestant.teamID
+      JOIN `group` ON `group`.ID = team.groupID
+      JOIN `contest` ON `group`.contestID = contest.ID
+      SET team.participationType = 'Unofficial'
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND contestant.grade = -1",
+      array("contestID" => $contestID));
+}
+
+echo "<h2>Publication of results</h2>";
+
+echo "<h3><a href='".$startUrl."&action=updateMaxGrade'>Update nbParticipants and max_grade in teams table (to prepare for ranking.</a></h3>";
+if ($action == "updateMaxGrade") {
+   execQueryAndShowNbRows("Update nbParticipants and max_grade", "
+      UPDATE team JOIN (
+         SELECT team.ID, count(*) as nbParticipants, MAX(contestant.grade) as max_grade
+         FROM team
+         JOIN `group` ON team.groupID = `group`.ID
+         JOIN `contest` ON `group`.contestID = contest.ID
+         JOIN contestant ON team.ID = contestant.teamID
+         WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+         AND team.participationType = 'Official'
+         GROUP BY team.ID
+      ) t ON team.ID = t.ID
+      SET team.nbContestants = t.nbParticipants, team.max_grade = t.max_grade",
+      array("contestID" => $contestID));
+}
+
+echo "<h3><a href='".$startUrl."&action=showTeamScores'>Make team scores visible to teachers.</a></h3>";
+if ($action == "showTeamScores") {
+   execQueryAndShowNbRows("Copy tmpScore to score to make scores visible to teachers", "
+      UPDATE team
+      JOIN `group` ON team.groupID = `group`.`ID`
+      JOIN `contest` ON `group`.contestID = contest.ID
+      SET score = tmpScore
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team.participationType = 'Official'",
+      array("contestID" => $contestID));      
+}
+
+echo "<p>Compute rankings from teacher interface</p>";
+
+echo "<p>In the database: set contest.printCode, contest.showResults, and contest.printCertificates as needed</p>";
+
+echo "<p>To allocate algoreaCodes, insert records such as INSERT INTO award_threshold (contestID, gradeID, awardID, nbContestants, minScore) VALUES ([contestID], 4, 1, 2, 0) for each contest</p>";
+
+
+
+echo "<h3><a href='".$startUrl."&action=studyZeroes'>Study cases of teams with 0 points.</a></h3>";
+if ($action == "studyZeroes") {
+   execSelectAndShowResults("Number of official teams with zero point", "
+      SELECT contest.name, count(*)
+      FROM `team`
+      JOIN `group` ON `group`.ID = team.groupID
+      JOIN `contest` ON `group`.contestID = contest.ID
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team.participationType = 'Official'
+      AND team.score = 0
+      GROUP BY contest.ID",
+      array("contestID" => $contestID));
+
+   execSelectAndShowResults("List of teams with zero points and misc information", "
+      SELECT contest.name, team.ID, team.password, count(team_question.teamID), TIMESTAMPDIFF(MINUTE, team.startTime, team.endTime), TIMESTAMPDIFF(MINUTE, team.startTime, team.tmpLastAnswerDate)
+      FROM `team`
+      JOIN `group` ON `group`.ID = team.groupID
+      JOIN `contest` ON `group`.contestID = contest.ID
+      LEFT JOIN team_question ON team.ID = team_question.teamID
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team.participationType = 'Official'
+      AND team.score = 0
+      GROUP BY team.ID
+      ORDER BY TIMESTAMPDIFF(MINUTE, team.startTime, team.tmpLastAnswerDate) DESC LIMIT 0,1000",
+      array("contestID" => $contestID));
+
+
+   execSelectAndShowResults("Groups with lots of zeroes", "
+      SELECT contest.name, `group`.name, `user`.officialEmail, `user`.alternativeEmail, nb
+      FROM (SELECT count(*) as nb, groupID
+      FROM (
+         SELECT team.groupID
+         FROM `team`
+         JOIN `group` ON `group`.ID = team.groupID
+         JOIN `contest` ON `group`.contestID = contest.ID
+         WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+         AND team.participationType = 'Official'
+         AND team.score = 0
+         GROUP BY team.ID
+      ) tmp  GROUP BY groupID) tmp2
+      JOIN `group` ON tmp2.groupID = `group`.ID
+      JOIN `user` ON `group`.userID = user.ID
+      JOIN `contest` ON `contest`.ID = `group`.contestID
+      ORDER BY user.ID",
+      array("contestID" => $contestID));
+}
+
+echo "<h3><a href='".$startUrl."&action=makeGroupUnofficial'>Make a group unofficial (with parameter groupCode)</a></h3>";
+if ($action == "makeGroupUnofficial") {
+   if (!isset($_GET["groupCode"])) {
+      echo "Missing groupCode parameter";
+      exit;
+   }
+   $groupCode = $_GET["groupCode"];
+   if (isset($_GET["confirm"])) {
+      $confirm = true;
+   } else {
+      echo "<a href='".$startUrl."&action=makeGroupUnofficial&groupCode=".$groupCode."&confirm=1'>I confirm that this group should be unofficial</a>";
+      $confirm = false;
+   }
+   
+   execSelectAndShowResults("Show the teams and students in this group", "
+      SELECT contest.name, `group`.name, `user`.officialEmail, `user`.alternativeEmail,
+      GROUP_CONCAT(CONCAT(contestant.firstName, ' ', contestant.lastName, '(', contestant.grade, ')', contestant.algoreaCode)),
+      team.score, team.rank
+      FROM `group`
+      JOIN `team`  ON `team`.groupID = `group`.ID
+      JOIN `contestant` ON `contestant`.teamID = team.ID
+      WHERE `group`.`code` = :groupCode
+      GROUP BY contestant.ID",
+      array("groupCode" => $groupCode));
+
+   if ($confirm) {
+      execQueryAndShowNbRows("Make group unofficial", "
+         UPDATE `group`
+         SET `participationType` = 'Unofficial'
+         WHERE `code` = :groupCode",
+         array("groupCode" => $groupCode));
+         
+      execQueryAndShowNbRows("Make team unofficial", "
+         UPDATE `group`
+         JOIN `team` ON `team`.`groupID` = `group`.`ID`
+         SET `team``participationType` = 'Unofficial'
+         WHERE `group`.`code` = :groupCode",
+         array("groupCode" => $groupCode));
+
+      execQueryAndShowNbRows("Remove associated registration", "
+         DELETE algorea_registration.*
+         FROM `group`
+         JOIN `team` ON `team`.`groupID` = `group`.`ID`
+         JOIN `contestant` ON `contestant`.`teamID` = `team`.`ID`
+         JOIN `algorea_registration` ON `algorea_registration`.`code` = `contestant`.`algoreaCode`
+         WHERE `group`.`code` = :groupCode",
+         array("groupCode" => $groupCode));
+
+
+      execQueryAndShowNbRows("Remove ranks, algoreaCode", "
+         UPDATE `group`
+         JOIN `team` ON `team`.`groupID` = `group`.`ID`
+         JOIN `contestant` ON `contestant`.`teamID` = `team`.`ID`
+         SET `contestant`.`rank` = NULL,
+         `contestant`.`schoolRank` = NULL,
+         `contestant`.`algoreaCode` = NULL
+         WHERE `group`.`code` = :groupCode",
+         array("groupCode" => $groupCode));
+
    }
 }
 
 
-echo "<h2><a href='".$startUrl."&action=scoreErrors'>Detect score errors</a></h2>";
-if ($action == "scoreErrors") {
-   execSelectAndShowResults("Team_questions where score is != ffScore", "
-      SELECT team_question.teamID, team_question.questionID, team_question.score, team_question.ffScore
-      FROM team_question
-      JOIN team_question_recover ON (team_question.teamID = team_question_recover.teamID AND team_question.questionID = team_question_recover.questionID )
-      JOIN team ON team_question.teamID = team.ID
-      JOIN `group` ON `team`.groupID = `group`.`ID`
-      JOIN `contest` ON `group`.contestID = contest.ID
-      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
-      AND team_question.score < team_question.ffScore",
-   array("contestID" => $contestID));
+echo "<h3><a href='".$startUrl."&action=makeGroupOfficial'>Make a group official (with parameter groupCode)</a></h3>";
+if ($action == "makeGroupOfficial") {
+   if (!isset($_GET["groupCode"])) {
+      echo "Missing groupCode parameter";
+      exit;
+   }
+   $groupCode = $_GET["groupCode"];
+   if (isset($_GET["confirm"])) {
+      $confirm = true;
+   } else {
+      echo "<a href='".$startUrl."&action=makeGroupOfficial&groupCode=".$groupCode."&confirm=1'>I confirm that this group should be official</a>";
+      $confirm = false;
+   }
+   
+   execSelectAndShowResults("Show the teams and students in this group", "
+      SELECT contest.name, `group`.name, `user`.officialEmail, `user`.alternativeEmail,
+      GROUP_CONCAT(CONCAT(contestant.firstName, ' ', contestant.lastName, '(', contestant.grade, ')', contestant.algoreaCode)),
+      team.score, team.rank
+      FROM `group`
+      JOIN `team`  ON `team`.groupID = `group`.ID
+      JOIN `contestant` ON `contestant`.teamID = team.ID
+      WHERE `group`.`code` = :groupCode
+      GROUP BY contestant.ID",
+      array("groupCode" => $groupCode));
+
+   if ($confirm) {
+      execQueryAndShowNbRows("Make group official", "
+         UPDATE `group`
+         SET `participationType` = 'Official'
+         WHERE `code` = :groupCode",
+         array("groupCode" => $groupCode));
+         
+      execQueryAndShowNbRows("Make teams official", "
+         UPDATE `group`
+         JOIN `team` ON `team`.`groupID` = `group`.`ID`
+         SET `team``participationType` = 'Official'
+         WHERE `group`.`code` = :groupCode",
+         array("groupCode" => $groupCode));
+         
+      echo "<p>You will need to check for incorrect grades issues, recompute rankings, qualifications and algoreaCodes.</p>";
+   }
 }
 
-echo "<h2><a href='".$startUrl."&action=fixScoreErrors'>After verification only: replace score with ffScore (and vice-versa when ffScore is nul)</a></h2>";
-if ($action == "fixScoreErrors") {
-   execQueryAndShowNbRows("Reset score for recovered answers", "
-      UPDATE team_question
-      JOIN team ON team_question.teamID = team.ID
-      JOIN `group` ON `team`.groupID = `group`.`ID`
-      JOIN `contest` ON `group`.contestID = contest.ID
-      SET team_question.score = team_question.ffScore
-      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
-      AND team_question.score < team_question.ffScore",
-   array("contestID" => $contestID));
-   
-   
-   execQueryAndShowNbRows("Save score to ffScore when ffScore IS NULL", "
-      UPDATE team_question
-      JOIN team ON team_question.teamID = team.ID
-      JOIN `group` ON `team`.groupID = `group`.`ID`
-      JOIN `contest` ON `group`.contestID = contest.ID
-      SET team_question.ffScore = team_question.score
-      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
-      AND team_question.ffScore IS NULL
-      AND team_question.score IS NOT NULL",
-   array("contestID" => $contestID));
-}
 
-echo "<h2><a href='".$startUrl."&action=gradeContest'>Lancement du calcul des scores</a></h2>";
-if ($action == "gradeContest") {
-   $language = $config->defaultLanguage;
-   // JSON3 shim for IE6-9 compatibility.
-   script_tag('/bower_components/json3/lib/json3.min.js');
-   // jquery 1.9 is required for IE6+ compatibility.
-   script_tag('/bower_components/jquery/jquery.min.js');
-   // Ajax CORS support for IE9 and lower.
-   script_tag('/bower_components/jQuery-ajaxTransport-XDomainRequest/jquery.xdomainrequest.min.js');
-   script_tag('/bower_components/jstz/index.js'); // no proper bower packaging, must be updated by hand (in bower.json)
-   script_tag('/bower_components/jquery-ui/jquery-ui.min.js');
-   script_tag('/bower_components/i18next/i18next.min.js');
-   script_tag('/bower_components/pem-platform/task-pr.js');
-   script_tag('/gradeContest.js');
-   echo "<p>Statut : <div id='gradeContestState'><span class='nbCurrent'></span><span class='current'></span><span class='gradeProcessing'></span></div></p>";
-   echo "<iframe id='preview_question' src='' style='width:800px;height:800px;'></iframe>";
-   echo "<script>gradeContestWithRefresh('".$contestID."');</script>";
-}
+
+/*
+Tool to make some groups official
+
+UPDATE `group` SET participationType = 'Official' WHERE code IN ('#vypsrd5r', 'kdmr36y6', 'Uxhfagua', '#Uxhfagua', 'vypsrd5r');
+UPDATE `group` JOIN team ON team.groupID = `group`.ID SET team.participationType = 'Official' WHERE code IN ('#vypsrd5r', 'kdmr36y6', 'Uxhfagua', '#Uxhfagua', 'vypsrd5r');
+*/

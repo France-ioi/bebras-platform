@@ -1,14 +1,24 @@
-<html><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><style>.borders tr td {
+<html><meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style>
+.borders tr td {
    border: solid black 1px;
    padding-left: 5px;
    padding-right: 5px;
    text-align: right;
+   width:50px;
 }
 .borders tr:first-child, .borders tr td:first-child {
    font-weight: bold
 }
 .orange td {
    background-color: orange;
+}
+.white td {
+   background-color: white;
+}
+.gray td {
+   background-color: #C0C0C0;
+   font-weight: bold;
 }
 .yellow td {
    background-color: yellow;
@@ -26,15 +36,15 @@
 require_once("../shared/common.php");
 require_once("commonAdmin.php");
 
-function displayScores($contestIDs, $minForOrange, $minForGreen, $minForBlue) {
+function displayScores($contestIDs, $minForYellow, $minForOrange, $minForGreen, $minForBlue) {
    global $db;
 
-   $query = "SELECT team.score, count(*) as nb, contestant.grade FROM contestant JOIN team ON team.ID = contestant.teamID JOIN `group` ON team.groupID = `group`.ID WHERE team.participationType = 'Official' AND contestID IN (".implode($contestIDs, ',').") AND contestant.grade > 0 GROUP BY contestant.grade, team.score";
+   $query = "SELECT team.score, count(*) as nb, contestant.grade FROM contestant JOIN team ON team.ID = contestant.teamID JOIN `group` ON team.groupID = `group`.ID WHERE team.participationType = 'Official' AND `group`.contestID IN (".implode($contestIDs, ',').") AND contestant.grade > 0 GROUP BY contestant.grade, team.score";
 
    $stmt = $db->prepare($query);
    $stmt->execute();
 
-   $grades = array(4 => "CM1", 5 => "CM2", 6 => "6ème", 7 => "5ème", 8 => "4ème", 9 => "3ème", 10 => "2nde", 11 => "1ère", 12 => "Terminale", 13 => "2nde<br/>pro", 14 => "1ère<br/>pro", 15 => "Terminale<br/>pro");
+   $grades = array(4 => "CM1", 5 => "CM2", 6 => "6e", 7 => "5e", 8 => "4e", 9 => "3e", 10 => "2de", 11 => "1ère", 12 => "Tale", 13 => "2de<br/>pro", 14 => "1ère<br/>pro", 15 => "Tale<br/>pro", 16 => "6e Segpa", 17 => "5e Segpa", 18 => "4e Segpa", 19 => "3e Segpa");
    $scores = array();
 
    $results = array();
@@ -70,7 +80,10 @@ function displayScores($contestIDs, $minForOrange, $minForGreen, $minForBlue) {
       if (!isset($scores[$score])) {
          continue;
       }
-      $class = "yellow";
+      $class = "white";
+      if ($score >= $minForYellow) {
+         $class = "yellow";
+      }
       if ($score >= $minForOrange) {
          $class = "orange";
       }
@@ -98,7 +111,7 @@ function displayScores($contestIDs, $minForOrange, $minForGreen, $minForBlue) {
    }
    echo $rows;
 
-   echo "<tr><td>Total</td>";
+   echo "<tr class='gray'><td>Total</td>";
    foreach ($grades as $grade => $gradeName) {
       echo "<td>".$gradeTotal[$grade]."</td>";
    }
@@ -116,14 +129,16 @@ if (!isset($_SESSION["userID"])) {
 }
 */
 
+echo "<p>Catégorie blanche :</p>";
+displayScores(array("866488984396180", "95300867864028463", "226161984593556559"), 100, 400, 400, 400);
+
+echo "<p>Catégorie jaune :</p>";
+displayScores(array("503609694961379947", "553157869958034707", "631835860403469834"), 0, 100, 400, 400);
+
+
 
 echo "<p>Catégorie orange :</p>";
-displayScores(array("124236500942177376", "151709596466921552", "175448842785562190"), 0, 100, 400);
-
-
-
-echo "<p>Catégorie verte :</p>";
-displayScores(array("424393866218438188", "195702159164266914", "452484155216195876"), 0, 0, 70);
+displayScores(array("695264095539164908", "780696932767704624", "786950565192017915"), 0, 0, 100, 400);
 
 
 ?>

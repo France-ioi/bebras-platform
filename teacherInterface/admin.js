@@ -11,10 +11,6 @@ var groups;
 var filterSchoolID = "0";
 var filterGroupID = "0";
 var generating = false;
-var gradePackSize = 20;
-var curGradingData = null;
-var curGradingBebras = null;
-var curGradingScoreCache = {};
 var models = null;
 var selectedContestID;  // currently selected contestID
 var selectedQuestionID; // currently selected questionID
