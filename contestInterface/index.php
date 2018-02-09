@@ -574,6 +574,8 @@
          <td>Équipe</td>
          <td>Statut</td>
          <td>Score</td>
+         <td>Classement</td>
+         <td>Classement<br/>établissement</td>
          <td>Accès</td>
       </tr>
    </table>

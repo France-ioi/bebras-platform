@@ -10,23 +10,23 @@
 .borders tr:first-child, .borders tr td:first-child {
    font-weight: bold
 }
-.orange td {
+.orange {
    background-color: orange;
 }
-.white td {
+.blanche {
    background-color: white;
 }
 .gray td {
    background-color: #C0C0C0;
    font-weight: bold;
 }
-.yellow td {
+.jaune {
    background-color: yellow;
 }
-.green td {
+.verte {
    background-color: lightgreen;
 }
-.blue td {
+.bleue {
    background-color: #8080FF;
 }
 </style><body>
@@ -36,10 +36,28 @@
 require_once("../shared/common.php");
 require_once("commonAdmin.php");
 
-function displayScores($contestIDs, $minForYellow, $minForOrange, $minForGreen, $minForBlue) {
+function displayScores($category, $contestIDs, $nbContestants, $minForYellow, $minForOrange, $minForGreen, $minForBlue) {
    global $db;
+   
+   $strNbContestants = "";
+   if ($nbContestants == 1) {
+      $strNbContestants = ", individuels.";
+   } else if ($nbContestants == 2) {
+      $strNbContestants = ", binômes.";
+   }
 
-   $query = "SELECT team.score, count(*) as nb, contestant.grade FROM contestant JOIN team ON team.ID = contestant.teamID JOIN `group` ON team.groupID = `group`.ID WHERE team.participationType = 'Official' AND `group`.contestID IN (".implode($contestIDs, ',').") AND contestant.grade > 0 GROUP BY contestant.grade, team.score";
+   $query = "SELECT team.score, count(*) as nb, contestant.grade
+      FROM contestant
+      JOIN team ON team.ID = contestant.teamID
+      JOIN `group` ON team.groupID = `group`.ID
+      WHERE team.participationType = 'Official' AND `group`.contestID IN (".implode($contestIDs, ',').")";
+      
+   if ($nbContestants != null) {
+      $query .= " AND team.nbContestants = ".$nbContestants;
+   }
+   $query .= "
+      AND contestant.grade > 0
+      GROUP BY contestant.grade, team.score";
 
    $stmt = $db->prepare($query);
    $stmt->execute();
@@ -64,14 +82,16 @@ function displayScores($contestIDs, $minForYellow, $minForOrange, $minForGreen, 
       $count++;
    }
 
-   echo "<table class='borders' cellspacing=0>\n<tr><td>Score</td>";
+   echo "<table class='borders' cellspacing=0>\n
+   <tr class='gray' style='font-weigth:bold;'><td style='text-align:left;font-size:18px;padding:8px' colspan=".(count($grades)+3).">Catégorie ".$category.$strNbContestants."</td></tr>
+   <tr class='gray' style='font-weigth:bold'><td>Score</td>";
 
    $gradeTotal = array();
    foreach ($grades as $grade => $gradeName) {
       echo "<td>".$gradeName."</td>";
       $gradeTotal[$grade] = 0;
    }
-   echo "<td>Classement<br/>général</td></tr>\n";
+   echo "<td>Classement<br/>général</td><td>Qualifié en<br/>catégorie</tr>\n";
 
    $rows = "";
    $allTotal = 0;
@@ -80,20 +100,20 @@ function displayScores($contestIDs, $minForYellow, $minForOrange, $minForGreen, 
       if (!isset($scores[$score])) {
          continue;
       }
-      $class = "white";
+      $qualifiedCategory = "blanche";
       if ($score >= $minForYellow) {
-         $class = "yellow";
+         $qualifiedCategory = "jaune";
       }
       if ($score >= $minForOrange) {
-         $class = "orange";
+         $qualifiedCategory = "orange";
       }
       if ($score >= $minForGreen) {
-         $class = "green";
+         $qualifiedCategory = "verte";
       }
       if ($score >= $minForBlue) {
-         $class = "blue";
+         $qualifiedCategory = "bleue";
       }
-      $row = "<tr class='".$class."'><td>".$score."</td>";
+      $row = "<tr class='".$category."'><td>".$score."</td>";
       foreach ($grades as $grade => $gradeName) {
          $row .= "<td>";
          if (isset($results[$grade][$score])) {
@@ -106,6 +126,7 @@ function displayScores($contestIDs, $minForYellow, $minForOrange, $minForGreen, 
          $row .= "</td>";
       }
       $row .= "<td>".($allTotalBefore + 1)."</td>";
+      $row .= "<td class='".$qualifiedCategory."'>".$qualifiedCategory."</td>";
       $row .= "</tr>\n";
       $rows .= $row;
    }
@@ -115,10 +136,11 @@ function displayScores($contestIDs, $minForYellow, $minForOrange, $minForGreen, 
    foreach ($grades as $grade => $gradeName) {
       echo "<td>".$gradeTotal[$grade]."</td>";
    }
-   echo "<td>".$allTotal."</tr>\n";
+   echo "<td></td><td>".$allTotal."</tr>\n";
 
 
    echo "</table>\n";
+   echo "<p></p>";
 }
 
 
@@ -129,17 +151,11 @@ if (!isset($_SESSION["userID"])) {
 }
 */
 
-echo "<p>Catégorie blanche :</p>";
-displayScores(array("866488984396180", "95300867864028463", "226161984593556559"), 100, 400, 400, 400);
-
-echo "<p>Catégorie jaune :</p>";
-displayScores(array("503609694961379947", "553157869958034707", "631835860403469834"), 0, 100, 400, 400);
-
-
-
-echo "<p>Catégorie orange :</p>";
-displayScores(array("695264095539164908", "780696932767704624", "786950565192017915"), 0, 0, 100, 400);
-
+for ($nbContestants = 1; $nbContestants <= 2; $nbContestants++) {
+   displayScores("blanche", array("866488984396180", "95300867864028463", "226161984593556559"), $nbContestants, 100, 400, 400, 400);
+   displayScores("jaune", array("503609694961379947", "553157869958034707", "631835860403469834"), $nbContestants, 0, 100, 400, 400);
+   displayScores("orange", array("695264095539164908", "780696932767704624", "786950565192017915"), $nbContestants, 0, 0, 100, 400);
+}
 
 ?>
 </body>

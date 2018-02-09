@@ -9,28 +9,10 @@ if (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"]) {
    exit;
 }
 
-// To (re)compute team.nbContestants:
-// update team set nbContestants = 0; insert into team (ID) select teamID from contestant on duplicate key update nbContestants = nbContestants + 1;
-
 // To pass contestants with grade < 0 as unofficial:
 //UPDATE contestant join team on contestant.teamID = team.ID SET team.participationType = 'Unofficial' WHERE contestant.grade < 0;
 
 // To reset ranks: update contestant set rank = NULL;
-
-function computeNbContestants($db, $contestID, $maxContestants) {
-   $stmt = $db->prepare('update team
-            JOIN `group` ON (`team`.`groupID` = `group`.`ID`)
-            set nbContestants = 0
-            where `group`.contestID = :contestID;');
-   $stmt->execute(array('contestID' => $contestID));
-   $stmt = $db->prepare('insert into team (ID) 
-            select teamID from contestant
-            JOIN team as teamjoin on (teamjoin.ID = contestant.teamID)
-            JOIN `group` ON (`teamjoin`.`groupID` = `group`.`ID`)
-            WHERE `group`.contestID = :contestID
-            on duplicate key update team.nbContestants = LEAST(:maxContestants, team.nbContestants + 1);');
-   $stmt->execute(array('contestID' => $contestID, 'maxContestants' => $maxContestants));
-}
 
 function getContestInfos($db, $contestID) {
    $stmt = $db->prepare('select ID, allowTeamsOfTwo, rankGrades, rankNbContestants from contest where ID = :contestID');
@@ -40,22 +22,29 @@ function getContestInfos($db, $contestID) {
       echo json_encode((object)array("status" => 'error', "message" => "Contest not found!"));
       exit;
    }
+
+   $stmt = $db->prepare('SELECT DISTINCT categoryColor FROM contest where parentContestID = :contestID');
+   $stmt->execute(array('contestID' => $contestID));
+   $contestInfos["categories"] = array();
+   while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $contestInfos["categories"][] = $row["categoryColor"];
+   }
    // get grades if relevant
    if ($contestInfos['rankGrades']) {
-      $stmt = $db->prepare('select distinct contestant.grade from contestant
+      $stmt = $db->prepare("SELECT DISTINCT contestant.grade
+               FROM contestant
                JOIN team on (team.ID = contestant.teamID)
                JOIN `group` ON (`team`.`groupID` = `group`.`ID`)
-               where 
-               `team`.participationType = \'Official\' and
-               `group`.contestID = :contestID;');
+               JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`)
+               WHERE `team`.participationType = 'Official'
+               AND (`contest`.ID = :contestID OR `contest`.parentContestID = :contestID)");
       $stmt->execute(array('contestID' => $contestID));
       $contestInfos['grades'] = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
    }
    return $contestInfos;
 }
 
-function computeRanks($db, $contestInfos)
-{  
+function computeRanks($db, $contestInfos, $category) {  
    $query = "
       UPDATE `contestant` as `c1`, 
       (
@@ -74,6 +63,7 @@ function computeRanks($db, $contestInfos)
             FROM `contestant` 
             JOIN `team` ON (`contestant`.`teamID` = `team`.`ID`) 
             JOIN `group` ON (`team`.`groupID` = `group`.`ID`)
+            JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`)
             WHERE 
                `team`.`participationType` = 'Official' AND 
 ";
@@ -83,8 +73,11 @@ function computeRanks($db, $contestInfos)
    if ($contestInfos['rankNbContestants'] && $contestInfos['allowTeamsOfTwo']) {
       $query .= " `team`.`nbContestants` = :nbContestants AND ";  
    }
+   if ($category != null) {
+      $query .= " `contest`.`categoryColor` = :category AND ";
+   }
    $query .= "
-            `group`.`contestID` = :contestID                
+            (`contest`.`ID` = :contestID OR `contest`.`parentContestID` = :contestID)
             ORDER BY
             `team`.`score` DESC
          ) `contestant2`, 
@@ -111,6 +104,9 @@ function computeRanks($db, $contestInfos)
             if ($maxContestants != 1) {
                $values['nbContestants'] = $i;
             }
+            if ($category != null) {
+               $values['category'] = $category;
+            }
             $stmt->execute($values);
          }
       } else {
@@ -118,13 +114,15 @@ function computeRanks($db, $contestInfos)
          if ($maxContestants != 1) {
             $values['nbContestants'] = $i;
          }
+         if ($category != null) {
+            $values['category'] = $category;
+         }
          $stmt->execute($values);
       }
    }
 }
 
-function computeRanksSchool($db, $contestInfos)
-{
+function computeRanksSchool($db, $contestInfos, $category) {
    $query = "
     UPDATE `contestant` as `c1`,
     (
@@ -145,15 +143,19 @@ function computeRanksSchool($db, $contestInfos)
       FROM `contestant`
             JOIN `team` ON (`contestant`.`teamID` = `team`.`ID`)
             JOIN `group` ON (`team`.`groupID` = `group`.`ID`)
+            JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`)
       WHERE 
           `team`.`participationType` = 'Official' AND ";
    if ($contestInfos['rankGrades']) {
       $query .= " `contestant`.`grade` = :grade AND ";
    }
+   if ($category != null) {
+      $query .= " `contest`.`categoryColor` = :category AND ";
+   }
    if ($contestInfos['rankNbContestants'] && $contestInfos['allowTeamsOfTwo']) {
       $query .= " `team`.`nbContestants` = :nbContestants AND ";  
    }
-   $query .= " `group`.`contestID` = :contestID
+   $query .= "(`contest`.`ID` = :contestID OR `contest`.`parentContestID` = :contestID)
       ORDER BY `group`.`schoolID`, `team`.`score` DESC
    ) `contestant2`,
    (
@@ -178,12 +180,18 @@ function computeRanksSchool($db, $contestInfos)
             if ($maxContestants != 1) {
                $values['nbContestants'] = $i;
             }
+            if ($category != null) {
+               $values['category'] = $category;
+            }
             $stmt->execute($values);
          }
       } else {
          $values = array(':contestID' => $contestInfos['ID']);
          if ($maxContestants != 1) {
             $values['nbContestants'] = $i;
+         }
+         if ($category != null) {
+            $values['category'] = $category;
          }
          $stmt->execute($values);
       }
@@ -198,11 +206,15 @@ if ((!isset($_SESSION["isAdmin"])) || (!$_SESSION["isAdmin"])) {
 $contestID = $_REQUEST["contestID"];
 
 $contestInfos = getContestInfos($db, $contestID);
-if ($contestInfos['rankNbContestants'] && $contestInfos['allowTeamsOfTwo']) {
-   computeNbContestants($db, $contestID, 2);
+if (count($contestInfos["categories"]) > 1) {
+   foreach ($contestInfos["categories"] as $category) {
+      computeRanks($db, $contestInfos, $category);
+      computeRanksSchool($db, $contestInfos, $category);
+   }
+} else {
+   computeRanks($db, $contestInfos, null);
+   computeRanksSchool($db, $contestInfos, null);
 }
-computeRanks($db, $contestInfos);
-computeRanksSchool($db, $contestInfos);
 unset($db);
 
 echo json_encode(array("success" => true));

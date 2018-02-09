@@ -1647,12 +1647,33 @@ window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, 
    }
 };
 
+window.rankToStr = function(rank, nameGrade, nbContestants) {
+   var strRank = "-";
+   if (rank !== null) {
+      strRank = rank;
+      rank = parseInt(rank);
+      if (rank == 1) {
+         strRank += "er";
+      } else {
+         strRank += "e";
+      }
+      strRank += "<br/>" + $nameGrade + " ";
+      if (nbContestants == 1) {
+         strRank += "individuels";
+      } else {
+         strRank += "binômes";
+      }
+   }
+   return strRank;
+}
+
 window.showPersonalPage = function(data) {
    personalPageData = data;
    $("#divPersonalPage").show();
    $("#persoLastName").html(data.registrationData.lastName);
    $("#persoFirstName").html(data.registrationData.firstName);
-   $("#persoGrade").html(t("grade_" + data.registrationData.grade).toLowerCase());
+   $nameGrade = t("grade_" + data.registrationData.grade).toLowerCase();
+   $("#persoGrade").html($nameGrade);
    $("#persoCategory").html(data.registrationData.qualifiedCategory);
    if (data.registrationData.allowContestAtHome == "0") {
       $("#buttonStartContest").attr("disabled", "disabled");
@@ -1676,11 +1697,16 @@ window.showPersonalPage = function(data) {
             score = Math.max(score, parseInt(participation.score));
          }
       }
+      var rank = rankToStr(participation.rank, $nameGrade, participation.nbContestants);
+      var schoolRank = rankToStr(participation.schoolRank, $nameGrade, participation.nbContestants);
+      
       htmlParticipations += "<tr><td>" + participation.contestName + "</td>" +
          "<td>" + window.utcDateFormatter(participation.startTime) + "</td>" +
          "<td>" + participation.contestants + "</td>" +
          "<td>" + status + "</td>" +
          "<td>" + score + "</td>" +
+         "<td>" + rank + "</td>" +
+         "<td>" + schoolRank + "</td>" +
          "<td><a href='" + location.pathname + "?team=" + participation.password + "' target='_blank'>ouvrir</a></td></tr>";
    }
    $("#pastParticipations").append(htmlParticipations);
