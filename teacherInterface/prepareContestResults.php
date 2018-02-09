@@ -1133,6 +1133,23 @@ if ($action == "makeGroupOfficial") {
    }
 }
 
+echo "<h3><a href='".$startUrl."&action=mergeStudents'>Merge students with same name, grade, user and school</a></h3>";
+if ($action == "mergeStudents") {
+
+      execQueryAndShowNbRows("Attach students with no registrationID to identical registered students", "
+         UPDATE contestant
+         JOIN team ON contestant.teamID = team.ID
+         JOIN `group` ON `group`.ID = team.groupID
+         JOIN `contest` ON `group`.contestID = contest.ID
+         JOIN algorea_registration ON `group`.userID = algorea_registration.userID
+         AND `group`.schoolID = algorea_registration.schoolID
+         AND contestant.firstName = algorea_registration.firstName
+         AND contestant.lastName = algorea_registration.lastName
+         AND contestant.grade = algorea_registration.grade
+         SET contestant.registrationID = algorea_registration.ID
+         WHERE contestant.registrationID IS NULL",
+         array());
+}
 
 
 /*

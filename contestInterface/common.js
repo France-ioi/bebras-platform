@@ -1696,6 +1696,8 @@ window.showPersonalPage = function(data) {
          if (participation.score !== null) {
             score = Math.max(score, parseInt(participation.score));
          }
+      } else if (participation.score !== null) {
+         score = parseInt(participation.score);
       }
       var rank = rankToStr(participation.rank, $nameGrade, participation.nbContestants);
       var schoolRank = rankToStr(participation.schoolRank, $nameGrade, participation.nbContestants);
