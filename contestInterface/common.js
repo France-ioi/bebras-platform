@@ -1629,13 +1629,15 @@ window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, 
             createTeam([{ lastName: "Anonymous", firstName: "Anonymous", genre: 2, email: null, zipCode: null}]);
          } else {
             setContestBreadcrumb();
-            $("#divLogin").show();
+            $("#divDescribeTeam").show();
             $("#divAccessContest").show();
             if (data.allowTeamsOfTwo == 1) {
                $("#divCheckNbContestants").show();
+               $("#divLogin").hide();
             } else {
                window.setNbContestants(1);
                $("#divCheckNbContestants").hide();
+               $("#divLogin").show();
             }
          }
          if ((data.registrationData != undefined) && (data.registrationData.code != undefined)) {
@@ -2113,8 +2115,9 @@ function createTeam(contestants) {
       function(data) {
          teamID = data.teamID;
          teamPassword = data.password;
+         $("#divDescribeTeam").hide();
          $("#divLogin").hide();
-         //$("#divCheckNbContestants").hide();
+         $("#divCheckNbContestants").hide();
          $("#divAccessContest").hide();
          $("#teamPassword").html(data.password);
          $("#divPassword").show();

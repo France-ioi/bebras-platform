@@ -362,7 +362,7 @@
     </table>
   </div>
 
-  <div id="divLogin" style="display:none" class="contestSelection-tab">
+  <div id="divDescribeTeam" style="display:none" class="contestSelection-tab">
     <div class="tabTitle">Membres de votre équipe</div>
    <div id="divCheckNbContestants" style="display:none">
     <p>
@@ -374,7 +374,7 @@
     </p>
    </div>
 
-    <div class="dialog">
+    <div id="divLogin" style="display:none" class="dialog">
       <div class="login_box panel">
         <div class="panel-head"><b data-i18n="login_teammate"></b><b> 1</b></div>
         <div class="panel-body">
