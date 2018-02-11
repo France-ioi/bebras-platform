@@ -208,6 +208,7 @@
              <li>création de fonctions</li>
              <li>tableaux, listes et chaînes de caractères</li>
           </ul>
+          <b>Participation individuelle uniquement (pas de binômes)</b>
         </td>
         <td></td>
       </tr>
