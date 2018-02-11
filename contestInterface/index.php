@@ -435,6 +435,7 @@
                 <option value="14" data-i18n="grade_14"></option>
                 <option value="12" data-i18n="grade_12"></option>
                 <option value="15" data-i18n="grade_15"></option>
+                <option value="20" data-i18n="grade_20"></option>
                 <option value="-4" data-i18n="grade_-4">Autre</option>
               </select>
             </p>
@@ -504,6 +505,7 @@
                 <option value="14" data-i18n="grade_14"></option>
                 <option value="12" data-i18n="grade_12"></option>
                 <option value="15" data-i18n="grade_15"></option>
+                <option value="20" data-i18n="grade_20"></option>
                 <option value="-4" data-i18n="grade_-4">Autre</option>
               </select></p>
             <p id="login-input-studentId-2">

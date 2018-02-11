@@ -173,7 +173,8 @@ function getGroupsColModel() {
                "11": t("grade_11"),
                "14": t("grade_14"),
                "12": t("grade_12"),
-               "15": t("grade_15")
+               "15": t("grade_15"),
+               "20": t("grade_20")
             }}},
          participationType: {label: t("participationType_label"), longLabel: t("participationType_long_label"), editable: true, required: true, edittype: "select", width: 100, editoptions:{ value:{"Official": t("participationType_official"), "Unofficial": t("participationType_unofficial")}}, comment: t("participationType_comment")},
          expectedStartTime: {
@@ -325,7 +326,8 @@ function initModels(isLogged) {
                   "13": t("grade_13"),
                   "11": t("grade_11"),
                   "14": t("grade_14"),
-                  "12": t("grade_12")
+                  "12": t("grade_12"),
+                  "20": t("grade_20")
                }}, searchoptions:{ value:"_NOF_:" + t("option_no_filter") +
                   ";-1:" + t("grade_-1") +
                   ";-4:" + t("grade_-4") +
@@ -344,7 +346,8 @@ function initModels(isLogged) {
                   ";11:" + t("grade_11") +
                   ";14:" + t("grade_14") +
                   ";12:" + t("grade_12") +
-                  ";15:" + t("grade_15")
+                  ";15:" + t("grade_15") +
+                  ";20:" + t("grade_20")
                },
                stype: "select", width:75},
             score: {label: t("contestant_score_label"), editable: false, width:75},
