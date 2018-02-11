@@ -308,7 +308,6 @@
         <td></td>
       </tr>
     </tbody></table>
-    <p class="categoryWarning">La catégorie verte n'est pas encore disponible, elle le sera dans les prochains jours.</p>
   </div>
 
   <div id="selectLanguage" style="display:none" class="contestSelection-tab">
