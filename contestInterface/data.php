@@ -397,15 +397,17 @@ function handleGroupFromRegistrationCode($db, $code) {
    $query = "SELECT IFNULL(tmp.score, 0) as score, tmp.sumScores, tmp.password, tmp.startTime, tmp.contestName, tmp.contestID, tmp.parentContestID, tmp.contestCategory, ".
        "tmp.nbMinutes, tmp.remainingSeconds, tmp.teamID, ".
        "GROUP_CONCAT(CONCAT(CONCAT(contestant.firstName, ' '), contestant.lastName)) as contestants, tmp.rank, tmp.schoolRank, count(*) as nbContestants ".
-       "FROM (SELECT team.ID as teamID, team.score, SUM(team_question.ffScore) as sumScores, contestant.rank, contestant.schoolRank, team.password, team.startTime, contest.ID as contestID, contest.parentContestID, contest.name as contestName, contest.categoryColor as contestCategory, ".
-       "team.nbMinutes, (team.`nbMinutes` * 60) - TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), `team`.`startTime`)) as remainingSeconds ".
-       "FROM `contestant` ".
-       "JOIN team ON `contestant`.teamID = `team`.ID ".
-       "JOIN `group` ON team.groupID = `group`.ID ".
-       "JOIN `contest` ON `group`.contestID = `contest`.ID ".
-       "LEFT JOIN `team_question` ON team_question.teamID = team.ID ".
-       "WHERE contestant.registrationID = :registrationID ".
-       "GROUP BY team.ID) tmp ".
+       "FROM (".
+          "SELECT team.ID as teamID, team.score, SUM(team_question.ffScore) as sumScores, contestant.rank, contestant.schoolRank, team.password, team.startTime, contest.ID as contestID, contest.parentContestID, contest.name as contestName, contest.categoryColor as contestCategory, ".
+          "team.nbMinutes, (team.`nbMinutes` * 60) - TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), `team`.`startTime`)) as remainingSeconds ".
+          "FROM `contestant` ".
+          "JOIN team ON `contestant`.teamID = `team`.ID ".
+          "JOIN `group` ON team.groupID = `group`.ID ".
+          "JOIN `contest` ON `group`.contestID = `contest`.ID ".
+          "LEFT JOIN `team_question` ON team_question.teamID = team.ID ".
+          "WHERE contestant.registrationID = :registrationID ".
+          "GROUP BY team.ID".
+       ") tmp ".
        "JOIN contestant ON tmp.teamID = contestant.teamID ".
        "GROUP BY tmp.teamID ".
        "ORDER BY tmp.startTime ASC";

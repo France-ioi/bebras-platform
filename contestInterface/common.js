@@ -1522,8 +1522,9 @@ function fillListTeams(teams) {
 */
 var nbContestants;
 
-window.setNbContestants = function(nbContestants) {
+window.setNbContestants = function(newNbContestants) {
    $(".nbContestants").removeClass('selected');
+   nbContestants = newNbContestants;
    if (nbContestants === 2) {
       $("#contestant2").show();
    }
@@ -1626,12 +1627,16 @@ window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, 
          if (isPublic) {
             window.setNbContestants(1);
             createTeam([{ lastName: "Anonymous", firstName: "Anonymous", genre: 2, email: null, zipCode: null}]);
-         } else if (data.allowTeamsOfTwo == 1) {
-            setContestBreadcrumb();
-            $("#divCheckNbContestants").show();
-            $("#divAccessContest").show();
          } else {
-            window.setNbContestants(1);
+            setContestBreadcrumb();
+            $("#divLogin").show();
+            $("#divAccessContest").show();
+            if (data.allowTeamsOfTwo == 1) {
+               $("#divCheckNbContestants").show();
+            } else {
+               window.setNbContestants(1);
+               $("#divCheckNbContestants").hide();
+            }
          }
          if ((data.registrationData != undefined) && (data.registrationData.code != undefined)) {
             contestants[1] = { registrationCode :  data.registrationData.code };
@@ -2107,8 +2112,8 @@ function createTeam(contestants) {
       function(data) {
          teamID = data.teamID;
          teamPassword = data.password;
-         //$("#divLogin").hide();
-         $("#divCheckNbContestants").hide();
+         $("#divLogin").hide();
+         //$("#divCheckNbContestants").hide();
          $("#divAccessContest").hide();
          $("#teamPassword").html(data.password);
          $("#divPassword").show();

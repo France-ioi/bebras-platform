@@ -362,8 +362,9 @@
     </table>
   </div>
 
-  <div id="divCheckNbContestants" style="display:none" class="contestSelection-tab">
+  <div id="divLogin" style="display:none" class="contestSelection-tab">
     <div class="tabTitle">Membres de votre équipe</div>
+   <div id="divCheckNbContestants" style="display:none">
     <p>
       <span data-i18n="nb_contestants_question"></span>
       <span class="btn-group" style="margin-left: 20px;">
@@ -371,8 +372,9 @@
         <button type="button" data-nbcontestants="2" class="btn btn-default nbContestants" data-i18n="nb_contestants_two"></button>
       </span>
     </p>
+   </div>
 
-    <div id="divLogin" style="display:none" class="dialog">
+    <div class="dialog">
       <div class="login_box panel">
         <div class="panel-head"><b data-i18n="login_teammate"></b><b> 1</b></div>
         <div class="panel-body">
