@@ -154,7 +154,7 @@ execSelectAndShowResults("Selected contest(s)", "
 
 echo "<h3><a href='".$startUrl."&action=showStats'>Some statistics</a></h3>";
 if ($action == "showStats") {
-   execSelectAndShowResults("Number of contestants", "
+   execSelectAndShowResults("Number of contestants (contestants participating in two subcontests are counted twice)", "
       SELECT team.participationType, count(*) FROM contestant
       JOIN team ON (contestant.teamID = team.ID)
       JOIN `group` ON (`team`.groupID = `group`.ID)
@@ -164,6 +164,28 @@ if ($action == "showStats") {
       ",
       array("contestID" => $contestID));
 
+   execSelectAndShowResults("Number of distinct official contestants", "
+      SELECT count(*) FROM (
+         SELECT DISTINCT registrationID FROM contestant
+         JOIN team ON (contestant.teamID = team.ID)
+         JOIN `group` ON (`team`.groupID = `group`.ID)
+         JOIN `contest` ON `group`.contestID = contest.ID
+         WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+         AND team.participationType = 'Official'
+         UNION
+         SELECT DISTINCT contestant.ID FROM contestant
+         JOIN team ON (contestant.teamID = team.ID)
+         JOIN `group` ON (`team`.groupID = `group`.ID)
+         JOIN `contest` ON `group`.contestID = contest.ID
+         WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+         AND team.participationType = 'Official'
+         AND contestant.registrationID IS NULL
+         )
+         tmp
+      ",
+      array("contestID" => $contestID));
+      
+      
    execSelectAndShowResults("Number of contestants by subcontest", "
       SELECT contest.name, team.participationType, count(*)
       FROM contestant
@@ -594,8 +616,8 @@ if ($action == "recomputeScores") {
 }
 
 
-echo "<h3><a href='".$startUrl."&action=showScoreAnomalies'>List score anomalies (score < ffScore) and (score > ffScore)</a></h3>";
-if ($action == "showScoreAnomalies") {
+echo "<h3><a href='".$startUrl."&action=showScoreAnomaliesBelow'>List score anomalies (score < ffScore)</a></h3>";
+if ($action == "showScoreAnomaliesBelow") {
    execSelectAndShowResults("List team_question where score < ffScore)", "
       SELECT team_question.teamID, team_question.questionID, team_question.score, team_question.ffScore, team.password
       FROM team_question
@@ -607,7 +629,9 @@ if ($action == "showScoreAnomalies") {
       AND team_question.score >= 0
       ORDER BY team.ID",
       array("contestID" => $contestID));
-
+}
+echo "<h3><a href='".$startUrl."&action=showScoreAnomaliesAbove'>List score anomalies (score > ffScore)</a></h3>";
+if ($action == "showScoreAnomaliesAbove") {
       execSelectAndShowResults("Team_questions where score is > ffScore", "
       SELECT team_question.teamID, team_question.questionID, team_question.score, team_question.ffScore, team.password
       FROM team_question

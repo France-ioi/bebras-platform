@@ -20,7 +20,9 @@ $grades = array(-1 => "Enseignant",
    16 => "6e SEGPA",
    17 => "5e SEGPA",
    18 => "4e SEGPA",
-   19 => "3e SEGPA");
+   19 => "3e SEGPA",
+   20 => "Post-Bac"
+   );
 
       if (!isset($_SESSION['userID'])) {
    die(json_encode(array('success' => false, 'error' => "Votre session a expiré, veuillez vous reconnecter.")));

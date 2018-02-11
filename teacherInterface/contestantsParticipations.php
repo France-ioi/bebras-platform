@@ -52,7 +52,7 @@ echo "<h1>Synthèse des résultats Castor et Algoréa</h1>";
 
 echo "<p>Dans les résultats ci-dessous, des élèves peuvent apparaître en double s'ils n'ont pas utilisé leur code de participant pour participer à Algoréa. Nous réunirons bientôt leurs participations sur la base de leurs noms, prénoms et classe.</p>";
 
-$grades = array(-1 => "Profs", -4 => "Autres", 4 => "CM1", 5 => "CM2", 6 => "6e", 7 => "5e", 8 => "4e", 9 => "3e", 10 => "2de", 11 => "1ère", 12 => "Tale", 13 => "2de<br/>pro", 14 => "1ère<br/>pro", 15 => "Tale<br/>pro", 16 => "6e Segpa", 17 => "5e Segpa", 18 => "4e Segpa", 19 => "3e Segpa");
+$grades = array(-1 => "Profs", -4 => "Autres", 4 => "CM1", 5 => "CM2", 6 => "6e", 7 => "5e", 8 => "4e", 9 => "3e", 10 => "2de", 11 => "1ère", 12 => "Tale", 13 => "2de<br/>pro", 14 => "1ère<br/>pro", 15 => "Tale<br/>pro", 16 => "6e Segpa", 17 => "5e Segpa", 18 => "4e Segpa", 19 => "3e Segpa", 20 => "Post-Bac");
 
 
 $query = "
