@@ -1932,6 +1932,7 @@ window.selectContest = function(ID) {
       contestID = ID;
       contestFolder = contest.folder;
       customIntro = contest.customIntro;
+      groupCheckedData.data.allowTeamsOfTwo = contest.allowTeamsOfTwo;
       groupWasChecked(groupCheckedData.data, groupCheckedData.curStep, groupCheckedData.groupCode, groupCheckedData.getTeams, groupCheckedData.isPublic, contestID);
    });
 }

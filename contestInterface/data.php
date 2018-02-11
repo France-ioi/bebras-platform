@@ -491,7 +491,7 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "",
 
    updateSessionWithContestInfos($row);
    
-   $query = "SELECT contest.ID as contestID, contest.folder, contest.name, contest.language, contest.categoryColor, contest.customIntro, contest.imageURL, contest.description ".
+   $query = "SELECT contest.ID as contestID, contest.folder, contest.name, contest.language, contest.categoryColor, contest.customIntro, contest.imageURL, contest.description, contest.allowTeamsOfTwo ".
       "FROM contest WHERE parentContestID = :contestID";
    $stmt = $db->prepare($query);
    $stmt->execute(array("contestID" => $row->contestID));
