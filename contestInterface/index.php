@@ -145,26 +145,17 @@
   <div id="selection-breadcrumb"></div>
   <div id="selectCategory" class="contestSelection-tab" style="display:none">
     <p id="extraMessageCategory" style="font-weight: bold"></p>
-    <div class="tabTitle">Choisissez la catégorie</div>
-    <div class="categoryWarning">
-    <p>Vous pouvez faire le concours plusieurs fois dans des catégories différentes si vous le souhaitez lors d'un même tour.</p>
-    <p>Ne choisissez la catégorie orange que si vous avez déjà une expérience en programmation, en particulier avec les variables.</p>
-    </div>
+    <div class="tabTitle" data-i18n="select_category"></div>
+    <div class="categoryWarning" data-i18n="[html]select_category_explanation"></div>
 
-    <p class="categoryWarning"><b>Attention :</b> si vous débutez, et ne vous êtes pas déjà bien entraîné sur les boucles imbriquées et conditions. commencez par la catégorie blanche même si vous êtes qualifié en jaune ou orange.</p>
+    <p class="categoryWarning" data-i18n="[html]select_category_warning"></p>
     <table class="colorCategories selectorTable"><tbody>
       <tr class="colorCategory white categoryChoice categorySelector" id="cat_blanche" data-category="blanche">
         <td class="selectorCell">
           <div class="selector_arrowForward" ><span> </span></div>
         </td>
-        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie blanche →</button></td>
-        <td>
-           <ul>
-              <li>séquences d'instructions</li>
-              <li>appels de fonctions simples</li>
-              <li>boucles répéter simples</li>
-           </ul>
-        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default" data-i18n="category_white"></button></td>
+        <td data-i18n="[html]category_white_description"></td>
         <td></td>
       </tr>
 
@@ -172,14 +163,8 @@
         <td class="selectorCell">
           <div class="selector_arrowForward" ><span> </span></div>
         </td>
-        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie jaune →</button></td>
-        <td>
-          <ul>
-            <li>instructions conditionnelles</li>
-            <li>boucles répéter imbriquées</li>
-            <li>imbrication de boucles et d'instructions conditionnelles</li>
-          </ul>
-        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default" data-i18n="category_yellow"></button></td>
+        <td data-i18n="[html]category_yellow_description"></td>
         <td></td>
       </tr>
 
@@ -187,14 +172,8 @@
         <td class="selectorCell">
           <div class="selector_arrowForward" ><span> </span></div>
         </td>
-        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie orange →</button></td>
-        <td>
-          <ul>
-            <li>variables</li>
-            <li>opérateurs arithmétiques et booléens</li>
-            <li>boucles "tant que"</li>
-          </ul>
-        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default" data-i18n="category_orange"></button></td>
+        <td data-i18n="[html]category_orange_description"></td>
         <td></td>
       </tr>
 
@@ -202,14 +181,8 @@
         <td class="selectorCell">
           <div class="selector_arrowForward" ><span> </span></div>
         </td>
-        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie verte →</button></td>
-        <td>
-          <ul>
-             <li>création de fonctions</li>
-             <li>tableaux, listes et chaînes de caractères</li>
-          </ul>
-          <b>Participation individuelle uniquement (pas de binômes)</b>
-        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default" data-i18n="category_green"></button></td>
+        <td data-i18n="[html]category_green_description"></td>
         <td></td>
       </tr>
 
@@ -217,94 +190,72 @@
         <td class="selectorCell">
           <div class="selector_arrowForward" ><span> </span></div>
         </td>
-        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie bleue →</button></td>
-        <td>
-           <ul>
-             <li>fonctions récursives</li>
-             <li>tableaux avancés</li>
-             <li>structures de données</li>
-           </ul>
-        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default" data-i18n="category_blue"></button></td>
+        <td data-i18n="[html]category_blue_description"></td>
         <td></td>
       </tr>
       <tr class="colorCategory white categoryChoice categorySelector" id="cat_cm1cm2" data-category="cm1cm2">
         <td class="selectorCell">
           <div class="selector_arrowForward" ><span> </span></div>
         </td>
-        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie CM1 / CM2 →</button></td>
-        <td>
-          <p>Pour les élèves en fin de primaire.</p>
-        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default" data-i18n="category_grades_4_5"></button></td>
+        <td data-i18n="[html]category_grades_4_5_description"></td>
         <td></td>
       </tr>
       <tr class="colorCategory white categoryChoice categorySelector" id="cat_6e5e" data-category="6e5e">
         <td class="selectorCell">
           <div class="selector_arrowForward" ><span> </span></div>
         </td>
-        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie sixième / cinquième →</button></td>
-        <td>
-          <p>Pour les élèves en début de collège.</p>
-        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default" data-i18n="category_grades_6_7"></button></td>
+        <td data-i18n="category_grades_6_7_description"></td>
         <td></td>
       </tr>
       <tr class="colorCategory white categoryChoice categorySelector" id="cat_4e3e" data-category="4e3e">
         <td class="selectorCell">
           <div class="selector_arrowForward" ><span> </span></div>
         </td>
-        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie quatrième / troisième →</button></td>
-        <td>
-          <p>Pour les élèves de fin de collège.</p>
-        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default" data-i18n="category_grades_8_9"></button></td>
+        <td data-i18n="category_grades_8_9_description"></td>
         <td></td>
       </tr>
       <tr class="colorCategory white categoryChoice categorySelector" id="cat_2depro" data-category="2depro">
         <td class="selectorCell">
           <div class="selector_arrowForward" ><span> </span></div>
         </td>
-        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie seconde pro →</button></td>
-        <td>
-          <p>Pour les élèves de début de lycée professionnel.</p>
-        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default" data-i18n="category_grades_13"></button></td>
+        <td data-i18n="category_grades_13_description"></td>
         <td></td>
       </tr>
       <tr class="colorCategory white categoryChoice categorySelector" id="cat_2de" data-category="2de">
         <td class="selectorCell">
           <div class="selector_arrowForward" ><span> </span></div>
         </td>
-        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie seconde →</button></td>
-        <td>
-          <p>Pour les élèves de début de lycée.</p>
-        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default" data-i18n="category_grades_10"></button></td>
+        <td data-i18n="category_grades_10_description"></td>
         <td></td>
       </tr>
       <tr class="colorCategory white categoryChoice categorySelector" id="cat_1reTalepro" data-category="1reTalepro">
         <td class="selectorCell">
           <div class="selector_arrowForward" ><span> </span></div>
         </td>
-        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie première pro / terminale pro →</button></td>
-        <td>
-          <p>Pour les élèves de fin de lycée professionnel.</p>
-        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default" data-i18n="category_grades_14_15"></button></td>
+        <td data-i18n="[html]category_grades_14_15_description"></td>
         <td></td>
       </tr>
       <tr class="colorCategory white categoryChoice categorySelector" id="cat_1reTale" data-category="1reTale">
         <td class="selectorCell">
           <div class="selector_arrowForward" ><span> </span></div>
         </td>
-        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie première / terminale →</button></td>
-        <td>
-          <p>Pour les élèves de fin de lycée.</p>
-        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default" data-i18n="category_grades_11_12"></button></td>
+        <td data-i18n="[html]category_grades_11_12_description"></td>
         <td></td>
       </tr>
       <tr class="colorCategory white categoryChoice categorySelector" id="cat_all" data-category="all">
         <td class="selectorCell">
           <div class="selector_arrowForward" ><span> </span></div>
         </td>
-        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default">Catégorie tous défis →</button></td>
-        <td>
-          <p>Les défis de toutes les catégories.</p>
-        </td>
+        <td class="colorCategoryTitle selectorTitle"><button type="button" class="btn btn-default" data-i18n="category_grades_all"></button></td>
+        <td data-i18n="[html]category_grades_all_description"></td>
         <td></td>
       </tr>
     </tbody></table>
@@ -312,58 +263,53 @@
 
   <div id="selectLanguage" style="display:none" class="contestSelection-tab">
     <p id="extraMessage" style="font-weight: bold"></p>
-    <div class="tabTitle">Choisissez le langage :</div>
-    <p>Si vous n'êtes pas sûr, nous vous recommandons Blockly.</p>
+    <div class="tabTitle" data-i18n="select_language"></div>
+    <p data-i18n="select_language_advice"></p>
     <table class="languageTable selectorTable"><tbody>
       <tr>
         <td class="languageSelector selectorCell" data-language="blockly">
           <div class="selector_arrowForward" ><span> </span></div>
         </td>
-        <td class="languageSelector selectorTitle" data-language="blockly"><button type="button" class="btn btn-default">Blockly →</button></td>
+        <td class="languageSelector selectorTitle" data-language="blockly"><button type="button" class="btn btn-default" data-i18n="language_blockly"></button></td>
         <td class="languageSelector" data-language="blockly">
           <img src="images/blockly.png" alt="exemple d'utilisation de Blockly">
         </td>
-        <td class="languageSelector languageDescription" data-language="blockly">
-          <p><strong>Ce que nous vous conseillons pour ce concours.</strong></p>
+        <td class="languageSelector languageDescription" data-language="blockly" data-i18n="[html]language_blockly_description">
         </td>
       </tr>
       <tr>
         <td class="languageSelector selectorCell" data-language="scratch">
           <div class="selector_arrowForward" ><span> </span></div>
         </td>
-        <td class="languageSelector selectorTitle" data-language="scratch"><button type="button" class="btn btn-default">Scratch →</button></td>
+        <td class="languageSelector selectorTitle" data-language="scratch"><button type="button" class="btn btn-default" data-i18n="language_scratch"></button></td>
         <td class="languageSelector" data-language="scratch">
           <img src="images/scratch.png" alt="exemple d'utilisation de Scratch">
         </td>
-        <td class="languageSelector languageDescription" data-language="scratch">
-          <p>Si vous avez l'habitude de Scratch.</p>
-          <p>Attention : ne fonctionne bien qu'avec les navigateurs Google Chrome ou Mozilla Firefox récents.</p>
+        <td class="languageSelector languageDescription" data-language="scratch" data-i18n="[html]language_scratch_description">
         </td>
       </tr>
       <tr>
         <td class="languageSelector selectorCell" data-language="python">
           <div class="selector_arrowForward" ><span> </span></div>
         </td>
-        <td class="languageSelector selectorTitle" data-language="python"><button type="button" class="btn btn-default">Python →</button></td>
+        <td class="languageSelector selectorTitle" data-language="python"><button type="button" class="btn btn-default" data-i18n="language_python"></button></td>
         <td class="languageSelector" data-language="python">
           <img src="images/python.png" alt="exemple d'utilisation de Python">
         </td>
-        <td class="languageSelector languageDescription" data-language="python">
-          <p>Si vous maîtrisez bien ce langage.</p>
-          <p>Attention : ne fonctionne bien qu'avec les navigateurs Google Chrome ou Mozilla Firefox récents.</p>
+        <td class="languageSelector languageDescription" data-language="python" data-i18n="[html]language_python_description">
         </td>
       </tr>
     </tbody></table>
   </div>
 
   <div id="selectContest" style="display:none" class="contestSelection-tab">
-    <div class="tabTitle">Choisissez la séquence :</div>
+    <div class="tabTitle" data-i18n="select_contest"></div>
     <table id="selectContestItems" class="selectorTable">
     </table>
   </div>
 
   <div id="divDescribeTeam" style="display:none" class="contestSelection-tab">
-    <div class="tabTitle">Membres de votre équipe</div>
+    <div class="tabTitle" data-i18n="team_nb_members"></div>
    <div id="divCheckNbContestants" style="display:none">
     <p>
       <span data-i18n="nb_contestants_question"></span>
@@ -379,18 +325,18 @@
         <div class="panel-head"><b data-i18n="login_teammate"></b><b> 1</b></div>
         <div class="panel-body">
           <div>
-            <span>Avez-vous votre code de participant ?</span>
+            <span data-i18n="login_has_registrationCode"></span>
             <span class='btn-group' style='margin-left: 10px;'>
-              <button type="button" class='btn btn-default yesno' onclick='hasRegistration(1, true)' id="hasReg1Yes">Oui</button>
-              <button type="button" class='btn btn-default yesno' onclick='hasRegistration(1, false)' id="hasReg1No">Non</button>
+              <button type="button" class='btn btn-default yesno' onclick='hasRegistration(1, true)' id="hasReg1Yes" data-i18n="yes"></button>
+              <button type="button" class='btn btn-default yesno' onclick='hasRegistration(1, false)' id="hasReg1No" data-i18n="no"></button>
             </span>
           </div>
           <div id="yesRegistrationCode1" style="text-align:center;display:none" class="form-inline">
             <p id="login-input-registrationCode-1">
               <span data-i18n="[html]login_input_registrationCode"></span>
               <input id="registrationCode1" type="text" autocomplete="off" class="form-control" /></p>
-            <p><i>(Une lettre puis une douzaine de chiffres)</i></p>
-            <button type='button' onclick="validateRegistrationCode(1)" class="btn btn-default" >Valider ce code</button>
+            <p><i data-i18n="login_registrationCode_description"></i></p>
+            <button type='button' onclick="validateRegistrationCode(1)" class="btn btn-default" data-i18n="login_validate_code"></button>
             <p><span id="errorRegistrationCode1" style="color:red;font-weight:bold"></span></p>
           </div>
           <div id="noRegistrationCode1" style="display:none" class="form-inline">
@@ -449,18 +395,18 @@
         <div class="panel-head"><b data-i18n="login_teammate"></b><b> 2</b></div>
         <div class="panel-body">
           <div>
-            <span>Avez-vous votre code de participant ?</span>
+            <span data-i18n="login_has_registrationCode"></span>
             <span class='btn-group' style='margin-left: 10px;'>
-              <button type="button" class='btn btn-default yesno' onclick='hasRegistration(2, true)' id="hasReg2Yes">Oui</button>
-              <button type="button" class='btn btn-default yesno' onclick='hasRegistration(2, false)' id="hasReg2No">Non</button>
+              <button type="button" class='btn btn-default yesno' onclick='hasRegistration(2, true)' id="hasReg2Yes" data-i18n="yes"></button>
+              <button type="button" class='btn btn-default yesno' onclick='hasRegistration(2, false)' id="hasReg2No" data-i18n="no"></button>
             </span>
           </div>
           <div id="yesRegistrationCode2" style='text-align:center;display:none' class="form-inline">
             <p id="login-input-registrationCode-2">
               <span data-i18n="[html]login_input_registrationCode"></span>
               <input id="registrationCode2" type="text" autocomplete="off" class="form-control" /></p>
-            <p><i>(Une lettre puis une douzaine de chiffres)</i></p>
-            <button type='button' onclick="validateRegistrationCode(2)" class="btn btn-default">Valider ce code</button>
+            <p><i data-i18n="login_registrationCode_description"></i></p>
+            <button type='button' onclick="validateRegistrationCode(2)" class="btn btn-default" data-i18n="login_validate_code"></button>
             <p><span id="errorRegistrationCode2" style="color:red;font-weight:bold"></span></p>
           </div>
           <div id="noRegistrationCode2" style="display:none" class="form-inline">
@@ -522,27 +468,19 @@
   </div>
 </div><!-- #divCheckNbContestants -->
 <div id="divStartContest" style="display:none">
-   <h2>Démarrer le concours Algoréa</h2>
-   <p>
-   Êtes-vous certain de vouloir commencer le concours officiel maintenant ?
-   </p>
-   <p>
-   Ne le commencez pas chez vous si votre enseignant a prévu de le faire en classe !
-   </p>
+   <div data-i18n="[html]contest_start_intro"></div>
    <table>
       <tr>
-         <td>   <button type="button" onclick="reallyStartContest()" class="btn btn-primary">Oui, je commence maintenant</button></td>
+         <td>   <button type="button" onclick="reallyStartContest()" class="btn btn-primary" data-i18n="contest_start_yes"></button></td>
          <td style="width:50px">
-         <td><button type="button" onclick="cancelStartContest()" class="btn btn-primary">Non, je me suis trompé.</button></td>
+         <td><button type="button" onclick="cancelStartContest()" class="btn btn-primary" data-i18n="contest_start_no"></button></td>
       </tr>
    </table>
 </div>
 
 <div id="divAllContestsDone" style="display:none">
-   <h2>Concours déjà effectué</h2>
-   <p>
-   Vous avez déjà utilisé ce code pour faire le concours dans toutes les catégories auxquelles vous avez accès.
-   </p>
+   <h2 data-i18n="contest_already_done"></h2>
+   <p data-i18n="contest_already_done_details"></p>
    <button type="button" onclick="cancelStartContest()" class="btn btn-primary">Retour</button>
 </div>
 
