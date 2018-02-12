@@ -107,6 +107,7 @@
     "submitPass": "Submit recovery code",
     "rank": "Rank: ",
     "others_retry": "Others can just <input type='button' onclick='checkGroup()' value='Retry'/>.",
+    "grade_3": "4 razred",
     "grade_4": "5 razred",
     "grade_5": "6 razred",
     "grade_6": "7 razred",

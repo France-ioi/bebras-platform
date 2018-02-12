@@ -116,6 +116,7 @@
     "submitPass": "Enviar código de recuperación",
     "rank": "Rango: ",
     "others_retry": "Otros pueden simplemente <input type='button' onclick='checkGroup()' value='Reintentar'/>.",
+    "grade_3": "3to grado",
     "grade_4": "4to grado",
     "grade_5": "5to grado",
     "grade_6": "6to grado",

@@ -116,6 +116,7 @@
     "submitPass": "Soumettre le code de secours",
     "rank": "Classement : ",
     "others_retry": "Pour les autres il suffira de <input type='button' onclick='checkGroup()' value='Réessayer'/>.",
+    "grade_3": "En CE2 (ou avant)",
     "grade_4": "En CM1",
     "grade_5": "En CM2",
     "grade_6": "En 6e",
