@@ -1631,6 +1631,12 @@ window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, 
             setContestBreadcrumb();
             $("#divDescribeTeam").show();
             $("#divAccessContest").show();
+            if (data.askParticipationCode == 0) {
+               $("#askRegistrationCode1").hide();
+               $("#askRegistrationCode2").hide();
+               hasRegistration(1, false);
+               hasRegistration(2, false);
+            }
             if (data.allowTeamsOfTwo == 1) {
                $("#divCheckNbContestants").show();
                $("#divLogin").hide();
@@ -1935,6 +1941,7 @@ window.selectContest = function(ID) {
       contestFolder = contest.folder;
       customIntro = contest.customIntro;
       groupCheckedData.data.allowTeamsOfTwo = contest.allowTeamsOfTwo;
+      groupCheckedData.data.askParticipationCode = contest.askParticipationCode;
       groupWasChecked(groupCheckedData.data, groupCheckedData.curStep, groupCheckedData.groupCode, groupCheckedData.getTeams, groupCheckedData.isPublic, contestID);
    });
 }

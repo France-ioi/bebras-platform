@@ -1,0 +1,1 @@
+ALTER TABLE `contestant` CHANGE `tmpIsOfficial` `tmpIsOfficial` TINYINT(4) NULL DEFAULT NULL;

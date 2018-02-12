@@ -324,7 +324,7 @@
       <div class="login_box panel">
         <div class="panel-head"><b data-i18n="login_teammate"></b><b> 1</b></div>
         <div class="panel-body">
-          <div>
+          <div id="askRegistrationCode1">
             <span data-i18n="login_has_registrationCode"></span>
             <span class='btn-group' style='margin-left: 10px;'>
               <button type="button" class='btn btn-default yesno' onclick='hasRegistration(1, true)' id="hasReg1Yes" data-i18n="yes"></button>
@@ -394,7 +394,7 @@
       <div class="login_box panel" cellspacing=0 id="contestant2" style="display:none">
         <div class="panel-head"><b data-i18n="login_teammate"></b><b> 2</b></div>
         <div class="panel-body">
-          <div>
+          <div id="askRegistrationCode2">
             <span data-i18n="login_has_registrationCode"></span>
             <span class='btn-group' style='margin-left: 10px;'>
               <button type="button" class='btn btn-default yesno' onclick='hasRegistration(2, true)' id="hasReg2Yes" data-i18n="yes"></button>
