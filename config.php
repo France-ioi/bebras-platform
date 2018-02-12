@@ -79,6 +79,8 @@ $config->certificates->webServiceUrl = 'http://castor-informatique.fr.localhost/
 $config->certificates->allow = false;
 $config->certificates->confIndexForThisPlatform = 0; // index of the conf in certificates/ (you shouldn't need to change it)
 
+$config->grades = [-1,4,5,6,16,7,17,8,18,9,19,10,13,11,14,12,15,20,-4];
+
 $config->timezone = ini_get('date.timezone');
 $config->defaultLanguage = 'fr';
 $config->contestPresentationURL = '';

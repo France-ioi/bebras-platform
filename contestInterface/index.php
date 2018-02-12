@@ -364,26 +364,12 @@
               <span data-i18n="grade_question"></span>
               <select id="grade1">
                 <option value="" data-i18n="grade_select" selected></option>
-                <option value="-1" data-i18n="grade_-1"></option>
-                <option value="4" data-i18n="grade_4"></option>
-                <option value="5" data-i18n="grade_5"></option>
-                <option value="6" data-i18n="grade_6"></option>
-                <option value="6" data-i18n="grade_16"></option>
-                <option value="7" data-i18n="grade_7"></option>
-                <option value="7" data-i18n="grade_17"></option>
-                <option value="8" data-i18n="grade_8"></option>
-                <option value="8" data-i18n="grade_18"></option>
-                <option value="9" data-i18n="grade_9"></option>
-                <option value="9" data-i18n="grade_19"></option>
-                <option value="10" data-i18n="grade_10"></option>
-                <option value="13" data-i18n="grade_13"></option>
-                <option value="11" data-i18n="grade_11"></option>
-                <option value="14" data-i18n="grade_14"></option>
-                <option value="12" data-i18n="grade_12"></option>
-                <option value="15" data-i18n="grade_15"></option>
-                <option value="20" data-i18n="grade_20"></option>
-                <option value="-4" data-i18n="grade_-4">Autre</option>
-              </select>
+<?php
+               foreach ($config->grades as $grade) {
+                  echo "<option value='".$grade."' data-i18n='grade_".$grade."'></option>";
+               }
+?>
+               </select>
             </p>
             <p id="login-input-studentId-1">
               <span data-i18n="[html]login_input_studentId"></span>
@@ -434,25 +420,11 @@
               <span data-i18n="grade_question"></span>
               <select id="grade2">
                 <option value="" data-i18n="grade_select" selected></option>
-                <option value="-1" data-i18n="grade_-1"></option>
-                <option value="4" data-i18n="grade_4"></option>
-                <option value="5" data-i18n="grade_5"></option>
-                <option value="6" data-i18n="grade_6"></option>
-                <option value="6" data-i18n="grade_16"></option>
-                <option value="7" data-i18n="grade_7"></option>
-                <option value="7" data-i18n="grade_17"></option>
-                <option value="8" data-i18n="grade_8"></option>
-                <option value="8" data-i18n="grade_18"></option>
-                <option value="9" data-i18n="grade_9"></option>
-                <option value="9" data-i18n="grade_19"></option>
-                <option value="10" data-i18n="grade_10"></option>
-                <option value="13" data-i18n="grade_13"></option>
-                <option value="11" data-i18n="grade_11"></option>
-                <option value="14" data-i18n="grade_14"></option>
-                <option value="12" data-i18n="grade_12"></option>
-                <option value="15" data-i18n="grade_15"></option>
-                <option value="20" data-i18n="grade_20"></option>
-                <option value="-4" data-i18n="grade_-4">Autre</option>
+<?php
+               foreach ($config->grades as $grade) {
+                  echo "<option value='".$grade."' data-i18n='grade_".$grade."'></option>";
+               }
+?>
               </select></p>
             <p id="login-input-studentId-2">
               <span data-i18n="[html]login_input_studentId"></span>
