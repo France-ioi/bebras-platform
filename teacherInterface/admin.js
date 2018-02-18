@@ -158,6 +158,7 @@ function getGroupsColModel() {
             width: 260, comment: t("contestID_comment")},
          grade: {label: "Classe", editable: true, edittype: "select", width: 100, required: true, editoptions:{
             value:{
+               "3": t("grade_3"),
                "4": t("grade_4"),
                "5": t("grade_5"),
                "6": t("grade_6"),
@@ -311,6 +312,7 @@ function initModels(isLogged) {
                value:{
                   "-1": t("grade_-1"),
                   "-4": t("grade_-4"),
+                  "3": t("grade_3"),
                   "4": t("grade_4"),
                   "5": t("grade_5"),
                   "15": t("grade_15"),
@@ -331,6 +333,7 @@ function initModels(isLogged) {
                }}, searchoptions:{ value:"_NOF_:" + t("option_no_filter") +
                   ";-1:" + t("grade_-1") +
                   ";-4:" + t("grade_-4") +
+                  ";3:" + t("grade_3") +
                   ";4:" + t("grade_4") +
                   ";5:" + t("grade_5") +
                   ";6:" + t("grade_6") +

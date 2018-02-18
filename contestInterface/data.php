@@ -282,6 +282,9 @@ function handleLoadSession() {
    if ($config->defaultLanguage == "es") {
       $message = "¿Desea reiniciar la prueba comenzada anteriormente?";
    }
+   if ($config->defaultLanguage == "en") {
+      $message = "Would you like to continue the participation that was started?";
+   }
    exitWithJson(array(
       "success" => true,
       "teamID" => $_SESSION["teamID"],
@@ -445,7 +448,7 @@ function handleGroupFromRegistrationCode($db, $code) {
 }
 
 function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "", $registrationData = null, $isOfficialContest = false) {
-   global $allCategories;
+   global $allCategories, $config;
    
    // Find a group whose code matches the given password.
    $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, UTC_TIMESTAMP()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`askParticipationCode`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`visibility`, `contest`.`askEmail`, `contest`.`askZip`, `contest`.`askGenre`, `contest`.`askGrade`, `contest`.`askStudentId`, `contest`.`name` as `contestName`, `contest`.`allowPauses`, `group`.`isGenerated`, `group`.`language`, `group`.`minCategory`, `group`.`maxCategory` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
@@ -457,7 +460,16 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "",
       return;
    }
    if ($row->open != "Open") {
-      exitWithJson((object)array("success" => false, "message" => "Le concours de ce groupe n'est pas ouvert."));
+      $messages = array("fr" => "Le concours de ce groupe n'est pas ouvert.",
+         "en" => "The contest associated with this group is not open",
+         "ar" => "المسابقة لم تبدأ بعد"
+      );
+      if (isset($messages[$config->defaultLanguage])) {
+         $message = $messages[$config->defaultLanguage];
+      } else {
+         $message = $messages["en"];
+      }
+      exitWithJson((object)array("success" => false, "message" => $message));
    }
    $groupID = $row->ID;
    $schoolID = $row->schoolID;
