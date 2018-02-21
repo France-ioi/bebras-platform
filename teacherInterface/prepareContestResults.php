@@ -548,7 +548,7 @@ if ($action == "markAboveMinScore") {
       JOIN `contest` ON `team`.contestID = contest.ID
       SET team_question.score = NULL
       WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
-      AND team.score = -1
+      AND team_question.score = -1
       AND team_question.ffScore IS NOT NULL
       AND team.tmpScore >= :minScore",
       array("contestID" => $contestID, "minScore" => $minScore));

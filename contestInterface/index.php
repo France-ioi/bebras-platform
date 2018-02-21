@@ -356,8 +356,8 @@
               <span data-i18n="login_ask_gender"></span>
               <br/>
               <div class="divInput">
-                <input type="radio" id="genre1_female" name="genre1" value="1" autocomplete="off"><label for="genre1_female" data-i18n="login_female"></label>
-                <br /><input type="radio" id="genre1_male" name="genre1" value="2" autocomplete="off"><label for="genre1_male" data-i18n="login_male"></label>
+                <input type="radio" id="genre1_male" name="genre1" value="2" autocomplete="off"><label for="genre1_male" data-i18n="login_male"></label><br/>
+                <br /><input type="radio" id="genre1_female" name="genre1" value="1" autocomplete="off"><label for="genre1_female" data-i18n="login_female"></label>
               </div>
             </div>
             <p id="login-input-grade-1">
@@ -412,8 +412,8 @@
               <span data-i18n="login_ask_gender"></span>
               <br />
               <div class="divInput">
-                <input type="radio" id="genre2_female" name="genre2" value="1" autocomplete="off"><label for="genre2_female" data-i18n="login_female"></label>
-                <br /><input type="radio" id="genre2_male" name="genre2" value="2" autocomplete="off"><label for="genre2_male" data-i18n="login_male"></label>
+                <input type="radio" id="genre2_male" name="genre2" value="2" autocomplete="off"><label for="genre2_male" data-i18n="login_male"></label>
+                <br /><input type="radio" id="genre2_female" name="genre2" value="1" autocomplete="off"><label for="genre2_female" data-i18n="login_female"></label>
               </div>
             </div>
             <p id="login-input-grade-2">
