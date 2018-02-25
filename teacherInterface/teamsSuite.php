@@ -24,18 +24,25 @@ if (!isset($_SESSION["userID"])) {
 $db2 = new PDO($dbConnexionString2, $dbUser2, $dbPasswd2);
 
 $query = "SELECT `pixal`.`groups`.ID, `pixal`.`groups`.`sName`,
-`pixal`.`users`.`ID`  as `idUser`, `alkindi2016`.`algorea_registration`.`firstName`, `alkindi2016`.`algorea_registration`.`lastName`,
+`pixal`.`users`.`ID` as `idUser`, tmp.`firstName`, tmp.`lastName`,
 `pixal`.`users_items`.`idItem`, `pixal`.`users_items`.`iScore`, date(`pixal`.`users`.`sLastLoginDate`) as lastLogin
+FROM
+(
+SELECT `login-module`.`badges`.`user_id`, `alkindi2016`.`algorea_registration`.ID as registrationID, `alkindi2016`.`algorea_registration`.firstName, `alkindi2016`.`algorea_registration`.lastName
 FROM `alkindi2016`.`algorea_registration`
 JOIN `login-module`.`badges` ON `login-module`.`badges`.`code` = `alkindi2016`.`algorea_registration`.`code`
-JOIN `pixal`.`users` ON `pixal`.`users`.`loginID` = `login-module`.`badges`.`user_id`
-JOIN `pixal`.`groups_groups` ON `pixal`.`groups_groups`.`idGroupChild`  = `pixal`.`users`.`idGroupSelf`
+WHERE `alkindi2016`.`algorea_registration`.`userID` = :userID
+) tmp
+JOIN `pixal`.`users` ON `pixal`.`users`.`loginID` = `tmp`.`user_id`
+JOIN `pixal`.`groups_groups` ON `pixal`.`groups_groups`.`idGroupChild` = `pixal`.`users`.`idGroupSelf`
 JOIN `pixal`.`groups` ON `pixal`.`groups`.`ID` = `pixal`.`groups_groups`.`idGroupParent`
-LEFT JOIN `pixal`.`users_items` ON (`pixal`.`users`.`ID` = `pixal`.`users_items`.`idUser`  AND `users_items`.`idItem` IN (220599740790459496, 1158858004591700590, 197716040621949845, 439985607120600097))
-WHERE  `alkindi2016`.`algorea_registration`.`userID` = :userID
-AND `pixal`.`groups`.`sType` = 'Team'
+LEFT JOIN `pixal`.`users_items` ON (`pixal`.`users`.`ID` = `pixal`.`users_items`.`idUser` AND `users_items`.`idItem` IN (220599740790459496, 1158858004591700590, 197716040621949845, 439985607120600097))
+WHERE `pixal`.`groups`.`sType` = 'Team'
 GROUP BY `pixal`.`users`.`ID`, `pixal`.`users_items`.`idItem`
 ORDER BY `pixal`.`groups`.ID ASC, `pixal`.`users_items`.`idItem` ASC";
+
+
+
 
 $stmt = $db2->prepare($query);
 $stmt->execute(['userID' => $_SESSION['userID']]);
