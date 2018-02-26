@@ -1617,6 +1617,7 @@ window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, 
             //window.location = t("contest_url");
             return false;
          } else {
+            $("#divCheckGroup").show();
             $("#recoverGroup").show();
             return false;
          }
