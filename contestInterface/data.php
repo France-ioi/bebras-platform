@@ -428,7 +428,7 @@ function handleGroupFromRegistrationCode($db, $code) {
    $contestID = "485926402649945250"; // hard-coded training contest
    $isOfficialContest = false;
    if (isset($_POST["startOfficial"])) {
-      $contestID = "884044050337033997"; // hard-coded real contest
+      $contestID = "112633747529078424"; // hard-coded real contest
       $isOfficialContest = true;
    }
    if (isset($_SERVER['HTTP_HOST']) && ($_SERVER['HTTP_HOST'] == "chticode.algorea.org")) {
