@@ -79,12 +79,23 @@ $items = array("220599740790459496", "1158858004591700590", "197716040621949845"
 
 echo "<h1>Équipes créées pour le 2e tour</h1>";
 
-echo "<p><b>Attention :</b> si vous avez des équipes qui ont obtenu 285 points ou plus, elles sont qualifiées pour le 3e tour.</p>
-<p>Le 3e tour dure 1h30 et doit se faire sous surveillance, sur 1 seul ordinateur par équipe, entre le 19 mars et le 7 avril inclus.</p>
-<p>Les sujets sont les mêmes que pour le 2e tour, mais doivent être faits le plus rapidement possible.</p>
-<p>Les élèves ne doivent rien utiliser d'autre pendant l'épreuve que le site du concours, des feuilles de brouillon et crayons.</p>
-<p>L'un des élèves devra se connecter sur <a href='https://suite.concours-alkindi.fr'>suite.concours-alkindi.fr</a> via son code de participant, rappelé ci-dessous.</a>
-<p>Pour chaque équipe sélectionnée, un code secret fourni dans la colonne de droite devra être saisi pour commencer l'épreuve. <b>Il ne doit être transmis à l'équipe qu'au moment de commencer l'épreuve</b>.</p>";
+echo "<h2>Équipes qualifiées</h2><p>Les équipes qui ont obtenu 285 points ou plus sont qualifiées pour le 3e tour.</p>
+<p>Le 3e tour dure 1h30 et doit se faire sous surveillance, entre le 19 mars et le 7 avril inclus.</p>
+<h2>Fonctionnement de l'épreuve du 3e tour</h2>
+<p>Pour chaque équipe sélectionnée, un code secret fourni dans la colonne de droite devra être saisi pour commencer l'épreuve. <b>Il ne doit être transmis à l'équipe qu'au moment de commencer l'épreuve</b>.</p>
+<p>Munis de ce code secret et de leur code de participant individuel, rappelé ci-dessous, ils devront se connecter sur <a href='https://suite.concours-alkindi.fr' target='_blank'>suite.concours-alkindi.fr</a>.</p>
+
+<p>Les sujets sont les mêmes que pour le 2e tour, mais avec des données différentes. Pour chaque sujet, l'équipe peut effectuer plusieurs tentatives pendant la durée de l'épreuve.</p>
+
+<p>Les élèves ne doivent utiliser rien d'autre que le site du concours, des feuilles de brouillon et des crayons.</p>
+
+<p>Attention : nous avons précédemment indiqué qu'il ne fallait utiliser qu'un ordinateur par équipe. Nous avons cependant décidé qu'il était préférable de ne pas imposer cette règle. Il n'y a donc pas de limite au nombre d'ordinateurs qu'une équipe peut utiliser.</p>
+
+<h2>Calcul du score et départage des équipes</h2>
+<p>Le score d'une équipe au 3e tour sera calculé de la même manière que lors du 2e tour. On considèrea pour chaque sujet, la tentative de meilleur score parmi celles effectuées pendant l'épreuve. Le score total sera la somme des scores des 4 sujets.</p>
+
+<p>En cas d'égalité de score, les équipes seront départagées en fonction du temps, calculé selon le principe suivant : pour chaque sujet, parmi les tentatives de meilleur score, on considèrera le temps mis pour celle qui a été résolue le plus rapidement. Il s'agit du temps entre le moment de création de cette tentative, et le moment où son score a été obtenu. Le temps total pour l'équipe sera la somme de ces temps pour les 4 sujets.</p>
+";
 
 
 echo "<table class='resultats' cellspacing=0><tr><td>Nom de l'équipe</td><td>Élèves</td><td>Réseau&nbsp;1D</td><td>Réseau&nbsp;2D</td><td>Enigma&nbsp;1</td><td>Enigma&nbsp;2</td><td>Total</td><td>Code secret tour 3</td></tr>";
