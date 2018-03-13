@@ -48,7 +48,18 @@ if (!isset($_SESSION["userID"])) {
    exit;
 }
 
+$showCodes = 0;
+if (isset($_GET["showCodes"])) {
+   $showCodes = $_GET["showCodes"];
+}
+
 echo "<h1>Synthèse des résultats Castor et Algoréa</h1>";
+
+if ($showCodes) {
+   echo "<a href='contestantsParticipations.php?showCodes=0'>Masquer les codes de participants</a>";
+} else {
+   echo "<a href='contestantsParticipations.php?showCodes=1'>Afficher les codes de participants</a>";
+}
 
 echo "<p>Dans les résultats ci-dessous, des élèves peuvent apparaître en double s'ils n'ont pas utilisé leur code de participant pour participer à Algoréa. Nous réunirons bientôt leurs participations sur la base de leurs noms, prénoms et classe.</p>";
 
@@ -180,6 +191,9 @@ foreach ($schools as $schoolID => $school) {
    $contestants = $school["contestants"];
 
    echo "<table class='results' cellspacing=0><tr><td rowspan=2>Groupe Castor</td><td rowspan=2>Prénom</td><td rowspan=2>Nom</td><td rowspan=2>Classe</td><td rowspan=2>Qualifié en<br/>catégorie</td>";
+   if ($showCodes) {
+      echo "<td rowspan=2>Code de participant</td>";
+   }
    foreach ($contests as $mainContestKey => $categoryContests) {
       echo "<td colspan='".count($categoryContests)."'";
       if (count($categoryContests) == 1) {
@@ -216,6 +230,9 @@ foreach ($schools as $schoolID => $school) {
          "<td>".$contestant["infos"]["lastName"]."</td>".
          "<td>".$grades[$contestant["infos"]["grade"]]."</td>".
          "<td class='".$contestant["infos"]["qualifiedCategory"]."'>".$contestant["infos"]["qualifiedCategory"]."</td>";
+      if ($showCodes) {
+         echo "<td>".$contestant["infos"]["code"]."</td>";
+      }
       foreach ($contests as $mainContestKey => $categoryContests) {
          foreach ($categoryContests as $category => $contestKey) {
             if (isset($contestant["results"][$contestKey])) {
