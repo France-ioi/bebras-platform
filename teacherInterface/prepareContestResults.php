@@ -207,6 +207,16 @@ if ($action == "showStats") {
       GROUP BY team.participationType, contestant.grade
       ORDER BY team.participationType, contestant.grade",
       array("contestID" => $contestID));
+
+   execSelectAndShowResults("Number of teams with NULL score (not yet computed)", "
+      SELECT count(*)
+      FROM team
+      JOIN `group` ON (`team`.groupID = `group`.ID)
+      JOIN `contest` ON `group`.contestID = contest.ID
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team.score IS NULL",
+      array("contestID" => $contestID));
+     
 }
 
 echo "<h3><a href='".$startUrl."&action=fixSubgroups'>Fix subgroups</a></h3>";
@@ -304,7 +314,8 @@ if ($action == "computeGenres") {
       JOIN `group` ON team.groupID = `group`.ID
       JOIN `contest` ON `contest`.ID = `group`.contestID
       SET contestant.orig_genre = contestant.genre
-      WHERE (contest.ID = :contestID) OR (contest.parentContestID = :contestID)",
+      WHERE (contest.ID = :contestID) OR (contest.parentContestID = :contestID)
+      AND contestant.orig_genre IS NULL",
       array("contestID" => $contestID));
 
    execQueryAndShowNbRows("Drop temporary table used to set genres :", "
@@ -399,7 +410,7 @@ if ($action == "showUnofficialGroups") {
       UPDATE `team` JOIN `group` ON team.groupID = `group`.ID  SET team.participationType = 'Unofficial' WHERE `group`.code IN ('hy4dufwp');
 */
 
-echo "<h3><a href='".$startUrl."&action=resetIsOfficial'>Completely reset contestants official status, start with all teams set to the group participation type</a></h3>";
+echo "<h3><a href='".$startUrl."&action=resetIsOfficial'>Completely reset contestants tmpOfficial status</a></h3>";
 if ($action == "resetIsOfficial") { 
    execQueryAndShowNbRows("Set contestant.tmpIsOfficial to NULL for all contestants", "
       UPDATE contestant
@@ -407,20 +418,26 @@ if ($action == "resetIsOfficial") {
       JOIN `group` ON team.groupID = `group`.ID
       JOIN `contest` ON `group`.contestID = contest.ID
       SET contestant.tmpIsOfficial = NULL, contestant.reasonUnofficial = NULL
-      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)",
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team.score IS NULL",
       array("contestID" => $contestID));
 
    execQueryAndShowNbRows("Truncate duplicate_contestants table", "
       TRUNCATE TABLE duplicate_contestants",
       array("contestID" => $contestID));
-
+}
+      
+echo "<h3><a href='".$startUrl."&action=setTeamParticipationType'>Set team participation type to group participationType</a></h3>";
+if ($action == "setTeamParticipationType") { 
+      
    execQueryAndShowNbRows("Set team.participationType from NULL to participationType of group", "
       UPDATE team
       JOIN `group` ON team.groupID = `group`.ID
       JOIN `contest` ON `group`.contestID = contest.ID
       SET team.participationType = `group`.participationType
       WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
-      AND team.participationType IS NULL",
+      AND team.participationType IS NULL
+      AND team.score IS NULL",
    array("contestID" => $contestID));
 }      
 
@@ -453,7 +470,8 @@ if ($action == "handleRecover") {
       JOIN team ON team_question_recover.teamID = team.ID
       JOIN `group` ON team.groupID = `group`.ID
       JOIN `contest` ON `group`.contestID = contest.ID
-      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)",
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team.score IS NULL",
       array("contestID" => $contestID));
 
    execSelectAndShowResults("Number of answers to recover", "
@@ -463,7 +481,8 @@ if ($action == "handleRecover") {
       JOIN `group` ON team.groupID = `group`.ID
       JOIN `contest` ON `group`.contestID = contest.ID
       JOIN team_question_recover ON (team_question.teamID = team_question_recover.teamID AND team_question.questionID = team_question_recover.questionID AND team_question.answer != team_question_recover.answer)
-      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)",
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team.score IS NULL",
       array("contestID" => $contestID));
 
    execQueryAndShowNbRows("Update answers from recovered data", "
@@ -473,7 +492,8 @@ if ($action == "handleRecover") {
       JOIN `contest` ON `group`.contestID = contest.ID
       JOIN team_question_recover ON (team_question.teamID = team_question_recover.teamID AND team_question.questionID = team_question_recover.questionID AND team_question.answer != team_question_recover.answer)
       SET team_question.answer = team_question_recover.answer, team_question.score = NULL, team_question.date = NOW()
-      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)",
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team.score IS NULL",
       array("contestID" => $contestID));
 
    execQueryAndShowNbRows("Reset score for recovered answers", "
@@ -483,7 +503,8 @@ if ($action == "handleRecover") {
       JOIN `contest` ON `group`.contestID = contest.ID
       JOIN team_question_recover ON (team_question.teamID = team_question_recover.teamID AND team_question.questionID = team_question_recover.questionID )
       SET team_question.score = NULL
-      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)",
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team.score IS NULL",
       array("contestID" => $contestID));
 }
 
@@ -499,9 +520,11 @@ if ($action == "sumFFScores") {
          JOIN `group` ON team.groupID = `group`.ID
          JOIN `contest` ON `group`.contestID = contest.ID
          WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+         AND team.score IS NULL
          GROUP BY team_question.teamID
       ) tmp ON team.ID = tmp.teamID
-      SET team.tmpLastAnswerDate = maxDate, team.tmpScore = tmp.score",
+      SET team.tmpLastAnswerDate = maxDate, team.tmpScore = tmp.score
+      WHERE team.score IS NULL",
       array("contestID" => $contestID));
 }
 
@@ -514,7 +537,8 @@ if ($action == "markRecomputeScores") {
       JOIN `contest` ON `team`.contestID = contest.ID
       SET team_question.score = -1
       WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
-      AND team_question.score IS NULL AND team_question.ffScore IS NOT NULL",
+      AND team_question.score IS NULL AND team_question.ffScore IS NOT NULL
+      AND team.score IS NULL",
       array("contestID" => $contestID));
 }
 
@@ -550,7 +574,8 @@ if ($action == "markAboveMinScore") {
       WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
       AND team_question.score = -1
       AND team_question.ffScore IS NOT NULL
-      AND team.tmpScore >= :minScore",
+      AND team.tmpScore >= :minScore
+      AND team.score IS NULL",
       array("contestID" => $contestID, "minScore" => $minScore));
 }
       
@@ -582,7 +607,8 @@ if ($action == "showScoresToCompute") {
       SELECT count(*) FROM team_question
       JOIN team ON team_question.teamID = team.ID
       WHERE team_question.score IS NULL
-      AND contestID IN (".$strContestsIDs.")",
+      AND contestID IN (".$strContestsIDs.")
+      AND team.score IS NULL",
       array());
 }
 
@@ -593,7 +619,8 @@ if ($action == "recomputeScores") {
       JOIN `group` ON `team`.groupID = `group`.`ID`
       JOIN `contest` ON `group`.contestID = contest.ID
       SET team.contestID = `group`.contestID
-      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)",
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team.score IS NULL",
       array("contestID" => $contestID));
 
    echo "<table class='queryResults'><tr><td style='width:300px'>Question</td><td>ID</td><td>Score</td><td>Nombre</td></tr>";
@@ -607,6 +634,7 @@ if ($action == "recomputeScores") {
          JOIN `contest` ON `team`.contestID = contest.ID
          WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
          AND team_question.questionID = :questionID
+         AND team.score IS NULL
          GROUP BY team_question.questionID, scoreType",
          array("contestID" => $contestID, "questionID" => $question->ID), true);
 //         AND (team_question.score IS NULL OR team_question.score < 0)
@@ -627,6 +655,7 @@ if ($action == "showScoreAnomaliesBelow") {
       WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
       AND team_question.score < team_question.ffScore
       AND team_question.score >= 0
+      AND team.score IS NULL
       ORDER BY team.ID",
       array("contestID" => $contestID));
 }
@@ -641,6 +670,7 @@ if ($action == "showScoreAnomaliesAbove") {
       WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
       AND team_question.score > team_question.ffScore
       AND team_question.score >= 0
+      AND team.score IS NULL
       ORDER BY team.ID",
       array("contestID" => $contestID));
 }
@@ -654,7 +684,8 @@ if ($action == "fixScoreErrors") {
       JOIN `contest` ON `group`.contestID = contest.ID
       SET team_question.score = team_question.ffScore
       WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
-      AND team_question.score < team_question.ffScore",
+      AND team_question.score < team_question.ffScore
+      AND team.score IS NULL",
       array("contestID" => $contestID));
    
    
@@ -666,7 +697,8 @@ if ($action == "fixScoreErrors") {
       SET team_question.ffScore = team_question.score
       WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
       AND team_question.ffScore IS NULL
-      AND team_question.score IS NOT NULL",
+      AND team_question.score IS NOT NULL
+      AND team.score IS NULL",
       array("contestID" => $contestID));
 }
 
@@ -686,7 +718,8 @@ if ($action == "hideInvalidParticipations") {
       JOIN `contest` ON `group`.contestID = contest.ID
       SET old_groupID = groupID, groupID = :discardedGroupID
       WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
-      AND (team.createTime IS NULL OR (team.createTime < DATE_SUB(NOW(), INTERVAL 1 DAY) AND team.startTime IS NULL))",
+      AND (team.createTime IS NULL OR (team.createTime < DATE_SUB(NOW(), INTERVAL 1 DAY) AND team.startTime IS NULL))
+      AND team.score IS NULL",
       array("contestID" => $contestID, "discardedGroupID" => $discardedGroupID));
 }
 
@@ -700,7 +733,8 @@ if ($action == "detectDuplicates") {
       SET contestant.tmpIsOfficial = 0, contestant.reasonUnofficial = 'Unofficial group'
       WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
       AND contestant.tmpIsOfficial IS NULL
-      AND `group`.participationType = 'Unofficial'",
+      AND `group`.participationType = 'Unofficial'
+      AND team.score IS NULL",
       array("contestID" => $contestID));
    
    execQueryAndShowNbRows("Set tmpIsOfficial from NULL to 1 for contestants from official groups", "
@@ -712,7 +746,8 @@ if ($action == "detectDuplicates") {
       WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
       AND contestant.tmpIsOfficial IS NULL
       AND `group`.`participationType` = 'Official'
-      AND `team`.`participationType` = 'Official'",
+      AND `team`.`participationType` = 'Official'
+      AND team.score IS NULL",
       array("contestID" => $contestID));
       
    execQueryAndShowNbRows("Detect and store duplicate contestants", "
@@ -730,6 +765,7 @@ if ($action == "detectDuplicates") {
          JOIN `group` ON `team`.groupID = `group`.`ID`
          JOIN `contest` ON `group`.contestID = contest.ID
          WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+         AND team.score IS NULL
          AND tmpIsOfficial = 1
          ORDER BY contestant.cached_schoolID DESC , contestant.firstName DESC , contestant.lastName DESC, contest.categoryColor DESC
       ) tmp WHERE duplicateID IS NOT NULL",
@@ -750,6 +786,7 @@ if ($action == "detectDuplicates") {
          JOIN `group` ON `team`.groupID = `group`.`ID`
          JOIN `contest` ON `group`.contestID = contest.ID
          WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+         AND team.score IS NULL
          AND tmpIsOfficial = 1
          ORDER BY contestant.cached_schoolID ASC, contestant.firstName ASC, contestant.lastName ASC, contest.categoryColor ASC
          ) tmp WHERE duplicateID IS NOT NULL",
@@ -801,6 +838,7 @@ if ($action == "markFailed") {
       JOIN `contest` ON `group`.contestID = contest.ID
       SET duplicateType = 'failed'
       WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team.score IS NULL
       AND tmpLastAnswerDate IS NULL
       AND duplicateType = 'former'",
       array("contestID" => $contestID));
@@ -811,6 +849,7 @@ if ($action == "markFailed") {
       JOIN `contest` ON `group`.contestID = contest.ID
       SET duplicateType = 'failed'
       WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team.score IS NULL
       AND duplicateType = 'former'
       AND TIMEDIFF(tmpLastAnswerDate, team.startTime) < '00:25:00'",
       array("contestID" => $contestID));
@@ -977,6 +1016,7 @@ if ($action == "updateMaxGrade") {
          JOIN `contest` ON `group`.contestID = contest.ID
          JOIN contestant ON team.ID = contestant.teamID
          WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+         AND team.score IS NULL
          AND team.participationType = 'Official'
          GROUP BY team.ID
       ) t ON team.ID = t.ID
@@ -992,6 +1032,7 @@ if ($action == "showTeamScores") {
       JOIN `contest` ON `group`.contestID = contest.ID
       SET score = tmpScore
       WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team.score IS NULL
       AND team.participationType = 'Official'",
       array("contestID" => $contestID));      
 }

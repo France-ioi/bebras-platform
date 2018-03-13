@@ -13,20 +13,20 @@
 .orange {
    background-color: orange;
 }
-.blanche {
+.white {
    background-color: white;
 }
 .gray td {
    background-color: #C0C0C0;
    font-weight: bold;
 }
-.jaune {
+.yellow {
    background-color: yellow;
 }
-.verte {
+.green {
    background-color: lightgreen;
 }
-.bleue {
+.blue {
    background-color: #8080FF;
 }
 </style><body>
@@ -38,6 +38,8 @@ require_once("commonAdmin.php");
 
 function displayScores($category, $contestIDs, $nbContestants, $minForYellow, $minForOrange, $minForGreen, $minForBlue) {
    global $db;
+
+   $className = array("blanche" => "white", "jaune" => "yellow", "orange" => "orange", "verte" => "green", "bleue" => "blue");
    
    $strNbContestants = "";
    if ($nbContestants == 1) {
@@ -113,7 +115,7 @@ function displayScores($category, $contestIDs, $nbContestants, $minForYellow, $m
       if ($score >= $minForBlue) {
          $qualifiedCategory = "bleue";
       }
-      $row = "<tr class='".$category."'><td>".$score."</td>";
+      $row = "<tr class='".$className[$category]."'><td>".$score."</td>";
       foreach ($grades as $grade => $gradeName) {
          $row .= "<td>";
          if (isset($results[$grade][$score])) {
@@ -126,7 +128,7 @@ function displayScores($category, $contestIDs, $nbContestants, $minForYellow, $m
          $row .= "</td>";
       }
       $row .= "<td>".($allTotalBefore + 1)."</td>";
-      $row .= "<td class='".$qualifiedCategory."'>".$qualifiedCategory."</td>";
+      $row .= "<td class='".$className[$qualifiedCategory]."'>".$qualifiedCategory."</td>";
       $row .= "</tr>\n";
       $rows .= $row;
    }
@@ -153,8 +155,15 @@ if (!isset($_SESSION["userID"])) {
 
 for ($nbContestants = 1; $nbContestants <= 2; $nbContestants++) {
    displayScores("blanche", array("866488984396180", "95300867864028463", "226161984593556559"), $nbContestants, 100, 400, 400, 400);
+}
+for ($nbContestants = 1; $nbContestants <= 2; $nbContestants++) {
    displayScores("jaune", array("503609694961379947", "553157869958034707", "631835860403469834"), $nbContestants, 0, 100, 400, 400);
+}
+for ($nbContestants = 1; $nbContestants <= 2; $nbContestants++) {
    displayScores("orange", array("695264095539164908", "780696932767704624", "786950565192017915"), $nbContestants, 0, 0, 100, 400);
+}
+for ($nbContestants = 1; $nbContestants <= 2; $nbContestants++) {
+   displayScores("verte", array("194265151775855451", "724496314570819714", "877860856667136566"), $nbContestants, 0, 0, 0, 100);
 }
 
 ?>
