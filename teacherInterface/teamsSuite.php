@@ -23,6 +23,10 @@ if (!isset($_SESSION["userID"])) {
 
 $db2 = new PDO($dbConnexionString2, $dbUser2, $dbPasswd2);
 
+// Query fetching scores on a contest on AlgoreaPlatform
+// To fetch scores on another contest, modify:
+// -users_items.idItem IN (...) with the IDs of the tasks
+// -groups.idTeamItem = '...' with the ID of the chapter on which teams are created
 $query = "SELECT `pixal`.`groups`.ID, `pixal`.`groups`.`sName`,
 `pixal`.`users`.`ID` as `idUser`, tmp.`firstName`, tmp.`lastName`,
 `pixal`.`users_items`.`idItem`, `pixal`.`users_items`.`iScore`, date(`pixal`.`users`.`sLastLoginDate`) as lastLogin,
@@ -40,7 +44,7 @@ JOIN `pixal`.`groups_groups` ON `pixal`.`groups_groups`.`idGroupChild` = `pixal`
 JOIN `pixal`.`groups` ON `pixal`.`groups`.`ID` = `pixal`.`groups_groups`.`idGroupParent`
 LEFT JOIN `pixal`.`alkindi_teams` ON `pixal`.`alkindi_teams`.idGroup = `pixal`.`groups`.`ID`
 LEFT JOIN `pixal`.`users_items` ON (`pixal`.`users`.`ID` = `pixal`.`users_items`.`idUser` AND `users_items`.`idItem` IN (220599740790459496, 1158858004591700590, 197716040621949845, 439985607120600097))
-WHERE `pixal`.`groups`.`sType` = 'Team'
+WHERE `pixal`.`groups`.`sType` = 'Team' AND `pixal`.`groups`.`idTeamItem` = '168412300778778181'
 GROUP BY `pixal`.`users`.`ID`, `pixal`.`users_items`.`idItem`
 ORDER BY `pixal`.`groups`.ID ASC, `pixal`.`users_items`.`idItem` ASC";
 
