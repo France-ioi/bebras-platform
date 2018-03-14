@@ -2,6 +2,13 @@
 
 require_once '../shared/common.php';
 
+if (!isset($_GET["contestID"])) {
+   echo "contestID param missing";
+   exit;
+}
+
+$contestID = $_GET["contestID"];
+
 $stmt = $db->prepare('select school.name, school.country, school.region, school.ID, school.city, school.zipcode, count(contestant.ID) as contestantCount, contestant.grade from contestant
 join team on team.ID = contestant.teamID
 join `group` on `group`.ID = team.groupID
@@ -10,7 +17,7 @@ where
 team.participationType = \'Official\'
 and `group`.contestID = :contestID
 group by school.ID, contestant.grade');
-$stmt->execute(['contestID' => '118456124984202960']);
+$stmt->execute(['contestID' => $contestID]);
 
 $bigRes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -103,6 +110,11 @@ foreach($bigRes as $row) {
 	}
 	$regionData[$index]['contestantData'][intval($row['grade'])] = intval($row['contestantCount']);
 	$regionData[$index]['contestantData']['total'] += intval($row['contestantCount']);
+   $grade = intval($row['grade']);
+   if (!isset($gradeCat[$grade])) {
+      echo "Grade ".$grade." is not valid for report.<br/>";
+      continue;
+   }
 	if (!isset($regionData[$index]['contestantData'][$gradeCat[intval($row['grade'])]])) {
 		$regionData[$index]['contestantData'][$gradeCat[intval($row['grade'])]] = 0;
 	}

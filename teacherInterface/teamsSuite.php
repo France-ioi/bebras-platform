@@ -95,6 +95,8 @@ echo "<h2>Équipes qualifiées</h2><p>Les équipes qui ont obtenu 285 points ou 
 <p>Le score d'une équipe au 3e tour sera calculé de la même manière que lors du 2e tour. On considèrea pour chaque sujet, la tentative de meilleur score parmi celles effectuées pendant l'épreuve. Le score total sera la somme des scores des 4 sujets.</p>
 
 <p>En cas d'égalité de score, les équipes seront départagées en fonction du temps, calculé selon le principe suivant : pour chaque sujet, parmi les tentatives de meilleur score, on considèrera le temps mis pour celle qui a été résolue le plus rapidement. Il s'agit du temps entre le moment de création de cette tentative, et le moment où son score a été obtenu. Le temps total pour l'équipe sera la somme de ces temps pour les 4 sujets.</p>
+
+<p><b>Attention :</b> suite à une erreur de notre part, certaines des équipes qualifiées n'ont pas encore de code secret pour le 3e tour. Nous allons corriger cela dans les prochaines heures.</p>
 ";
 
 
