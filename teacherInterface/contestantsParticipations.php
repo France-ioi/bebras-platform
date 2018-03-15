@@ -119,7 +119,8 @@ $count = 0;
 while ($row = $stmt->fetchObject()) {
    if ($row->schoolID != $curSchoolID) {
       if ($curSchoolID != 0) {
-         $schools[$row->schoolID]["contestants"] = $contestants;
+         $schools[$curSchoolID]["contestants"] = $contestants;
+         $contestants = array();
       }
       $curSchoolID = $row->schoolID;
       $schools[$row->schoolID] = array("name"  => $row->schoolName);
