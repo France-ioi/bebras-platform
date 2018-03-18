@@ -59,7 +59,7 @@ function getMimeTypes() {
        $out['png'] = 'image/png';
        $out['css'] = 'text/css';
        $out['txt'] = 'text/plain';
-       $out['git'] = 'image/gif';
+       $out['gif'] = 'image/gif';
        $out['jpg'] = 'image/jpeg';
        $out['svg'] = 'image/svg+xml';
        $out['html'] = 'text/html';
@@ -336,7 +336,7 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
       $questionSolution = $task->getContent(PEMTaskCompiler::SOLUTION);
 
       // Remove absolute images
-      $questionBody = preg_replace('#http\://.*\.(png|jpg|gif|jpeg)#isU', '', $questionBody);
+      $questionBody = preg_replace('#http\://.*\.(png|jpg|gif|mp4|jpeg)#isU', '', $questionBody);
 
       $strQuestion .= '<div id="question-'.$curKey.'" class="question"><div id="task" class="taskView">'."\r\n"
               .'<style>'.$cssQuestions.'</style>'

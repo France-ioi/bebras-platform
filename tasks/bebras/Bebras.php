@@ -108,7 +108,7 @@ class Bebras
       }
       
       // Add task's images in the JSON
-      $images = PEMTaskCompiler::findUsedFiles($inlineJs.$contentBody.$inlineCss, array('png', 'jpg', 'gif', 'PNG', 'JPG', 'GIF'));
+      $images = PEMTaskCompiler::findUsedFiles($inlineJs.$contentBody.$inlineCss, array('png', 'jpg', 'gif', 'mp4', 'PNG', 'JPG', 'GIF', 'MP4'));
       foreach ($images as $curImage) {
          $bebras['task'][] = array(
             'type' => 'image',
@@ -117,7 +117,7 @@ class Bebras
       }
       
       // Add solution's images in the JSON
-      $imagesSolution = PEMTaskCompiler::findUsedFiles($contentSolution, array('png', 'jpg', 'gif', 'PNG', 'JPG', 'GIF'));
+      $imagesSolution = PEMTaskCompiler::findUsedFiles($contentSolution, array('png', 'jpg', 'gif', 'mp4', 'PNG', 'JPG', 'GIF', 'MP4'));
       foreach ($imagesSolution as $curImageSolution) {
          $bebras['solution'][] = array(
             'type' => 'image',
