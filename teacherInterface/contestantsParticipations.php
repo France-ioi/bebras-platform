@@ -65,6 +65,9 @@ echo "<p>Dans les résultats ci-dessous, des élèves peuvent apparaître en dou
 
 $grades = array(-1 => "Profs", -4 => "Autres", 4 => "CM1", 5 => "CM2", 6 => "6e", 7 => "5e", 8 => "4e", 9 => "3e", 10 => "2de", 11 => "1ère", 12 => "Tale", 13 => "2de<br/>pro", 14 => "1ère<br/>pro", 15 => "Tale<br/>pro", 16 => "6e Segpa", 17 => "5e Segpa", 18 => "4e Segpa", 19 => "3e Segpa", 20 => "Post-Bac");
 
+$contestIDs = ["118456124984202960","884044050337033997","112633747529078424"];
+$categories = ["blanche", "jaune", "orange", "verte", "bleue"];
+
 
 $query = "
    SELECT
@@ -101,7 +104,7 @@ $query = "
       JOIN contestant ON contestant.teamID = team.ID
       LEFT JOIN algorea_registration ON contestant.registrationID = algorea_registration.ID
       LEFT JOIN `contest` parentContest ON contest.parentContestID = parentContest.ID
-   WHERE (`contest`.ID IN (884044050337033997,118456124984202960,112633747529078424) OR `contest`.parentContestID IN (884044050337033997,118456124984202960,112633747529078424))
+   WHERE (`contest`.ID IN (".join(",", $contestIDs).") OR `contest`.parentContestID IN (".join(",", $contestIDs)."))
    AND `group`.userID = :userID
    ORDER BY schoolID, contestant.ID, team.score DESC";
 
@@ -195,7 +198,11 @@ foreach ($schools as $schoolID => $school) {
    if ($showCodes) {
       echo "<td rowspan=2>Code de participant</td>";
    }
-   foreach ($contests as $mainContestKey => $categoryContests) {
+   foreach ($contestIDs as $mainContestKey) {
+      if (!isset($contests[$mainContestKey])) {
+         continue;
+      }
+      $categoryContests = $contests[$mainContestKey];
       echo "<td colspan='".count($categoryContests)."'";
       if (count($categoryContests) == 1) {
          echo " rowspan=2 ";
@@ -203,8 +210,15 @@ foreach ($schools as $schoolID => $school) {
       echo ">".$mainContestsNames[$mainContestKey]."</td>";
    }
    echo "</tr><tr>";
-   foreach ($contests as $mainContestKey => $categoryContests) {
-      foreach ($categoryContests as $category => $contest) {
+   foreach ($contestIDs as $mainContestKey) {
+      if (!isset($contests[$mainContestKey])) {
+         continue;
+      }
+      $categoryContests = $contests[$mainContestKey];
+      foreach ($categories as $category) {
+         if (!isset($categoryContests[$category])) {
+            continue;
+         }
          if (count($categoryContests) > 1) {
             echo "<td>".$category."</td>";
          }
@@ -234,35 +248,51 @@ foreach ($schools as $schoolID => $school) {
       if ($showCodes) {
          echo "<td>".$contestant["infos"]["code"]."</td>";
       }
-      foreach ($contests as $mainContestKey => $categoryContests) {
-         foreach ($categoryContests as $category => $contestKey) {
-            if (isset($contestant["results"][$contestKey])) {
-               $result = $contestant["results"][$contestKey];
-               $rankInfos = "classement en attente";
-               if ($result["rank"] != '') {
-                  $rankGroup = $grades[$contestant["infos"]["grade"]]." ";
-                  if ($result["nbContestants"] == "1") {
-                     $rankGroup .= "individuels";
-                  } else {
-                     $rankGroup .= "binômes";
-                  }
-                  $rankInfos = $result["rank"]."e des ".$rankGroup;
-               } else if ($result["participationType"] == "Unofficial") {
-                  $rankInfos = "Hors concours";
-               }
-               echo "<td class='".$category."'>".
-                  $result["score"]."<br/>".
-                  "<span class='rank'>".$rankInfos."</span>".
-                  "</td>";
-            } else {
-               echo "<td class='grise'>-</td>";
+      foreach ($contestIDs as $mainContestKey) {
+         if (!isset($contests[$mainContestKey])) {
+            continue;
+         }
+         $categoryContests = $contests[$mainContestKey];
+         $shown = false;
+         foreach ($categories as $category) {
+            if (isset($categoryContests[$category])) {
+               showContestantResult($contestant, $categoryContests[$category], $category);
+               $shown = true;
             }
+         }
+         if (!$shown) {
+            showContestantResult($contestant, $categoryContests[""], "");
          }
       }
       echo "</tr>";
    }
 
    echo "</table>";
+}
+
+function showContestantResult($contestant, $contestKey, $category) {
+   global $grades;
+   if (isset($contestant["results"][$contestKey])) {
+      $result = $contestant["results"][$contestKey];
+      $rankInfos = "classement en attente";
+      if ($result["rank"] != '') {
+         $rankGroup = $grades[$contestant["infos"]["grade"]]." ";
+         if ($result["nbContestants"] == "1") {
+            $rankGroup .= "individuels";
+         } else {
+            $rankGroup .= "binômes";
+         }
+         $rankInfos = $result["rank"]."e des ".$rankGroup;
+      } else if ($result["participationType"] == "Unofficial") {
+         $rankInfos = "Hors concours";
+      }
+      echo "<td class='".$category."'>".
+         $result["score"]."<br/>".
+         "<span class='rank'>".$rankInfos."</span>".
+         "</td>";
+   } else {
+      echo "<td class='grise'>-</td>";
+   }
 }
 
 ?>
