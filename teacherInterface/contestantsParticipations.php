@@ -101,7 +101,7 @@ $query = "
       JOIN contestant ON contestant.teamID = team.ID
       LEFT JOIN algorea_registration ON contestant.registrationID = algorea_registration.ID
       LEFT JOIN `contest` parentContest ON contest.parentContestID = parentContest.ID
-   WHERE (`contest`.ID IN (884044050337033997,118456124984202960) OR `contest`.parentContestID IN (884044050337033997,118456124984202960))
+   WHERE (`contest`.ID IN (884044050337033997,118456124984202960,112633747529078424) OR `contest`.parentContestID IN (884044050337033997,118456124984202960,112633747529078424))
    AND `group`.userID = :userID
    ORDER BY schoolID, contestant.ID, team.score DESC";
 
