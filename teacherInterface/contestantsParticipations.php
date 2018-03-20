@@ -65,7 +65,36 @@ echo "<p>Dans les résultats ci-dessous, des élèves peuvent apparaître en dou
 
 $grades = array(-1 => "Profs", -4 => "Autres", 4 => "CM1", 5 => "CM2", 6 => "6e", 7 => "5e", 8 => "4e", 9 => "3e", 10 => "2de", 11 => "1ère", 12 => "Tale", 13 => "2de<br/>pro", 14 => "1ère<br/>pro", 15 => "Tale<br/>pro", 16 => "6e Segpa", 17 => "5e Segpa", 18 => "4e Segpa", 19 => "3e Segpa", 20 => "Post-Bac");
 
-$contestIDs = ["118456124984202960","884044050337033997","112633747529078424"];
+$allContestIDs = ["118456124984202960","884044050337033997","112633747529078424"];
+
+$query = "SELECT ID, name FROM contest WHERE ID IN (".join(",", $allContestIDs).")";
+$stmt = $db->prepare($query);
+$stmt->execute(array("userID" => $_SESSION['userID']));
+echo "<div style='border:solid black 1px;padding:5px;width:400px'>";
+echo "<p>N'afficher que les participants aux concours :</p>";
+echo "<form name='filter' method='post'>";
+$data = array();
+while ($row = $stmt->fetchObject()) {
+   $data[$row->ID] = $row->name;
+}
+$contestIDs = array();
+foreach ($allContestIDs as $contestID) {
+   if (isset($data[$contestID])) {
+      $checked = "";
+      if (isset($_POST["contest_".$contestID])) {
+         $checked = "checked";
+         $contestIDs[] = $contestID;
+      }
+      echo "<input type='checkbox' name='contest_".$contestID."' ".$checked.">".$data[$contestID]."</input><br/>";
+   }
+}
+if (count($contestIDs) == 0) {
+   $contestIDs = $allContestIDs;
+}
+echo "<input type='submit' value='Filtrer' />";
+echo "</form></div>";
+
+
 $categories = ["blanche", "jaune", "orange", "verte", "bleue"];
 
 
