@@ -33,7 +33,7 @@ $query = "SELECT `pixal`.`groups`.ID, `pixal`.`groups`.`sName`,
 `pixal`.`alkindi_teams`.sPassword AS password,
 tmp.code,
 `pixal`.`alkindi_teams`.thirdScore, `pixal`.`alkindi_teams`.thirdTime,
-`pixal`.`alkindi_teams`.score1, `pixal`.`alkindi_teams`.time1, `pixal`.`alkindi_teams`.score2, `pixal`.`alkindi_teams`.time2, `pixal`.`alkindi_teams`.score3, `pixal`.`alkindi_teams`.time3, `pixal`.`alkindi_teams`.score4, `pixal`.`alkindi_teams`.time4,
+`pixal`.`alkindi_teams`.score1, `pixal`.`alkindi_teams`.time1, `pixal`.`alkindi_teams`.score2, `pixal`.`alkindi_teams`.time2, `pixal`.`alkindi_teams`.score3, `pixal`.`alkindi_teams`.time3, `pixal`.`alkindi_teams`.score4, `pixal`.`alkindi_teams`.time4
 FROM
 (
 SELECT `login-module`.`badges`.`user_id`, `alkindi2016`.`algorea_registration`.ID as registrationID, `alkindi2016`.`algorea_registration`.firstName, `alkindi2016`.`algorea_registration`.lastName, `alkindi2016`.`algorea_registration`.`code`
