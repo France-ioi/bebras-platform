@@ -31,7 +31,9 @@ $query = "SELECT `pixal`.`groups`.ID, `pixal`.`groups`.`sName`,
 `pixal`.`users`.`ID` as `idUser`, tmp.`firstName`, tmp.`lastName`,
 `pixal`.`users_items`.`idItem`, `pixal`.`users_items`.`iScore`, date(`pixal`.`users`.`sLastLoginDate`) as lastLogin,
 `pixal`.`alkindi_teams`.sPassword AS password,
-tmp.code
+tmp.code,
+`pixal`.`alkindi_teams`.thirdScore, `pixal`.`alkindi_teams`.thirdTime,
+`pixal`.`alkindi_teams`.score1, `pixal`.`alkindi_teams`.time1, `pixal`.`alkindi_teams`.score2, `pixal`.`alkindi_teams`.time2, `pixal`.`alkindi_teams`.score3, `pixal`.`alkindi_teams`.time3, `pixal`.`alkindi_teams`.score4, `pixal`.`alkindi_teams`.time4,
 FROM
 (
 SELECT `login-module`.`badges`.`user_id`, `alkindi2016`.`algorea_registration`.ID as registrationID, `alkindi2016`.`algorea_registration`.firstName, `alkindi2016`.`algorea_registration`.lastName, `alkindi2016`.`algorea_registration`.`code`
@@ -104,10 +106,16 @@ echo "<h2>Équipes qualifiées</h2><p>Les équipes qui ont obtenu 285 points ou 
 ";
 
 
-echo "<table class='resultats' cellspacing=0><tr><td>Nom de l'équipe</td><td>Élèves</td><td>Réseau&nbsp;1D</td><td>Réseau&nbsp;2D</td><td>Enigma&nbsp;1</td><td>Enigma&nbsp;2</td><td>Total</td><td>Code secret tour 3</td></tr>";
+echo "<table class='resultats' cellspacing=0><tr>";
+echo "<td>Rang final</td><td>Nom de l'équipe</td><td>Élèves</td>";
+echo "<td>Réseau&nbsp;1D<br />(2e tour)</td><td>Réseau&nbsp;2D<br />(2e tour)</td><td>Enigma&nbsp;1<br />(2e tour)</td><td>Enigma&nbsp;2<br />(2e tour)</td><td>Total<br />(2e tour)</td><td>Code secret tour 3</td>";
+echo "<td>Réseau&nbsp;1D<br />(3e tour)</td><td>Réseau&nbsp;3D<br />(3e tour)</td><td>Enigma&nbsp;1<br />(3e tour)</td><td>Enigma&nbsp;3<br />(3e tour)</td><td>Total<br />(3e tour)</td>";
+echo "</tr>";
 $curGroupID = 0;
 foreach ($groups as $group) {
-   echo "<tr><td>".htmlentities($group->sName)."</td><td>";
+   echo "<tr>";
+   echo "<td>".($group->rank ? $group->tank : '')."</td>";
+   echo "<td>".htmlentities($group->sName)."</td><td>";
    foreach ($group->users as $user) {
       echo htmlentities($user->firstName)." ".htmlentities($user->lastName)." [".$user->code."]<br/>";
    }
@@ -126,6 +134,17 @@ foreach ($groups as $group) {
    }
    echo "<td>".$sum."</td>";
    echo "<td>".$group->password."</td>";
+   if($group->thirdScore) {
+        echo "<td>".$group->score1." (".$group->time1.")</td>";
+        echo "<td>".$group->score2." (".$group->time2.")</td>";
+        echo "<td>".$group->score3." (".$group->time3.")</td>";
+        echo "<td>".$group->score4." (".$group->time4.")</td>";
+        echo "<td>".$group->thirdScore." (".$group->thirdTime.")</td>";
+   } elseif($sum >= 285) {
+        echo '<td colspan="5">Participation ou résultats en attente</td>';
+   } else {
+        echo '<td colspan="5">Non qualifiée</td>';
+   }
    echo "</tr>";
 }
 echo "</table>";
