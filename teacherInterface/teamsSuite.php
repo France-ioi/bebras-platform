@@ -109,7 +109,7 @@ echo "<h2>Équipes qualifiées</h2><p>Les équipes qui ont obtenu 285 points ou 
 echo "<table class='resultats' cellspacing=0><tr>";
 echo "<td>Rang final</td><td>Nom de l'équipe</td><td>Élèves</td>";
 echo "<td>Réseau&nbsp;1D<br />(2e tour)</td><td>Réseau&nbsp;2D<br />(2e tour)</td><td>Enigma&nbsp;1<br />(2e tour)</td><td>Enigma&nbsp;2<br />(2e tour)</td><td>Total<br />(2e tour)</td><td>Code secret tour 3</td>";
-echo "<td>Réseau&nbsp;1D<br />(3e tour)</td><td>Réseau&nbsp;3D<br />(3e tour)</td><td>Enigma&nbsp;1<br />(3e tour)</td><td>Enigma&nbsp;3<br />(3e tour)</td><td>Total<br />(3e tour)</td>";
+echo "<td>Réseau&nbsp;1D<br />(3e tour)</td><td>Réseau&nbsp;2D<br />(3e tour)</td><td>Enigma&nbsp;1<br />(3e tour)</td><td>Enigma&nbsp;2<br />(3e tour)</td><td>Total<br />(3e tour)</td>";
 echo "</tr>";
 $curGroupID = 0;
 foreach ($groups as $group) {
