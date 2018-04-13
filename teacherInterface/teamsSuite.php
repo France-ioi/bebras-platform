@@ -105,7 +105,8 @@ echo "<h2>Équipes qualifiées</h2><p>Les équipes qui ont obtenu 285 points ou 
 
 <p>En cas d'égalité de score, les équipes seront départagées en fonction du temps, calculé selon le principe suivant : pour chaque sujet, parmi les tentatives de meilleur score, on considèrera le temps mis pour celle qui a été résolue le plus rapidement. Il s'agit du temps entre le moment de création de cette tentative, et le moment où son score a été obtenu. Le temps total pour l'équipe sera la somme de ces temps pour les 4 sujets.</p>
 
-<p><b>Attention :</b> suite à une erreur de notre part, certaines des équipes qualifiées n'ont pas encore de code secret pour le 3e tour. Nous allons corriger cela dans les prochaines heures.</p>
+echo "<h2>Classement final</h2>
+<p>Dans les deux dernières colonnes, vous pouvez trouver soit le classement de l'équipe au sein de sa grande région et au niveau national, soit a mention \"Qualifiée en finale\" si l'équipe est qualifiée.</p>
 ";
 
 
