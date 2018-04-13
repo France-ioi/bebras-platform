@@ -107,14 +107,13 @@ echo "<h2>Équipes qualifiées</h2><p>Les équipes qui ont obtenu 285 points ou 
 
 
 echo "<table class='resultats' cellspacing=0><tr>";
-echo "<td>Rang final</td><td>Nom de l'équipe</td><td>Élèves</td>";
+echo "<td>Nom de l'équipe</td><td>Élèves</td>";
 echo "<td>Réseau&nbsp;1D<br />(2e tour)</td><td>Réseau&nbsp;2D<br />(2e tour)</td><td>Enigma&nbsp;1<br />(2e tour)</td><td>Enigma&nbsp;2<br />(2e tour)</td><td>Total<br />(2e tour)</td><td>Code secret tour 3</td>";
-echo "<td>Réseau&nbsp;1D<br />(3e tour)</td><td>Réseau&nbsp;2D<br />(3e tour)</td><td>Enigma&nbsp;1<br />(3e tour)</td><td>Enigma&nbsp;2<br />(3e tour)</td><td>Total<br />(3e tour)</td>";
+echo "<td>Réseau&nbsp;1D<br />(3e tour)</td><td>Réseau&nbsp;2D<br />(3e tour)</td><td>Enigma&nbsp;1<br />(3e tour)</td><td>Enigma&nbsp;2<br />(3e tour)</td><td>Total<br />(3e tour)</td><td>Classement<br/>grande région</td><td>Classement<br/>national</td>";
 echo "</tr>";
 $curGroupID = 0;
 foreach ($groups as $group) {
    echo "<tr>";
-   echo "<td>".($group->rank ? $group->tank : '')."</td>";
    echo "<td>".htmlentities($group->sName)."</td><td>";
    foreach ($group->users as $user) {
       echo htmlentities($user->firstName)." ".htmlentities($user->lastName)." [".$user->code."]<br/>";
@@ -144,6 +143,12 @@ foreach ($groups as $group) {
         echo '<td colspan="5">Participation ou résultats en attente</td>';
    } else {
         echo '<td colspan="5">Non qualifiée</td>';
+   }
+   if ($group->qualifiedFinal == 1) {
+      echo "<td colspan=2>Qualifiée en finale</td>";
+   } else {
+      echo "<td>".($group->rankBigRegion ? $group->rankBigRegion : '')."</td>";
+      echo "<td>".($group->rank ? $group->rank : '')."</td>";
    }
    echo "</tr>";
 }
