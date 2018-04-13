@@ -32,6 +32,7 @@ $query = "SELECT `pixal`.`groups`.ID, `pixal`.`groups`.`sName`,
 `pixal`.`users_items`.`idItem`, `pixal`.`users_items`.`iScore`, date(`pixal`.`users`.`sLastLoginDate`) as lastLogin,
 `pixal`.`alkindi_teams`.rank,
 `pixal`.`alkindi_teams`.rankBigRegion,
+`pixal`.`alkindi_teams`.rankRegion,
 `pixal`.`alkindi_teams`.qualifiedFinal,
 `pixal`.`alkindi_teams`.sPassword AS password,
 tmp.code,
@@ -105,15 +106,15 @@ echo "<h2>Équipes qualifiées</h2><p>Les équipes qui ont obtenu 285 points ou 
 
 <p>En cas d'égalité de score, les équipes seront départagées en fonction du temps, calculé selon le principe suivant : pour chaque sujet, parmi les tentatives de meilleur score, on considèrera le temps mis pour celle qui a été résolue le plus rapidement. Il s'agit du temps entre le moment de création de cette tentative, et le moment où son score a été obtenu. Le temps total pour l'équipe sera la somme de ces temps pour les 4 sujets.</p>
 
-echo "<h2>Classement final</h2>
+<h2>Classement final</h2>
 <p>Dans les deux dernières colonnes, vous pouvez trouver soit le classement de l'équipe au sein de sa grande région et au niveau national, soit a mention \"Qualifiée en finale\" si l'équipe est qualifiée.</p>
-<p>Les récompenses attribuées aux meilleures équipes non finalistes seront indiquées plus tard.</p>";
+<p>Les récompenses attribuées aux meilleures équipes non finalistes seront indiquées plus tard.</p>
 
 
 echo "<table class='resultats' cellspacing=0><tr>";
 echo "<td>Nom de l'équipe</td><td>Élèves</td>";
 echo "<td>Réseau&nbsp;1D<br />(2e tour)</td><td>Réseau&nbsp;2D<br />(2e tour)</td><td>Enigma&nbsp;1<br />(2e tour)</td><td>Enigma&nbsp;2<br />(2e tour)</td><td>Total<br />(2e tour)</td><td>Code secret tour 3</td>";
-echo "<td>Réseau&nbsp;1D<br />(3e tour)</td><td>Réseau&nbsp;2D<br />(3e tour)</td><td>Enigma&nbsp;1<br />(3e tour)</td><td>Enigma&nbsp;2<br />(3e tour)</td><td>Total<br />(3e tour)</td><td>Classement<br/>grande région</td><td>Classement<br/>national</td>";
+echo "<td>Réseau&nbsp;1D<br />(3e tour)</td><td>Réseau&nbsp;2D<br />(3e tour)</td><td>Enigma&nbsp;1<br />(3e tour)</td><td>Enigma&nbsp;2<br />(3e tour)</td><td>Total<br />(3e tour)</td><td>Classement<br/>académie</td><td>Classement<br/>grande région</td><td>Classement<br/>national</td>";
 echo "</tr>";
 $curGroupID = 0;
 foreach ($groups as $group) {
@@ -149,8 +150,9 @@ foreach ($groups as $group) {
         echo '<td colspan="5">Non qualifiée</td>';
    }
    if ($group->qualifiedFinal == 1) {
-      echo "<td colspan=2>Qualifiée en finale</td>";
+      echo "<td colspan=3>Qualifiée en finale</td>";
    } else {
+      echo "<td>".($group->rankRegion ? $group->rankRegion : '')."</td>";
       echo "<td>".($group->rankBigRegion ? $group->rankBigRegion : '')."</td>";
       echo "<td>".($group->rank ? $group->rank : '')."</td>";
    }
