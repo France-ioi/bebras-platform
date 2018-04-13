@@ -37,6 +37,7 @@ $query = "SELECT `pixal`.`groups`.ID, `pixal`.`groups`.`sName`,
 `pixal`.`alkindi_teams`.sPassword AS password,
 tmp.code,
 `pixal`.`alkindi_teams`.thirdScore, `pixal`.`alkindi_teams`.thirdTime,
+`pixal`.`alkindi_teams`.isOfficial,
 `pixal`.`alkindi_teams`.score1, `pixal`.`alkindi_teams`.time1, `pixal`.`alkindi_teams`.score2, `pixal`.`alkindi_teams`.time2, `pixal`.`alkindi_teams`.score3, `pixal`.`alkindi_teams`.time3, `pixal`.`alkindi_teams`.score4, `pixal`.`alkindi_teams`.time4
 FROM
 (
@@ -151,6 +152,8 @@ foreach ($groups as $group) {
    }
    if ($group->qualifiedFinal == 1) {
       echo "<td colspan=3>Qualifiée en finale</td>";
+   } else if ($grou->isOfficial != 1) {
+      echo "<td colspan=3>Hors classement</td>";
    } else {
       echo "<td>".($group->rankRegion ? $group->rankRegion : '')."</td>";
       echo "<td>".($group->rankBigRegion ? $group->rankBigRegion : '')."</td>";
