@@ -152,7 +152,7 @@ foreach ($groups as $group) {
    }
    if ($group->qualifiedFinal == 1) {
       echo "<td colspan=3>Qualifiée en finale</td>";
-   } else if ($grou->isOfficial != 1) {
+   } else if ($group->isOfficial != 1) {
       echo "<td colspan=3>Hors classement</td>";
    } else {
       echo "<td>".($group->rankRegion ? $group->rankRegion : '')."</td>";
