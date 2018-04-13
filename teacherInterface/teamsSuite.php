@@ -107,7 +107,7 @@ echo "<h2>Équipes qualifiées</h2><p>Les équipes qui ont obtenu 285 points ou 
 
 echo "<h2>Classement final</h2>
 <p>Dans les deux dernières colonnes, vous pouvez trouver soit le classement de l'équipe au sein de sa grande région et au niveau national, soit a mention \"Qualifiée en finale\" si l'équipe est qualifiée.</p>
-";
+<p>Les récompenses attribuées aux meilleures équipes non finalistes seront indiquées plus tard.</p>";
 
 
 echo "<table class='resultats' cellspacing=0><tr>";
