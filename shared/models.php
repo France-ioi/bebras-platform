@@ -276,7 +276,7 @@ $viewsModels = array(
          "full_groups" => array("srcTable" => "team", "srcField" => "groupID", "dstField" => "ID"),
          "contest" => array("srcTable" => "full_groups", "srcField" => "contestID", "dstField" => "ID"),
          "school" => array("srcTable" => "full_groups", "srcField" => "schoolID", "dstField" => "ID"),
-         "award_threshold" => array("srcTable" => "team", "on" => "(team.nbContestants = award_threshold.nbContestants and `full_groups`.contestID = award_threshold.contestID and contestant.grade = award_threshold.gradeID and award_threshold.awardID = 2)"),
+         "award_threshold" => array("srcTable" => "team", "on" => "(team.nbContestants = award_threshold.nbContestants and `full_groups`.contestID = award_threshold.contestID and contestant.grade = award_threshold.gradeID and award_threshold.awardID = 1)"),
          "algorea_registration" => array("type" => "LEFT", "srcTable" => "contestant", "srcField" => "ID", "dstField" => "contestantID"),
       ),
       'fields' => array(
