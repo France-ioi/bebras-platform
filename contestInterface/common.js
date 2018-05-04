@@ -2693,7 +2693,7 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
          questionIframe.initialize();
       }
       var taskViews = {"task": true};
-      if (questionIframe.gradersLoaded) {
+      if (questionIframe.gradersLoaded || fullFeedback) {
          taskViews.grader = true;
       }
       if (TimeManager.isContestOver()) {
