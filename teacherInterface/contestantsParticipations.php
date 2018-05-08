@@ -52,20 +52,34 @@ $showCodes = 0;
 if (isset($_GET["showCodes"])) {
    $showCodes = $_GET["showCodes"];
 }
+$mergeCodes = 0;
+if (isset($_GET["mergeCodes"])) {
+   $mergeCodes = $_GET["mergeCodes"];
+}
+
 
 echo "<h1>Synthèse des résultats Castor et Algoréa</h1>";
 
+echo "<b>Options d'affichage</b><br/>";
+echo "<ul>";
 if ($showCodes) {
-   echo "<a href='contestantsParticipations.php?showCodes=0'>Masquer les codes de participants</a>";
+   echo "<li><a href='contestantsParticipations.php?showCodes=0'>Masquer les codes de participants</a>";
 } else {
-   echo "<a href='contestantsParticipations.php?showCodes=1'>Afficher les codes de participants</a>";
+   echo "<li><a href='contestantsParticipations.php?showCodes=1'>Afficher les codes de participants</a>";
 }
-
-echo "<p>Dans les résultats ci-dessous, des élèves peuvent apparaître en double s'ils n'ont pas utilisé leur code de participant pour participer à Algoréa. Nous réunirons bientôt leurs participations sur la base de leurs noms, prénoms et classe.</p>";
+/*
+if ($mergeCodes) {
+   echo "<li><a href='contestantsParticipations.php?mergeCodes=0'>Désactiver le mode fusion des élèves qui apparaissent deux fois</a>";
+} else {
+   echo "<li><a href='contestantsParticipations.php?mergeCodes=1&showCodes=1'>Activer le mode fusion des élèves qui apparaissent deux fois</a>";
+}
+echo "</ul>";
+*/
+echo "<p>Dans les résultats ci-dessous, des élèves peuvent apparaître en double s'ils n'ont pas utilisé leur code de participant pour participer à Algoréa.</p>";
 
 $grades = array(-1 => "Profs", -4 => "Autres", 4 => "CM1", 5 => "CM2", 6 => "6e", 7 => "5e", 8 => "4e", 9 => "3e", 10 => "2de", 11 => "1ère", 12 => "Tale", 13 => "2de<br/>pro", 14 => "1ère<br/>pro", 15 => "Tale<br/>pro", 16 => "6e Segpa", 17 => "5e Segpa", 18 => "4e Segpa", 19 => "3e Segpa", 20 => "Post-Bac");
 
-$allContestIDs = ["118456124984202960","884044050337033997","112633747529078424"];
+$allContestIDs = ["118456124984202960","884044050337033997","112633747529078424", "404363140821714044"];
 
 $query = "SELECT ID, name FROM contest WHERE ID IN (".join(",", $allContestIDs).")";
 $stmt = $db->prepare($query);
@@ -135,7 +149,7 @@ $query = "
       LEFT JOIN `contest` parentContest ON contest.parentContestID = parentContest.ID
    WHERE (`contest`.ID IN (".join(",", $contestIDs).") OR `contest`.parentContestID IN (".join(",", $contestIDs)."))
    AND `group`.userID = :userID
-   ORDER BY schoolID, contestant.ID, team.score DESC";
+   ORDER BY schoolID, IFNULL(contestant.registrationID, contestant.ID), team.score DESC";
 
 $stmt = $db->prepare($query);
 $stmt->execute(array("userID" => $_SESSION['userID']));
@@ -177,6 +191,7 @@ while ($row = $stmt->fetchObject()) {
    if (!isset($contestants[$row->ID])) {
       if ($row->regFirstName != null) {
          $infos = array(
+             "ID" => $row->ID,
              "firstName" => $row->regFirstName,
              "lastName" => $row->regLastName,
              "grade" => $row->regGrade,
@@ -187,6 +202,7 @@ while ($row = $stmt->fetchObject()) {
           );
       } else {
          $infos = array(
+             "ID" => $row->ID,
              "firstName" => $row->firstName,
              "lastName" => $row->lastName,
              "grade" => $row->grade,
@@ -226,6 +242,9 @@ foreach ($schools as $schoolID => $school) {
    echo "<table class='results' cellspacing=0><tr><td rowspan=2>Groupe Castor</td><td rowspan=2>Prénom</td><td rowspan=2>Nom</td><td rowspan=2>Classe</td><td rowspan=2>Qualifié en<br/>catégorie</td>";
    if ($showCodes) {
       echo "<td rowspan=2>Code de participant</td>";
+   }
+   if ($mergeCodes) {
+      echo "<td rowspan=2>Déplacer vers le code</td>";
    }
    foreach ($contestIDs as $mainContestKey) {
       if (!isset($contests[$mainContestKey])) {
@@ -276,6 +295,9 @@ foreach ($schools as $schoolID => $school) {
          "<td class='".$contestant["infos"]["qualifiedCategory"]."'>".$contestant["infos"]["qualifiedCategory"]."</td>";
       if ($showCodes) {
          echo "<td>".$contestant["infos"]["code"]."</td>";
+      }
+      if ($mergeCodes) {
+         echo "<td><input class='mergeCode' onchange='changeCode(\"".$contestant["infos"]["ID"]."\")' id='merge_".$contestant["infos"]["ID"]."' style='width:150px' /></td>";
       }
       foreach ($contestIDs as $mainContestKey) {
          if (!isset($contests[$mainContestKey])) {
