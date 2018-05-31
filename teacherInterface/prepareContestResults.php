@@ -712,6 +712,8 @@ if ($action == "fixScoreErrors") {
       array("contestID" => $contestID));
 }
 
+echo "<p>Compute temporary scores again.</p>";
+
 echo "<h2>Attempts that should be discarded</h2>";
 
 
@@ -1041,7 +1043,6 @@ if ($action == "showTeamScores") {
       JOIN `contest` ON `group`.contestID = contest.ID
       SET score = tmpScore
       WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
-      AND team.score IS NULL
       AND team.participationType = 'Official'",
       array("contestID" => $contestID));      
 }

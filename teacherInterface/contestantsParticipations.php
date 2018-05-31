@@ -132,6 +132,7 @@ $query = "
       algorea_registration.grade as regGrade,
       algorea_registration.category,
       algorea_registration.validatedCategory,
+      algorea_registration.round,
       `group`.contestID,
       contest.parentContestID,
       contest.name as contestName,
@@ -196,6 +197,7 @@ while ($row = $stmt->fetchObject()) {
              "lastName" => $row->regLastName,
              "grade" => $row->regGrade,
              "code" => $row->code,
+             "round" => $row->round,
              "qualifiedCategory" => $row->category,
              "validatedCategory" => $row->validatedCategory,
              "bebrasGroup" => "-"
@@ -207,6 +209,7 @@ while ($row = $stmt->fetchObject()) {
              "lastName" => $row->lastName,
              "grade" => $row->grade,
              "code" => "-",
+             "round" => $row->round,
              "qualifiedCategory" => "-",
              "validatedCategory" => "-",
              "bebrasGroup" => "-"
@@ -239,7 +242,7 @@ foreach ($schools as $schoolID => $school) {
    echo "<h2>".$school["name"]."</h2>";
    $contestants = $school["contestants"];
 
-   echo "<table class='results' cellspacing=0><tr><td rowspan=2>Groupe Castor</td><td rowspan=2>Prénom</td><td rowspan=2>Nom</td><td rowspan=2>Classe</td><td rowspan=2>Qualifié en<br/>catégorie</td>";
+   echo "<table class='results' cellspacing=0><tr><td rowspan=2>Groupe Castor</td><td rowspan=2>Prénom</td><td rowspan=2>Nom</td><td rowspan=2>Classe</td><td rowspan=2>Qualifié en<br/>catégorie</td><td rowspan=2>Qualifié en<br/>demi-finale</td>";
    if ($showCodes) {
       echo "<td rowspan=2>Code de participant</td>";
    }
@@ -293,6 +296,11 @@ foreach ($schools as $schoolID => $school) {
          "<td>".$contestant["infos"]["lastName"]."</td>".
          "<td>".$grades[$contestant["infos"]["grade"]]."</td>".
          "<td class='".$contestant["infos"]["qualifiedCategory"]."'>".$contestant["infos"]["qualifiedCategory"]."</td>";
+      if ($contestant["infos"]["round"] == "1") {
+         echo "<td>oui</td>";
+      } else {
+         echo "<td></td>";
+      }
       if ($showCodes) {
          echo "<td>".$contestant["infos"]["code"]."</td>";
       }
