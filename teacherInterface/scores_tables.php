@@ -152,7 +152,8 @@ if (!isset($_SESSION["userID"])) {
    exit;
 }
 */
-
+// Algorea 2018 1
+/*
 for ($nbContestants = 1; $nbContestants <= 2; $nbContestants++) {
    displayScores("blanche", array("866488984396180", "95300867864028463", "226161984593556559"), $nbContestants, 100, 400, 400, 400);
 }
@@ -165,6 +166,36 @@ for ($nbContestants = 1; $nbContestants <= 2; $nbContestants++) {
 for ($nbContestants = 1; $nbContestants <= 2; $nbContestants++) {
    displayScores("verte", array("194265151775855451", "724496314570819714", "877860856667136566"), $nbContestants, 0, 0, 0, 100);
 }
+*/
+/*
+// Algorea 2018 2
+for ($nbContestants = 1; $nbContestants <= 2; $nbContestants++) {
+   displayScores("blanche", array("433875944567802955", "464234573261791223", "478814972692557331"), $nbContestants, 100, 400, 400, 400);
+}
+for ($nbContestants = 1; $nbContestants <= 2; $nbContestants++) {
+   displayScores("jaune", array("489660906155539641", "538693023575903347", "635186277262638479"), $nbContestants, 0, 100, 400, 400);
+}
+for ($nbContestants = 1; $nbContestants <= 2; $nbContestants++) {
+   displayScores("orange", array("645319172551959739", "669911621655411237", "726425520897651240"), $nbContestants, 0, 0, 100, 400);
+}
+for ($nbContestants = 1; $nbContestants <= 2; $nbContestants++) {
+   displayScores("verte", array("755470871511205442", "896961304723791165", "929621055141482397"), $nbContestants, 0, 0, 0, 100);
+}
+*/
+// Algorea 2018 3
+for ($nbContestants = 1; $nbContestants <= 2; $nbContestants++) {
+   displayScores("blanche", array("48391093164618821", "114487714666658710", "996122155980313798"), $nbContestants, 100, 400, 400, 400);
+}
+for ($nbContestants = 1; $nbContestants <= 2; $nbContestants++) {
+   displayScores("jaune", array("545356571926977995", "617648920823399729", "834754723498000394"), $nbContestants, 0, 100, 400, 400);
+}
+for ($nbContestants = 1; $nbContestants <= 2; $nbContestants++) {
+   displayScores("orange", array("261656471759188263", "358123805952272903", "783319671389043423"), $nbContestants, 0, 0, 100, 400);
+}
+for ($nbContestants = 1; $nbContestants <= 2; $nbContestants++) {
+   displayScores("verte", array("19597742245918219", "156853804889706187", "972697214621656335"), $nbContestants, 0, 0, 0, 100);
+}
+
 
 ?>
 </body>

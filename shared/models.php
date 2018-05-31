@@ -369,7 +369,7 @@ $viewsModels = array(
          "groupField" => $fieldGroupFilter,
          "official" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`participationType` = 'Official'", 'ignoreValue' => true),
          "score" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`score` = :score"),
-         "contestID" => array("joins" => array("full_groups"), "condition" => "`[PREFIX]group`.`contestID` = :contestID"),
+         "contestID" => array("joins" => array("full_groups"), "condition" => "`[PREFIX]full_groups`.`contestID` = :contestID"),
          "teamID" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`ID` = :teamID"),
          "groupID" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`groupID` = :groupID"),
          "schoolID" => array("joins" => array("full_groups"), "condition" => "`full_groups`.`schoolID` = :schoolID"),

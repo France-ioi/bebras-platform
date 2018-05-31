@@ -520,11 +520,11 @@ if ($action == "sumFFScores") {
          JOIN `group` ON team.groupID = `group`.ID
          JOIN `contest` ON `group`.contestID = contest.ID
          WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
-         AND team.score IS NULL
+         AND (team.score IS NULL OR team.score = 0)
          GROUP BY team_question.teamID
       ) tmp ON team.ID = tmp.teamID
       SET team.tmpLastAnswerDate = maxDate, team.tmpScore = tmp.score
-      WHERE team.score IS NULL",
+      WHERE team.score IS NULL OR team.score = 0",
       array("contestID" => $contestID));
 }
 
@@ -675,7 +675,7 @@ if ($action == "showScoreAnomaliesAbove") {
       array("contestID" => $contestID));
 }
 
-echo "<h3><a href='".$startUrl."&action=fixScoreErrors'>After verification only: replace score with ffScore (and vice-versa when ffScore is null)</a></h3>";
+echo "<h3><a href='".$startUrl."&action=fixScoreErrors'>After verification only: replace score with ffScore if ffScore is better (and vice-versa)</a></h3>";
 if ($action == "fixScoreErrors") {
    execQueryAndShowNbRows("Reset score for recovered answers", "
       UPDATE team_question
@@ -688,6 +688,16 @@ if ($action == "fixScoreErrors") {
       AND team.score IS NULL",
       array("contestID" => $contestID));
    
+   execQueryAndShowNbRows("Save score into ffScore if better", "
+      UPDATE team_question
+      JOIN team ON team_question.teamID = team.ID
+      JOIN `group` ON `team`.groupID = `group`.`ID`
+      JOIN `contest` ON `group`.contestID = contest.ID
+      SET team_question.ffScore = team_question.score
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team_question.score > team_question.ffScore
+      AND team.score IS NULL",
+      array("contestID" => $contestID));
    
    execQueryAndShowNbRows("Save score to ffScore when ffScore IS NULL", "
       UPDATE team_question
@@ -1016,7 +1026,6 @@ if ($action == "updateMaxGrade") {
          JOIN `contest` ON `group`.contestID = contest.ID
          JOIN contestant ON team.ID = contestant.teamID
          WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
-         AND team.score IS NULL
          AND team.participationType = 'Official'
          GROUP BY team.ID
       ) t ON team.ID = t.ID
@@ -1036,6 +1045,8 @@ if ($action == "showTeamScores") {
       AND team.participationType = 'Official'",
       array("contestID" => $contestID));      
 }
+
+echo "<p>Set rankGrades and rankNbContestants in main contest record, as needed</p>";
 
 echo "<p>Compute rankings from teacher interface</p>";
 
@@ -1216,6 +1227,71 @@ if ($action == "mergeStudents") {
          array());
 }
 
+echo "<h3><a href='".$startUrl."&action=updateCategories'>Update students category depending on their score</a></h3>";
+if ($action == "updateCategories") {
+   execQueryAndShowNbRows("Set category to 'blanche' if none is defined", "
+      UPDATE
+      algorea_registration
+      JOIN contestant ON algorea_registration.ID = contestant.registrationID
+      JOIN team ON contestant.teamID = team.ID
+      JOIN `group` ON `group`.ID = team.groupID
+      JOIN `contest` ON `contest`.ID = `group`.contestID
+      SET algorea_registration.category = 'blanche'
+      WHERE algorea_registration.category IS NULL OR algorea_registration.category = ''",
+      array());
+
+   execQueryAndShowNbRows("Set category to 'jaune' if qualified by a contest", "
+      UPDATE
+      algorea_registration
+      JOIN contestant ON algorea_registration.ID = contestant.registrationID
+      JOIN team ON contestant.teamID = team.ID
+      JOIN `group` ON `group`.ID = team.groupID
+      JOIN `contest` ON `contest`.ID = `group`.contestID
+      SET algorea_registration.category = 'jaune'
+      WHERE algorea_registration.category = 'blanche'
+      AND team.score >= contest.qualificationScore
+      AND contest.qualificationCategory = 'jaune'",
+      array());
+
+   execQueryAndShowNbRows("Set category to 'orange' if qualified by a contest", "
+      UPDATE
+      algorea_registration
+      JOIN contestant ON algorea_registration.ID = contestant.registrationID
+      JOIN team ON contestant.teamID = team.ID
+      JOIN `group` ON `group`.ID = team.groupID
+      JOIN `contest` ON `contest`.ID = `group`.contestID
+      SET algorea_registration.category = 'orange'
+      WHERE (algorea_registration.category = 'blanche' OR algorea_registration.category = 'jaune')
+      AND team.score >= contest.qualificationScore
+      AND contest.qualificationCategory = 'orange'",
+     array());
+
+   execQueryAndShowNbRows("Set category to 'verte' if qualified by a contest", "
+      UPDATE
+      algorea_registration
+      JOIN contestant ON algorea_registration.ID = contestant.registrationID
+      JOIN team ON contestant.teamID = team.ID
+      JOIN `group` ON `group`.ID = team.groupID
+      JOIN `contest` ON `contest`.ID = `group`.contestID
+      SET algorea_registration.category = 'verte'
+      WHERE (algorea_registration.category = 'blanche' OR algorea_registration.category = 'jaune' OR algorea_registration.category = 'orange')
+      AND team.score >= contest.qualificationScore
+      AND contest.qualificationCategory = 'verte'",
+     array());
+
+   execQueryAndShowNbRows("Set category to 'bleue' if qualified by a contest", "
+      UPDATE
+      algorea_registration
+      JOIN contestant ON algorea_registration.ID = contestant.registrationID
+      JOIN team ON contestant.teamID = team.ID
+      JOIN `group` ON `group`.ID = team.groupID
+      JOIN `contest` ON `contest`.ID = `group`.contestID
+      SET algorea_registration.category = 'bleue'
+      WHERE (algorea_registration.category = 'blanche' OR algorea_registration.category = 'jaune' OR algorea_registration.category = 'orange' OR algorea_registration.category = 'verte')
+      AND team.score >= contest.qualificationScore
+      AND contest.qualificationCategory = 'bleue'",
+     array());
+}
 
 /*
 Tool to make some groups official
