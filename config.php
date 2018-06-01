@@ -50,6 +50,15 @@ $config->aws->region = '';
 $config->aws->bucketName = '';
 $config->aws->s3region = '';
 
+// Badge interface
+$config->badgeInterface = (object) array();
+// customCodeQuery: allows to fetch more data in the query used by verifyCode
+$config->badgeInterface->customCodeQuery = null;
+// customDataFunction: allows to modify the data to be sent. Takes one
+// argument, &$contestant, which is the array returned by the database query
+// and which will be returned as the badge
+$config->badgeInterface->customDataFunction = null;
+
 $config->contestInterface = (object) array();
 // Point contestInterface->baseUrl to an URL serving the contestInterface directory.
 $config->contestInterface->baseUrl = 'http://concours.castor-informatique.fr';
