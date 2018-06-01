@@ -46,8 +46,9 @@ function verifyCode($badgeName, $code) {
   $contestant['data'] = ['category' => $contestant['category']];
   unset($contestant['category']);
 
-  if($config->badgeInterface->customDataFunction) {
-     $config->badgeInterface->customDataFunction($contestant);
+  $customDataFunction = $config->badgeInterface->customDataFunction;
+  if($customDataFunction) {
+     $customDataFunction($contestant);
   }
 
   return $contestant;
