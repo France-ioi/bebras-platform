@@ -1056,7 +1056,6 @@ echo "<p>In the database: set contest.printCode, contest.showResults, and contes
 echo "<p>To allocate algoreaCodes, insert records such as INSERT INTO award_threshold (contestID, gradeID, awardID, nbContestants, minScore) VALUES ([contestID], 4, 1, 2, 0) for each contest</p>";
 
 
-
 echo "<h3><a href='".$startUrl."&action=studyZeroes'>Study cases of teams with 0 points.</a></h3>";
 if ($action == "studyZeroes") {
    execSelectAndShowResults("Number of official teams with zero point", "
@@ -1226,6 +1225,31 @@ if ($action == "mergeStudents") {
          SET contestant.registrationID = algorea_registration.ID
          WHERE contestant.registrationID IS NULL",
          array());
+}
+
+echo "<h3><a href='".$startUrl."&action=newRegistrations'>Create registrations for students that don't have one yet</a></h3>";
+if ($action == "newRegistrations") {
+      execQueryAndShowNbRows("Create registrations for official contestants that don't have one yet", "
+         INSERT IGNORE INTO algorea_registration (ID, firstName, lastName, genre, email, zipCode, grade, studentID, userID, code, contestantID, schoolID)
+         SELECT contestant.ID, contestant.firstName, contestant.lastName, contestant.genre, '', '', contestant.grade, '', `group`.`userID`,
+         CONCAT(CONCAT('a', FLOOR(RAND()*10000000)), CONCAT('', FLOOR(RAND()*10000000))),
+         contestant.ID, `group`.schoolID
+         FROM contestant
+         JOIN team ON team.ID = contestant.teamID
+         JOIN `group` ON `group`.ID = team.groupID
+         JOIN `contest` ON `group`.`contestID` = `contest`.ID
+         WHERE
+         (contest.ID = :contestID OR contest.parentContestID = :contestID)
+         AND contestant.registrationID IS NULL
+         AND team.participationType = 'Official'",
+      array("contestID" => $contestID));
+
+      execQueryAndShowNbRows("Attach newly created registrations to corresponding students", "
+         UPDATE contestant
+         JOIN algorea_registration ON contestant.ID = algorea_registration.ID
+         SET contestant.registrationID = algorea_registration.ID
+         WHERE contestant.registrationID IS NULL",
+      array());
 }
 
 echo "<h3><a href='".$startUrl."&action=updateCategories'>Update students category depending on their score</a></h3>";
