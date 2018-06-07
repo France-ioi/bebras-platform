@@ -1318,6 +1318,188 @@ if ($action == "updateCategories") {
      array());
 }
 
+echo "<h3><a href='".$startUrl."&action=updateRegistrationCategory'>Update students best scores in each category</a></h3>";
+if ($action == "updateRegistrationCategory") {
+
+   execQueryAndShowNbRows("Create records for white category", 
+      "INSERT IGNORE INTO registration_category (registrationID, category) SELECT ID, 'blanche' FROM algorea_registration WHERE algorea_registration.category IN ('blanche', 'jaune', 'orange', 'verte', 'bleue')",
+      array());
+
+   execQueryAndShowNbRows("Create records for yellow category", 
+      "INSERT IGNORE INTO registration_category (registrationID, category) SELECT ID, 'jaune' FROM algorea_registration WHERE algorea_registration.category IN ('jaune', 'orange', 'verte', 'bleue')",
+      array());
+   
+   execQueryAndShowNbRows("Create records for orange category", 
+      "INSERT IGNORE INTO registration_category (registrationID, category) SELECT ID, 'orange' FROM algorea_registration WHERE algorea_registration.category IN ('orange', 'verte', 'bleue')",
+      array());
+   
+   execQueryAndShowNbRows("Create records for green category", 
+      "INSERT IGNORE INTO registration_category (registrationID, category) SELECT ID, 'verte' FROM algorea_registration WHERE algorea_registration.category IN ('verte', 'bleue')",
+      array());
+
+   execQueryAndShowNbRows("Update best score for individual participations", 
+      "UPDATE
+      (SELECT registration_category.ID, GREATEST(IFNULL(registration_category.bestScoreIndividual, 0), MAX(team.score)) as maxScore
+      FROM registration_category
+      JOIN contestant ON contestant.registrationID = registration_category.registrationID
+      JOIN team ON contestant.teamID = team.ID
+      JOIN `group` ON team.`groupID` = `group`.ID
+      JOIN `contest` ON `group`.contestID = contest.ID
+      WHERE team.participationType = 'Official'
+      AND team.nbContestants = 1
+      AND contest.categoryColor = registration_category.category
+      GROUP BY registration_category.ID
+      )
+      tmp
+      JOIN registration_category ON tmp.ID = registration_category.ID
+      SET registration_category.bestScoreIndividual = tmp.maxScore",
+      array());
+
+   execQueryAndShowNbRows("Update date of best score for individual participations", 
+      "UPDATE
+      (SELECT registration_category.ID, MAX(team.startTime) as maxTime
+      FROM registration_category
+      JOIN contestant ON contestant.registrationID = registration_category.registrationID
+      JOIN team ON contestant.teamID = team.ID
+      JOIN `group` ON team.`groupID` = `group`.ID
+      JOIN `contest` ON `group`.contestID = contest.ID
+      WHERE team.participationType = 'Official'
+      AND team.nbContestants = 1
+      AND team.score = registration_category.bestScoreIndividual
+      AND contest.categoryColor = registration_category.category
+      GROUP BY registration_category.ID
+      )
+      tmp
+      JOIN registration_category ON tmp.ID = registration_category.ID
+      SET registration_category.dateBestScoreIndividual = tmp.maxTime",
+      array());
+
+   execQueryAndShowNbRows("Update best score for team participations", 
+      "UPDATE
+      (SELECT registration_category.ID, GREATEST(IFNULL(registration_category.bestScoreTeam, 0), MAX(team.score)) as maxScore
+      FROM registration_category
+      JOIN contestant ON contestant.registrationID = registration_category.registrationID
+      JOIN team ON contestant.teamID = team.ID
+      JOIN `group` ON team.`groupID` = `group`.ID
+      JOIN `contest` ON `group`.contestID = contest.ID
+      WHERE team.participationType = 'Official'
+      AND team.nbContestants = 2
+      AND contest.categoryColor = registration_category.category
+      GROUP BY registration_category.ID
+      )
+      tmp
+      JOIN registration_category ON tmp.ID = registration_category.ID
+      SET registration_category.bestScoreTeam = tmp.maxScore",
+      array());
+
+   execQueryAndShowNbRows("Update best score for team participations", 
+      "UPDATE
+      (SELECT registration_category.ID, MAX(team.startTime) as maxTime
+      FROM registration_category
+      JOIN contestant ON contestant.registrationID = registration_category.registrationID
+      JOIN team ON contestant.teamID = team.ID
+      JOIN `group` ON team.`groupID` = `group`.ID
+      JOIN `contest` ON `group`.contestID = contest.ID
+      WHERE team.participationType = 'Official'
+      AND team.nbContestants = 1
+      AND team.score = registration_category.bestScoreTeam
+      AND contest.categoryColor = registration_category.category
+      GROUP BY registration_category.ID
+      )
+      tmp
+      JOIN registration_category ON tmp.ID = registration_category.ID
+      SET registration_category.dateBestScoreTeam = tmp.maxTime",
+      array());
+      
+   execQueryAndShowNbRows("Update total Algorea score", 
+      "   UPDATE algorea_registration
+      JOIN (
+      SELECT algorea_registration.ID, 
+       SUM(GREATEST(GREATEST(IFNULL(bestScoreIndividual, 0),
+                         IFNULL(bestScoreTeam, 0)),
+                IF(algorea_registration.category != registration_category.category, 100, 0))) as totalScore
+       FROM algorea_registration
+       JOIN registration_category
+       ON algorea_registration.ID = registration_category.registrationID
+       GROUP BY algorea_registration.ID
+       ) tmp ON tmp.ID = algorea_registration.ID
+      SET algorea_registration.totalScoreAlgorea = tmp.totalScore",
+      array());
+}
+
+
+echo "<h3><a href='".$startUrl."&action=updateAlgoreaRanks'>Compute algorea ranks</a></h3>";
+if ($action == "updateAlgoreaRanks") {
+   execQueryAndShowNbRows("Update Algorea ranks (per grade)", 
+       "UPDATE `algorea_registration` as `c1`,
+       (
+          SELECT 
+              `algorea_registration2`.`ID`,
+               @curRank := IF(@prevGrade=`grade`, IF(@prevScore=`algorea_registration2`.`totalScoreAlgorea`, @curRank, @studentNumber + 1), 1) AS algoreaRank, 
+               @studentNumber := IF(@prevGrade=grade, @studentNumber + 1, 1) as studentNumber, 
+               @prevScore := totalScoreAlgorea,
+               @prevGrade := grade
+       FROM 
+       (
+          SELECT 
+             `ID`,
+             `grade`,
+             `totalScoreAlgorea`
+         FROM `algorea_registration`
+         WHERE 
+             totalScoreAlgorea IS NOT NULL
+         ORDER BY `grade`, `totalScoreAlgorea` DESC
+      ) `algorea_registration2`,
+      (
+          SELECT 
+             @curRank :=0, 
+             @prevScore:=null, 
+             @studentNumber:=0, 
+             @prevGrade := null
+            ) r
+       ) as `c2`
+       SET `c1`.`algoreaRank` = `c2`.`algoreaRank` 
+       WHERE `c1`.`ID` = `c2`.`ID`",
+       array());
+       
+   execQueryAndShowNbRows("Update Algorea school ranks (per grade)", 
+        "UPDATE `algorea_registration` as `c1`,
+          (
+             SELECT 
+                 `algorea_registration2`.`ID`,
+                  @curRank := IF (@prevGrade=`grade`, IF(@prevSchool=`schoolID`, IF(@prevScore=`algorea_registration2`.`totalScoreAlgorea`, @curRank, @studentNumber + 1), 1), 1) AS algoreaSchoolRank, 
+                  @studentNumber := IF(@prevGrade=grade, IF(@prevSchool=`schoolID`, @studentNumber + 1, 1), 1) as studentNumber, 
+                  @prevScore := totalScoreAlgorea,
+                  @prevSchool := `schoolID`,
+                  @prevGrade := grade
+          FROM 
+          (
+             SELECT 
+                `ID`,
+                `totalScoreAlgorea`,
+                `grade`,
+                `schoolID`
+            FROM `algorea_registration`
+            WHERE 
+                totalScoreAlgorea IS NOT NULL
+            ORDER BY `schoolID`, `grade`, `totalScoreAlgorea` DESC
+         ) `algorea_registration2`,
+         (
+             SELECT 
+                @curRank :=0, 
+                @prevScore:=null, 
+                @studentNumber:=0, 
+                @prevGrade := null,
+                @prevSchool:=null
+               ) r
+          ) as `c2`
+          SET `c1`.`algoreaSchoolRank` = `c2`.`algoreaSchoolRank` 
+          WHERE `c1`.`ID` = `c2`.`ID`",
+          array());
+}
+
+
+
 /*
 Tool to make some groups official
 
