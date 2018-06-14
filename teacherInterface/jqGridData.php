@@ -484,6 +484,9 @@ function selectRecords($db, $modelName, $recordID, $roles, $extraFilters = array
          if (isset($extraFilters["contestID"])) {
             $request["filters"]["contestID"] = $extraFilters["contestID"];
          }
+      } else if ($modelName === "algorea_registration") {
+         $request["filters"]["userID"] = $_SESSION["userID"];
+         $request["filters"]["hasScore"] = 1;
       } else {
          echo json_encode(array("success" => false, "message" => 'unknown model name: '.$modelName));
          return;

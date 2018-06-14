@@ -268,6 +268,30 @@ if (isset($_SESSION["isAdmin"]) && $_SESSION["isAdmin"]) {
 }
 
 $viewsModels = array(
+   'algorea_registration' => array(
+      "mainTable" => "algorea_registration",
+      "adminOnly" => false,
+      "joins" => array(
+      ),
+      "fields" => array(
+         "firstName" => array(),
+         "lastName" => array(),
+         "genre" => array(),
+         "grade" => array(),
+         "score" => array("tableName" => "algorea_registration", "fieldName" => "totalScoreAlgorea"),
+         "rank" => array("tableName" => "algorea_registration", "fieldName" => "algoreaRank"),
+         "schoolRank" => array("tableName" => "algorea_registration", "fieldName" => "algoreaSchoolRank"),
+         "category" => array(),
+         "round" => array(),
+         "userID" => array(),
+         "schoolID" => array(),
+      ),
+      "filters" => array(
+         "schoolID" => array("joins" => array(), "condition" => "`algorea_registration`.`schoolID` = :schoolID"),
+         "userID" => array("joins" => array(), "condition" => "(`algorea_registration`.`userID` = :userID)"),
+         "hasScore" => array("joins" => array(), "ignoreValue" => true, "condition" => "`[PREFIX]algorea_registration`.`totalScoreAlgorea` > 0")
+      )
+   ),
    'award1' => array(
       'mainTable' => 'contestant',
       'adminOnly' => false,

@@ -111,6 +111,9 @@ function fillDataDiplomas(params) {
    var contest = allData.contest[params.contestID];
    for (var contestantID in allData.contestant) {
       var contestant = allData.contestant[contestantID];
+      if (contestant.round == "1") {
+         continue;
+      }
       var groupID = contestant.groupID;
       if (contestantPerGroup[groupID] == undefined) {
         contestantPerGroup[groupID] = [];
@@ -127,6 +130,10 @@ function fillDataDiplomas(params) {
         schoolRank: contestant.schoolRank,
         level: contestant.level
       };
+      if (params.contestID == "algorea") {
+        diplomaContestant.category = contestant.category;
+        diplomaContestant.round = contestant.round;
+      }
       diplomaContestant.contest = allData.contest[contestant.contestID];
       diplomaContestant.user = allData.users[contestant.userID];
       diplomaContestant.school = allData.school[contestant.schoolID];
@@ -371,6 +378,13 @@ function getDisplayedScoreAndRank(diploma) {
    var scoreAndRank = [
       "a obtenu " + diploma.score + " points"// sur " + diploma.contest.maxScore
    ];
+   if ((diploma.category != undefined) && (diploma.category != "blanche")) {
+      if (diploma.round == "1") {
+         scoreAndRank.push("la qualification en catégorie " + diploma.category + " et en demi-finale");
+      } else {
+         scoreAndRank.push("la qualification en catégorie " + diploma.category);
+      }
+   }
    if (diploma.rank <= diploma.contestParticipants / 2) {
       scoreAndRank.push("la " + toOrdinal(diploma.rank) + " place sur " + diploma.contestParticipants);
    }
@@ -398,6 +412,9 @@ function getDisplayedScoreAndRank(diploma) {
 
 function addDiploma(content, diploma, contest, school, user) {
    var contestLogo = {image: allImages.logo, width:150};
+   if (contest.ID == "algorea") {
+      contestLogo.width = 75;
+   }
    var yearBackground = {image: allImages.yearBackground, width:150};
 
    var grade = i18n.t('grade_' + diploma.grade);
@@ -538,6 +555,30 @@ function genDocumentParts(params) {
    }
 }
 
+function loadAllDataAlgorea(params) {
+   loadData("school", function() {
+      loadData("colleagues", function() { 
+         loadData("user", function() {
+            loadData("algorea_registration", function() {
+               mergeUsers();
+               allData["contestant"] = allData["algorea_registration"];
+               var userID = 0;
+               for (var iContestant in allData["contestant"]) {
+                  allData["contestant"][iContestant]["groupID"] = 0;
+                  allData["contestant"][iContestant]["contestID"] = "algorea";
+                  allData["contestant"][iContestant]["nbContestants"] = 1;
+                  userID = allData["contestant"][iContestant]["userID"];
+               }
+               allData["group"] = [{ schoolID: params["schoolID"], "userID": userID, "contestID": "algorea", name: "Participants Algoréa"} ];
+               allData["contest"] = {"algorea": {"ID": "algorea", "rankGrades": 1, "rankNbContestants": 0, maxScore: 630, name: "Algoréa 2018", year: 2018}};
+               getTotalContestants(params, function() {
+                  getStrings(params);
+               });
+            }, params);
+         }, params);
+      }, params);
+   }, params);               
+}
 
 function loadAllData(params) {
    loadData("group", function() {
@@ -585,7 +626,11 @@ function init() {
       params['teamID'] = teamID;
    }
    params['official'] = true;
-   loadAllData(params);
+   if (contestID == "algorea") {
+      loadAllDataAlgorea(params);
+   } else {
+      loadAllData(params);
+   }
  }
  init();
 
