@@ -1310,6 +1310,10 @@ function loadContests() {
             nbContests += 1;
             contestList += '<li><button type="button" onclick="printSchoolCertificates(\''+contest.ID+'\')" class="btn btn-default">'+contest.name+'</button></li>';
          }
+         if (contestID == "884044050337033997") { // hard-coded special case for Algorea 2018
+            nbContests += 1;
+            contestList += '<li><button type="button" onclick="printSchoolCertificates(\'algorea\')" class="btn btn-default">Concours Algoréa</button></li>';
+         }
       }
       contestList += "</ul>";
       if (nbContests == 0) {
