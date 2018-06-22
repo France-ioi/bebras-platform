@@ -73,11 +73,11 @@ if ($mergeCodes) {
 } else {
    echo "<li><a href='contestantsParticipations.php?mergeCodes=1&showCodes=1'>Activer le mode fusion des élèves qui apparaissent deux fois</a>";
 }
-echo "</ul>";
 */
+echo "</ul>";
 echo "<p>Dans les résultats ci-dessous, des élèves peuvent apparaître en double s'ils n'ont pas utilisé leur code de participant pour participer à Algoréa.</p>";
 
-$grades = array(-1 => "Profs", -4 => "Autres", 4 => "CM1", 5 => "CM2", 6 => "6e", 7 => "5e", 8 => "4e", 9 => "3e", 10 => "2de", 11 => "1ère", 12 => "Tale", 13 => "2de<br/>pro", 14 => "1ère<br/>pro", 15 => "Tale<br/>pro", 16 => "6e Segpa", 17 => "5e Segpa", 18 => "4e Segpa", 19 => "3e Segpa", 20 => "Post-Bac");
+$grades = array(-2 => "Inconnu", -1 => "Profs", -4 => "Autres", 4 => "CM1", 5 => "CM2", 6 => "6e", 7 => "5e", 8 => "4e", 9 => "3e", 10 => "2de", 11 => "1ère", 12 => "Tale", 13 => "2de<br/>pro", 14 => "1ère<br/>pro", 15 => "Tale<br/>pro", 16 => "6e Segpa", 17 => "5e Segpa", 18 => "4e Segpa", 19 => "3e Segpa", 20 => "Post-Bac");
 
 $allContestIDs = ["118456124984202960","884044050337033997","112633747529078424", "404363140821714044"];
 
@@ -133,6 +133,9 @@ $query = "
       algorea_registration.category,
       algorea_registration.validatedCategory,
       algorea_registration.round,
+      algorea_registration.scoreDemi2018,
+      algorea_registration.rankDemi2018,
+      algorea_registration.qualifiedFinal,
       `group`.contestID,
       contest.parentContestID,
       contest.name as contestName,
@@ -198,6 +201,9 @@ while ($row = $stmt->fetchObject()) {
              "grade" => $row->regGrade,
              "code" => $row->code,
              "round" => $row->round,
+             "scoreDemi2018" => $row->scoreDemi2018,
+             "rankDemi2018" => $row->rankDemi2018,
+             "qualifiedFinal" => $row->qualifiedFinal,
              "qualifiedCategory" => $row->category,
              "validatedCategory" => $row->validatedCategory,
              "bebrasGroup" => "-"
@@ -210,6 +216,9 @@ while ($row = $stmt->fetchObject()) {
              "grade" => $row->grade,
              "code" => "-",
              "round" => $row->round,
+             "scoreDemi2018" => $row->scoreDemi2018,
+             "rankDemi2018" => $row->rankDemi2018,
+             "qualifiedFinal" => $row->qualifiedFinal,
              "qualifiedCategory" => "-",
              "validatedCategory" => "-",
              "bebrasGroup" => "-"
@@ -242,7 +251,7 @@ foreach ($schools as $schoolID => $school) {
    echo "<h2>".$school["name"]."</h2>";
    $contestants = $school["contestants"];
 
-   echo "<table class='results' cellspacing=0><tr><td rowspan=2>Groupe Castor</td><td rowspan=2>Prénom</td><td rowspan=2>Nom</td><td rowspan=2>Classe</td><td rowspan=2>Qualifié en<br/>catégorie</td><td rowspan=2>Qualifié en<br/>demi-finale</td>";
+   echo "<table class='results' cellspacing=0><tr><td rowspan=2>Groupe Castor</td><td rowspan=2>Prénom</td><td rowspan=2>Nom</td><td rowspan=2>Classe</td><td rowspan=2>Qualifié en<br/>catégorie</td>";
    if ($showCodes) {
       echo "<td rowspan=2>Code de participant</td>";
    }
@@ -260,6 +269,7 @@ foreach ($schools as $schoolID => $school) {
       }
       echo ">".$mainContestsNames[$mainContestKey]."</td>";
    }
+   echo "<td rowspan=2 style='width:70px'>Demi-finale</td>";
    echo "</tr><tr>";
    foreach ($contestIDs as $mainContestKey) {
       if (!isset($contests[$mainContestKey])) {
@@ -296,11 +306,6 @@ foreach ($schools as $schoolID => $school) {
          "<td>".$contestant["infos"]["lastName"]."</td>".
          "<td>".$grades[$contestant["infos"]["grade"]]."</td>".
          "<td class='".$contestant["infos"]["qualifiedCategory"]."'>".$contestant["infos"]["qualifiedCategory"]."</td>";
-      if ($contestant["infos"]["round"] == "1") {
-         echo "<td>oui</td>";
-      } else {
-         echo "<td></td>";
-      }
       if ($showCodes) {
          echo "<td>".$contestant["infos"]["code"]."</td>";
       }
@@ -323,6 +328,29 @@ foreach ($schools as $schoolID => $school) {
             showContestantResult($contestant, $categoryContests[""], "");
          }
       }
+      echo "<td>";
+      if ($contestant["infos"]["round"] == "1") {
+         $score = $contestant["infos"]["scoreDemi2018"];
+         if (($score != null) && ($score > 0)) {
+            echo $score;
+            echo "<br/>";
+            $qualifiedFinal = $contestant["infos"]["qualifiedFinal"];
+            echo "<span class='rank'>";
+            if ($qualifiedFinal == "0") {
+               echo $contestant["infos"]["rankDemi2018"]."e des ".$grades[$contestant["infos"]["grade"]]."<br/>pas en finale";
+            } else if ($qualifiedFinal == "1") {
+               echo "Finaliste (à Paris)";
+            } else {
+               echo "Qualifié pour la<br/>finale en ligne";
+            }
+            echo "</span>";
+         } else {
+            echo "-";
+         }
+      } else {
+         echo "-";
+      }
+      echo "</td>";
       echo "</tr>";
    }
 
