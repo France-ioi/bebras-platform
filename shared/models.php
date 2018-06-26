@@ -281,6 +281,7 @@ $viewsModels = array(
          "score" => array("tableName" => "algorea_registration", "fieldName" => "totalScoreAlgorea"),
          "rank" => array("tableName" => "algorea_registration", "fieldName" => "algoreaRank"),
          "schoolRank" => array("tableName" => "algorea_registration", "fieldName" => "algoreaSchoolRank"),
+         "rankDemi2018" => array(),
          "category" => array(),
          "round" => array(),
          "userID" => array(),
