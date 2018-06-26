@@ -1417,7 +1417,7 @@ if ($action == "updateRegistrationCategory") {
       SELECT algorea_registration.ID, 
        SUM(GREATEST(GREATEST(IFNULL(bestScoreIndividual, 0),
                          IFNULL(bestScoreTeam, 0)),
-                IF(algorea_registration.category != registration_category.category, 100, 0))) as totalScore
+                IF(algorea_registration.category != registration_category.category, 160, 0))) as totalScore
        FROM algorea_registration
        JOIN registration_category
        ON algorea_registration.ID = registration_category.registrationID

@@ -111,9 +111,9 @@ function fillDataDiplomas(params) {
    var contest = allData.contest[params.contestID];
    for (var contestantID in allData.contestant) {
       var contestant = allData.contestant[contestantID];
-      if (contestant.round == "1") {
+/*      if (contestant.round == "1") {
          continue;
-      }
+      }*/
       var groupID = contestant.groupID;
       if (contestantPerGroup[groupID] == undefined) {
         contestantPerGroup[groupID] = [];
@@ -133,6 +133,7 @@ function fillDataDiplomas(params) {
       if (params.contestID == "algorea") {
         diplomaContestant.category = contestant.category;
         diplomaContestant.round = contestant.round;
+        diplomaContestant.rankDemi2018 = contestant.rankDemi2018;
       }
       diplomaContestant.contest = allData.contest[contestant.contestID];
       diplomaContestant.user = allData.users[contestant.userID];
@@ -379,17 +380,21 @@ function getDisplayedScoreAndRank(diploma) {
       "a obtenu " + diploma.score + " points"// sur " + diploma.contest.maxScore
    ];
    if ((diploma.category != undefined) && (diploma.category != "blanche")) {
-      if (diploma.round == "1") {
+/*      if (diploma.round == "1") {
          scoreAndRank.push("la qualification en catégorie " + diploma.category + " et en demi-finale");
       } else {
+*/         
          scoreAndRank.push("la qualification en catégorie " + diploma.category);
-      }
+/*      }*/
    }
    if (diploma.rank <= diploma.contestParticipants / 2) {
-      scoreAndRank.push("la " + toOrdinal(diploma.rank) + " place sur " + diploma.contestParticipants);
+      scoreAndRank.push("la " + toOrdinal(diploma.rank) + " place sur " + diploma.contestParticipants + " lors des trois premiers tours");
    }
    if (diploma.schoolRank <= diploma.schoolParticipants / 2) {
       scoreAndRank.push("la "+ toOrdinal(diploma.schoolRank) + " place sur " + diploma.schoolParticipants + " dans l'établissement");
+   }
+   if (diploma.rankDemi2018 != null) {
+      scoreAndRank.push("la " + toOrdinal(diploma.rankDemi2018) + " place en demi-finale");
    }
    if (diploma.qualified) {
       scoreAndRank.push(qualificationText);
