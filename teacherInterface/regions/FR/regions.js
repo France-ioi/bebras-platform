@@ -25,12 +25,14 @@ regions = [
    'countryFR:orleans-tours',
    'countryFR:paris',
    'countryFR:poitiers',
+   'countryFR:polynesie',
    'countryFR:rouen',
    'countryFR:reims',
    'countryFR:rennes',
    'countryFR:reunion',
+   'countryFR:spm',
    'countryFR:strasbourg',
    'countryFR:toulouse',
    'countryFR:versailles',
-   'countryFR:polynesie'
+   'countryFR:wf'
 ];

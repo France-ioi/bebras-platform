@@ -25,7 +25,6 @@
       "ac-orleans-tours.fr",
       "ac-paris.fr",
       "ac-poitiers.fr",
-      "ac-polynesie.pf",
       "ac-rouen.fr",
       "ac-reims.fr",
       "ac-rennes.fr",
@@ -33,6 +32,9 @@
       "ac-strasbourg.fr",
       "ac-toulouse.fr",
       "ac-versailles.fr",
+      "ac-spm.fr",
+      "ac-polynesie.pf",
+      "ac-wf.wf",
       "educagri.fr"
    ]
 }
