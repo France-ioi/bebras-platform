@@ -18,7 +18,7 @@ function validateEmail($type, $email, $salt) {
    $stmt->execute(array($email, $salt));
    if ($row = $stmt->fetchObject()) {
       $validate = "";
-      if ($type === "officialEmail") {
+      if (($type === "officialEmail") && ($config->teacherInterface->forceOfficialEmailDomain)) {
          $validate = ", `validated` = 1 ";
       }
       $query = "UPDATE `user` SET `".$type."Validated` = 1 ".$validate." WHERE (`ID` = ?)";
