@@ -2496,7 +2496,10 @@ function getMailToManualValidation(message) {
 
 function newUser() {
    initModels(false);
-   var message = "<p>" + t("warning_official_email_required") + getMailToManualValidation(window.config.infoEmail) + "</p>";
+   var message = "";
+   if (window.config.forceOfficialEmailDomain) {
+      message = "<p>" + t("warning_official_email_required") + getMailToManualValidation(window.config.infoEmail) + "</p>";
+   }
 
    newForm("user_create", t("user_registration"), message);
 }
