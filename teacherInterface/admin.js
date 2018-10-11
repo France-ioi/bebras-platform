@@ -133,6 +133,25 @@ function getRegionsObjects(isFilter) {
    return choices;
 }
 
+function getGradesList(isFilter) {
+   var gradesList = {};
+   var gradesFilter = "";
+   var grades = [-1, -4, 3, 4, 5, 6, 16, 6, 16, 7, 17, 8, 18, 9, 19, 10, 13, 11, 14, 12, 20];
+   if (config.grades != undefined) {
+      grades = config.grades;
+   }
+   for (var iGrade = 0; iGrade < grades.length; iGrade++) {
+      var grade = grades[iGrade];
+      gradesList["" + grade] = t("grade_" + grade);
+      gradesFilter = ";" + grade + ":" + t("grade_" + grade);
+   }
+   if (isFilter) {
+      return gradesFilter;
+   } else {
+      return gradesList;
+   }
+}
+
 function getGroupsColModel() {
    var model = {
       tableName: "group",
@@ -157,26 +176,7 @@ function getGroupsColModel() {
             required: true, 
             width: 260, comment: t("contestID_comment")},
          grade: {label: "Classe", editable: true, edittype: "select", width: 100, required: true, editoptions:{
-            value:{
-               "3": t("grade_3"),
-               "4": t("grade_4"),
-               "5": t("grade_5"),
-               "6": t("grade_6"),
-               "16": t("grade_16"),
-               "7": t("grade_7"),
-               "17": t("grade_17"),
-               "8": t("grade_8"),
-               "18": t("grade_18"),
-               "9": t("grade_9"),
-               "19": t("grade_19"),
-               "10": t("grade_10"),
-               "13": t("grade_13"),
-               "11": t("grade_11"),
-               "14": t("grade_14"),
-               "12": t("grade_12"),
-               "15": t("grade_15"),
-               "20": t("grade_20")
-            }}},
+            value: getGradesList(false)}},
          participationType: {label: t("participationType_label"), longLabel: t("participationType_long_label"), editable: true, required: true, edittype: "select", width: 100, editoptions:{ value:{"Official": t("participationType_official"), "Unofficial": t("participationType_unofficial")}}, comment: t("participationType_comment")},
          expectedStartTime: {
             label: t("expectedStartTime_label") + "<br/>(" + jstz.determine().name() + ")",
@@ -309,49 +309,7 @@ function initModels(isLogged) {
                width: 75},
             //contestants: {label: "Équipe", editable: false, width:300},
             grade: {label: "Classe", editable: true, edittype: "select", required: true, editoptions:{
-               value:{
-                  "-1": t("grade_-1"),
-                  "-4": t("grade_-4"),
-                  "3": t("grade_3"),
-                  "4": t("grade_4"),
-                  "5": t("grade_5"),
-                  "15": t("grade_15"),
-                  "6": t("grade_6"),
-                  "16": t("grade_16"),
-                  "7": t("grade_7"),
-                  "17": t("grade_17"),
-                  "8": t("grade_8"),
-                  "18": t("grade_18"),
-                  "9": t("grade_9"),
-                  "19": t("grade_19"),
-                  "10": t("grade_10"),
-                  "13": t("grade_13"),
-                  "11": t("grade_11"),
-                  "14": t("grade_14"),
-                  "12": t("grade_12"),
-                  "20": t("grade_20")
-               }}, searchoptions:{ value:"_NOF_:" + t("option_no_filter") +
-                  ";-1:" + t("grade_-1") +
-                  ";-4:" + t("grade_-4") +
-                  ";3:" + t("grade_3") +
-                  ";4:" + t("grade_4") +
-                  ";5:" + t("grade_5") +
-                  ";6:" + t("grade_6") +
-                  ";16:" + t("grade_16") +
-                  ";7:" + t("grade_7") +
-                  ";17:" + t("grade_17") +
-                  ";8:" + t("grade_8") +
-                  ";18:" + t("grade_18") +
-                  ";9:" + t("grade_9") +
-                  ";19:" + t("grade_19") +
-                  ";10:" + t("grade_10") +
-                  ";13:" + t("grade_13") +
-                  ";11:" + t("grade_11") +
-                  ";14:" + t("grade_14") +
-                  ";12:" + t("grade_12") +
-                  ";15:" + t("grade_15") +
-                  ";20:" + t("grade_20")
-               },
+               value:getGradesList(false)}, searchoptions:{ value:"_NOF_:" + t("option_no_filter") + getGradesList(true)},
                stype: "select", width:75},
             score: {label: t("contestant_score_label"), editable: false, width:75},
             nbContestants: {label: t("contestant_nbContestants_label"), editable: false, width:60, editoptions:{

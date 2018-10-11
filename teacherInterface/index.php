@@ -301,6 +301,7 @@
       'customStringsName' => $config->customStringsName,
       'allowCertificates' => $config->certificates->allow,
       'useAlgoreaCodes' => $config->teacherInterface->useAlgoreaCodes,
+      'grades' => $config->grades
    ]) ?>;
    init();
 </script>
