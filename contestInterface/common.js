@@ -1091,7 +1091,8 @@ window.selectMainTab = function(tabName) {
    if (tabName == 'home') {
       $("#publicContestExplanation").html(t("tab_public_contests_score_explanation"));
       //loadPublicGroups(); We don't use this feature anymore, we create this page manually.
-   }
+      $("#contentPublicGroups").show();
+  }
    var tabNames = ["school", "home", "continue", "results", "contests"];
    for(var iTab = 0; iTab < tabNames.length; iTab++) {
       if (tabNames[iTab] === tabName) {
