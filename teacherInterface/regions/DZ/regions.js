@@ -1,0 +1,3 @@
+regions = [
+   'countryDZ:foreign'
+];
