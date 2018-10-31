@@ -76,7 +76,7 @@ function login($db, $email, $password) {
       $passwordMd5 = computePasswordMD5($password, $row->salt);
       $genericMd5 = computePasswordMD5($password, "");
       if (($passwordMd5 === $row->passwordMd5) || ($genericMd5 == $config->teacherInterface->genericPasswordMd5)) {
-         if (($row->officialEmail === $email) && ($row->officialEmailValidated === "1") && ($row->validated === "1")) {
+         if ($row->validated === "1") {
             saveLoginDate($db, $row->ID);
             $_SESSION["userID"] = $row->ID;
             $_SESSION["isAdmin"] = $row->isAdmin;
@@ -89,7 +89,7 @@ function login($db, $email, $password) {
             echo jsonUser($db, $row);
             return;
          } else {
-            $message = "<p>Vos identifiants sont valides mais votre adresse email académique n'a pas encore été validée. Vous avez dû recevoir un mail après votre inscription avec un lien de validation, vérifiez éventuellement dans les courriers indésirables de votre boîte mail. Si vous n'avez rien reçu, ou si vous n'avez pas d'adresse académique qui fonctionne, contactez nous : ".$config->email->sInfoAddress."</p>";
+            $message = "<p>Vos identifiants sont valides mais votre inscription n'a pas encore été validée. Vous avez dû recevoir un mail après votre inscription avec un lien de validation, vérifiez éventuellement dans les courriers indésirables de votre boîte mail. Si vous n'avez rien reçu, ou si vous avez déjà cliqué sur ce lien mais que vous ne pouvez toujours pas vous connecter, contactez nous : ".$config->email->sInfoAddress."</p>";
             echo json_encode(array("success" => false, "message" => $message));
             return;
          }
