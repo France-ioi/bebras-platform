@@ -76,8 +76,7 @@ function login($db, $email, $password) {
       $passwordMd5 = computePasswordMD5($password, $row->salt);
       $genericMd5 = computePasswordMD5($password, "");
       if (($passwordMd5 === $row->passwordMd5) || ($genericMd5 == $config->teacherInterface->genericPasswordMd5)) {
-         if ((($row->officialEmail === $email) && ($row->officialEmailValidated === "1")) ||
-             ($row->validated === "1")) {
+         if (($row->officialEmail === $email) && ($row->officialEmailValidated === "1") && ($row->validated === "1")) {
             saveLoginDate($db, $row->ID);
             $_SESSION["userID"] = $row->ID;
             $_SESSION["isAdmin"] = $row->isAdmin;
