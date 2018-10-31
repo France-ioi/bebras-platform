@@ -175,7 +175,7 @@ function getGroupsColModel() {
             stype: "select", searchoptions: { value:getItemNames(contests, true)},
             required: true, 
             width: 260, comment: t("contestID_comment")},
-         grade: {label: "Classe", editable: true, edittype: "select", width: 100, required: true, editoptions:{
+         grade: {label: t("contestant_grade_label"), editable: true, edittype: "select", width: 100, required: true, editoptions:{
             value: getGradesList(false)}},
          participationType: {label: t("participationType_label"), longLabel: t("participationType_long_label"), editable: true, required: true, edittype: "select", width: 100, editoptions:{ value:{"Official": t("participationType_official"), "Unofficial": t("participationType_unofficial")}}, comment: t("participationType_comment")},
          expectedStartTime: {
@@ -308,7 +308,7 @@ function initModels(isLogged) {
                stype: "select", searchoptions:{ value:"_NOF_:" + t("option_no_filter") + ";1:" + t("option_female") + ";2:" + t("option_male")},
                width: 75},
             //contestants: {label: "Équipe", editable: false, width:300},
-            grade: {label: "Classe", editable: true, edittype: "select", required: true, editoptions:{
+            grade: {label: t("contestant_grade_label"), editable: true, edittype: "select", required: true, editoptions:{
                value:getGradesList(false)}, searchoptions:{ value:"_NOF_:" + t("option_no_filter") + getGradesList(true)},
                stype: "select", width:75},
             score: {label: t("contestant_score_label"), editable: false, width:75},

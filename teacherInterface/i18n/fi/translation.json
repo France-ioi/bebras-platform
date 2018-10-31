@@ -109,6 +109,8 @@
     "grade_18": "8. luokka Special",
     "grade_19": "9. luokka Special",
     "grade_20": "toinen aste",
+    "grade_-1": "Opettaja",
+    "grade_-4": "Muu",
     "participationType_long_label": "Osallistumisen tyyppi",
     "participationType_label": "Osallistumisen<br/>tyyppi",
     "participationType_comment": "Luo 'epävirallinen' ryhmä, jos haluat esim. testata järjestelmää niin, että testisuorituksia ei huomioida tuloslaskennassa.<br/>",
