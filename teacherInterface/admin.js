@@ -411,7 +411,7 @@ function initModels(isLogged) {
             gender: {label: t("user_gender_label"), editable: true, edittype: "select", width: 20, editoptions:{ value:{"F": "Mme.", "M": "M."}}, required:true},
             lastName: {label: t("user_lastName_label"), editable: true, edittype: "text", width: 90, required: true},
             firstName: {label: t("user_firstName_label"), editable: true, edittype: "text", width: 90, required: true},
-            officialEmail: {label: t("user_officialEmail_label"), editable: true, edittype: officialEmailEditType, width: 90, required: true},
+            officialEmail: {label: t("user_officialEmail_label"), editable: true, edittype: officialEmailEditType, width: 90, required: false},
             alternativeEmail: {label: t("user_alternativeEmail_label"), editable: true, edittype: "email", width: 90},
             password: {label: t("user_password_label"), editable: true, edittype: "password", width: 90, required: true},
             password2: {label: t("user_password_confirm_label"), editable: true, edittype: "password", width: 90, required: true}
@@ -1868,6 +1868,7 @@ function newForm(modelName, title, message, item) {
             html += "<option value='" + allowedDomain + "'>" + allowedDomain + "</option>";
          }
          html += "</select>";
+         html += "<br/><input type='checkbox' id='" + fieldId + "_none'>" + t("user_no_official_email");
       } else if (field.edittype === "datetime") {
          html += "<input id='" + fieldId + "_date' type='text' "+requiredString+"/> ";
          html += " à ";
@@ -2047,14 +2048,39 @@ function editForm(modelName, title, item) {
    showForm(modelName);
 }
 
+function checkEmailFormat(email) {
+   // based on https://www.regular-expressions.info/email.html
+   var re = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+   return re.test(email);
+}
+
 function checkUser(user, isCreate) {
+   /*
+   var firstAt = user.officialEmail.indexOf("@");
+   if (user.officialEmail.indexOf("@", firstAt + 1) == 0) {
+      user.officialEmail = "";
+   }
+   */
+   if (user.officialEmail == "none") {
+      $("#edit_form_error").html(t("teacher_required"));
+      return false;
+   }
    if (user.officialEmail !== "") {
-      var firstAt = user.officialEmail.indexOf("@");
-      if (user.officialEmail.indexOf("@", firstAt + 1) > 0) {
+      if (!checkEmailFormat(user.officialEmail)) {
          $("#edit_form_error").html(t("invalid_officialEmail"));
          return false;
       }
+   } else if (user.alternativeEmail == "") {
+      $("#edit_form_error").html(t("missing_email")); // TODO alternative email required
+      return false;
    }
+   if (user.alternativeEmail != "") {
+      if (!checkEmailFormat(user.alternativeEmail)) {
+         $("#edit_form_error").html(t("invalid_alternativeEmail")); // TODO alternative email required
+         return false;
+      }
+   }
+   
    var minPasswordLength = 6;
    if (user.password != user.password2) {
       $("#edit_form_error").html(t("passwords_different"));
@@ -2154,12 +2180,14 @@ function validateForm(modelName) {
          var fullDate = date + " " + hours + ":" + minutes;
          item[fieldName] = localDateToUtc(fullDate);
       } else if (field.edittype === "ac-email") {
-         if ($("#" + modelName + "_" + fieldName + "_domain").val() === "undefined") {
+         if ($("#" + modelName + "_" + fieldName + "_none").is(":checked")) {
+            item[fieldName] = "";
+         } else if ($("#" + modelName + "_" + fieldName + "_domain").val() === "undefined") {
             if (item[fieldName] !== "") {
                jqAlert(t("official_email_invalid"));
                return;
             }
-            item[fieldName] = "";
+            item[fieldName] = "none";
          }
          else {
             var domain = $("#" + modelName + "_" + fieldName + "_domain").val();
@@ -2248,7 +2276,7 @@ function validateForm(modelName) {
          endEditForm(modelName, data.recordID, item);
          if (modelName === "user_create") {
             if (item.officialEmail) {
-               jqAlert(t("you_will_get_email") + window.config.infoEmail);
+               jqAlert(t("you_will_get_email") + " " + window.config.infoEmail);
             } else {
                jqAlert(t("no_official_email_1") + getMailToManualValidation(t("contact_us")) + window.config.infoEmail + " " + t("no_official_email_2"));
             }
