@@ -139,13 +139,20 @@ function getTotalContestants($contestID, $grade, $nbContestants = null) {
    return $stmt->fetchColumn();
 }
 
-function getTeacherTranslationStrings() {
+function translate($key) {
    global $config;
+   
    static $teacherTranslationStrings = null;
    if (!$teacherTranslationStrings) {
-      $normalStrings = json_decode(file_get_contents(__DIR__.'/../teacherInterface/i18n/'.$config->defaultLanguage.'/translation.json'), true);
-      $specificStrings = json_decode(file_get_contents(__DIR__.'/../teacherInterface/i18n/'.$config->defaultLanguage.'/'.$config->customStringsName.'.json'), true);
-      $teacherTranslationStrings = array_merge($normalStrings, $specificStrings);
+      $teacherTranslationStrings = json_decode(file_get_contents(__DIR__.'/../teacherInterface/i18n/'.$config->defaultLanguage.'/translation.json'), true);
+      if ($config->customStringsName) {
+         $specificStrings = json_decode(file_get_contents(__DIR__.'/../teacherInterface/i18n/'.$config->defaultLanguage.'/'.$config->customStringsName.'.json'), true);
+         $teacherTranslationStrings = array_merge($teacherTranslationStrings, $specificStrings);
+      }
    }
-   return $teacherTranslationStrings;
+   if (isset($teacherTranslationStrings[$key])) {
+      return $teacherTranslationStrings[$key];
+   } else {
+      return $key;
+   }
 }

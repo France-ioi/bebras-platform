@@ -9,7 +9,7 @@ $contestID = null;
 
 if (isset($_REQUEST["contestID"]) && $_REQUEST['contestID']) {
    if ((!isset($_SESSION["isAdmin"])) || (!$_SESSION["isAdmin"])) {
-      echo json_encode((object)array("status" => 'error', "message" => "Seul un admin peut évaluer les scores d'un concours"));
+      echo json_encode((object)array("status" => 'error', "message" => translate("admin_restricted")));
       exit;
    }
    $contestID = $_REQUEST["contestID"];
@@ -18,7 +18,7 @@ if (isset($_REQUEST["contestID"]) && $_REQUEST['contestID']) {
    $stmt->execute(array($contestID));
    $row = $stmt->fetchObject();
    if (!$row) {
-      echo json_encode((object)array("status" => 'error', "message" => "Le concours n'existe pas"));
+      echo json_encode((object)array("status" => 'error', "message" => "This contest doesn't exist"));
       exit;
    }
 } else if (isset($_REQUEST["groupID"]) && $_REQUEST['groupID']) {
@@ -27,7 +27,7 @@ if (isset($_REQUEST["contestID"]) && $_REQUEST['contestID']) {
    $args = array($groupID);
    if ((!isset($_SESSION["isAdmin"])) || (!$_SESSION["isAdmin"])) {
       if (!isset($_SESSION['userID'])) {
-         echo json_encode((object)array("status" => 'error', "message" => "Vous n'êtes pas loggé"));
+         echo json_encode((object)array("status" => 'error', "message" => translate("session_expired")));
          exit;
       } else {
          $query = "SELECT `group`.`ID`, `contest`.`ID` as `contestID`, `contest`.`folder`, `contest`.`showSolutions` FROM `group` JOIN `contest` on `group`.`contestID` = `contest`.`ID` LEFT JOIN `user_user` on `group`.`userID` = `user_user`.`userID` WHERE `group`.`ID` = ? and ((`user_user`.`accessType` = 'write' AND `user_user`.`targetUserID` = ?) OR (`group`.`userID` = ?))";
@@ -38,11 +38,11 @@ if (isset($_REQUEST["contestID"]) && $_REQUEST['contestID']) {
    $stmt->execute($args);
    $row = $stmt->fetchObject();
    if (!$row) {
-      echo json_encode((object)array("status" => 'error', "message" => "Le groupe n'existe pas ou vous n'y avez pas accès (questions.php)"));
+      echo json_encode((object)array("status" => 'error', "message" => translate("grader_inexistent_group")."(questions.php)"));
       exit;
    }
    if (!intval($row->showSolutions) && (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"])) {
-      echo json_encode((object)array("status" => 'error', "message" => "Vous ne pouvez pas évaluer les soumissions d'un groupe correspondant à un concours en cours."));
+      echo json_encode((object)array("status" => 'error', "message" => translate("grader_contest_running")."(questions.php)"));
       exit;
    }
    $contestID = $row->contestID;

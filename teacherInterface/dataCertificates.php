@@ -6,12 +6,12 @@ require_once("commonAdmin.php");
 
 
 if (!isset($_SESSION["userID"])) {
-   echo "Votre session a expiré, veuillez vous reconnecter.";
+   echo translate("session_expired");
    exit;
 }
 
 if (!isset($_POST['contestID']) || !isset($_POST['schoolID'])) {
-   echo "Vous n'avez pas spécifié de contestID ou de schoolID.";
+   echo translate("certificates_please_specify_contestID_schoolID");
 }
 
 if ($_POST['contestID'] != "algorea") {
@@ -19,7 +19,7 @@ if ($_POST['contestID'] != "algorea") {
    $stmt->execute(['contestID' => $_POST['contestID']]);
    $contest = $stmt->fetch();
    if (!$contest) {
-      echo "Impossible de trouver de concours avec l'ID ".$_POST['contestID'].'.';
+      echo sprintf(translate("certificates_unknown_contest"), $_POST['contestID']);
    }
 
    $groupBy = '';

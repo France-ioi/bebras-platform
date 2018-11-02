@@ -96,9 +96,9 @@ if ($_GET["action"] == "mergeSchools")
       mergeDuplicates($db, $rowDuplicate->ID);
    }
    if ($nbDuplicates == 1)
-      $msg = "Aucun doublon, aucune fusion faite";
+      $msg = translate("merge_failed_no_duplicates");
    else
-      $msg = "Fusion effectuée pour ".$nbDuplicates." établissements";
+      $msg = sprintf(translate("merge_success"), $nbDuplicates);
    output(array("success" => true, "msg" => $msg));   
 }
 if ($_GET["action"] == "getSchoolList")

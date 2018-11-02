@@ -5,7 +5,7 @@ require_once("../shared/common.php");
 require_once("commonAdmin.php");
 
 if (!isset($_SESSION["userID"])) {
-   echo "Votre session a expiré, veuillez vous reconnecter.";
+   echo translate("session_expired");
    exit;
 }
 
@@ -71,7 +71,7 @@ $output = fopen('php://output', 'w');
 header( 'Content-Type: text/csv' );
 header( 'Content-Disposition: attachment;filename=test.csv');
 
-$fields = array("ID" , "nom", "prénom", "genre", "groupe", "teamID", "début", "fin", "score total");
+$fields = array("ID" , translate("export_lastName"), translate("export_firstName"), translate("export_gender"), translate("export_group"), "teamID", translate("export_begin"), translate("export_end"), translate("export_total_score"));
 $questions = array();
 $questionsRanks = array();
 $rank = 0;

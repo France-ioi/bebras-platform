@@ -29,7 +29,7 @@ function checkOfficialEmail($email) {
             return true;
          }
       }
-      return "l'adresse email ne correspond pas à un domaine académique";
+      return translate("user_invalid_domain");
    } else {
       return true;
    }
@@ -135,7 +135,7 @@ function checkRequestGroup($db, &$request, &$record, $operation, &$roles) {
    if (!$_SESSION["isAdmin"]) {
       $record["userID"] = $_SESSION["userID"];
    } else {
-      die(json_encode(['success' => false, 'error' => "You cannot create groups as Administrator"]));
+      die(json_encode(['success' => false, 'error' => translate("admins_cant_create_groups")]));
    }
 
    // Filters
@@ -149,7 +149,7 @@ function checkRequestGroup($db, &$request, &$record, $operation, &$roles) {
    }   
    // This can't be done through a standard filter yet
    if (($operation === "update") && groupContestChanged($db, $record["ID"], $record["contestID"])) {
-      $message = "can't change the contest of a group that has been used"; // TODO : translate
+      $message = trasnalte("groups_cant_change_contest_of_started_group");
       error_log($message);
       echo json_encode(array("success" => false, "message" => $message));      
       return false;
@@ -221,13 +221,13 @@ function checkRequestUser($db, &$request, &$record, $operation, &$roles) {
  
    if ($operation === "insert") {
       if (existingEmail($db, $record["officialEmail"], 0)) {
-         $message = "Un compte existe déjà pour l'email ".$record["officialEmail"].".";
+         $message = sprintf(translate("user_email_already_used"), $record["officialEmail"]);
          echo json_encode(array("success" => false, "message" => $message));
          error_log($message);
          return false;
       }
       if (existingEmail($db, $record["alternativeEmail"], 0)) {
-         $message = "Un compte existe déjà pour l'email ".$record["alternativeEmail"].".";
+         $message = sprintf(translate("user_email_already_used"), $record["alternativeEmail"]);
          echo json_encode(array("success" => false, "message" => $message));
          error_log($message);
          return false;
@@ -248,7 +248,7 @@ function checkRequestUser($db, &$request, &$record, $operation, &$roles) {
       if ($record["password"] != "") {
          $oldPasswordMd5 = computePasswordMD5($record["old_password"], $user->salt);
          if ($oldPasswordMd5 !== $user->passwordMd5) { 
-            echo json_encode(array("success" => false, "message" => "mot de passe invalide"));
+            echo json_encode(array("success" => false, "message" => translate("invalid_password")));
             error_log("Invalid password");
             return false;
          }
@@ -263,7 +263,7 @@ function checkRequestUser($db, &$request, &$record, $operation, &$roles) {
    if ((!$_SESSION["isAdmin"]) && ($operation === "update")) {
       // Could/should we use a filter for this ?
       if (($record["officialEmail"] !== $user->officialEmail) && $user->officialEmailValidated) {
-         error_log("impossible de modifier un email officiel validé");
+         error_log("a validated official email can't be changed");
          return false;
       }
    }   
@@ -661,16 +661,16 @@ if (!isset($_REQUEST["tableName"])) {
 }
 $modelName = $_REQUEST["tableName"];
 if (!isset($_SESSION["userID"]) && !(($modelName === "user") && ($_REQUEST["oper"] === "insert"))) {
-   error_log("Requête invalide pour utilisateur non connecté. session : ".json_encode($_SESSION)." request : ".json_encode($_REQUEST));
+   error_log("Invalid request for non-connected user. session : ".json_encode($_SESSION)." request : ".json_encode($_REQUEST));
    http_response_code(500);
    header("Status: 500 Server Error Invalid Request");
-   echo "Requête invalide pour utilisateur non connecté";
+   echo translate("session_expired");
    unset($db);
    exit;
 }
 
 if ($config->maintenanceUntil) {
-   echo json_encode(['success' => false, "message" => "Désolé, le site est en indisponible jusqu'à ".$config->maintenanceUntil.' pour cause de maintenance']);
+   echo json_encode(['success' => false, "message" => sprintf(translate("site_under_maintainance"), $config->maintenanceUntil)]);
    exit();
 }
 

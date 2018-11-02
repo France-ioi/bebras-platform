@@ -7,10 +7,10 @@ require_once("../shared/tinyORM.php");
 
 if (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"]) {
    if (!isset($_POST['groupID']) || !$_POST['groupID']) {
-      echo json_encode((object)array("status" => 'error', "message" => "Seul un admin peut évaluer les scores d'un concours"));
+      echo json_encode((object)array("status" => 'error', "message" => translate("admin_restricted")));
       exit;
    } else if (!isset($_SESSION["userID"]) || !$_SESSION["userID"]) {
-      echo json_encode((object)array("status" => 'error', "message" => "Vous n'êtes pas loggé"));
+      echo json_encode((object)array("status" => 'error', "message" => translate("session_expired")));
       exit;
    }
 }
@@ -32,7 +32,7 @@ if ($contestID != null) {
    $stmt->execute(array($contestID));
    $row = $stmt->fetchObject();
    if (!$row) {
-      echo json_encode((object)array("status" => 'error', "message" => "Le concours n'existe pas"));
+      echo json_encode((object)array("status" => 'error', "message" => translate("grader_inexistent_contest")));
       exit;
    }
    $contestFolder = $row->folder;
@@ -48,11 +48,11 @@ if ($contestID != null) {
    $stmt->execute($args);
    $row = $stmt->fetchObject();
    if (!$row) {
-      echo json_encode((object)array("status" => 'error', "message" => "Le groupe n'existe pas ou vous n'y avez pas accès"));
+      echo json_encode((object)array("status" => 'error', "message" => translate("grader_inexistent_group")));
       exit;
    }
    if (!intval($row->showSolutions) && (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"])) {
-      echo json_encode((object)array("status" => 'error', "message" => "Vous ne pouvez pas évaluer les soumissions d'un groupe correspondant à un concours en cours."));
+      echo json_encode((object)array("status" => 'error', "message" => translate("grader_contest_running")));
       exit;
    }
    $contestFolder = $row->folder;
@@ -65,7 +65,7 @@ $stmt = $db->prepare($query);
 $stmt->execute(array($contestID, $questionKey));
 $row = $stmt->fetchObject();
 if (!$row) {
-   echo json_encode((object)array("status" => 'error', "message" => "La question ".$questionKey." n'existe pas dans le concours sélectionné"));
+   echo json_encode((object)array("status" => 'error', "message" => sprintf(translate("grader_inexistent_question"), $questionKey)));
    exit;
 }
 

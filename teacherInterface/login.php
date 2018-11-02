@@ -57,7 +57,7 @@ function isLogged($db) {
       $stmt->execute(array($_SESSION["userID"]));
       $row = $stmt->fetchObject();
       if (!$row) {
-         echo json_encode(array("success" => false, "message" => "Identifiant invalide"));
+         echo json_encode(array("success" => false, "message" => translate("login_invalid_identifier")));
          return;
       }
       saveLoginDate($db, $row->ID);
@@ -89,7 +89,7 @@ function login($db, $email, $password) {
             echo jsonUser($db, $row);
             return;
          } else {
-            $message = "<p>Vos identifiants sont valides mais votre inscription n'a pas encore été validée. Vous avez dû recevoir un mail après votre inscription avec un lien de validation, vérifiez éventuellement dans les courriers indésirables de votre boîte mail. Si vous n'avez rien reçu, ou si vous avez déjà cliqué sur ce lien mais que vous ne pouvez toujours pas vous connecter, contactez nous : ".$config->email->sInfoAddress."</p>";
+            $message = "<p>".sprintf(translate("login_user_not_validated"), $config->email->sInfoAddress)."<p>";
             echo json_encode(array("success" => false, "message" => $message));
             return;
          }

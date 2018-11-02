@@ -4,12 +4,12 @@ require_once("../shared/common.php");
 require_once("commonAdmin.php");
 
 if (!isset($_SESSION["userID"])) {
-   echo "Votre session a expiré, veuillez vous reconnecter.";
+   echo translate("session_expired");
    exit;
 }
 
 if (!isset($_GET["groupID"])) {
-   echo "paramètre groupID manquant";
+   echo translate("groups_groupID_missing");
    exit;
 }
 
@@ -69,22 +69,22 @@ while ($row = $stmt->fetchObject()) {
 foreach ($groups as $group) {
    echo "<h2>Groupe ".$group["name"]."</h2>";
    if ($group["startTime"] == null) {
-      echo "<p>Ce groupe n'a pas encore participé.</p>";
+      echo "<p>".translate("groups_group_has_not_participated")."</p>";
       break;
    }
-   echo "<p>Participé le : ".$group["startTime"]." (UTC)</p>";
-   echo "<p>Attention : <ul><li>Pour des raisons techniques, l'affichage des scores détaillés est temporairement désactivé pour les participations effectuées pendant la période du concours, mais sera réactivé ensuite.<li>Pour le concours lui-même, les scores affichés ne seront définitifs qu'après l'annonce officielle des résultats.</li></ul></p>";
-   echo "<table cellspacing=0><tr><th class='rotate'><div><span>Équipe</span></div></th>";
+   echo "<p>".sprintf(translate("groups_participated_on"), $group["startTime"])."</p>";
+   echo translate("groups_warning_disabled_during_contest");
+   echo "<table cellspacing=0><tr><th class='rotate'><div><span>".translate("groups_team")."</span></div></th>";
    foreach ($group["teams"] as $teamID => $team) {
       foreach ($team["questions"] as $questionName => $question) {
          echo "<th class='rotate'><div><span>".$questionName."</span></div></th>";
       }
-      echo "<th class='rotate'><div><span><b>Total</b></span></div></th>";
+      echo "<th class='rotate'><div><span><b>".translate("groups_total")."</b></span></div></th>";
       break;
    }
    echo "</tr>";
    foreach ($group["teams"] as $teamID => $team) {
-      echo "<tr><td><a href='http://concours.castor-informatique.fr?team=".$team["password"]."' target='_blank'>[ouvrir]</a> ".$team["contestants"]."</td>";
+      echo "<tr><td><a href='http://concours.castor-informatique.fr?team=".$team["password"]."' target='_blank'>[".translate("groups_open")."]</a> ".$team["contestants"]."</td>";
       $score = 0;
       foreach ($team["questions"] as $questionName => $ffScore) {
          if ($ffScore == null) {

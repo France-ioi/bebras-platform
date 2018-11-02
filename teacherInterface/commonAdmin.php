@@ -27,7 +27,6 @@ function computePasswordMD5($sPassword, $sSalt) {
 function sendMail($sTo, $sTitle, $sBody, $sFrom, $sBCC = NULL)
 {
    global $config;
-   $translationStrings = getTeacherTranslationStrings();
    $mail             = new PHPMailer();
    $mail->IsSMTP(); // telling the class to use SMTP
    $mail->SMTPDebug  = 0; // SMTP debug information 0, 1 (errors and messages), 2 (messages only)
@@ -46,8 +45,8 @@ function sendMail($sTo, $sTitle, $sBody, $sFrom, $sBCC = NULL)
    //$mail->MsgHTML($sBody);
    
    // Emails
-   $mail->SetFrom($sFrom, $translationStrings['mail_from_name']);
-   $mail->AddReplyTo($sFrom, $translationStrings['mail_from_name']);
+   $mail->SetFrom($sFrom, translate('mail_from_name'));
+   $mail->AddReplyTo($sFrom, translate('mail_from_name'));
    $mail->AddAddress($sTo);
    
    if (!is_null($sBCC))

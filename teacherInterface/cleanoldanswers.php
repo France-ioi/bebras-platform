@@ -5,7 +5,7 @@ require_once("../shared/common.php");
 require_once("commonAdmin.php");
 
 if (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"]) {
-      echo json_encode((object)array("status" => 'error', "message" => "Seul un admin peut effectuer cette opération"));
+      echo json_encode((object)array("status" => 'error', "message" => translate("admin_restricted")));
       exit;
 }
 

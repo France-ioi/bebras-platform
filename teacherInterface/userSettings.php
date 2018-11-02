@@ -6,7 +6,7 @@ require_once("commonAdmin.php");
 
 
 if (!isset($_SESSION['userID'])) {
-   die(json_encode(array('success' => false, 'error' => "Votre session a expiré, veuillez vous reconnecter.")));
+   die(json_encode(array('success' => false, 'error' => translate("session_expired"))));
    exit();
 }
 ?>

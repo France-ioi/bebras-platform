@@ -5,7 +5,7 @@ require_once("commonAdmin.php");
 
 
 if (!isset($_SESSION["userID"])) {
-   echo "Votre session a expiré, veuillez vous reconnecter.";
+   echo translate("session_expired");
    exit;
 }
 

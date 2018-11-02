@@ -16,13 +16,13 @@ if (isset($_GET["password"])) {
    if (md5($_GET["password"]) == $config->teacherInterface->genericPasswordMd5) {
       $_SESSION["isAdmin"] = true;
    } else {
-      echo "Invalid password";
+      echo translate("invalid_password");
       exit;
    }
 }
 
 if (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"]) {
-   echo "This page is for admins only.";
+   echo translate("admin_restricted");
    exit;
 }
 

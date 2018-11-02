@@ -146,7 +146,7 @@
             <button type="button" id="buttonEditSelected_group" data-i18n="groups_edit_selected" onclick="editGroup()" class="btn btn-default"></button>
             <button type="button" id="buttonDeleteSelected_group" data-i18n="groups_delete_selected" class="btn btn-default"></button>
             <button type="button" id="buttonGradeSelected_group" data-i18n="groups_grade_selected" onclick="gradeGroup()" class="btn btn-default"></button>
-            <button type="button" id="buttonDisplaySelected_group" onclick="displayScoresGroup()" class="btn btn-default" value="test">Afficher les résultats détaillés</button>
+            <button type="button" id="buttonDisplaySelected_group" onclick="displayScoresGroup()" class="btn btn-default" value="test" data-i18n="groups_view_details"></button>
             <div id="gradeGroupState" style="display:none;"></div>
             <h2 data-i18n="groups_sheet_title"></h2>
             <p data-i18n="[html]groups_sheet_intro"></p>

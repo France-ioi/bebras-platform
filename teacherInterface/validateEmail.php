@@ -7,12 +7,10 @@ require_once("commonAdmin.php");
 include('./config.php');
 header('Content-type: text/html');
 
-$translationStrings = getTeacherTranslationStrings();
-
-$errorMessage = str_replace('__contactEmail__', $config->email->sInfoAddress, $translationStrings['validate_email_error']);
+$errorMessage = str_replace('__contactEmail__', $config->email->sInfoAddress, translate('validate_email_error');
 
 function validateEmail($type, $email, $salt) {
-   global $db, $config, $errorMessage, $translationStrings;
+   global $db, $config, $errorMessage;
    $query = "SELECT * FROM `user` WHERE (`".$type."` = ? AND `salt` = ?)";
    $stmt = $db->prepare($query);
    $stmt->execute(array($email, $salt));
@@ -24,7 +22,7 @@ function validateEmail($type, $email, $salt) {
       $query = "UPDATE `user` SET `".$type."Validated` = 1 ".$validate." WHERE (`ID` = ?)";
       $stmt = $db->prepare($query);
       $stmt->execute(array($row->ID));
-      echo str_replace('__email__', $email, $translationStrings['validate_email_ok']);
+      echo str_replace('__email__', $email, translate('validate_email_ok'));
    } else {
       echo $errorMessage;
    }

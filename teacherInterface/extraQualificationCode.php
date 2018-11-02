@@ -4,28 +4,8 @@ include('./config.php');
 require_once("../shared/common.php");
 require_once("commonAdmin.php");
 
-$grades = array(-1 => "Enseignant",
-   4 => "CM1",
-   5 => "CM2",
-   6 => "6e",
-   7 => "5e",
-   8 => "4e",
-   9 => "3e",
-   10 => "2de",
-   11 => "1re",
-   12 => "Terminale",
-   13 => "2de pro",
-   14 => "1re pro",
-   15 => "Terminale pro",
-   16 => "6e SEGPA",
-   17 => "5e SEGPA",
-   18 => "4e SEGPA",
-   19 => "3e SEGPA",
-   20 => "Post-Bac"
-   );
-
-      if (!isset($_SESSION['userID'])) {
-   die(json_encode(array('success' => false, 'error' => "Votre session a expiré, veuillez vous reconnecter.")));
+if (!isset($_SESSION['userID'])) {
+   die(json_encode(array('success' => false, 'error' => translate("session_expired"))));
    exit();
 }
 ?>
@@ -53,7 +33,7 @@ function showError($message) {
 
 if (isset($_POST["schoolID"])) {
    if ($_POST["lastName"] == "" || $_POST["firstName"] == "") {
-      showError("<b>Vous n'avez pas rempli tous les champs !</b>");
+      showError("<b>".translate("codes_fields_missing")."</b>");
    } else {
       $query = "SELECT `code` FROM algorea_registration WHERE schoolID = :schoolID AND userID = :userID AND firstName = :firstName AND lastName = :lastName AND grade = :grade";
       $stmt = $db->prepare($query);
@@ -64,7 +44,7 @@ if (isset($_POST["schoolID"])) {
          'grade' => $_POST["grade"]
          ]);
       if ($row = $stmt->fetchObject()) {
-         showError("Vous avez déjà un participant nommé ".$_POST["firstName"]." ".$_POST["lastName"]." dans cet établissement, qui a pour code : ".$row->code);
+         showError(sprintf(translate("codes_participant_exists"), $_POST["firstName"], $_POST["lastName"], $row->code));
       }
       else {
          $code = generateRandomCode();
@@ -78,19 +58,21 @@ if (isset($_POST["schoolID"])) {
             'grade' => $_POST["grade"],
             'code' => $code         
             ]);
-         showError("Le code ".$code." a été généré pour ".$_POST["firstName"]." ".$_POST["lastName"]);
+         showError(sprintf(translate("codes_generated"), $code, $_POST["firstName"], $_POST["lastName"]));
       }
    }
 }
 
-?>
-<h1>Codes de participants supplémentaires</h1>
-<p>
-Voici la liste des codes de participants que vous avez créé manuellement :
-</p>
-<table id="participationCodes" cellspacing=0>
-<tr><td>Établissement</td><td>Nom</td><td>Prénom</td><td>Classe</td><td>Code de participant</td><td>Catégorie</td></tr>
-<?php
+echo "<h1>".translate("codes_extra_title")."</h1>".
+     "<p>".translate("codes_list_existing")."</p>".
+     "<table id='participationCodes' cellspacing=0><tr>".
+     "<td>".translate("schools_title")."</td>".
+     "<td>".translate("contestant_lastName_label")."</td>".
+     "<td>".translate("contestant_firstName_label")."</td>".
+     "<td>".translate("contestant_grade_label")."</td>".
+     "<td>".translate("participation_code")."</td>".
+     "<td>".translate("codes_category")."</td>".
+     "</tr>";
 
 $query = "select `school`.`name`, `firstName`, `lastName`, `grade`, `code`, `category` ".
    "FROM `algorea_registration` JOIN `school` ON `schoolID` = `school`.`ID` ".
@@ -107,47 +89,39 @@ while ($row = $stmt->fetchObject()) {
       "</tr>";
 }
 
-?>
-</table>
+echo "</table>".
+   "<h2>".translate("codes_generate_new_title")."</h2>".
+   translate("codes_generate_new_explanation").
+   
+   "<form action='extraQualificationCode.php' method='post'>".
+   "<table>".
+   "<tr><td>".translate("codes_school")."</td><td><select name='schoolID'>";
 
-<h2>Créer un nouveau code :</h2>
-<p>
-Vous pouvez ici créer un code de participant pour un élève qui n'a pas pu en obtenir lors d'une étape précédente, ou bien pour vous-même, pour tester le fonctionnement.
-<p>
-Assurez-vous de ne pas créer un code pour une personne qui en dispose déjà.
-</p>
-<form action="extraQualificationCode.php" method="post">
-   <table>
-      <tr><td>Établissement :</td><td><select name="schoolID">
-<?php
 $query = "select CONCAT(CONCAT(`school`.`name`, ', '), `school`.`city`) as name, `school`.`ID` FROM `school` JOIN `school_user` ON `school`.`ID` = `school_user`.`schoolID` WHERE `school_user`.`userID` = :userID";
 $stmt = $db->prepare($query);
 $stmt->execute(['userID' => $_SESSION['userID']]);
 while ($row = $stmt->fetchObject()) {
-   echo "<option value='".$row->ID."'
-   >".htmlentities($row->name)."</option>";
+   echo "<option value='".$row->ID."'>".htmlentities($row->name)."</option>";
 }
-?>
-</select>    
-      </td></tr>
-      <tr><td>Nom :</td><td><input type="text" name="lastName" /></td></tr>
-      <tr><td>Prénom :</td><td><input type="text" name="firstName" /></td></tr>
-      <tr><td>Classe :</td><td><select name="grade">
-<?php
-   foreach ($grades as $iGrade => $strGrade) {
-      echo "<option value='".$iGrade."'>".$strGrade."</option>";
+echo "</select>".
+     "</td></tr>".
+     "<tr><td>".translate("codes_lastName")."</td><td><input type='text' name='lastName' /></td></tr>".
+     "<tr><td>".translate("codes_firstName")."</td><td><input type='text' name='firstName' /></td></tr>".
+     "<tr><td>".translate("codes_grade")."</td><td><select name='grade'>";
+
+   foreach ($config->grades as $iGrade) {
+      echo "<option value='".$iGrade."'>".translate("grade_short_".$iGrade)."</option>";
    }
-?>    
-      </select>
-      </td></tr>
-   </table>
-   <input type="submit" value="Valider" />
-</form>
-<?php
+
+echo "</select>".
+     "</td></tr>".
+   "</table>".
+   "<input type='submit' value='".translate("codes_validate")." />".
+   "</form>";
+
    script_tag('/bower_components/i18next/i18next.min.js');
-?>
-</html>
-<?php
+
+echo "</html>";
 
 function generateRandomCode() {
    global $db;

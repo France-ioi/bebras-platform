@@ -5,7 +5,7 @@ require_once("../shared/common.php");
 require_once("commonAdmin.php");
 
 if (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"]) {
-   echo json_encode((object)array("status" => 'error', "message" => "Only admins can do that!"));
+   echo json_encode((object)array("status" => 'error', "message" => translate("admin_restricted")));
    exit;
 }
 
@@ -199,7 +199,7 @@ function computeRanksSchool($db, $contestInfos, $category) {
 }
 
 if ((!isset($_SESSION["isAdmin"])) || (!$_SESSION["isAdmin"])) {
-   echo json_encode((object)array("success" => false, "message" => "Seul un admin peut calculer les classements"));
+   echo json_encode((object)array("success" => false, "message" => translate("admin_restricted")));
    exit;
 }
 
