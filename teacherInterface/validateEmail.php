@@ -7,7 +7,7 @@ require_once("commonAdmin.php");
 include('./config.php');
 header('Content-type: text/html');
 
-$errorMessage = str_replace('__contactEmail__', $config->email->sInfoAddress, translate('validate_email_error');
+$errorMessage = str_replace('__contactEmail__', $config->email->sInfoAddress, translate('validate_email_error'));
 
 function validateEmail($type, $email, $salt) {
    global $db, $config, $errorMessage;
