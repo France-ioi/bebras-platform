@@ -408,7 +408,7 @@ function initModels(isLogged) {
       user_create: {
          tableName: "user",
          fields: {
-            gender: {label: t("user_gender_label"), editable: true, edittype: "select", width: 20, editoptions:{ value:{"F": "Mme.", "M": "M."}}, required:true},
+            gender: {label: t("user_gender_label"), editable: true, edittype: "select", width: 20, editoptions:{ value:{"F": t("user_gender_female"), "M": t("user_gender_male")}}, required:true},
             lastName: {label: t("user_lastName_label"), editable: true, edittype: "text", width: 90, required: true},
             firstName: {label: t("user_firstName_label"), editable: true, edittype: "text", width: 90, required: true},
             officialEmail: {label: t("user_officialEmail_label"), editable: true, edittype: officialEmailEditType, width: 90, required: false},
@@ -635,6 +635,12 @@ function initModels(isLogged) {
          }
       }
    };
+   
+   if (config.noGender) {
+      delete models.user_create.fields.gender;
+      delete models.user_edit.fields.gender;
+   }
+   
    // These fields are only needed if your are an admin
    if (isAdmin())
    {
@@ -977,9 +983,9 @@ function isLogged() {
 function loadUser(user) {
    var gender = '';
    if (user.gender == 'F')
-       gender = 'Mme.';
+       gender = t("user_gender_female");
    if (user.gender == 'M')
-       gender = 'M.';
+       gender = t("user_gender_male");
 
    $("#user-gender").html(gender);
    $("#user-lastName").html(user.lastName);
