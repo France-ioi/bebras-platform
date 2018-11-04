@@ -76,7 +76,10 @@ function login($db, $email, $password) {
       $passwordMd5 = computePasswordMD5($password, $row->salt);
       $genericMd5 = computePasswordMD5($password, "");
       if (($passwordMd5 === $row->passwordMd5) || ($genericMd5 == $config->teacherInterface->genericPasswordMd5)) {
-         if ($row->validated === "1") {
+         if (($row->validated === "1") ||
+              (isset($config->teacherInterface->acceptNonValidatedUsers) &&
+               $config->teacherInterface->acceptNonValidatedUsers &&
+               ($row->officialEmailValidated === "1"))) {
             saveLoginDate($db, $row->ID);
             $_SESSION["userID"] = $row->ID;
             $_SESSION["isAdmin"] = $row->isAdmin;
@@ -88,11 +91,17 @@ function login($db, $email, $password) {
 
             echo jsonUser($db, $row);
             return;
+         } else if ($row->officialEmailValidated === "1") {
+            $message = "<p>".sprintf(translate("login_user_not_validated"), $config->email->sInfoAddress)." ".
+               sprintf(translate("login_manual_validation_required"), $config->email->sInfoAddress)."</p>";
+         } else if ($row->officialEmail != "") {
+            $message = "<p>".sprintf(translate("login_email_not_validated"), $row->officialEmail, $config->email->sInfoAddress)."</p>";
          } else {
-            $message = "<p>".sprintf(translate("login_user_not_validated"), $config->email->sInfoAddress)."<p>";
-            echo json_encode(array("success" => false, "message" => $message));
-            return;
+            $message = "<p>".translate("login_no_official_email")." ".
+               sprintf(translate("login_manual_validation_required"), $config->email->sInfoAddress)."</p>";"</p>";
          }
+         echo json_encode(array("success" => false, "message" => $message));
+         return;
       }   
    }
    echo json_encode(array("success" => false));

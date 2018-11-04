@@ -301,7 +301,8 @@
       'customStringsName' => $config->customStringsName,
       'allowCertificates' => $config->certificates->allow,
       'useAlgoreaCodes' => $config->teacherInterface->useAlgoreaCodes,
-      'grades' => $config->grades
+      'grades' => $config->grades,
+      'noGender' => (isset($config->teacherInterface->noGender) && $config->teacherInterface->noGender)
    ]) ?>;
    init();
 </script>
