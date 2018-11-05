@@ -346,7 +346,6 @@
     "option_hidden_contest": "Gömd",
     "option_visible_contest": "Synlig",
     "option_open_contest": "Öppen",
-    "option_closed_contest": "Stängd",
     "contest_visibility_label": "Synlighet",
     "contest_closedToOfficialGroups_label": "Stängd för officiella grupper",
     "contest_begin_date_label" : "Start",
