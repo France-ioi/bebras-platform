@@ -2055,8 +2055,7 @@ function editForm(modelName, title, item) {
 }
 
 function checkEmailFormat(email) {
-   // based on https://www.regular-expressions.info/email.html
-   var re = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+   var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
    return re.test(email);
 }
 
@@ -2071,20 +2070,9 @@ function checkUser(user, isCreate) {
       $("#edit_form_error").html(t("teacher_required"));
       return false;
    }
-   if (user.officialEmail !== "") {
-      if (!checkEmailFormat(user.officialEmail)) {
-         $("#edit_form_error").html(t("invalid_officialEmail"));
-         return false;
-      }
-   } else if (user.alternativeEmail == "") {
-      $("#edit_form_error").html(t("missing_email")); // TODO alternative email required
+   if ((user.officialEmail == "") && (user.alternativeEmail == "")) {
+      $("#edit_form_error").html(t("missing_email"));
       return false;
-   }
-   if (user.alternativeEmail != "") {
-      if (!checkEmailFormat(user.alternativeEmail)) {
-         $("#edit_form_error").html(t("invalid_alternativeEmail")); // TODO alternative email required
-         return false;
-      }
    }
    
    var minPasswordLength = 6;
@@ -2155,11 +2143,6 @@ function getSQLFromDate(date) {
    }
 }
 
-function validateEmailAddress(email) {
-   var re = /\S+@\S+\.\S+/;
-   return re.test(email);
-}
-
 
 function validateForm(modelName) {
    var item = {};
@@ -2198,10 +2181,14 @@ function validateForm(modelName) {
          else {
             var domain = $("#" + modelName + "_" + fieldName + "_domain").val();
             item[fieldName] += "@" +  domain;
+            if (!checkEmailFormat(item[fieldName])) {
+               jqAlert(t("official_email_invalid"));
+               return;
+            }
          }
       } else if (field.edittype == 'email') {
-         if (item[fieldName] && !validateEmailAddress(item[fieldName])) {
-            jqAlert(t("user_invalid_email"));
+         if (item[fieldName] && !checkEmailFormat(item[fieldName])) {
+            jqAlert(t("invalid_alternativeEmail"));
             return;
          }
       }
