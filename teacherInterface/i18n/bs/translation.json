@@ -150,6 +150,7 @@
     "school_country_label": "Zemlja",
     "school_zipcode_long_label": "Poštanski kod",
     "school_nbStudents_label": "Veličina<br/>(broj učenika)",
+    "school_nbStudents_label_long": "Veličina (broj učenika)",
     "school_nbStudents_comment": "Ukupan broj učenika u školi",
     "user_saniValid_label": "Korektno<br/>ime",
     "user_gender_label": "Titula",

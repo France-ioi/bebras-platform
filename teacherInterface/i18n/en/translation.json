@@ -166,6 +166,7 @@
     "school_country_label": "Country",
     "school_zipcode_long_label": "Postcode",
     "school_nbStudents_label": "Size<br/>(students)",
+    "school_nbStudents_label_long": "Size (students)",
     "school_nbStudents_comment": "Total number of students in the school",
     "user_saniValid_label": "Correct<br/>names",
     "user_gender_label": "Title",

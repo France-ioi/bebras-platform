@@ -184,6 +184,7 @@
     "school_country_label": "Pays",
     "school_zipcode_long_label": "Code postal",
     "school_nbStudents_label": "Taille<br/>(élèves)",
+    "school_nbStudents_label_long": "Taille (élèves)",
     "school_nbStudents_comment": "Nombre total d'élèves de l'établissement",
     "user_saniValid_label": "Nom/Prénom<br/>corrects",
     "user_gender_label": "Titre",

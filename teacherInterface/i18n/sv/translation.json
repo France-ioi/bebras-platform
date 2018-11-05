@@ -168,6 +168,7 @@
     "school_country_label": "Land",
     "school_zipcode_long_label": "Postnummer",
     "school_nbStudents_label": "Storlek",
+    "school_nbStudents_label_long": "Storlek",
     "school_nbStudents_comment": "Ungefärligt antal elever på skolan",
     "user_saniValid_label": "Rätta<br/>namn",
     "user_gender_label": "Titel",

@@ -340,7 +340,7 @@ function initModels(isLogged) {
             city: {label: t("school_city_label"), editable: true, edittype: "text", width: 200, required: true},
             zipcode: {label: t("school_zipcode_label"), longLabel: t("school_zipcode_long_label"), editable: true, edittype: "text", width: 120, required: true},
             country: {label: t("school_country_label"), editable: true, edittype: "text", width: 100, required: true},
-            nbStudents: {label: t("school_nbStudents_label"), longLabel: "Taille", editable: true, edittype: "text", subtype:"positiveint", width: 100, comment:t("school_nbStudents_comment"), required: true}
+            nbStudents: {label: t("school_nbStudents_label"), longLabel: t("school_nbStudents_label_long"), editable: true, edittype: "text", subtype:"positiveint", width: 100, comment:t("school_nbStudents_comment"), required: true}
          }
       },
       school_search: {

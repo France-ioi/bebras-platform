@@ -168,6 +168,7 @@
     "school_country_label": "Maa",
     "school_zipcode_long_label": "Postinumero",
     "school_nbStudents_label": "Koko<br/>(oppilaita)",
+    "school_nbStudents_label_long": "Koko (oppilaita)",
     "school_nbStudents_comment": "Koulun kaikkien oppilaiden lukumäärä",
     "user_saniValid_label": "Oikeat<br/>nimet",
     "user_gender_label": "Nimike",
