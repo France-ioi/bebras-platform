@@ -189,7 +189,7 @@
     "user_isAdmin_label": "Ylläpitäjä",
     "user_comment_label": "Kommentti",
     "user_password_label": "Salasana",
-    "user_change_password_explanation": "If you want to change your password, please fill the last 3 fields. Otherwise, leave them empty.",
+    "user_change_password_explanation": "Täytä viimeiset 3 kenttää, jos haluat vaihtaa salasanasi. Jätä ne muussa tapauksessa tyhjiksi.",
     "user_old_password_label": "Vanha salasana",
     "user_password_confirm_label": "Varmista salasana",
     "user_new_password_label": "Uusi salasana",
