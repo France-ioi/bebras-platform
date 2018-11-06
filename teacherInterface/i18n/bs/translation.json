@@ -170,6 +170,7 @@
     "user_isAdmin_label": "Admininstrator",
     "user_comment_label": "Admin komentar",
     "user_password_label": "Lozinka",
+    "user_change_password_explanation": "If you want to change your password, please fill the last 3 fields. Otherwise, leave them empty.",
     "user_old_password_label": "Stara lozinka",
     "user_password_confirm_label": "Potvrdite lozinku",
     "user_new_password_label": "Nova lozinka",

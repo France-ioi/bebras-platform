@@ -425,7 +425,7 @@ function initModels(isLogged) {
             firstName: {label: t("user_firstName_label"), editable: true, edittype: "text", width: 90, required: true},
             officialEmail: {label: t("user_officialEmail_label"), editable: true, edittype: officialEmailEditType, width: 90, required: true},
             alternativeEmail: {label: t("user_alternativeEmail_label"), editable: true, edittype: "text", width: 90},
-            old_password: {label: t("user_old_password_label"), editable: true, edittype: "password", width: 90, comment:"Si vous souhaitez modifier votre mot de passe, remplissez les 3 derniers champs. Sinon, laissez-les vides."},
+            old_password: {label: t("user_old_password_label"), editable: true, edittype: "password", width: 90, comment:t("user_change_password_explanation")},
             password: {label: t("user_new_password_label"), editable: true, edittype: "password", width: 90},
             password2: {label: t("user_new_password_confirm_label"), editable: true, edittype: "password", width: 90}
          }
@@ -1894,7 +1894,7 @@ function newForm(modelName, title, message, item) {
       html += t('user_accept_email')+'</label>';
    }
    html += "<input id='buttonValidate_" + modelName + "' type='button' value='OK' onclick='validateForm(\"" + modelName + "\")' class='btn btn-primary'/> ";
-   html += "<input id='buttonCancel_" + modelName + "' type='button' value='Annuler' onclick='endEditForm(\"" + modelName + "\", 0 , {})' class='btn btn-default'/>";
+   html += "<input id='buttonCancel_" + modelName + "' type='button' value='" + t("cancel") + "' onclick='endEditForm(\"" + modelName + "\", 0 , {})' class='btn btn-default'/>";
    html += "<div id='edit_form_error' style='color:red'></div>";
    $("#edit_form").html(html);
    eval(js);

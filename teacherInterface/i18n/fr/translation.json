@@ -204,6 +204,7 @@
     "user_isAdmin_label": "Admin",
     "user_comment_label": "Commentaire admin",
     "user_password_label": "Mot de passe",
+    "user_change_password_explanation": "Si vous souhaitez modifier votre mot de passe, remplissez les 3 derniers champs. Sinon, laissez-les vides.",
     "user_old_password_label": "Ancien mot de passe",
     "user_password_confirm_label": "Mot de passe (confirmation)",
     "user_new_password_label": "Nouveau mot de passe",
