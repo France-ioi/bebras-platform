@@ -188,7 +188,7 @@
     "user_isAdmin_label": "Admin",
     "user_comment_label": "Admin kommentar",
     "user_password_label": "Lösenord",
-    "user_change_password_explanation": "If you want to change your password, please fill the last 3 fields. Otherwise, leave them empty.",
+    "user_change_password_explanation": "Om du vill ändra ditt lösenord, vänligen fyll i de sista tre fälten. Annars lämna dem tomma.",
     "user_old_password_label": "Gammalt lösenord",
     "user_password_confirm_label": "Bekräfta lösenord",
     "user_new_password_label": "Nytt lösenord",
