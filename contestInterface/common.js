@@ -1409,8 +1409,12 @@ function loadContestData(contestID, contestFolder, groupPassword)
          $.post("data.php", {SID: SID, action: "loadContestData", groupPassword: groupPassword, teamID: teamID},
          function(data) {
             if (!data.success) {
+               $("#divHeader").show();
                $("#divCheckGroup").show();
                $("#ReloginResult").html(t("invalid_password"));
+               $("#divQuestions").hide();
+               $('.fullFeedback').hide();
+               $('#mainNav').show();
                Utils.enableButton("buttonRelogin");
                return;
             }
@@ -1659,6 +1663,7 @@ window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, 
          $('#mainNav').hide();
       } else {
          fillListTeams(data.teams);
+         $('#mainNav').show();
          $("#divRelogin").show();
       }
    }
