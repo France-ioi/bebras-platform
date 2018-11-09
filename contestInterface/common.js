@@ -1094,7 +1094,7 @@ window.selectMainTab = function(tabName) {
       $("#loadPublicGroups").hide();
       $("#contentPublicGroups").show();
   }
-   var tabNames = ["school", "home", "continue", "results", "contests"];
+   var tabNames = ["school", "home", "continue", "contests"];
    for(var iTab = 0; iTab < tabNames.length; iTab++) {
       if (tabNames[iTab] === tabName) {
          $("#tab-" + tabNames[iTab]).show();
@@ -1504,6 +1504,7 @@ window.checkPasswordInterrupted = function() {
  * Used to continue a contest if the students didn't write down the team password
 */
 function fillListTeams(teams) {
+   $("#selectTeam").html("<option value='0'>" + t("tab_view_select_team"));
    for (var curTeamID in teams) {
       var team = teams[curTeamID];
       var teamName = "";

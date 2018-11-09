@@ -64,7 +64,7 @@
       <div class="tabTitle" data-i18n="general_start_contest"></div>
       <p class="stepName" data-i18n="[html]tab_start_contest_enter_code"></p>
       <div class="divInput form-inline">
-        <input id="groupCode" type="text" class="form-control" />
+        <input id="groupCode" type="text" class="form-control" autocorrect="off" autocapitalize="none"/>
         <button type="button" id="buttonCheckGroup" onclick="checkGroup()" data-i18n="tab_start_contest_start_button" class="btn btn-primary"></button>
         <div><span id="CheckGroupResult" style="color:red"></span></div>
       </div>
@@ -72,7 +72,7 @@
     <div id="recoverGroup" style="display:none;">
       <p data-i18n="[html]group_session_expired_recover"></p>
       <div class="divInput form-inline">
-        <input id="recoverGroupPass" type="password" class="form-control" />
+        <input id="recoverGroupPass" type="password" class="form-control" autocorrect="off" autocapitalize="none" />
         <button type="button" id="buttonRecoverGroup" onclick="recoverGroup()" data-i18n="submitPass" class="btn btn-default"></button>
         <div><span id="recoverGroupResult" style="color:red"></span></div>
       </div>
@@ -84,7 +84,7 @@
     <div class="tabTitle" data-i18n="general_continue_contest"></div>
     <p><span data-i18n="tab_view_results_access_code"></span></p>
     <div class="divInput form-inline">
-      <input id="interruptedPassword" type="password" class="form-control">
+      <input id="interruptedPassword" type="text" class="form-control" autocorrect="off" autocapitalize="none">
       <button type="button" id="buttonInterrupted" class="btn btn-default" onclick="checkPasswordInterrupted()" data-i18n="tab_view_results_view_results_button"></button>
       <div><span id="InterruptedResult" style="color:red"></span></div>
     </div>
@@ -101,39 +101,12 @@
       </div>
       <p data-i18n="tab_view_ask_password_to_teacher"></p>
       <div class="divInput form-inline">
-        <input id="groupPassword" type="password" class="form-control">
+        <input id="groupPassword" type="password" class="form-control" autocorrect="off" autocapitalize="none">
         <button type="button" id="buttonRelogin" class="btn btn-default" onclick="relogin()" data-i18n="tab_view_restart_contest"></button>
         <div><span id="ReloginResult" style="color:red"></span></div>
       </div>
     </div>
   </div><!-- #tab-continue -->
-
-  <div id="tab-results" style="display:none" class="tabContent">
-    <div class="tabTitle" data-i18n="general_view_results"></div>
-    <p data-i18n="tab_view_results_access_code"></p>
-    <div class="divInput form-inline">
-      <input id="interruptedPassword" type="password" class="form-control">
-      <button type="button" id="buttonInterrupted" class="btn btn-default" onclick="checkPasswordInterrupted()" data-i18n="tab_view_results_view_results_button"></button>
-      <div><span id="InterruptedResult" style="color:red"></span></div>
-    </div>
-    <p data-i18n="tab_view_results_info_1"></p>
-    <p><b data-i18n="tab_view_results_info_2"></b></p>
-    <!--<p>Si vous ne disposez pas de mot de passe mais que vous êtes en classe, alors entrez le code de groupe fourni par votre enseignant.</p>-->
-    <p data-i18n="tab_view_results_info_3"></p>
-    <p data-i18n="tab_view_results_info_4"></p>
-    <div id="divRelogin" style="display:none">
-      <p data-i18n="tab_view_select_team_in_list"></p>
-      <div class="divInput">
-        <select id="selectTeam"><option value='0' data-i18n="tab_view_select_team"></option></select>
-      </div>
-      <p data-i18n="tab_view_ask_password_to_teacher"></p>
-      <div class="divInput form-inline">
-        <input id="groupPassword" type="password" class="form-control">
-        <button type="button" id="buttonRelogin" class="btn btn-default" onclick="relogin()" data-i18n="tab_view_restart_contest"></button>
-        <div><span id="ReloginResult" style="color:red"></span></div>
-      </div>
-    </div>
-  </div><!-- #tab-results -->
 
   <div id="tab-contests" style="display:none" class="tabContent">
     <div class="tabTitle" data-i18n="general_view_other_contests"></div>
