@@ -459,7 +459,7 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "",
       // No such group.
       return;
    }
-   if ($row->open != "Open") {
+   if (($row->open != "Open") && ($row->schoolID != 9999999999)) { // temporary hack to allow test groups
       $messages = array("fr" => "Le concours de ce groupe n'est pas ouvert.",
          "en" => "The contest associated with this group is not open",
          "ar" => "المسابقة لم تبدأ بعد"
