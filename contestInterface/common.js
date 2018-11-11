@@ -2433,6 +2433,10 @@ function finalCloseContest(message) {
          }
          $("#remindTeamPassword").html(teamPassword);
          $("#divClosedRemindPassword").show();
+         if (fullFeedback) {
+            $("#remindScore").html(ffTeamScore);
+            $("#scoreReminder").show();
+         }
       } else {
          $("#divQuestions").hide();
          hideQuestionIframe();

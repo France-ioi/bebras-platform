@@ -573,6 +573,9 @@
       <p>
          <span data-i18n="closed_your_password"></span> <span class='selectable' id="remindTeamPassword"></span>
       </p>
+      <p id="scoreReminder" style="display:none">
+         <span data-i18n="score"></span> <span id="remindScore"></span>
+      </p>
    </div>
 </div>
 <div id="divError" autocomplete="off">
