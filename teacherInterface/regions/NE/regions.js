@@ -1,3 +1,7 @@
 regions = [
-   'countryNE:foreign'
+   'countryNE:foreign',
+   'countryNE:niamey',
+   'countryNE:agadez',
+   'countryNE:zinder',
+   'countryNE:maradi'
 ];
