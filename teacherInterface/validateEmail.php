@@ -19,6 +19,7 @@ function validateEmail($type, $email, $salt) {
       $message = translate('validate_email_ok');
       if (($type === "officialEmail") && ($config->teacherInterface->forceOfficialEmailDomain)) {
          $validate = ", `validated` = 1 ";
+      } else {
          $message = translate('validate_email_unofficial');         
       }
       $query = "UPDATE `user` SET `".$type."Validated` = 1 ".$validate." WHERE (`ID` = ?)";
