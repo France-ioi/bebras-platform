@@ -423,6 +423,7 @@
     "awards_personal_code_withcode": "",
     "go_to_index": "Return to the <a href='index.php'>teacher interface</a>",
     "validate_email_ok": "Your email address __email__ is now validated. You can now <a href=\"index.php\">sign in on the teacher interface</a>.",
+    "validate_email_unofficial": "Your email address __email__ is now validated.<br/><br/>To validate your registration, please contact us at __email_info__ and explain your situation and the reason why you don't have a professional email address from one of the authorized domains.",
     "validate_email_error": "<p><b style='color:red'>Error: invalid URL.</b></p><p>Please make sure to follow the complete link given in the email you received. If this still does not work, contact us at <a href=\"mailto:__contactEmail__\">__contactEmail__</a></p>",
 "merge_failed_no_duplicates": "No duplicates. No merging was performed",
     "merge_success": "%s schools were merged",

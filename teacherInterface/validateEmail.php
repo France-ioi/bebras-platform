@@ -16,16 +16,20 @@ function validateEmail($type, $email, $salt) {
    $stmt->execute(array($email, $salt));
    if ($row = $stmt->fetchObject()) {
       $validate = "";
+      $message = translate('validate_email_ok');
       if (($type === "officialEmail") && ($config->teacherInterface->forceOfficialEmailDomain)) {
          $validate = ", `validated` = 1 ";
+         $message = translate('validate_email_unofficial');         
       }
       $query = "UPDATE `user` SET `".$type."Validated` = 1 ".$validate." WHERE (`ID` = ?)";
       $stmt = $db->prepare($query);
       $stmt->execute(array($row->ID));
-      echo str_replace('__email__', $email, translate('validate_email_ok'));
+      $message = str_replace('__email__', $email, $message);
+      echo str_replace('__email_info__', $config->email->sInfoAddress, $message);
    } else {
       echo $errorMessage;
    }
+   echo "<br/><br/>";
 }
 
 echo "

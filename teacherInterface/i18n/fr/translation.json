@@ -448,6 +448,7 @@
     "maintenance_until": "Désolé, ce site en indisponible pour cause de maintenance jusqu'à __end__.",
     "go_to_index": "Retourner à la la <a href=\"index.php\">page d'accueil coordinateur</a>",
     "validate_email_ok": "Votre adresse __email__ a maintenant été confirmée. Vous pouvez désormais vous <a href=\"index.php\">connecter sur l'interface coordinateur</a>.",
+    "validate_email_unofficial": "Votre adresse __email__ a maintenant été confirmée.<br/><br/>Pour valider votre inscription, contactez-nous à __email_info__ en nous indiquant votre situation et la raison qui fait que vous n'avez pas d'email professionnel dans un des domaines autorisés.",
     "validate_email_error": "<p><b style='color:red'>Erreur: l'url est invalide.</b></p><p>Réessayez en vous assurant d'inclure l'adresse complète fournie dans l'email que vous avez reçu. Si cela ne fonctionne toujours pas, contactez-nous à <a href=\"mailto:__contactEmail__\">__contactEmail__</a>.</p>",
 
     "merge_failed_no_duplicates": "Aucun doublon, aucune fusion faite",
