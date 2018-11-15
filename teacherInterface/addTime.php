@@ -19,6 +19,7 @@ script_tag('/bower_components/jquery/jquery.min.js');
 
 <?php
 
+
 if (isset($_REQUEST["password"])) {
    if (md5($_REQUEST["password"]) == $config->teacherInterface->genericPasswordMd5) {
       $_SESSION["isAdmin"] = true;
@@ -118,12 +119,22 @@ function getTeamsData($groupID, $endDateTime, $extraMinutes) {
 
 $teams = getTeamsData($row->ID, $endDateTime, $extraMinutes);
 
-$query = "UPDATE `team` SET endTime = NULL, extraMinutes = IFNULL(extraMinutes, 0) + :minutesToAdd WHERE ID = :teamID";
+$resetPasswords = false;
+$strGenPassword = "";
+if (isset($_REQUEST["resetPasswords"]) && ($_REQUEST["resetPasswords"] == "on")) {
+   $resetPasswords = true;
+   $strGenPassword = ", password = :newPassword";
+}
+$query = "UPDATE `team` SET endTime = NULL, extraMinutes = IFNULL(extraMinutes, 0) + :minutesToAdd ".$strGenPassword." WHERE ID = :teamID";
 $stmt = $db->prepare($query);
 $teamsMinutesAdded = array();
 foreach ($teams as $team) {
    if ($team->checked) {
-      $stmt->execute(array("teamID" => $team->ID, "minutesToAdd" => $team->minutesToAdd));
+      $params = array("teamID" => $team->ID, "minutesToAdd" => $team->minutesToAdd);
+      if ($resetPasswords) {
+         $params["newPassword"] = genAccessCode($db);
+      }
+      $stmt->execute($params);
       $teamsMinutesAdded[$team->ID] = $team->minutesToAdd;
    }
 }
@@ -148,6 +159,7 @@ echo "</table></p>";
 
 echo "<p>Add time assuming that participation was interrupted at: <input type='text' name='endDateTime'/>  format: YYYY-MM-DD HH:mm:ss</p>";
 echo "<p>Add number of minutes: <input type='number' name='extraMinutes'/></p>";
+echo "<p>Generate new access codes for these students (so that they can't restart from home): <input type='checkbox' name='resetPasswords'/></p>";
 echo "<p><input type=submit value='Submit'></p>";
 echo "</form>";
 
