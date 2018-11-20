@@ -71,7 +71,7 @@ if (isset($_REQUEST["extraMinutes"])) {
 $query = "SELECT `group`.ID, `group`.name, `group`.startTime, `group`.grade, `group`.nbStudentsEffective, ".
          "`user`.`firstName`, `user`.`lastName`, `user`.`officialEmail`, `user`.`alternativeEmail` ".
          "FROM `group` ".
-         "LEFT JOIN USER ON `group`.`userID` = `user`.`ID` ".
+         "LEFT JOIN `user` ON `group`.`userID` = `user`.`ID` ".
          "WHERE `group`.`code` = :groupCode";
 $stmt = $db->prepare($query);
 $stmt->execute(array("groupCode" => $groupCode));
