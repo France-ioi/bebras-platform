@@ -5,6 +5,7 @@ echo "<!DOCTYPE html>";
 
 require_once("../shared/common.php");
 require_once("commonAdmin.php");
+include_once("../shared/tinyORM.php");
 include('./config.php');
 
 // jquery 1.9 is required for IE6+ compatibility.
@@ -106,7 +107,7 @@ function getTeamsData($groupID, $endDateTime, $extraMinutes) {
             "FROM team ".
             "JOIN contestant ON team.ID = contestant.teamID ".
             "WHERE `team`.`groupID` = :groupID ".
-            "GROUP BY team.ID";
+            "GROUP BY team.ID ORDER BY students";
    $stmt = $db->prepare($query);
    $stmt->execute($params);
    $rows = array();
@@ -125,19 +126,35 @@ if (isset($_REQUEST["resetPasswords"]) && ($_REQUEST["resetPasswords"] == "on"))
    $resetPasswords = true;
    $strGenPassword = ", password = :newPassword";
 }
-$query = "UPDATE `team` SET endTime = NULL, extraMinutes = IFNULL(extraMinutes, 0) + :minutesToAdd ".$strGenPassword." WHERE ID = :teamID";
+$query = "UPDATE `team` SET endTime = NULL, extraMinutes = :minutesToSet ".$strGenPassword." WHERE ID = :teamID";
 $stmt = $db->prepare($query);
 $teamsMinutesAdded = array();
 foreach ($teams as $team) {
    if ($team->checked) {
-      $params = array("teamID" => $team->ID, "minutesToAdd" => $team->minutesToAdd);
+      $minutesToSet = $team->minutesToAdd;
+      if (intval($team->extraMinutes) > 0) {
+         $minutesToSet += intval($team->extraMinutes);
+      }
+      $params = array("teamID" => $team->ID, "minutesToSet" => $minutesToSet);
+      $data = array("extraMinutes"  => $minutesToSet);
       if ($resetPasswords) {
          $params["newPassword"] = genAccessCode($db);
+         $data["password"] = $params["newPassword"];
       }
       $stmt->execute($params);
+      if ($config->db->use == "dynamoDB") {
+         try {
+            $tinyOrm->update('team', $data, array('ID'=>$team->ID));
+         } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
+            error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
+            error_log('DynamoDB error updating team for teamID: '.$teamID);
+         }
+      }
       $teamsMinutesAdded[$team->ID] = $team->minutesToAdd;
    }
 }
+
+
 
 $teams = getTeamsData($row->ID, $endDateTime, $extraMinutes);
 echo "<form method='POST'>";
