@@ -1,5 +1,8 @@
 <?php
   include('./config.php');
+  require_once("../shared/common.php");
+  require_once("commonAdmin.php");
+
   header('Content-type: text/html');
 ?><!DOCTYPE html>
 <html><head>
@@ -98,28 +101,28 @@ font-family: 'Varela Round', sans-serif;
 </head>
 <body>
 <div style="text-align: center">
-   <p class="bigmessage">Génération des diplômes</p>
+   <p class="bigmessage"><?php echo translate("certificates_generation"); ?></p>
 
    <div id="preload">
-      <p>Téléchargement des données en cours.</p>
-      <p>Veuillez patienter quelques instants.</p>
+      <p><?php echo translate("download_in_progress"); ?></p>
+      <p><?php echo translate("please_wait"); ?></p>
    </div>
 
    <div id="loaded" style="display:none;text-align:center">
       <div style="width:600px;background:#EEE;border:solid black 1px;margin:auto">
-         <p>La création d'un pdf peut prendre plusieurs secondes.</p>
-         <p><b>Attention :</b> il est possible que le navigateur affiche une popup vous disant<br/>que la page ne répond plus et vous demandant si vous voulez continuer.<br/>Répondez oui car la préparation des diplômes peut prendre du temps.</p>
-         <p>Assurez-vous d'utiliser un navigateur récent.</p>
+         <p><?php echo translate("certificates_generation_may_take_time"); ?></p>
+         <p><?php echo translate("warning_possible_popup"); ?></p>
+         <p><?php echo translate("use_recent_browser"); ?></p>
       </div>
       <br/>
       <div style="border:solid black 1px;margin:auto;padding:5px;text-align:left;width:600px;">
-         <p><b>Option</b> : n'imprimer les diplômes que pour :</p>
+         <p><?php echo translate("certificates_option_filter"); ?></p>
          <!--<p><input type="checkbox" id="qualifiedOnly" onchange="updateNbDiplomas()"></input>Les élèves ayant obtenu <span id="qualificationText"></span></p>-->
-         <p><input type="checkbox" id="topRankedOnly" onchange="updateNbDiplomas()"></input>Les élèves étant dans les <input type="number" id="minRankPercentile" style="width:40px;text-align:center" value="50" onchange="updateNbDiplomas()"/></input>% mieux classés de leur catégorie</p>
-         <p>Diplômes à imprimer : <span id="printedCertificates"></span> sur <span id="totalCertificates"></span>
+         <p><input type="checkbox" id="topRankedOnly" onchange="updateNbDiplomas()"></input><?php echo sprintf(translate("certificates_filter_students_percentile"), "<input type='number' id='minRankPercentile' style='width:40px;text-align:center' value='50' onchange='updateNbDiplomas()'/></input>"); ?> </p>
+         <p><?php echo sprintf(translate("certificate_number_to_print"), "<span id='printedCertificates'></span>", "<span id='totalCertificates'></span>");  ?>   
       </div>
       <br/>
-      <p>Créer un pdf pour chaque paquet de <input type="number" id="diplomasPerPart" value="100" style="width:40px" onchange="updateNbDiplomas()"></input> diplômes.<br/>(Un petit nombre réduit les chances que votre navigateur crashe)</p>
+      <p><?php echo sprintf(translate("certificates_number_per_pdf"), "<input type='number' id='diplomasPerPart' value='100' style='width:40px' onchange='updateNbDiplomas()'></input>"); ?> </p>
       <div id="buttons">
       </div>
    </div>
