@@ -18,6 +18,11 @@ if ($_POST['contestID'] != "algorea") {
    $stmt = $db->prepare("SELECT * FROM `contest` WHERE ID = :contestID;");
    $stmt->execute(['contestID' => $_POST['contestID']]);
    $contest = $stmt->fetch();
+   if ($contest["parentContestID"] != null) {
+      $stmt = $db->prepare("SELECT * FROM `contest` WHERE ID = :contestID;");
+      $stmt->execute(['contestID' => $contest["parentContestID"]]);
+      $contest = $stmt->fetch();
+   }
    if (!$contest) {
       echo sprintf(translate("certificates_unknown_contest"), $_POST['contestID']);
    }
@@ -40,13 +45,14 @@ if ($_POST['contestID'] != "algorea") {
    $query = "SELECT count(distinct contestant.ID) AS `totalContestants`, `contestant`.`grade`, `team`.`nbContestants` FROM `contestant` ".
       "JOIN `team` ON (`contestant`.`teamID` = `team`.`ID`) ".
       "JOIN `group` ON (`group`.`ID` = `team`.`groupID`) ".
+      "JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) ".
       "LEFT JOIN `user_user` ON (`group`.`userID` = `user_user`.`userID`) ".
       "WHERE `group`.`schoolID` = :schoolID ".
       "AND `team`.`participationType` = 'Official' ".
-      "AND `group`.`contestID` = :contestID ";
+      "AND (`contest`.`ID` = :contestID OR `contest`.`parentContestID` = :contestID) ";
 
       
-   $data = array("contestID"  => $_REQUEST["contestID"],
+   $data = array("contestID"  => $contest["ID"],
       "schoolID" => $_REQUEST["schoolID"]);
 
    $query .= $groupBy;
@@ -62,8 +68,10 @@ if ($_POST['contestID'] != "algorea") {
    $query = "SELECT count(contestant.ID) AS `totalContestants`, `contestant`.`grade`, `team`.`nbContestants` FROM `contestant` ".
       "JOIN `team` ON (`contestant`.`teamID` = `team`.`ID`) ".
       "JOIN `group` ON (`group`.`ID` = `team`.`groupID`) ".
+      "JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) ".
       "WHERE `team`.`participationType` = 'Official' ".
-      "AND `group`.`contestID` = :contestID ". $groupBy;
+      "AND ((`contest`.`ID` = :contestID AND `contest`.`parentContestID` IS NULL) OR (`contest`.`parentContestID` = :contestID)) ".
+      $groupBy;
 
    $data = array("contestID"  => $_REQUEST["contestID"]);
 

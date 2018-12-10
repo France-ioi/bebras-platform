@@ -170,7 +170,7 @@ function isDiplomaToPrint(diploma) {
    if (qualifiedOnly && !diploma.qualified) {
       return false;
    }
-   if (diploma.rank / diploma.contestParticipants > rankPercentile) {
+   if (parseInt(diploma.rank) / parseInt(diploma.contestParticipants) > rankPercentile) {
       return false;
    }
    return true;
