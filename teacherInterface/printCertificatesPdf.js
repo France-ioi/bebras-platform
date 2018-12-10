@@ -6,8 +6,11 @@
 */
 
 function toOrdinal(i) {
-   // TODO: adapt to English, using numeral.js?
-   return i == 1 ? '1ère' : i+'e';
+   if (i == 1) {
+      return i + i18n.t('certificates_rank_1_suffix');
+   } else {
+      return i + i18n.t('certificates_rank_n_suffix');
+   }
 }
 
 function dateFormat(d) {
@@ -432,7 +435,7 @@ function addDiploma(content, diploma, contest, school, user) {
    var certifiedOn = i18n.t("certificates_certified_on");
    var certifiedBy = i18n.t("certificates_certified_by");
 
-   var contestSubtitle = i18n.t('translations_category_label') + grade + levelNbContestants;
+   var contestSubtitle = i18n.t('certificates_category') + grade + levelNbContestants;
    var coordName =  getCoordName(user);
    var today = dateFormat(new Date());
 
@@ -462,7 +465,7 @@ The styles depend on the contest.
             ]
          },
          layout: 'noBorders',
-         absolutePosition: {x: 20, y: 490}
+         absolutePosition: {x: 20, y: 480}
       },
       {
          stack: [partnerLogos] // this is an array of images
@@ -470,7 +473,7 @@ The styles depend on the contest.
       {
         stack: [
           {text: [certifiedOn, ' ' , today]},
-          {text: [certifiedBy, ' ', coordName]}//,
+          {text: [certifiedBy, coordName]},
           {text: [school.name, ', ', school.city]}
         ],
         absolutePosition: {x: 600, y: 490},

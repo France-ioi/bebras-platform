@@ -557,5 +557,8 @@
     "certificates_certified_by": "by",
     "certificates_group": "Group",
     "certificates_coordinator": "Coordinator:",
+    "certificates_category": "Category",
+    "certificates_rank_1_suffix": "st",
+    "certificates_rank_n_suffix": "th",
     "certificates_and": "and"
 }

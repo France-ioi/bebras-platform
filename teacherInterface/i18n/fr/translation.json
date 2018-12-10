@@ -577,9 +577,12 @@
     "certificates_school_rank": "a obtenu la __rank__ place sur __total__ dans l'établissement",
     "certificates_semifinals_rank": "la __rank__ place en demi-finale",
     "certificates_certified_on": "Certifié le",
-    "certificates_certified_by": "par",
+    "certificates_certified_by": "par ",
     "certificates_group": "Groupe",
     "certificates_coordinator": "Coordonné par",
+    "certificates_category": "Categorie",
+    "certificates_rank_1_suffix": "ère",
+    "certificates_rank_n_suffix": "e",
     "certificates_and": "et"
 }
 

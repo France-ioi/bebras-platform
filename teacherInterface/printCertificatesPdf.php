@@ -50,22 +50,31 @@ var allImages = {
 
 $partnerImagesInfos = array();
 $maxLogoHeight = 0;
-$finalWidth = 70;
-$logoStartX = 165 - (count($config->certificates->partnerLogos) * 80 - 10) / 2;
-foreach ($config->certificates->partnerLogos as $fileName) {
+$totalWidth = 0;
+foreach ($config->certificates->partnerLogos as $numLogo => $fileName) {
    $imageInfo = getimagesize($fileName);
    $width = intVal($imageInfo[0]);
+   if ($config->certificates->partnerLogosWidths != null) {
+      $finalWidth = intVal($config->certificates->partnerLogosWidths[$numLogo]);
+   }
    $height = intVal($imageInfo[1]) * $finalWidth / $width;
    if ($height > $maxLogoHeight) {
       $maxLogoHeight = $height;
    }
-   $partnerImagesInfos[] = array($fileName, $height);
+   $partnerImagesInfos[] = array($fileName, $height, $finalWidth);
+   $totalWidth += $finalWidth;
 }
+$nbLogos = count($config->certificates->partnerLogos);
+$logoStartX = 165 - ($totalWidth + (10 * ($nbLogos - 1))) / 2;
 $strJS = "var partnerLogos = [\n";
+$xPos = $logoStartX;
 foreach ($partnerImagesInfos as $iLogo => $logoInfo) {
+   $width = $logoInfo[2];
+   $height = $logoInfo[1];
    $strJS .= "{ stack:[{image: '" . imageToBase64($logoInfo[0]) .
-              "', width:70}], absolutePosition: {x:" . ($logoStartX + ($iLogo * 80)) . ", y:" .
-              (510 + ($maxLogoHeight - $logoInfo[1]) / 2) . " } },\n";
+              "', width:".$width."}], absolutePosition: {x:" . $xPos . ", y:" .
+              (510 + ($maxLogoHeight - $height) / 2) . " } },\n";
+   $xPos += $width + 10;
 }
 $strJS .= "];";
 

@@ -554,12 +554,15 @@
     "certificates_generate_pdf_x": "Luo pdf __number__ / __total__",
     "certificates_points_obtained": "sai __points__ pistettä",
     "certificates_qualification_to_category": "selviytyi jatkoon kategoriassa __category__",
-    "certifiactes_global_rank": "saavutti kokonaissijan __rank__ / __total__",
+    "certificates_global_rank": "saavutti kokonaissijan __rank__ / __total__",
     "certificates_school_rank": "oli omassa koulussaan sijalla __rank__ / __total__",
     "certificates_semifinals_rank": "saavutti semifinaaleissa sijan __rank__",
     "certificates_certified_on": "Myönnetty",
-    "certificates_certified_by": ":",
+    "certificates_certified_by": "",
     "certificates_group": "Ryhmä",
     "certificates_coordinator": "Opettaja:",
+    "certificates_category": "",
+    "certificates_rank_1_suffix": "",
+    "certificates_rank_n_suffix": "",
     "certificates_and": "ja"
 }

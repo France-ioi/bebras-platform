@@ -178,8 +178,11 @@
          }
 
          function toOrdinal(i) {
-            // TODO: adapt to English, using numeral.js?
-            return i == 1 ? '1ère' : i+'e';
+            if (i == 1) {
+               return i + i18n.t('certificates_rank_1_suffix');
+            } else {
+               return i + i18n.t('certificates_rank_n_suffix');
+            }
          }
 
          function dateFormat(d) {
