@@ -18,13 +18,13 @@ if ($_POST['contestID'] != "algorea") {
    $stmt = $db->prepare("SELECT * FROM `contest` WHERE ID = :contestID;");
    $stmt->execute(['contestID' => $_POST['contestID']]);
    $contest = $stmt->fetch();
+   if (!$contest) {
+      echo sprintf(translate("certificates_unknown_contest"), $_POST['contestID']);
+   }
    if ($contest["parentContestID"] != null) {
       $stmt = $db->prepare("SELECT * FROM `contest` WHERE ID = :contestID;");
       $stmt->execute(['contestID' => $contest["parentContestID"]]);
       $contest = $stmt->fetch();
-   }
-   if (!$contest) {
-      echo sprintf(translate("certificates_unknown_contest"), $_POST['contestID']);
    }
 
    $groupBy = '';
@@ -49,13 +49,11 @@ if ($_POST['contestID'] != "algorea") {
       "LEFT JOIN `user_user` ON (`group`.`userID` = `user_user`.`userID`) ".
       "WHERE `group`.`schoolID` = :schoolID ".
       "AND `team`.`participationType` = 'Official' ".
-      "AND (`contest`.`ID` = :contestID OR `contest`.`parentContestID` = :contestID) ";
-
-      
+      "AND (`contest`.`ID` = :contestID OR `contest`.`parentContestID` = :contestID) ".
+      $groupBy;
+     
    $data = array("contestID"  => $contest["ID"],
       "schoolID" => $_REQUEST["schoolID"]);
-
-   $query .= $groupBy;
 
    $stmt = $db->prepare($query);
    $stmt->execute($data);
@@ -70,11 +68,11 @@ if ($_POST['contestID'] != "algorea") {
       "JOIN `group` ON (`group`.`ID` = `team`.`groupID`) ".
       "JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) ".
       "WHERE `team`.`participationType` = 'Official' ".
-      "AND ((`contest`.`ID` = :contestID AND `contest`.`parentContestID` IS NULL) OR (`contest`.`parentContestID` = :contestID)) ".
+      "AND (`contest`.`ID` = :contestID OR `contest`.`parentContestID` = :contestID) ".
       $groupBy;
-
-   $data = array("contestID"  => $_REQUEST["contestID"]);
-
+      
+   $data = array("contestID"  => $contest["ID"]);
+   
    $stmt = $db->prepare($query);
    $stmt->execute($data);
 
