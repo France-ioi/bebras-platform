@@ -573,7 +573,7 @@
     "certificates_generate_pdf_x": "Générer le PDF __number__ / __total__",
     "certificates_points_obtained": "a obtenu __points__ points",
     "certificates_qualification_to_category": "la qualification en catégorie __category__",
-    "certifiactes_global_rank": "a obtenu la __rank__ place sur __total__",
+    "certificates_global_rank": "a obtenu la __rank__ place sur __total__",
     "certificates_school_rank": "a obtenu la __rank__ place sur __total__ dans l'établissement",
     "certificates_semifinals_rank": "la __rank__ place en demi-finale",
     "certificates_certified_on": "Certifié le",
