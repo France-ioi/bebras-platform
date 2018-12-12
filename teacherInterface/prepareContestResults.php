@@ -1196,7 +1196,7 @@ if ($action == "makeGroupOfficial") {
    
    execSelectAndShowResults("Show the teams and students in this group", "
       SELECT contest.name, `group`.name, `user`.officialEmail, `user`.alternativeEmail,
-      GROUP_CONCAT(CONCAT(contestant.firstName, ' ', contestant.lastName, '(', contestant.grade, ')', contestant.algoreaCode)),
+      GROUP_CONCAT(CONCAT(contestant.firstName, ' ', contestant.lastName, '(', contestant.grade, ')', IFNULL(contestant.algoreaCode,''))),
       team.score, contestant.rank
       FROM `group`
       JOIN `team`  ON `team`.groupID = `group`.ID
