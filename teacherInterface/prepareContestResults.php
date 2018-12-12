@@ -1217,7 +1217,7 @@ if ($action == "makeGroupOfficial") {
       execQueryAndShowNbRows("Make teams official", "
          UPDATE `group`
          JOIN `team` ON `team`.`groupID` = `group`.`ID`
-         SET `team``participationType` = 'Official'
+         SET `team`.`participationType` = 'Official'
          WHERE `group`.`code` = :groupCode",
          array("groupCode" => $groupCode));
          
