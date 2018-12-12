@@ -780,7 +780,7 @@ if ($action == "detectDuplicates") {
       INSERT IGNORE INTO duplicate_contestants (contestant1ID, contestant2ID)
       SELECT ID, duplicateID FROM (
          SELECT `contestant`.ID,
-         @duplicateContestantID := IF(@prevFirstName=`contestant`.firstName AND @prevLastName = `contestant`.lastName AND @prevSchoolID = `contestant`.cached_schoolID AND @prevCategoryColor = `contest`.`categoryColor`, @prevID, NULL) AS duplicateID, 
+         @duplicateContestantID := IF(@prevFirstName=`contestant`.firstName AND @prevLastName = `contestant`.lastName AND @prevSchoolID = `contestant`.cached_schoolID AND (`contest`.`categoryColor` IS NULL OR @prevCategoryColor = `contest`.`categoryColor`), @prevID, NULL) AS duplicateID, 
          @prevFirstName := contestant.firstName,
          @prevLastName := contestant.lastName,
          @prevSchoolID := contestant.cached_schoolID,
@@ -801,7 +801,7 @@ if ($action == "detectDuplicates") {
       INSERT IGNORE INTO duplicate_contestants (contestant1ID, contestant2ID)
       SELECT ID, duplicateID FROM (
          SELECT `contestant`.ID,
-         @duplicateContestantID := IF(@prevFirstName=`contestant`.firstName AND @prevLastName = `contestant`.lastName AND @prevSchoolID = `contestant`.cached_schoolID AND @prevCategoryColor = `contest`.`categoryColor`, @prevID, NULL) AS duplicateID, 
+         @duplicateContestantID := IF(@prevFirstName=`contestant`.firstName AND @prevLastName = `contestant`.lastName AND @prevSchoolID = `contestant`.cached_schoolID AND (`contest`.`categoryColor` IS NULL OR @prevCategoryColor = `contest`.`categoryColor`), @prevID, NULL) AS duplicateID, 
          @prevFirstName := contestant.firstName,
          @prevLastName := contestant.lastName,
          @prevSchoolID := contestant.cached_schoolID,
