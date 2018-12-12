@@ -556,6 +556,20 @@ if ($action == "markRecomputeScoresGroups") {
 }
 */
 
+echo "<h3><a href='".$startUrl."&action=markWithRecoveed'>Mark teams with recorvered answer be recomputed</a></h3>";
+if ($action == "markWithRecoveed") {
+   execQueryAndShowNbRows("Set scores to recompute if team has recovered answers", "
+      UPDATE team_question
+      JOIN team_question_recover ON team_question.teamID = team_question_recover.teamID
+         AND team_question.questionID = team_question_recover.questionID
+      JOIN `team` ON `team`.ID = team_question.teamID
+      JOIN contest ON team.contestID = contest.ID
+      SET team_question.score = NULL
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      AND team_question.score = -1
+      AND team.score IS NULL",
+      array("contestID" => $contestID));
+}
 
 
 echo "<h3><a href='".$startUrl."&action=markAboveMinScore'>Mark teams above threshold to be recomputed</a></h3>";
@@ -1183,10 +1197,12 @@ if ($action == "makeGroupOfficial") {
    execSelectAndShowResults("Show the teams and students in this group", "
       SELECT contest.name, `group`.name, `user`.officialEmail, `user`.alternativeEmail,
       GROUP_CONCAT(CONCAT(contestant.firstName, ' ', contestant.lastName, '(', contestant.grade, ')', contestant.algoreaCode)),
-      team.score, team.rank
+      team.score, contestant.rank
       FROM `group`
       JOIN `team`  ON `team`.groupID = `group`.ID
       JOIN `contestant` ON `contestant`.teamID = team.ID
+      JOIN `contest` ON `group`.contestID = `contest`.ID
+      JOIN `user` ON `group`.userID = user.ID
       WHERE `group`.`code` = :groupCode
       GROUP BY contestant.ID",
       array("groupCode" => $groupCode));
