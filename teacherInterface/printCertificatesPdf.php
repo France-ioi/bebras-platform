@@ -54,6 +54,7 @@ $totalWidth = 0;
 foreach ($config->certificates->partnerLogos as $numLogo => $fileName) {
    $imageInfo = getimagesize($fileName);
    $width = intVal($imageInfo[0]);
+   $finalWidth = 0;
    if ($config->certificates->partnerLogosWidths != null) {
       $finalWidth = intVal($config->certificates->partnerLogosWidths[$numLogo]);
    }
