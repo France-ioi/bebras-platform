@@ -410,8 +410,8 @@ $viewsModels = array(
       "joins" => array(
          "team" => array("srcTable" => "contestant", "srcField" => "teamID", "dstField" => "ID"),
          "full_groups" => array("srcTable" => "team", "srcField" => "groupID", "dstField" => "ID"),
-         "contest" => array("srcTable" => "group", "srcField" => "contestID", "dstField" => "ID"),
-         "school" => array("srcTable" => "group", "srcField" => "schoolID", "dstField" => "ID"),
+         "contest" => array("srcTable" => "full_groups", "srcField" => "contestID", "dstField" => "ID"),
+         "school" => array("srcTable" => "full_groups", "srcField" => "schoolID", "dstField" => "ID"),
          "grade" => array("srcTable" => "contestant", "srcField" => "grade", "dstField" => "ID"),
       ),
       "fields" => array(
@@ -420,7 +420,7 @@ $viewsModels = array(
          "grade" => array("tableName" => "full_groups"),
          "contestID" => array("tableName" => "full_groups", "access" => array("write" => array(), "read" => array("user"))),
          "contestName" => array("tableName" => "contest", "fieldName" => "name"),
-         "full_groupsName" => array("tableName" => "group", "fieldName" => "name"),
+         "full_groupsName" => array("tableName" => "full_groups", "fieldName" => "name"),
          "saniValid" => array(),
          "firstName" => array(),
          "lastName" => array(),
