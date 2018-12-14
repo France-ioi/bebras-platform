@@ -67,14 +67,19 @@ foreach ($config->certificates->partnerLogos as $numLogo => $fileName) {
 }
 $nbLogos = count($config->certificates->partnerLogos);
 $logoStartX = 165 - ($totalWidth + (10 * ($nbLogos - 1))) / 2;
-$strJS = "var partnerLogos = [\n";
 $xPos = $logoStartX;
+$partnersStartY = 510;
+if (isset($config->certificates->partnerLogosY)) {
+   $partnersStartY = intVal($config->certificates->partnerLogosY);
+}
+$strJS = "var partnersStartY = ".$partnersStartY.";\nvar partnerLogos = [\n";
 foreach ($partnerImagesInfos as $iLogo => $logoInfo) {
    $width = $logoInfo[2];
+
    $height = $logoInfo[1];
    $strJS .= "{ stack:[{image: '" . imageToBase64($logoInfo[0]) .
               "', width:".$width."}], absolutePosition: {x:" . $xPos . ", y:" .
-              (510 + ($maxLogoHeight - $height) / 2) . " } },\n";
+              ($partnersStartY  + ($maxLogoHeight - $height) / 2) . " } },\n"; 
    $xPos += $width + 10;
 }
 $strJS .= "];";

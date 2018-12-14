@@ -427,6 +427,8 @@ if ($action == "resetIsOfficial") {
       array("contestID" => $contestID));
 }
       
+echo "<p>TODO: the first time, make sure teamp participationType is null  and score of all teams are set to NULL.</p>";
+      
 echo "<h3><a href='".$startUrl."&action=setTeamParticipationType'>Set team participation type to group participationType</a></h3>";
 if ($action == "setTeamParticipationType") { 
       

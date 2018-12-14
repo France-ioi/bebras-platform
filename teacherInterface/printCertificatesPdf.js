@@ -465,7 +465,7 @@ The styles depend on the contest.
             ]
          },
          layout: 'noBorders',
-         absolutePosition: {x: 20, y: 480}
+         absolutePosition: {x: 20, y: partnersStartY - 30}
       },
       {
          stack: [partnerLogos] // this is an array of images
