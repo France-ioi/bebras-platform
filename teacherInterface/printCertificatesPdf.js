@@ -325,8 +325,8 @@ function addHeaderForGroup(content, group, contest, user, school, isFirst) {
 
 function addContestantTableForGroup(content, contestantsData) {
    var columnTitle = [
-      i18n.t('contestant_lastName_label'),
       i18n.t('contestant_firstName_label'),
+      i18n.t('contestant_lastName_label'),
       i18n.t('contestant_genre_label'),
       i18n.t('contestant_grade_label'),
       i18n.t('contestant_qualificationCode_label'),
@@ -355,8 +355,8 @@ function addContestantTableForGroup(content, contestantsData) {
          qualificationStr = i18n.t('option_no');
       }
       students.push([
-         diploma.lastName,
          diploma.firstName,
+         diploma.lastName,
          diploma.genre,
          i18n.t('grade_' + diploma.grade),
          qualificationStr,
@@ -455,7 +455,7 @@ The styles depend on the contest.
       {stack: [contestLogo], absolutePosition: {x:20, y:40}},//this is an image
       {text: contestName, style: ['contestName', 'accentColor'], margin: [0, 30, 0, 20]},
       {text: contestSubtitle, style: ['contestSubtitle', 'mainColor']},
-      {text: [diploma.lastName, ' ', diploma.firstName], style: ['accentColor', 'contestantName'], margin: [0, 40, 0, 0]},
+      {text: [diploma.firstName, ' ', diploma.lastName], style: ['accentColor', 'contestantName'], margin: [0, 40, 0, 0]},
       {text: scoreAndRank, style: 'diplomaScore', margin: [0, 20, 0, 0]},
       {
          table: {

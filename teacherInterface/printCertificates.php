@@ -207,8 +207,8 @@
          function displayDiplomas(params) {
             var contestantPerGroup = fillDataDiplomas(params);
             var tableHeader = "<table class=\"bordered\"><tr>" +
-               "<td>"+i18n.t('contestant_lastName_label')+"</td>" +
                "<td>"+i18n.t('contestant_firstName_label')+"</td>" +
+               "<td>"+i18n.t('contestant_lastName_label')+"</td>" +
                "<td>"+i18n.t('contestant_genre_label')+"</td>" +
                "<td>"+i18n.t('contestant_grade_label')+"</td>" +
                "<td>"+i18n.t('contestant_qualificationCode_label')+"</td>" +
@@ -245,8 +245,8 @@
                      qualificationStr = i18n.t('option_no');
                   }
                   s += "<tr>" +
-                     "<td>" + diploma.lastName + "</td>" +
                      "<td>" + diploma.firstName + "</td>" +
+                     "<td>" + diploma.lastName + "</td>" +
                      "<td>" + diploma.genre + "</td>" +
                      "<td>" + i18n.t('grade_'+diploma.grade) + "</td>" +
                      "<td>" + qualificationStr + "</td>" +
@@ -271,7 +271,7 @@
                      schoolRankOrdinal: toOrdinal(diploma.schoolRank),
                      maxRank: diploma.contestParticipants,
                      maxSchoolRank: diploma.schoolParticipants,
-                     name: diploma.lastName+' '+diploma.firstName,
+                     name: diploma.firstName+' 'diploma.lastName,
                      grade: i18n.t("grade_"+diploma.grade)
                   };
                   if (diploma.rank <= diploma.contestParticipants / 2) {
@@ -291,7 +291,7 @@
                      levelNbContestants: levelNbContestants,
                      scoreRank: i18n.t('diploma_score', scoreRankContext),
                      contestYear: contest.year,
-                     name: diploma.lastName+' '+diploma.firstName,
+                     name: diploma.firstName+' '+diploma.lastName,
                      interpolation: {prefix: '__', suffix: '__'}
                   };
                   var qualificationCode = '';
