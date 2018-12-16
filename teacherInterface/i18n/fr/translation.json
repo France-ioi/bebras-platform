@@ -583,7 +583,11 @@
     "certificates_category": "Catégorie ",
     "certificates_rank_1_suffix": "ère",
     "certificates_rank_n_suffix": "e",
-    "certificates_and": "et"
+    "certificates_and": "et",
+    "certificates_option_display": "Paramètres d'affichage des scores et classements",
+    "certificates_min_score_displayed": "Afficher le score s'il est au minimum de %s points.",
+    "certificates_max_school_rank_percentile_displayed": "Afficher le classement dans l'établissement pour les %s%% mieux classés.",
+    "certificates_max_rank_percentile_displayed": "Afficher le classement général pour les %s%% mieux classés."
 }
 
 

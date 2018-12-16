@@ -133,8 +133,18 @@ font-family: 'Varela Round', sans-serif;
       <div style="border:solid black 1px;margin:auto;padding:5px;text-align:left;width:600px;">
          <p><?php echo translate("certificates_option_filter"); ?></p>
          <!--<p><input type="checkbox" id="qualifiedOnly" onchange="updateNbDiplomas()"></input>Les élèves ayant obtenu <span id="qualificationText"></span></p>-->
-         <p><input type="checkbox" id="topRankedOnly" onchange="updateNbDiplomas()"></input><?php echo sprintf(translate("certificates_filter_students_percentile"), "<input type='number' id='minRankPercentile' style='width:40px;text-align:center' value='50' onchange='updateNbDiplomas()'/></input>"); ?> </p>
-         <p><?php echo sprintf(translate("certificate_number_to_print"), "<span id='printedCertificates'></span>", "<span id='totalCertificates'></span>");  ?>   
+         <p><input type="checkbox" id="topRankedOnly" onchange="updateNbDiplomas()"></input>
+         <?php
+            echo sprintf(translate("certificates_filter_students_percentile"), "<input type='number' id='minRankPercentile' style='width:40px;text-align:center' value='50' onchange='updateNbDiplomas()'/></input>");
+         ?> </p>
+         <p><?php echo sprintf(translate("certificate_number_to_print"), "<span id='printedCertificates'></span>", "<span id='totalCertificates'></span>");  ?></p>
+         <p><?php echo "<b>".translate("certificates_option_display")."</b>"; ?></p>
+         
+         <?php
+            echo "<p>".sprintf(translate("certificates_min_score_displayed"), "<input type='number' id='minScoreDisplayed' style='width:40px;text-align:center' value='0'/></input>")."</p>";
+            echo "<p>".sprintf(translate("certificates_max_rank_percentile_displayed"), "<input type='number' id='maxRankPercentileDisplayed' style='width:40px;text-align:center' value='50'/></input>")."</p>";
+            echo "<p>".sprintf(translate("certificates_max_school_rank_percentile_displayed"), "<input type='number' id='maxSchoolRankPercentileDisplayed' style='width:40px;text-align:center' value='50'/></input>")."</p>";
+         ?>
       </div>
       <br/>
       <p><?php echo sprintf(translate("certificates_number_per_pdf"), "<input type='number' id='diplomasPerPart' value='100' style='width:40px' onchange='updateNbDiplomas()'></input>"); ?> </p>

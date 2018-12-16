@@ -560,5 +560,9 @@
     "certificates_category": "Category",
     "certificates_rank_1_suffix": "st",
     "certificates_rank_n_suffix": "th",
-    "certificates_and": "and"
+    "certificates_and": "and",
+    "certificates_option_display": "Print settings for scores and ranks",
+    "certificates_min_score_displayed": "Print the score if it's at least %s points.",
+    "certificates_max_school_rank_percentile_displayed": "Print the school rank for the top %s%% only.",
+    "certificates_max_rank_percentile_displayed": "Print the national rank for the top %s%% only."
 }

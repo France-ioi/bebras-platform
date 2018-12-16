@@ -379,9 +379,15 @@ function addContestantTableForGroup(content, contestantsData) {
 }
 
 function getDisplayedScoreAndRank(diploma) {
+   var minScoreDisplayed = parseInt($("#minScoreDisplayed").val());
+   var maxRankPercentileDisplayed = parseInt($("#maxRankPercentileDisplayed").val()) / 100;
+   var maxSchoolRankPercentileDisplayed = parseInt($("#maxSchoolRankPercentileDisplayed").val()) / 100;
    var scoreAndRank = [
-      i18n.t("certificates_points_obtained", { points: diploma.score })
    ];
+   if (diploma.score >= minScoreDisplayed) {
+      scoreAndRank.push(i18n.t("certificates_points_obtained", { points: diploma.score }));
+   }
+
    if ((diploma.category != undefined) && (diploma.category != "blanche")) {
 /*      if (diploma.round == "1") {
          scoreAndRank.push("la qualification en catégorie " + diploma.category + " et en demi-finale");
@@ -390,10 +396,10 @@ function getDisplayedScoreAndRank(diploma) {
          scoreAndRank.push(i18n.t("certificates_qualification_to_category", {category: diploma.category}));
 /*      }*/
    }
-   if (diploma.rank <= diploma.contestParticipants / 2) {
+   if (diploma.rank <= diploma.contestParticipants * maxRankPercentileDisplayed) {
       scoreAndRank.push(i18n.t("certificates_global_rank", {rank: toOrdinal(diploma.rank), total: diploma.contestParticipants}));
    }
-   if (diploma.schoolRank <= diploma.schoolParticipants / 2) {
+   if (diploma.schoolRank <= diploma.schoolParticipants * maxSchoolRankPercentileDisplayed) {
       scoreAndRank.push(i18n.t("certificates_school_rank", {rank: toOrdinal(diploma.schoolRank), total: diploma.schoolParticipants}));
    }
    if (diploma.rankDemi2018 != null) {
