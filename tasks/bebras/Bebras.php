@@ -108,16 +108,23 @@ class Bebras
       }
       
       // Add task's images in the JSON
-      $images = PEMTaskCompiler::findUsedFiles($inlineJs.$contentBody.$inlineCss, array('png', 'jpg', 'gif', 'mp4', 'PNG', 'JPG', 'GIF', 'MP4'));
+      $images = PEMTaskCompiler::findUsedFiles($inlineJs.$contentBody.$inlineCss, array('png', 'jpg', 'gif', 'PNG', 'JPG', 'GIF'));
       foreach ($images as $curImage) {
          $bebras['task'][] = array(
             'type' => 'image',
             'url' => $curImage,
          );
       }
+      $videos = PEMTaskCompiler::findUsedFiles($inlineJs.$contentBody.$inlineCss, array('mp4', 'MP4'));
+      foreach ($videos as $curVideo) {
+         $bebras['task'][] = array(
+            'type' => 'video',
+            'url' => $curVideo,
+         );
+      }
       
       // Add solution's images in the JSON
-      $imagesSolution = PEMTaskCompiler::findUsedFiles($contentSolution, array('png', 'jpg', 'gif', 'mp4', 'PNG', 'JPG', 'GIF', 'MP4'));
+      $imagesSolution = PEMTaskCompiler::findUsedFiles($contentSolution, array('png', 'jpg', 'gif', 'PNG', 'JPG', 'GIF'));
       foreach ($imagesSolution as $curImageSolution) {
          $bebras['solution'][] = array(
             'type' => 'image',
@@ -228,8 +235,14 @@ class Bebras
          if ($curImage[0] == '/') {
             $curImage = substr($curImage, 1);
          }
-         
          $htmlContent .= '<img style="display: none;" src="'.$curImage.'" />'."\n";
+      }
+      $videos = PEMTaskCompiler::findUsedFiles($html, array('mp4', 'MP4'), true);
+      foreach ($videos as $curVideo) {
+         if ($curVideo[0] == '/') {
+            $curVideo = substr($curVideo, 1);
+         }
+         $htmlContent .= '<video style="display: none;" src="'.$curVideo.'" />'."\n";
       }
       
       return $htmlContent;

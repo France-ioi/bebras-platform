@@ -62,6 +62,7 @@ function getMimeTypes() {
        $out['gif'] = 'image/gif';
        $out['jpg'] = 'image/jpeg';
        $out['svg'] = 'image/svg+xml';
+       $out['mp4'] = 'video/mp4';
        $out['html'] = 'text/html';
        $out['ttf'] = 'application/octet-stream';
        $out['eot'] = 'application/octet-stream';
