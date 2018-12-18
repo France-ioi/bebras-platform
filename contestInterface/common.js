@@ -58,7 +58,8 @@ var groupCheckedData = null;
 var contestants = {};
 var teamMateHasRegistration = {1: false, 2: false};
 var personalPageData = null;
-
+// Function listening for resize events
+var bodyOnResize = null;
 
 function getParameterByName(name) {
    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -111,7 +112,7 @@ window.unlockAllLevels = function() {
    var sortedQuestionIDs = getSortedQuestionIDs(questionsData);
    for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
       var questionKey = questionsData[sortedQuestionIDs[iQuestionID]].key;
-      questionUnlockedLevels[questionKey] = 3;
+      questionUnlockedLevels[questionKey] = 4;
       $("#place_" + questionKey).hide();
       $("#row_" + questionKey).show();
    }
@@ -575,6 +576,7 @@ var questionIframe = {
       iframe.setAttribute('id', 'question-iframe');
       iframe.setAttribute('scrolling', 'no');
       iframe.setAttribute('src', 'about:blank');
+      iframe.setAttribute('allowFullScreen', '');
 
       var content = '<!DOCTYPE html>' +
          '<html><head><meta http-equiv="X-UA-Compatible" content="IE=edge"></head>' +
@@ -587,10 +589,15 @@ var questionIframe = {
       if (typeof iframe.contentWindow.document.close === 'function')
          iframe.contentWindow.document.close();
 
+      // Chrome doesn't allow to set this attribute until iframe contents are
+      // loaded
+      iframe.setAttribute('allowFullScreen', true);
+
       this.iframe = $('#question-iframe')[0];
       this.doc = $('#question-iframe')[0].contentWindow.document;
       this.body = $('body', this.doc);
       this.tbody = this.doc.getElementsByTagName('body')[0];
+      this.autoHeight = false;
 
       this.setHeight(0);
       this.body.css('width', '782px');
@@ -747,22 +754,15 @@ var questionIframe = {
                     defaultAnswers[questionIframe.questionKey] = strAnswer;
                  }, logError);
               }
-              task.getHeight(function(height) {
-                 platform.updateDisplay({height: height});
-              }, logError);
+              questionIframe.updateHeight();
            }, logError);
+           task.getMetaData(function(metaData) {
+              questionIframe.autoHeight = !!metaData.autoHeight;
+           });
         }, logError);
         // Iframe height "hack" TODO: why two timers?
-        setTimeout(function() {
-           task.getHeight(function(height) {
-              platform.updateDisplay({height: height});
-           }, logError);
-        }, 500);
-        setTimeout(function() {
-           task.getHeight(function(height) {
-              platform.updateDisplay({height: height});
-           }, logError);
-        }, 1000);
+        setTimeout(questionIframe.updateHeight, 500);
+        setTimeout(questionIframe.updateHeight, 1000);
 
         // TODO : test without timeout : should not be needed.
         setTimeout(function() {
@@ -795,6 +795,39 @@ var questionIframe = {
               nextStep();
            }
         }, 50);
+      }
+   },
+
+   /**
+    * Update the iframe height depending on the task parameters
+    */
+   updateHeight: function(callback) {
+      if(!questionIframe.loaded || !questionIframe.task) {
+         if(callback) { callback(); }
+         return;
+      }
+      if(questionIframe.autoHeight) {
+         // Because the layout can vary, we simply take the height of the html
+         // and compare to the desired height, hence finding how much the
+         // iframe's height needs to change
+         var newHeight = $('#question-iframe').height() - $('#html').height() + document.documentElement.clientHeight;
+         platform.updateDisplay({height: newHeight});
+         if(callback) { callback(); }
+      } else {
+         task.getHeight(function(height) {
+            platform.updateDisplay({height: height});
+            if(callback) { callback(); }
+         }, logError);
+      }
+   },
+
+   /**
+    * body resize event handler
+    */
+   onBodyResize: function() {
+      // We only need to update if the iframe is on auto-height
+      if(questionIframe.autoHeight) {
+         questionIframe.updateHeight();
       }
    },
 
@@ -1200,6 +1233,8 @@ function getQuestionScoreRate(questionData) {
 }
 
 function getNbLockedStars(questionData) {
+   // TODO (here and everywhere in the code) : support variable number of
+   // levels and hence of unlockedLevels
    if (questionUnlockedLevels[questionData.key] != 0) {
       return 3 - questionUnlockedLevels[questionData.key];
    }
@@ -1218,7 +1253,7 @@ function updateUnlockedLevels(sortedQuestionIDs, updatedQuestionKey, contestEnde
       questionKey = questionsData[sortedQuestionIDs[iQuestionID]].key;
       prevQuestionUnlockedLevels[questionKey] = questionUnlockedLevels[questionKey];
       //if (contestEnded) {
-         questionUnlockedLevels[questionKey] = 3;
+         questionUnlockedLevels[questionKey] = 4;
          nbTasksUnlocked[2]++;
          continue;
       //}
@@ -2938,8 +2973,7 @@ function loadSolutions(data) {
          if (!currentQuestionKey) {
             return;
          }
-         questionIframe.task.getHeight(function(height) {
-            platform.updateDisplay({height: height});
+         questionIframe.updateHeight(function() {
             if (questionIframe.loaded) {
                questionIframe.task.unload(function() {
                   questionIframe.loadQuestion({'task': true, 'solution': true, 'grader': true}, currentQuestionKey, function(){});
@@ -3236,6 +3270,7 @@ $(document).on('ready', function() {
    } else {
       init();
    }
+   $('body').on('resize', questionIframe.onBodyResize);
 });
 
 }();

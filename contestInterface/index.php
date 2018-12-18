@@ -547,7 +547,7 @@
    <div class="newInterface" style="width:770px;margin:auto;text-align:left;padding: 10px 0 10px">
       <span class="questionTitle" style="padding-right: 20px"></span><span id="questionStars"></span>
    </div>
-   <iframe src="about:blank" id="question-iframe" scrolling="no"></iframe>
+   <iframe src="about:blank" id="question-iframe" scrolling="no" allowfullscreen></iframe>
 </div>
 <div id="divFooter" style="display:none;text-align:center" autocomplete="off">
    <div class="header_sep_bottom"></div>
