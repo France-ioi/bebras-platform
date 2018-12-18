@@ -595,6 +595,7 @@ var questionIframe = {
       this.body = $('body', this.doc);
       this.tbody = this.doc.getElementsByTagName('body')[0];
       this.autoHeight = false;
+      $("#divFooter").show();
 
       this.setHeight(0);
       this.body.css('width', '782px');
@@ -755,6 +756,10 @@ var questionIframe = {
            }, logError);
            task.getMetaData(function(metaData) {
               questionIframe.autoHeight = !!metaData.autoHeight;
+              if(questionIframe.autoHeight) {
+                 $("#divFooter").hide();
+                 questionIframe.updateHeight();
+              }
            });
         }, logError);
         // Iframe height "hack" TODO: why two timers?
@@ -1385,6 +1390,7 @@ function setupContest(data) {
       }
    }
 
+   $("#divFooter").show();
    $('.buttonClose').show();
 
    // Starts the timer
@@ -2673,6 +2679,7 @@ function fillNextQuestionID(sortedQuestionsIDs) {
 window.backToList = function() {
    $(".questionListIntro").show();
    $(".questionList").show();
+   $("#divFooter").show();
    $(".buttonClose").show();
    $("#question-iframe-container").hide();
    $(".button_return_list").prop("disabled",true);
