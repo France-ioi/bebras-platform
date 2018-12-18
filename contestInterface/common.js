@@ -806,15 +806,16 @@ var questionIframe = {
          if(callback) { callback(); }
          return;
       }
+      var fullHeight = $('#question-iframe').height() - $('html').height() + document.documentElement.clientHeight;
       if(questionIframe.autoHeight) {
          // Because the layout can vary, we simply take the height of the html
          // and compare to the desired height, hence finding how much the
          // iframe's height needs to change
-         var newHeight = $('#question-iframe').height() - $('html').height() + document.documentElement.clientHeight;
-         platform.updateDisplay({height: newHeight});
+         platform.updateDisplay({height: fullHeight});
          if(callback) { callback(); }
       } else {
          questionIframe.task.getHeight(function(height) {
+            height = Math.max(fullHeight, height + 25);
             platform.updateDisplay({height: height});
             if(callback) { callback(); }
          }, logError);
@@ -937,7 +938,6 @@ var questionIframe = {
    },
 
    setHeight: function(height) {
-       height = Math.max($(window).height() - 79, height + 25);
        $('#question-iframe').css('height', height + 'px');
    }
 };
