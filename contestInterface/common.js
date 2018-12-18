@@ -278,9 +278,6 @@ var platform = {
    },
    updateDisplay: function(data, success, error) {
       if(data.height) {
-        if (data.height < 700) {
-          data.height = 700;
-        }
         questionIframe.setHeight(data.height);
      }
      if (success) {success();}
