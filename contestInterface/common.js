@@ -814,7 +814,7 @@ var questionIframe = {
          platform.updateDisplay({height: newHeight});
          if(callback) { callback(); }
       } else {
-         task.getHeight(function(height) {
+         questionIframe.task.getHeight(function(height) {
             platform.updateDisplay({height: height});
             if(callback) { callback(); }
          }, logError);
