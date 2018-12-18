@@ -810,7 +810,7 @@ var questionIframe = {
          // Because the layout can vary, we simply take the height of the html
          // and compare to the desired height, hence finding how much the
          // iframe's height needs to change
-         var newHeight = $('#question-iframe').height() - $('#html').height() + document.documentElement.clientHeight;
+         var newHeight = $('#question-iframe').height() - $('html').height() + document.documentElement.clientHeight;
          platform.updateDisplay({height: newHeight});
          if(callback) { callback(); }
       } else {
