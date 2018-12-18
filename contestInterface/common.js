@@ -3270,7 +3270,7 @@ $(document).on('ready', function() {
    } else {
       init();
    }
-   $('body').on('resize', questionIframe.onBodyResize);
+   window.addEventListener('resize', questionIframe.onBodyResize);
 });
 
 }();
