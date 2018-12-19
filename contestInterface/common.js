@@ -595,7 +595,6 @@ var questionIframe = {
       this.body = $('body', this.doc);
       this.tbody = this.doc.getElementsByTagName('body')[0];
       this.autoHeight = false;
-      $("#divFooter").show();
 
       this.setHeight(0);
       this.body.css('width', '782px');
@@ -2289,7 +2288,7 @@ function initContestData(data, newContestID) {
       $("#question-iframe-container").addClass("newInterfaceIframeContainer").show();
       $(".oldInterface").html("").hide();
       $(".newInterface").show();
-      window.backToList();
+      window.backToList(true);
    } else {
       $("#question-iframe-container").addClass("oldInterfaceIframeContainer").show();
       $(".newInterface").html("").hide();
@@ -2676,10 +2675,12 @@ function fillNextQuestionID(sortedQuestionsIDs) {
    questionsData[prevQuestionID].nextQuestionID = "0";
 }
 
-window.backToList = function() {
+window.backToList = function(initial) {
+   if(!initial) {
+      $('#divFooter').show();
+   }
    $(".questionListIntro").show();
    $(".questionList").show();
-   $("#divFooter").show();
    $(".buttonClose").show();
    $("#question-iframe-container").hide();
    $(".button_return_list").prop("disabled",true);
