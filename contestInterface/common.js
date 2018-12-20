@@ -277,7 +277,7 @@ var platform = {
       this.updateDisplay({height: height}, success, error);
    },
    updateDisplay: function(data, success, error) {
-      if(data.height) {
+     if(data.height) {
         questionIframe.setHeight(data.height);
      }
      if (success) {success();}
@@ -455,6 +455,7 @@ var questionIframe = {
    questionKey: null,
    task: null,
    gradersLoaded: false,
+   autoHeight: false,
 
    /**
     * Load a javascript file inside the iframe
@@ -939,7 +940,10 @@ var questionIframe = {
    },
 
    setHeight: function(height) {
-       $('#question-iframe').css('height', height + 'px');
+      if(height < 700 && !questionIframe.autoHeight) {
+         height = 700;
+      }
+      $('#question-iframe').css('height', height + 'px');
    }
 };
 
