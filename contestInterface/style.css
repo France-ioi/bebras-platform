@@ -461,6 +461,9 @@ body.autoHeight .headerAutoHeight {
 .headerAutoHeight_table {
   height: 40px;
   width: 100%;
+  max-width: 880px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .headerAutoHeight_table td {
   text-align: center;
@@ -469,17 +472,19 @@ body.autoHeight .headerAutoHeight {
 }
 .headerAutoHeight_table .questionTitle {
   text-align: center;
+  font-size: 28px;
 }
 .headerAutoHeight_logo {
   width: 60px;
 }
 .headerAutoHeight_logo .header_logo_img {
+  height: auto;
+  width: auto;
   max-height: 40px;
   max-width: 60px;
 }
 .headerAutoHeight_time {
   width: 80px;
-  padding-bottom: 10px;
 }
 .headerAutoHeight_score {
   width: 120px;
@@ -491,6 +496,17 @@ body.autoHeight .headerAutoHeight {
 .headerAutoHeight_button > .button_return_list {
   font-size: 16px;
   font-weight: bold;
+}
+@media (max-width: 767px) {
+  .headerAutoHeight_table td {
+    font-size: 16px;
+  }
+  .headerAutoHeight_table .questionTitle {
+    font-size: 24px;
+  }
+  .headerAutoHeight_score {
+    display: none;
+  }
 }
 
 .icon {

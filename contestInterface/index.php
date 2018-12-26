@@ -510,7 +510,7 @@
          </td></tr>
       </table>
    </div>
-   <div class="newInterface headerElements" style="padding-bottom:1em">
+   <div class="newInterface headerElements">
       <div class="header">
          <table class="header_table">
             <tr>
