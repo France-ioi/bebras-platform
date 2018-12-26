@@ -596,6 +596,7 @@ var questionIframe = {
       this.body = $('body', this.doc);
       this.tbody = this.doc.getElementsByTagName('body')[0];
       this.autoHeight = false;
+      $('body').removeClass('autoHeight');
 
       this.setHeight(0);
       this.body.css('width', '782px');
@@ -757,7 +758,7 @@ var questionIframe = {
            task.getMetaData(function(metaData) {
               questionIframe.autoHeight = !!metaData.autoHeight;
               if(questionIframe.autoHeight) {
-                 $("#divFooter").hide();
+                 $('body').addClass('autoHeight');
                  questionIframe.updateHeight();
               }
            });
@@ -1308,6 +1309,7 @@ function updateUnlockedLevels(sortedQuestionIDs, updatedQuestionKey, contestEnde
          drawStars('score_' + questionData.key, 4, 20, scoreRate, "normal", nbLocked);  // stars under icon on main page
          if (questionKey == updatedQuestionKey) {
             drawStars('questionStars', 4, 24, scoreRate, "normal", nbLocked); // stars in question title
+            drawStars('questionIframeStars', 4, 24, scoreRate, "normal", nbLocked); // stars in question title
          }
       }
    }
@@ -1393,7 +1395,6 @@ function setupContest(data) {
       }
    }
 
-   $("#divFooter").show();
    $('.buttonClose').show();
 
    // Starts the timer
@@ -2407,6 +2408,7 @@ function closeContest(message) {
    hasDisplayedContestStats = true;
    Utils.disableButton("buttonClose");
    Utils.disableButton("buttonCloseNew");
+   $('body').removeClass('autoHeight');
    $("#divQuestions").hide();
    hideQuestionIframe();
    if (questionIframe.task) {
@@ -2680,9 +2682,7 @@ function fillNextQuestionID(sortedQuestionsIDs) {
 }
 
 window.backToList = function(initial) {
-   if(!initial) {
-      $('#divFooter').show();
-   }
+   $('body').removeClass('autoHeight');
    $(".questionListIntro").show();
    $(".questionList").show();
    $(".buttonClose").show();
@@ -2742,6 +2742,7 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
       $(".questionTitle").html(questionName);
       if (newInterface) {
          drawStars('questionStars', 4, 24, getQuestionScoreRate(questionData), "normal", getNbLockedStars(questionData)); // stars under icon on main page
+         drawStars('questionIframeStars', 4, 24, getQuestionScoreRate(questionData), "normal", getNbLockedStars(questionData)); // stars under icon on main page
       }
       currentQuestionKey = questionKey;
 

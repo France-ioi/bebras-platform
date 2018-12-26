@@ -510,7 +510,7 @@
          </td></tr>
       </table>
    </div>
-   <div class="newInterface" style="padding-bottom:1em">
+   <div class="newInterface headerElements" style="padding-bottom:1em">
       <div class="header">
          <table class="header_table">
             <tr>
@@ -520,6 +520,19 @@
                <td class="header_rank" style="display:none"><span data-i18n="rank"></span> <br/><b><span class="rank" width="95%"></span></b></td>
                <td class="header_button">
                  <button class="button_return_list" type="button" data-i18n="return_to_list" onclick="backToList()" ></button>
+               </td>
+            </tr>
+         </table>
+      </div>
+      <div class="headerAutoHeight">
+         <table class="headerAutoHeight_table">
+            <tr>
+               <td class="headerAutoHeight_logo" data-i18n="[html]top_image_new"></td>
+               <td class="headerAutoHeight_time"><b><span class='minutes'></span>:<span class='seconds'></span></b></td>
+               <td class="headerAutoHeight_title"><span class="questionTitle" style="padding-right: 20px"></span><span id="questionIframeStars"></span></td>
+               <td class="headerAutoHeight_score"><b><span class='scoreTotalFullFeedback'></span></b></td>
+               <td class="headerAutoHeight_button">
+                 <button class="button_return_list" type="button" data-i18n="return" onclick="backToList()" ></button>
                </td>
             </tr>
          </table>
@@ -544,8 +557,8 @@
 </div>
 
 <div id="question-iframe-container" style="display:none" autocomplete="off">
-   <div class="newInterface" style="width:770px;margin:auto;text-align:left;padding: 10px 0 10px">
-      <span class="questionTitle" style="padding-right: 20px"></span><span id="questionStars"></span>
+   <div class="newInterface questionIframeHeader">
+      <span class="questionTitle" style="padding-right: 20px"></span><span id="questionIframeStars"></span>
    </div>
    <iframe src="about:blank" id="question-iframe" scrolling="no" allowfullscreen></iframe>
 </div>
