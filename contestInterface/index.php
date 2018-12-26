@@ -529,7 +529,7 @@
             <tr>
                <td class="headerAutoHeight_logo" data-i18n="[html]top_image_new"></td>
                <td class="headerAutoHeight_time"><b><span class='minutes'></span>:<span class='seconds'></span></b></td>
-               <td class="headerAutoHeight_title"><span class="questionTitle" style="padding-right: 20px"></span><span id="questionIframeStars"></span></td>
+               <td class="headerAutoHeight_title"><span class="questionTitle" style="padding-right: 20px"></span><span id="questionStars"></span></td>
                <td class="headerAutoHeight_score"><b><span class='scoreTotalFullFeedback'></span></b></td>
                <td class="headerAutoHeight_button">
                  <button class="button_return_list" type="button" data-i18n="return" onclick="backToList()" ></button>
