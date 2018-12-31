@@ -369,6 +369,7 @@ $viewsModels = array(
          "team" => array("srcTable" => "contestant", "srcField" => "teamID", "dstField" => "ID"),
          "full_groups" => array("srcTable" => "team", "srcField" => "groupID", "dstField" => "ID"),
          "contest" => array("srcTable" => "full_groups", "srcField" => "contestID", "dstField" => "ID"),
+         "algorea_registration" => array("type" => "LEFT", "srcTable" => "contestant", "srcField" => "ID", "dstField" => "contestantID")
       ),
       "fields" => array(
          "schoolID" => array("tableName" => "full_groups", "access" => array("write" => array(), "read" => array("user")), "groupBy" => "`contestant`.`ID`"),
@@ -382,11 +383,10 @@ $viewsModels = array(
          "score" => array("tableName" => "team"),
          "nbContestants" => array("tableName" => "team"),
          "rank" => array(),
+         "category" => array("tableName" => "algorea_registration", "fieldName" => "category", "type" => "string"),
          "email" => array(),
          "zipCode" => array(),
          "studentId" => array(),
-         "level" => array("tableName" => "contest"),
-         "algoreaCode" => array(),
          "schoolRank" => array(),
          "userID" => array("tableName" => "full_groups"),
          "groupID" => array("tableName" => "team"),
@@ -413,6 +413,7 @@ $viewsModels = array(
          "contest" => array("srcTable" => "full_groups", "srcField" => "contestID", "dstField" => "ID"),
          "school" => array("srcTable" => "full_groups", "srcField" => "schoolID", "dstField" => "ID"),
          "grade" => array("srcTable" => "contestant", "srcField" => "grade", "dstField" => "ID"),
+         "algorea_registration" => array("type" => "LEFT", "srcTable" => "contestant", "srcField" => "ID", "dstField" => "contestantID")
       ),
       "fields" => array(
          "schoolID" => array("tableName" => "full_groups", "access" => array("write" => array(), "read" => array("user")), "groupBy" => "`contestant`.`ID`"),
@@ -431,6 +432,7 @@ $viewsModels = array(
          "nbContestants" => array("tableName" => "team"),
          "rank" => array(),
          "qualificationCode" => array("fieldName" => "algoreaCode"),
+         "category" => array("tableName" => "algorea_registration", "fieldName" => "category", "type" => "string"),
          "email" => array(),
          "zipCode" => array(),
       ),

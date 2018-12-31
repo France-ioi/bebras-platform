@@ -322,6 +322,7 @@ function initModels(isLogged) {
                },
                edittype: "select", stype: "select"},
             rank: {label: t("contestant_rank_label"), editable: false, width:150},
+            category: {label: t("contestant_category_label"), editable: false, search: true, width: 130},
             email: {label: t("contestant_email_label"), editable: true, edittype: "text", width:150},
             zipCode: {label: t("contestant_zipCode_label"), editable: true, edittype: "text", width:150}
          }
@@ -1067,10 +1068,10 @@ function continueLogUser() {
          $("#tabs-teams").hide();
       }
       if (state !== 'normal') {
-         $("#li-tabs-awards").hide();
          $("#li-tabs-certificates").hide();
          $("#tabs-certificates").hide();
       }      
+      $("#li-tabs-awards").hide();
       $("#tabs-questions").hide();
       $("#tabs-contests").hide();
       if (state === 'normal') {
