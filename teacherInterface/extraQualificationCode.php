@@ -83,7 +83,7 @@ while ($row = $stmt->fetchObject()) {
    echo "<tr><td>".$row->name."</td>".
       "<td>".$row->lastName."</td>".
       "<td>".$row->firstName."</td>".
-      "<td>".$grades[$row->grade]."</td>".
+      "<td>".translate("grade_short_".$row->grade)."</td>".
       "<td>".$row->code."</td>".
       "<td>".$row->category."</td>".
       "</tr>";
@@ -116,7 +116,7 @@ echo "</select>".
 echo "</select>".
      "</td></tr>".
    "</table>".
-   "<input type='submit' value='".translate("codes_validate")." />".
+   "<input type='submit' value='".translate("codes_validate")."' />".
    "</form>";
 
    script_tag('/bower_components/i18next/i18next.min.js');
