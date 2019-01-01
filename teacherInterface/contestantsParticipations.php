@@ -77,7 +77,8 @@ if ($mergeCodes) {
 echo "</ul>";
 echo "<p>".translate("results_students_may_appear_twice")."</p>";
 
-$allContestIDs = ["118456124984202960","884044050337033997","112633747529078424", "404363140821714044"];
+$mainContestID = "822122511136074554";
+$allContestIDs = ["822122511136074554","337033997884044050"];
 
 $query = "SELECT ID, name FROM contest WHERE ID IN (".join(",", $allContestIDs).")";
 $stmt = $db->prepare($query);
@@ -227,7 +228,7 @@ while ($row = $stmt->fetchObject()) {
           "results" => array()
       );
    }
-   if ($row->contestID == "118456124984202960") {
+   if ($row->contestID == $mainContestID) {
       $contestants[$row->ID]["infos"]["bebrasGroup"] = $row->groupName;
    }
    if (!isset($contestants[$row->ID]["results"][$contestKey])) {
@@ -272,7 +273,9 @@ foreach ($schools as $schoolID => $school) {
       }
       echo ">".$mainContestsNames[$mainContestKey]."</td>";
    }
+   /*
    echo "<td rowspan=2 style='width:70px'>".translate("results_semi_finals")."</td>";
+   */
    echo "</tr><tr>";
    foreach ($contestIDs as $mainContestKey) {
       if (!isset($contests[$mainContestKey])) {
@@ -331,6 +334,7 @@ foreach ($schools as $schoolID => $school) {
             showContestantResult($contestant, $categoryContests[""], "");
          }
       }
+      /*
       echo "<td>";
       if ($contestant["infos"]["round"] == "1") {
          $score = $contestant["infos"]["scoreDemi2018"];
@@ -355,6 +359,7 @@ foreach ($schools as $schoolID => $school) {
          echo "-";
       }
       echo "</td>";
+      */
       echo "</tr>";
    }
 

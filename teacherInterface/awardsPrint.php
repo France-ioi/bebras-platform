@@ -14,9 +14,9 @@ if ($config->customStringsName) {
   $strings = array_merge($strings, $customStrings);
 }
 
-$model = getViewModel('award1');
+$model = getViewModel('contestant');
 $request = array(
-   "modelName" => 'award1',
+   "modelName" => 'contestant',
    "model" => $model,
    "filters" => array()
 );
@@ -155,12 +155,12 @@ foreach($awarded as $contestant) {
    $strTable .= '<td>'.$contestant->groupName.'</td>';
    $strTable .= '<td>'.$contestant->firstName.'</td>';
    $strTable .= '<td>'.$contestant->lastName.'</td>';
-   $strTable .= '<td>'.$contestant->algoreaCode.'</td>';
-   $strTable .= '<td>'.$contestant->algoreaCategory.'</td>';
-   $strCertificates .= '<p class="schoolName">'.$contestant->name.'</p>'; // name of the school
-   $strCertificates .= '<p>'.translate("secret_participation_code").' <span class="code">'.$contestant->algoreaCode.'</span></p>';
-   if ($contestant->algoreaCategory) {
-      $strCertificates .= '<p>'.translate("contestant_category_label").' <span class="code">'.$contestant->algoreaCategory.'</span></p>';
+   $strTable .= '<td>'.$contestant->qualificationCode.'</td>';
+   $strTable .= '<td>'.$contestant->category.'</td>';
+   $strCertificates .= '<p class="schoolName">'.$contestant->schoolName.'</p>'; // name of the school
+   $strCertificates .= '<p>'.translate("secret_participation_code").' <span class="code">'.$contestant->qualificationCode.'</span></p>';
+   if ($contestant->category) {
+      $strCertificates .= '<p>'.translate("contestant_category_label").' <span class="code">'.$contestant->category.'</span></p>';
    }
    $strCertificates .= '<p class="small">'.$secondLine.'</p>';
    $strCertificates .= '<p class="small">'.$thirdLine.'</p>';

@@ -318,7 +318,7 @@ $viewsModels = array(
          "city" => array("tableName" => "school"),
          "name" => array("tableName" => "school"),
          "algoreaCode" => array("tableName" => "contestant"),
-         "algoreaCategory" => array("tableName" => "contestant"),
+         "algoreaCategory" => array("tableName" => "algorea_registration", "fieldName" => "category"),
          "franceioiID" => array("tableName" => "algorea_registration"),
          "groupName" => array("tableName" => "full_groups", "fieldName" => "name")
       ),
@@ -368,6 +368,7 @@ $viewsModels = array(
       "joins" => array(
          "team" => array("srcTable" => "contestant", "srcField" => "teamID", "dstField" => "ID"),
          "full_groups" => array("srcTable" => "team", "srcField" => "groupID", "dstField" => "ID"),
+         "school" => array("srcTable" => "full_groups", "srcField" => "schoolID", "dstField" => "ID"),
          "contest" => array("srcTable" => "full_groups", "srcField" => "contestID", "dstField" => "ID"),
          "algorea_registration" => array("type" => "LEFT", "srcTable" => "contestant", "srcField" => "ID", "dstField" => "contestantID")
       ),
@@ -390,6 +391,9 @@ $viewsModels = array(
          "schoolRank" => array(),
          "userID" => array("tableName" => "full_groups"),
          "groupID" => array("tableName" => "team"),
+         "qualificationCode" => array("fieldName" => "algoreaCode"),
+         "groupName" => array("tableName" => "full_groups", "fieldName" => "name"),         
+         "schoolName" => array("tableName" => "school", "fieldName" => "name"),         
       ),
       "filters" => array(
          "groupField" => $fieldGroupFilter,
@@ -401,7 +405,15 @@ $viewsModels = array(
          "schoolID" => array("joins" => array("full_groups"), "condition" => "`full_groups`.`schoolID` = :schoolID"),
          "userID" => array("joins" => array("full_groups"), "condition" => "(`full_groups`.`userID` = :userID OR `full_groups`.`targetUserID` = :userID)"),
          "ownerUserID" => array("joins" => array("full_groups"), "condition" => "`full_groups`.`userID` = :[PREFIX_FIELD]ownerUserID"),
+         "awarded" => array("joins" => array("team", "algorea_registration"), "ignoreValue" => true, "condition" => "(`[PREFIX]team`.`participationType` = 'Official' and `[PREFIX]algorea_registration`.`code` is not null)"),
+         "printable" => array("joins" => array("contest"), "condition" => "`[PREFIX]contest`.`printCodes` = 1", "ignoreValue" => true)
       ),
+      'orders' => array(
+         array('field' => 'contestID'),
+         array('field' => 'groupField'),
+         array('field' => 'lastName'),
+         array('field' => 'firstName'),
+      )
    ),
    
    "contestantCSV" => array(

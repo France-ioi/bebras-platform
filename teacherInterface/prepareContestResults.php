@@ -1515,12 +1515,3 @@ if ($action == "updateAlgoreaRanks") {
           WHERE `c1`.`ID` = `c2`.`ID`",
           array());
 }
-
-
-
-/*
-Tool to make some groups official
-
-UPDATE `group` SET participationType = 'Official' WHERE code IN ('#vypsrd5r', 'kdmr36y6', 'Uxhfagua', '#Uxhfagua', 'vypsrd5r');
-UPDATE `group` JOIN team ON team.groupID = `group`.ID SET team.participationType = 'Official' WHERE code IN ('#vypsrd5r', 'kdmr36y6', 'Uxhfagua', '#Uxhfagua', 'vypsrd5r');
-*/
