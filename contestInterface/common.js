@@ -763,6 +763,10 @@ var questionIframe = {
     * Run the task, should be called only by the loadQuestion function
     */
    run: function(taskViews, callback) {
+      // Reset autoHeight-related styles
+      $('body').removeClass('autoHeight');
+      $('#container', questionIframe.doc).css('padding', '5px');
+
       TaskProxyManager.getTaskProxy('question-iframe', withTask, true);
       function withTask (task) {
         questionIframe.task = task;
@@ -780,6 +784,7 @@ var questionIframe = {
               questionIframe.autoHeight = !!metaData.autoHeight;
               if(questionIframe.autoHeight) {
                  $('body').addClass('autoHeight');
+                 $('#container', questionIframe.doc).css('padding', '');
                  toggleMetaViewport(true);
                  questionIframe.updateHeight();
               }
