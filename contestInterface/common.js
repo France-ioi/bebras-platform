@@ -1449,6 +1449,7 @@ function setupContest(data) {
 */
 function loadContestData(contestID, contestFolder, groupPassword)
 {
+   $('#browserAlert').hide();
    $("#divImagesLoading").show();
    questionIframe.initialize(function() {
       if (fullFeedback) {
@@ -1853,6 +1854,7 @@ window.startPreparation = function() {
 window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, language, startOfficial) {
    Utils.disableButton("button" + curStep);
    $('#recoverGroup').hide();
+   $('#browserAlert').hide();
    $("#" + curStep + "Result").html('');
    $.post("data.php", {SID: SID, action: "checkPassword", password: groupCode, getTeams: getTeams, language: language, startOfficial: startOfficial, commonJsVersion: commonJsVersion, timestamp: window.timestamp, commonJsTimestamp: commonJsTimestamp},
       function(data) {
