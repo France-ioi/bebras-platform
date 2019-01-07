@@ -267,6 +267,26 @@ function inArray(arr, value) {
     return -1;
 }
 
+
+/**
+ * Add or remove the meta viewport tag
+ *
+ * @param {bool} toggle
+ */
+function toggleMetaViewport(toggle) {
+   if(toggle) {
+      if($('meta[name=viewport]').length) { return; }
+      // Add
+      var metaViewport = document.createElement('meta');
+      metaViewport.name = "viewport";
+      metaViewport.content = "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no";
+      document.getElementsByTagName('head')[0].appendChild(metaViewport);
+   } else {
+      // Remove
+      $('meta[name=viewport]').remove();
+   }
+}
+
 /**
  * The platform object as defined in the Bebras API specifications
  *
@@ -597,6 +617,7 @@ var questionIframe = {
       this.tbody = this.doc.getElementsByTagName('body')[0];
       this.autoHeight = false;
       $('body').removeClass('autoHeight');
+      toggleMetaViewport(false);
 
       this.setHeight(0);
       this.body.css('width', '782px');
@@ -742,6 +763,10 @@ var questionIframe = {
     * Run the task, should be called only by the loadQuestion function
     */
    run: function(taskViews, callback) {
+      // Reset autoHeight-related styles
+      $('body').removeClass('autoHeight');
+      $('#container', questionIframe.doc).css('padding', '5px');
+
       TaskProxyManager.getTaskProxy('question-iframe', withTask, true);
       function withTask (task) {
         questionIframe.task = task;
@@ -759,6 +784,8 @@ var questionIframe = {
               questionIframe.autoHeight = !!metaData.autoHeight;
               if(questionIframe.autoHeight) {
                  $('body').addClass('autoHeight');
+                 $('#container', questionIframe.doc).css('padding', '');
+                 toggleMetaViewport(true);
                  questionIframe.updateHeight();
               }
            });
@@ -2409,6 +2436,7 @@ function closeContest(message) {
    Utils.disableButton("buttonClose");
    Utils.disableButton("buttonCloseNew");
    $('body').removeClass('autoHeight');
+   toggleMetaViewport(false);
    $("#divQuestions").hide();
    hideQuestionIframe();
    if (questionIframe.task) {
@@ -2683,6 +2711,7 @@ function fillNextQuestionID(sortedQuestionsIDs) {
 
 window.backToList = function(initial) {
    $('body').removeClass('autoHeight');
+   toggleMetaViewport(false);
    $(".questionListIntro").show();
    $(".questionList").show();
    $(".buttonClose").show();
