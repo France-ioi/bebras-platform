@@ -781,43 +781,63 @@ if ($action == "detectDuplicates") {
    execQueryAndShowNbRows("Detect and store duplicate contestants", "
       INSERT IGNORE INTO duplicate_contestants (contestant1ID, contestant2ID)
       SELECT ID, duplicateID FROM (
-         SELECT `contestant`.ID,
-         @duplicateContestantID := IF(@prevFirstName=`contestant`.firstName AND @prevLastName = `contestant`.lastName AND @prevSchoolID = `contestant`.cached_schoolID AND (`contest`.`categoryColor` IS NULL OR @prevCategoryColor = `contest`.`categoryColor`), @prevID, NULL) AS duplicateID, 
-         @prevFirstName := contestant.firstName,
-         @prevLastName := contestant.lastName,
-         @prevSchoolID := contestant.cached_schoolID,
-         @prevCategoryColor := contest.categoryColor,
-         @prevID := contestant.ID
-         FROM contestant
+         SELECT `conts`.ID,
+         @duplicateContestantID := IF(@prevFirstName=`conts`.firstName AND @prevLastName = `conts`.lastName AND @prevSchoolID = `conts`.cached_schoolID AND (`conts`.`categoryColor` IS NULL OR @prevCategoryColor = `conts`.`categoryColor`), @prevID, NULL) AS duplicateID, 
+         @prevFirstName := conts.firstName,
+         @prevLastName := conts.lastName,
+         @prevSchoolID := conts.cached_schoolID,
+         @prevCategoryColor := conts.categoryColor,
+         @prevID := conts.ID
+         FROM
+         (SELECT contestant.*, contest.categoryColor FROM 
+         contestant
          JOIN `team` ON contestant.teamID = team.ID
          JOIN `group` ON `team`.groupID = `group`.`ID`
          JOIN `contest` ON `group`.contestID = contest.ID
          WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
-         AND team.score IS NULL
          AND tmpIsOfficial = 1
-         ORDER BY contestant.cached_schoolID DESC , contestant.firstName DESC , contestant.lastName DESC, contest.categoryColor DESC
-      ) tmp WHERE duplicateID IS NOT NULL",
+         ORDER BY contestant.cached_schoolID DESC , contestant.firstName DESC , contestant.lastName DESC, contest.categoryColor DESC) conts,
+         (
+            SELECT
+            @prevFirstName := 0,
+            @prevLastName := 0,
+            @prevSchoolID := 0,
+            @prevCategoryColor := 0,
+            @prevID := 0,
+            @num := 0
+         ) tmp1
+         ) tmp2  WHERE duplicateID IS NOT NULL",
       array("contestID" => $contestID));
          
    execQueryAndShowNbRows("Detect and store duplicate contestants (reverse order)", "
       INSERT IGNORE INTO duplicate_contestants (contestant1ID, contestant2ID)
       SELECT ID, duplicateID FROM (
-         SELECT `contestant`.ID,
-         @duplicateContestantID := IF(@prevFirstName=`contestant`.firstName AND @prevLastName = `contestant`.lastName AND @prevSchoolID = `contestant`.cached_schoolID AND (`contest`.`categoryColor` IS NULL OR @prevCategoryColor = `contest`.`categoryColor`), @prevID, NULL) AS duplicateID, 
-         @prevFirstName := contestant.firstName,
-         @prevLastName := contestant.lastName,
-         @prevSchoolID := contestant.cached_schoolID,
-         @prevCategoryColor := contest.categoryColor,
-         @prevID := contestant.ID
-         FROM contestant
+         SELECT `conts`.ID,
+         @duplicateContestantID := IF(@prevFirstName=`conts`.firstName AND @prevLastName = `conts`.lastName AND @prevSchoolID = `conts`.cached_schoolID AND (`conts`.`categoryColor` IS NULL OR @prevCategoryColor = `conts`.`categoryColor`), @prevID, NULL) AS duplicateID, 
+         @prevFirstName := conts.firstName,
+         @prevLastName := conts.lastName,
+         @prevSchoolID := conts.cached_schoolID,
+         @prevCategoryColor := conts.categoryColor,
+         @prevID := conts.ID
+         FROM
+         (SELECT contestant.*, contest.categoryColor FROM 
+         contestant
          JOIN `team` ON contestant.teamID = team.ID
          JOIN `group` ON `team`.groupID = `group`.`ID`
          JOIN `contest` ON `group`.contestID = contest.ID
          WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
-         AND team.score IS NULL
          AND tmpIsOfficial = 1
-         ORDER BY contestant.cached_schoolID ASC, contestant.firstName ASC, contestant.lastName ASC, contest.categoryColor ASC
-         ) tmp WHERE duplicateID IS NOT NULL",
+         ORDER BY contestant.cached_schoolID ASC , contestant.firstName ASC , contestant.lastName ASC, contest.categoryColor ASC) conts,
+         (
+            SELECT
+            @prevFirstName := 0,
+            @prevLastName := 0,
+            @prevSchoolID := 0,
+            @prevCategoryColor := 0,
+            @prevID := 0,
+            @num := 0
+         ) tmp1
+         ) tmp2  WHERE duplicateID IS NOT NULL",
       array("contestID" => $contestID));
 
    execQueryAndShowNbRows("Mark duplicate contestants types as former vs latter 1/4", "
@@ -925,7 +945,7 @@ if ($action == "removeFailed") {
       AND team.groupID != :discardedGroupID",
       array("contestID" => $contestID, "discardedGroupID" => $discardedGroupID));
 
-   execQueryAndShowNbRows("Save original group of failed participations", "
+   execQueryAndShowNbRows("Move failed participations to discard group", "
       # on les déplace dans le groupe spécial
       UPDATE team
       JOIN `group` ON `team`.`groupID` = `group`.ID
@@ -1071,6 +1091,17 @@ echo "<p>In the database: set contest.printCode, contest.showResults, and contes
 
 echo "<p>To allocate algoreaCodes, insert records such as INSERT INTO award_threshold (contestID, gradeID, awardID, nbContestants, minScore) VALUES ([contestID], 4, 1, 2, 0) for each contest</p>";
 
+echo "<h3><a href='".$startUrl."&action=cleanRanksUnofficial'>Remove ranks of unofficial participants.</a></h3>";
+if ($action == "cleanRanksUnofficial") {
+   execSelectAndShowResults("Remove ranks of unofficial participants", "
+      UPDATE contestant
+      JOIN team ON contestant.teamID = team.ID
+      JOIN `group` ON team.groupID = `group`.ID
+      JOIN `contest` ON `group`.contestID = contest.ID
+      SET rank = NULL, schoolRank = NULL
+      WHERE team.participationType = 'Unofficial'
+      AND (contest.ID = :contestID OR contest.parentContestID = :contestID)",
+      array("contestID" => $contestID));
 
 echo "<h3><a href='".$startUrl."&action=studyZeroes'>Study cases of teams with 0 points.</a></h3>";
 if ($action == "studyZeroes") {
