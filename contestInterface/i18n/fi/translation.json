@@ -1,7 +1,7 @@
 {
     "general_page_title": "Tietotekniikan Majava-kilpailu - kilpailujärjestelmä",
     "general_instructions": "Lisää tietoa Tietotekniikan Majava-kilpailusta löydät <a href='http://www.majava-kilpailu.fi'>Tietotekniikan Majava-kilpailun kotisivulta</a>.",
-    "browser_support": "<p>Kilpailujärjestelmä toimii seuraavilla selaimilla:</p><ul><li>Google Chrome versio 5.0 ja uudempi ;</li><li>Firefox versio 3.6 ja uudempi ;</li><li>Internet Explorer versio 8.0 ja uudempi ;</li><li>Safari versio 3.0 ja uudempi (toimii iPad-laitteella).</li></ul>",
+    "browser_support_bebras-platform": "<p>Kilpailujärjestelmä toimii seuraavilla selaimilla:</p><ul><li>Google Chrome versio 5.0 ja uudempi ;</li><li>Firefox versio 3.6 ja uudempi ;</li><li>Internet Explorer versio 8.0 ja uudempi ;</li><li>Safari versio 3.0 ja uudempi (toimii iPad-laitteella).</li></ul>",
     "general_choice": "Valitse:",
     "general_start_contest": "Aloita kilpaileminen koulussa",
     "general_public_contests": "Harjoittele kotona, tutustu aiempiin kilpailutehtäviin",

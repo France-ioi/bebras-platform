@@ -1,7 +1,11 @@
 {
     "general_page_title": "Concours Castor Informatique — Plateforme",
     "general_instructions": "Pour accéder à une présentation générale du concours Castor Informatique, allez sur <a href=\"http://castor-informatique.fr\">la page d'accueil</a>.",
-    "browser_support": "<p>La plateforme fonctionne avec les navigateurs web suivants :</p><ul><li>Google Chrome à partir de la version 5.0 ;</li><li>Firefox à partir de la version 3.6 ;</li><li>Internet Explorer à partir de la version 8.0 ;</li><li>Safari à partir de la version 3.0 (fonctionne sur iPad).</li></ul>",
+    "browser_support_bebras-platform": "<p>La plateforme fonctionne avec les navigateurs web suivants :</p><ul><li>Google Chrome à partir de la version 5.0 ;</li><li>Firefox à partir de la version 3.6 ;</li><li>Internet Explorer à partir de la version 8.0 ;</li><li>Safari à partir de la version 3.0 (fonctionne sur iPad).</li></ul>",
+    "browser_support_quickAlgo": "<p>Le concours Algoréa fonctionne avec les navigateurs web suivants :</p><ul><li>Google Chrome à partir de la version 35 ;</li><li>Firefox à partir de la version 43 ;</li><li>Microsoft Edge à partir de la version 12 ;</li><li>Safari à partir de la version 9.</li></ul>",
+    "browser_support_confirm": "Votre navigateur n'étant pas supporté, le concours pourrait mal fonctionner voire pas du tout. Nous vous conseillons vivement d'utiliser un navigateur à jour, par exemple Chrome.<br>Êtes-vous sûr(e) de vouloir participer quand même ?",
+    "browser_support_old": "Votre navigateur n'est pas à jour. Nous vous conseillons de le mettre à jour avant de commencer le concours.",
+    "browser_support_confirm_btn": "J'ai compris, essayer quand même",
     "general_start_contest": "Commencer un concours avec un code",
     "general_public_contests": "S'entraîner (sans code)",
     "general_continue_contest": "Continuer le concours juste après une interruption",

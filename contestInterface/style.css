@@ -114,6 +114,7 @@ a {
 #mainContent {
   margin-left: 20px;
 }
+
 #browserAlert {
   color: #8a6d3b;
   width: 500px;
@@ -123,6 +124,26 @@ a {
   border: 1px solid #faebcc;
   border-radius: 6px;
 }
+#submitParticipationCode .browserConfirm {
+  display: none;
+}
+#submitParticipationCode.needBrowserConfirm .browserConfirm {
+  display: block;
+}
+#submitParticipationCode.needBrowserConfirm .divInput {
+  display: none;
+}
+.browserConfirm {
+  color: #8a6d3b;
+  margin: 8px;
+  padding: 16px;
+  width: 600px;
+  background-color: #fcf8e3;
+  border: 1px solid #faebcc;
+  border-radius: 6px;
+  text-align: justify;
+}
+
 .tabTitle {
   font-size: 2em;
   font-family:"Century Gothic", "Trebuchet MS", "Arial Narrow", Arial, sans-serif;

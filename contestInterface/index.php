@@ -20,7 +20,37 @@
 </div>
 <form id="mainContent" autocomplete="off">
 
-  <div id="browserAlert" data-i18n="[html]browser_support"></div>
+<?php
+// Check browser version
+$browserVerified = true;
+$browserOld = false;
+if($config->contestInterface->browserCheck) {
+  require_once __DIR__.'/../vendor/autoload.php';
+  $browser = new WhichBrowser\Parser($_SERVER['HTTP_USER_AGENT']);
+  if($config->contestInterface->browserCheck == 'bebras-platform') {
+    $browserVerified = $browser->isBrowser('Firefox', '>=', '3.6') ||
+         $browser->isBrowser('Chrome', '>=', '5') ||
+         $browser->isBrowser('Safari', '>=', '9') ||
+         $browser->isBrowser('Internet Explorer', '>=', '8') ||
+         $browser->isBrowser('Edge');
+  } elseif($config->contestInterface->browserCheck == 'quickAlgo') {
+    $browserVerified = $browser->isBrowser('Firefox', '>=', '43') ||
+         $browser->isBrowser('Chrome', '>=', '35') ||
+         $browser->isBrowser('Safari', '>=', '9') ||
+         $browser->isBrowser('Edge', '>=', '12');
+  }
+  $browserOld = $browser->isBrowser('Firefox', '<', '60') ||
+                $browser->isBrowser('Chrome', '<', '64') ||
+                $browser->isBrowser('Safari', '<', '11') ||
+                $browser->isBrowser('Edge', '<', '41') ||
+                $browser->isBrowser('Internet Explorer');
+}
+
+if(!$browserVerified) {
+    // The message changes depending on the browserCheck value
+    echo '<div id="browserAlert" data-i18n="[html]browser_support_' . $config->contestInterface->browserCheck . '"></div>';
+}
+?>
 
 
   <nav id="mainNav">
@@ -60,9 +90,13 @@
     <p>Pour <b>voir votre score détaillé</b> si vous avez participé au concours 2012, cliquez sur "Continuer le concours" et saisissez votre code personnel fourni au début de l'épreuve. Vous aurez aussi accès aux réponses et à une <b>correction détaillée</b> en dessous de chaque question.</p>
     <h3>Vous démarrez un concours en classe, pour la première fois ?</h3>
     -->
-    <div id="submitParticipationCode">
+    <div id="submitParticipationCode" <?=(!$browserVerified || $browserOld) ? 'class="needBrowserConfirm"' : '' ?>>
       <div class="tabTitle" data-i18n="general_start_contest"></div>
       <p class="stepName" data-i18n="[html]tab_start_contest_enter_code"></p>
+      <div class="browserConfirm">
+        <span data-i18n="[html]<?=$browserVerified ? 'browser_support_old' : 'browser_support_confirm'?>"></span><br>
+        <button type="button" onclick="confirmUnsupportedBrowser()" data-i18n="browser_support_confirm_btn" class="btn btn-primary"></button>
+      </div>
       <div class="divInput form-inline">
         <input id="groupCode" type="text" class="form-control" autocorrect="off" autocapitalize="none"/>
         <button type="button" id="buttonCheckGroup" onclick="checkGroup()" data-i18n="tab_start_contest_start_button" class="btn btn-primary"></button>
@@ -669,29 +703,4 @@ window.contestsRoot = <?= json_encode(upgrade_url($config->teacherInterface->sAb
 window.ieMode = true;
 </script>
 <![endif]-->
-<script type="text/javascript">
-  var browser_support = true;
-  if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
-    var ffversion=new Number(RegExp.$1);
-    if (ffversion<3.6) var browser_support = false;
-  }
-  else if (/Chrome[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
-    var chversion=new Number(RegExp.$1);
-    if (chversion<5) var browser_support = false;
-  }
-  else if (/Safari[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
-    var sfversion=new Number(RegExp.$1);
-    if (sfversion<3) var browser_support = false;
-  }
-  else if (navigator.userAgent.indexOf('MSIE') != -1) {
-    var detectIEregexp = /MSIE (\d+\.\d+);/;
-    if (detectIEregexp.test(navigator.userAgent)){
-      var ieversion=new Number(RegExp.$1);
-      if (ieversion<8) var browser_support = false;
-    }
-  }
-  if (browser_support) {
-    $('#browserAlert').hide();
-  }
-</script>
 </body></html>

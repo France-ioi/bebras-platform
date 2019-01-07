@@ -1,7 +1,7 @@
 {
     "general_page_title": "Bebras - la platforma",
     "general_instructions": "Para una impresión general del Concurso Bebras, diríjase a <a href=\"http://castor-informatique.fr\">la página principal Francesa</a>.",
-    "browser_support": "<p>La plataforma funciona con los siguientes navegadores :</p><ul><li>Google Chrome versions 5.0 o más ;</li><li>Firefox versions 3.6 o más ;</li><li>Internet Explorer versions 8.0 y arriba ;</li><li>Safari versions 3.0 o más (funciona en iPads).</li></ul>",
+    "browser_support_bebras-platform": "<p>La plataforma funciona con los siguientes navegadores :</p><ul><li>Google Chrome versions 5.0 o más ;</li><li>Firefox versions 3.6 o más ;</li><li>Internet Explorer versions 8.0 y arriba ;</li><li>Safari versions 3.0 o más (funciona en iPads).</li></ul>",
     "general_choice": "Escoja una opción:",
     "general_start_contest": "Iniciar un concurso en la escuela",
     "general_public_contests": "Practicar en casa Ver concursos pasados",

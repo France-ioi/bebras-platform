@@ -1533,6 +1533,13 @@ window.setNbImagesLoaded = function(content) {
 // Team connexion
 
 /*
+ * Called when confirming a participation from an unsupported browser
+ */
+window.confirmUnsupportedBrowser = function() {
+   $("#submitParticipationCode").removeClass('needBrowserConfirm');
+};
+
+/*
  * Called when starting a contest by providing a group code on the main page.
 */
 window.checkGroup = function() {

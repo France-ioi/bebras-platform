@@ -1,7 +1,7 @@
 {
     "general_page_title": "Bebras - Databävern",
     "general_instructions": "För information om Databävern se <a href=\"http://bebras.se\">den gamla svenska sidan</a>.",
-    "browser_support": "<p>Platformen fungerar med följande webbläsare :</p><ul><li>Google Chrome version 5.0 och uppåt ;</li><li>Firefox version 3.6 och uppåt ;</li><li>Internet Explorer version 8.0 och uppåt ;</li><li>Safari version 3.0 och uppåt (fungerar på iPad).</li></ul>",
+    "browser_support_bebras-platform": "<p>Platformen fungerar med följande webbläsare :</p><ul><li>Google Chrome version 5.0 och uppåt ;</li><li>Firefox version 3.6 och uppåt ;</li><li>Internet Explorer version 8.0 och uppåt ;</li><li>Safari version 3.0 och uppåt (fungerar på iPad).</li></ul>",
     "general_choice": "Välj:",
     "general_start_contest": "Starta en tävling på skolan",
     "general_public_contests": "Träna på egen hand, se tidigare tävlingar",

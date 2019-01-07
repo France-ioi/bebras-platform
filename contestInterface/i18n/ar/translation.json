@@ -1,7 +1,7 @@
 {
     "general_page_title": "مسابقة القندس الدولية - مصر",
     "general_instructions": "",
-    "browser_support": "<p>The platform works with the following web browsers :</p><ul><li>Google Chrome versions 5.0 and up ;</li><li>Firefox versions 3.6 and up ;</li><li>Internet Explorer versions 8.0 and up ;</li><li>Safari versions 3.0 and up (works on iPad).</li></ul>",
+    "browser_support_bebras-platform": "<p>The platform works with the following web browsers :</p><ul><li>Google Chrome versions 5.0 and up ;</li><li>Firefox versions 3.6 and up ;</li><li>Internet Explorer versions 8.0 and up ;</li><li>Safari versions 3.0 and up (works on iPad).</li></ul>",
     "general_choice": "اختر",
     "general_start_contest": "ابدأ المسابقة في المدرسة",
     "general_public_contests": "تدرب في المنزل أو شاهد المسابقات السابقة",
