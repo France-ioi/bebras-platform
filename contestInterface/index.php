@@ -450,8 +450,8 @@
    </table>
    </p>
    <p id="contestAtHomePrevented" style="display:none">
-       Votre enseignant à indiqué que le concours officiel doit se faire en classe, avec un code de groupe.<br/>
-       Vous ne pouvez donc pas commencer le concours depuis cette interface, mais cous pouvez faire des préprations à la maison.
+       Votre enseignant a indiqué que le concours officiel doit se faire en classe, avec un code de groupe.<br/>
+       Vous ne pouvez donc pas commencer le concours depuis cette interface, mais vous pouvez faire des préparations à la maison.
    </p>
    <h3>Participations :</h3>
    <table id="pastParticipations" cellspacing=0>
