@@ -6,6 +6,7 @@
     "browser_support_confirm": "Votre navigateur n'étant pas supporté, le concours pourrait mal fonctionner voire pas du tout. Nous vous conseillons vivement d'utiliser un navigateur à jour, par exemple Chrome.<br>Êtes-vous sûr(e) de vouloir participer quand même ?",
     "browser_support_old": "Votre navigateur n'est pas à jour. Nous vous conseillons de le mettre à jour avant de commencer le concours.",
     "browser_support_confirm_btn": "J'ai compris, essayer quand même",
+    "browser_redirect_scratch_to_blockly": "Scratch ne fonctionne pas sur tablette. Blockly va donc être utilisé. Il ressemble beaucoup à Scratch.",
     "general_start_contest": "Commencer un concours avec un code",
     "general_public_contests": "S'entraîner (sans code)",
     "general_continue_contest": "Continuer le concours juste après une interruption",

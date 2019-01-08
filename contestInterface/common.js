@@ -9,6 +9,16 @@ var commonJsVersion = 2;
 // Timestamp of common.js initial loading, sent on checkPassword too
 var commonJsTimestamp = Date();
 
+// Redirections from Scratch contests to Blockly versions when user is on a
+// mobile device
+var scratchToBlocklyContestID = {
+//  "223556559616198459": "40284639530086786", // 2019.1 white
+  "604034698343183586": "503470753157869958", // 2019.1 yellow
+  "719201791586950565": "727677046248069693", // 2019.1 orange
+  "714570819714244963": "185545119426515177" // 2019.1 green
+};
+
+
 var contestID;
 var contestFolder;
 var contestVisibility;
@@ -2027,6 +2037,12 @@ window.getContest = function(ID) {
 window.selectContest = function(ID) {
    $("#selectContest").delay(250).slideUp(400).queue(function() {
       $(this).dequeue();
+      if (window.browserIsMobile && typeof scratchToBlocklyContestID[ID] != 'undefined') {
+         alert(t("browser_redirect_scratch_to_blockly"));
+         ID = scratchToBlocklyContestID[ID];
+         selectedLanguage = 'blockly';
+         setContestBreadcrumb();
+      }
       var contest = window.getContest(ID);
       contestID = ID;
       contestFolder = contest.folder;
@@ -2209,6 +2225,13 @@ window.validateLoginForm = function() {
  * Creates a new team using contestants information
 */
 function createTeam(contestants) {
+   if (window.browserIsMobile && typeof scratchToBlocklyContestID[contestID] != 'undefined') {
+      alert(t("browser_redirect_scratch_to_blockly"));
+      contestID = scratchToBlocklyContestID[contestID];
+      var contest = window.getContest(contestID);
+      contestFolder = contest.folder;
+      customIntro = contest.customIntro;
+   }
    $.post("data.php", {SID: SID, action: "createTeam", contestants: contestants, contestID: contestID},
       function(data) {
          teamID = data.teamID;

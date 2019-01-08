@@ -21,7 +21,7 @@
 <form id="mainContent" autocomplete="off">
 
 <?php
-// Check browser version
+// Check browser parameters
 $browserVerified = true;
 $browserOld = false;
 if($config->contestInterface->browserCheck) {
@@ -53,6 +53,8 @@ if(!$browserVerified) {
     // The message changes depending on the browserCheck value
     echo '<div id="browserAlert" data-i18n="[html]browser_support_' . $config->contestInterface->browserCheck . '"></div>';
 }
+
+$browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
 ?>
 
 
@@ -670,6 +672,7 @@ if(!$browserVerified) {
   window.sAbsoluteStaticPath = <?= json_encode(upgrade_url($config->teacherInterface->sAbsoluteStaticPath.'/')) ?>;
   window.sAssetsStaticPath = <?= json_encode(upgrade_url($config->teacherInterface->sAssetsStaticPath.'/')) ?>;
   window.timestamp = <?= $config->timestamp ?>;
+  window.browserIsMobile = <?=$browserIsMobile ? 'true' : 'false' ?>;
   try {
     i18n.init(<?= json_encode([
       'lng' => $config->defaultLanguage,

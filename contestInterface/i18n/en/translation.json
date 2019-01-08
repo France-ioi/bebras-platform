@@ -6,6 +6,7 @@
     "browser_support_confirm": "Your browser is unsupported, the contest may not work properly or at all. We advise you strongly to use an up-to-date browser such as Chrome.<br>Are you sure you want to participate anyway?",
     "browser_support_old": "Your browser is not up-to-date. We advise you to update it before starting the contest.",
     "browser_support_confirm_btn": "I understand, try anyway",
+    "browser_redirect_scratch_to_blockly": "Scratch doesn't work on tablets and mobile devices, Blockly will be used instead. It resembles Scratch a lot.",
     "general_choice": "Make your choice:",
     "general_start_contest": "Start a contest at school",
     "general_public_contests": "Practice at home, see past contests",
