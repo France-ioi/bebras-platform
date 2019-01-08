@@ -945,21 +945,25 @@ var questionIframe = {
     * @param {string} questionKey
     */
    load: function(taskViews, questionKey, callback) {
+      var that = this;
+      var cb = function() {
+         showQuestionIframe();
+         that.loadQuestion(taskViews, questionKey, callback);
+      };
       if (this.loaded) {
-         var that = this;
          if (questionIframe.task && questionIframe.task.iframe_loaded) {
             questionIframe.task.unload(function() {
                that.loaded = false;
-               that.loadQuestion(taskViews, questionKey, callback);
+               questionIframe.initialize(cb);
             }, function() {
                logError(arguments);
                that.loaded = false;
-               that.loadQuestion(taskViews, questionKey, callback);
+               questionIframe.initialize(cb);
             });   
          }
          else {
             this.loaded = false;
-            this.loadQuestion(taskViews, questionKey, callback);
+            questionIframe.initialize(cb);
          }
       }
       else {
