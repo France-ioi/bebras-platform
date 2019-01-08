@@ -781,6 +781,15 @@ var questionIframe = {
       function withTask (task) {
         questionIframe.task = task;
         TaskProxyManager.setPlatform(task, platform);
+        task.getMetaData(function(metaData) {
+           questionIframe.autoHeight = !!metaData.autoHeight;
+           if(questionIframe.autoHeight) {
+              $('body').addClass('autoHeight');
+              $('#container', questionIframe.doc).css('padding', '');
+              toggleMetaViewport(true);
+              questionIframe.updateHeight();
+           }
+        });
         task.load(taskViews, function() {
            task.showViews(taskViews, function() {
               if (typeof defaultAnswers[questionIframe.questionKey] == 'undefined') {
@@ -790,15 +799,6 @@ var questionIframe = {
               }
               questionIframe.updateHeight();
            }, logError);
-           task.getMetaData(function(metaData) {
-              questionIframe.autoHeight = !!metaData.autoHeight;
-              if(questionIframe.autoHeight) {
-                 $('body').addClass('autoHeight');
-                 $('#container', questionIframe.doc).css('padding', '');
-                 toggleMetaViewport(true);
-                 questionIframe.updateHeight();
-              }
-           });
         }, logError);
         // Iframe height "hack" TODO: why two timers?
         setTimeout(questionIframe.updateHeight, 500);
