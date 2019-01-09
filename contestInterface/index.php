@@ -596,6 +596,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
 </div>
 
 <div id="question-iframe-container" style="display:none" autocomplete="off">
+   <div class="questionIframeLoading">Chargement en cours...</div>
    <div class="newInterface questionIframeHeader">
       <span class="questionTitle" style="padding-right: 20px"></span><span id="questionIframeStars"></span>
    </div>

@@ -791,6 +791,7 @@ var questionIframe = {
            }
         });
         task.load(taskViews, function() {
+           $('.questionIframeLoading').hide();
            task.showViews(taskViews, function() {
               if (typeof defaultAnswers[questionIframe.questionKey] == 'undefined') {
                  task.getAnswer(function(strAnswer) {
@@ -2785,6 +2786,7 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
       $(".questionList").hide();
       $(".buttonClose").hide();
       $("#question-iframe-container").show();
+      $(".questionIframeLoading").show();
       $(".button_return_list").prop("disabled", false);
    }
 
