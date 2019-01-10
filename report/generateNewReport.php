@@ -74,7 +74,9 @@ $regionNames = [
     "strasbourg"=> "Strasbourg",
     "toulouse"=> "Toulouse",
     "versailles"=> "Versailles",
-    "polynesie"=> "Polynésie française"
+    "polynesie"=> "Polynésie française",
+    "spm" => "Saint-Pierre et Miquelon",
+    "wf" => "Wallis et Futuna"    
 ];
 
 $finalRes = ['all' => []];

@@ -1102,6 +1102,7 @@ if ($action == "cleanRanksUnofficial") {
       WHERE team.participationType = 'Unofficial'
       AND (contest.ID = :contestID OR contest.parentContestID = :contestID)",
       array("contestID" => $contestID));
+}
 
 echo "<h3><a href='".$startUrl."&action=studyZeroes'>Study cases of teams with 0 points.</a></h3>";
 if ($action == "studyZeroes") {
@@ -1296,8 +1297,9 @@ if ($action == "newRegistrations") {
       execQueryAndShowNbRows("Attach newly created registrations to corresponding students", "
          UPDATE contestant
          JOIN algorea_registration ON contestant.ID = algorea_registration.ID
-         SET contestant.registrationID = algorea_registration.ID
-         WHERE contestant.registrationID IS NULL",
+         SET contestant.registrationID = algorea_registration.ID,
+         contestant.algoreaCode = algorea_registration.code
+         WHERE contestant.registrationID IS NULL OR contestant.algoreaCode IS NULL;",
       array());
 }
 
