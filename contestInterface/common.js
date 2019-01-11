@@ -1664,7 +1664,7 @@ var hideLoginFields = function(postData) {
    }
 };
 
-window.hasRegistration = function(teamMate, hasReg) {
+window.hasRegistration = function(teamMate, hasReg, lock) {
    $("#LoginResult").html("");
    teamMateHasRegistration[teamMate] = hasReg;
    $("#hasReg" + teamMate + "Yes").removeClass("selected");
@@ -1674,6 +1674,11 @@ window.hasRegistration = function(teamMate, hasReg) {
    if(hasReg) {
       $("#hasReg" + teamMate + "Yes").addClass("selected");
       $("#yesRegistrationCode" + teamMate).show();
+      if (lock) {
+         $("#hasReg" + teamMate + "No").attr("disabled", "disabled");
+         $("#registrationCode" + teamMate).attr("readonly", "readonly");
+         $("#validateRegCode" + teamMate).hide();
+      }
    } else {
       $("#hasReg" + teamMate + "No").addClass("selected");
       $("#noRegistrationCode" + teamMate).show();
@@ -1749,7 +1754,7 @@ window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, 
          if ((data.registrationData != undefined) && (data.registrationData.code != undefined)) {
             contestants[1] = { registrationCode :  data.registrationData.code };
             $("#registrationCode1").val(data.registrationData.code);
-            hasRegistration(1, true);
+            hasRegistration(1, true, true);
             $("#errorRegistrationCode1").html("Bienvenue " + data.registrationData.firstName + " " + data.registrationData.lastName);
          }
          $('#mainNav').hide();

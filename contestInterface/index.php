@@ -348,7 +348,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
               <span data-i18n="[html]login_input_registrationCode"></span>
               <input id="registrationCode1" type="text" autocomplete="off" class="form-control" /></p>
             <p><i data-i18n="login_registrationCode_description"></i></p>
-            <button type='button' onclick="validateRegistrationCode(1)" class="btn btn-default" data-i18n="login_validate_code"></button>
+            <button id="validateRegCode1" type='button' onclick="validateRegistrationCode(1)" class="btn btn-default" data-i18n="login_validate_code"></button>
             <p><span id="errorRegistrationCode1" style="color:red;font-weight:bold"></span></p>
           </div>
           <div id="noRegistrationCode1" style="display:none" class="form-inline">
@@ -404,7 +404,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
               <span data-i18n="[html]login_input_registrationCode"></span>
               <input id="registrationCode2" type="text" autocomplete="off" class="form-control" /></p>
             <p><i data-i18n="login_registrationCode_description"></i></p>
-            <button type='button' onclick="validateRegistrationCode(2)" class="btn btn-default" data-i18n="login_validate_code"></button>
+            <button id="validateRegCode2" type='button' onclick="validateRegistrationCode(2)" class="btn btn-default" data-i18n="login_validate_code"></button>
             <p><span id="errorRegistrationCode2" style="color:red;font-weight:bold"></span></p>
           </div>
           <div id="noRegistrationCode2" style="display:none" class="form-inline">
