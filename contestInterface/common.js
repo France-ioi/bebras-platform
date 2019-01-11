@@ -3153,6 +3153,68 @@ function showQuestionIframe()
    $('#question-iframe').css('height', 'auto');
 }
 
+var fullscreenActive = false;
+var fullscreenEvents = false;
+window.toggleFullscreen = function() {
+   if(!fullscreenEvents) {
+      // Register events to update fullscreen state
+      document.addEventListener("fullscreenchange", updateFullscreen);
+      document.addEventListener("webkitfullscreenchange", updateFullscreen);
+      document.addEventListener("mozfullscreenchange", updateFullscreen);
+      document.addEventListener("MSFullscreenChange", updateFullscreen);
+      fullscreenEvents = true;
+   }
+
+   if(fullscreenActive) {
+      // Exit fullscreen
+      var el = document;
+      if(el.exitFullscreen) {
+         el.exitFullscreen();
+      } else if(el.mozCancelFullScreen) {
+         el.mozCancelFullScreen();
+      } else if(el.webkitExitFullscreen) {
+         el.webkitExitFullscreen();
+      } else if(el.msExitFullscreen) {
+         el.msExitFullscreen();
+      }
+      fullscreenActive = false;
+   } else {
+      var el = document.documentElement;
+      if(el.requestFullscreen) {
+         el.requestFullscreen();
+      } else if(el.mozRequestFullScreen) {
+         el.mozRequestFullScreen();
+      } else if(el.webkitRequestFullscreen) {
+         el.webkitRequestFullscreen();
+      } else if(el.msRequestFullscreen) {
+         el.msRequestFullscreen();
+      }
+      fullscreenActive = true;
+   }
+}
+
+function updateFullscreen() {
+   // Update fullscreen state when receiving event
+   if(document.fullscreenElement || document.msFullscreenElement || document.mozFullScreen || document.webkitIsFullScreen) {
+      fullscreenActive = true;
+   } else {
+      fullscreenActive = false;
+   }
+}
+
+function checkFullscreen() {
+   // Checks whether fullscreen is available, else hides the button
+   var el = document.documentElement;
+   var available = false;
+   try {
+      available = el.requestFullscreen || el.mozRequestFullScreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+   } catch(e) {}
+   if(!available) {
+      $('.header_button_fullscreen').hide();
+   }
+}
+
+
 //
 // Loader
 //
@@ -3353,6 +3415,7 @@ $(document).on('ready', function() {
       init();
    }
    window.addEventListener('resize', questionIframe.onBodyResize);
+   checkFullscreen();
 });
 
 }();

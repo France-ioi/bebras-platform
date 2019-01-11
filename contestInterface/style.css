@@ -474,10 +474,20 @@ body.autoHeight .headerAutoHeight {
 .header_logo_img {
   width: 60px;
 }
-.header_button > .button_return_list {
-  font-size: 20px;
+.header_button > button {
+  height: 43px;
   font-weight: bold;
+}
+.header_button {
+  width: 310px; /**/
+  text-align: right;
+  padding-bottom: 10px;
+}
+.header_button > button.button_return_list {
   padding: 8px;
+}
+.header_button.header_button_fullscreen {
+  width: 80px;
 }
 .header_score {
   width: 140px;
@@ -489,10 +499,10 @@ body.autoHeight .headerAutoHeight {
 }
 .header_space {
 }
-.header_button {
-  width: 310px; /**/
-  text-align: right;
-  padding-bottom: 10px;
+@media (max-width: 767px) {
+  .header_table td {
+    font-size: 16px;
+  }
 }
 
 .headerAutoHeight_table {
@@ -530,9 +540,10 @@ body.autoHeight .headerAutoHeight {
   width: 60px;
   text-align: right;
 }
-.headerAutoHeight_button > .button_return_list {
+.headerAutoHeight_button > button {
   font-size: 16px;
   font-weight: bold;
+  white-space: nowrap;
 }
 @media (max-width: 767px) {
   .headerAutoHeight_table td {
