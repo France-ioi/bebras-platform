@@ -560,6 +560,9 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
                <td class="header_button">
                  <button class="button_return_list" type="button" data-i18n="return_to_list" onclick="backToList()" ></button>
                </td>
+               <td class="header_button header_button_fullscreen">
+                 <button type="button" data-i18n="fullscreen" onclick="toggleFullscreen()" ></button>
+               </td>
             </tr>
          </table>
       </div>
@@ -572,6 +575,9 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
                <td class="headerAutoHeight_score"><b><span class='scoreTotalFullFeedback'></span></b></td>
                <td class="headerAutoHeight_button">
                  <button class="button_return_list" type="button" data-i18n="return" onclick="backToList()" ></button>
+               </td>
+               <td class="headerAutoHeight_button header_button_fullscreen">
+                 <button type="button" data-i18n="fullscreen" onclick="toggleFullscreen()" ></button>
                </td>
             </tr>
          </table>
