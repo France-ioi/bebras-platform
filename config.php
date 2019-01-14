@@ -66,6 +66,7 @@ $config->contestInterface->sAbsoluteStaticPathNoS3 = 'http://concours.castor-inf
 $config->contestInterface->sAssetsStaticPathNoS3 = 'http://concours.castor-informatique.fr';
 $config->contestInterface->sessionLength = 3600;
 $config->contestInterface->browserCheck = 'bebras-platform';
+$config->contestInterface->logActivity = false;
 
 $config->teacherInterface = (object) array();
 $config->teacherInterface->sHotlineNumber = '';

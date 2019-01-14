@@ -298,6 +298,14 @@ function toggleMetaViewport(toggle) {
 }
 
 /**
+ * Log activity on a question (question load, attempt)
+ */
+function logActivity(teamID, questionID, type, answer, score) {
+  if(!window.config || !window.config.logActivity) { return; }
+  $.post("activity.php", {teamID: teamID, questionID: questionID, type: type, answer: answer, score: score});
+}
+
+/**
  * The platform object as defined in the Bebras API specifications
  *
  * @type type
@@ -366,9 +374,17 @@ var platform = {
          if (mode == "cancel") {
             answer = "";
          }
-         var questionData = questionsData[questionsKeyToID[questionKey]];
+         var questionID = questionsKeyToID[questionKey];
+
+         if(mode == "log") {
+            logActivity(teamID, questionID, "attempt", answer);
+            return;
+         }
+
+         var questionData = questionsData[questionID];
          if (fullFeedback) {
             questionIframe.task.gradeAnswer(answer, null, function(score, message) {
+               logActivity(teamID, questionID, "submission", answer, score);
                if (score < questionData.maxScore) {
                   mode = "stay";
                }
@@ -879,6 +895,9 @@ var questionIframe = {
     * @param string questionKey
     */
    loadQuestion: function(taskViews, questionKey, callback) {
+      var questionID = questionsKeyToID[questionKey];
+      logActivity(teamID, questionID, "load");
+
       this.body.find('#container > .question').remove();
       // We cannot just clone the element, because it'll result in an strange id conflict, even if we put the result in an iframe
       var questionContent = $('#question-' + questionKey).html();
