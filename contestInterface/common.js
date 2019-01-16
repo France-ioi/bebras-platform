@@ -32,6 +32,7 @@ var customIntro;
 var solutionsLoaded;
 var teamID = 0;
 var teamPassword = "";
+var contestImagePreload = {};
 var questionsData = {};
 var questionsKeyToID = {};
 var questionsToGrade = [];
@@ -298,10 +299,32 @@ function toggleMetaViewport(toggle) {
 }
 
 /**
+ * Fetch configuration
+ */
+function getConfig(callback) {
+  if(window.config) {
+     if(callback) { callback(); }
+     return;
+  }
+
+  $.post("data.php", {action: 'getConfig', p: getParameterByName('p')},
+     function(data) {
+        window.config = data.config;
+        if(callback) { callback(); }
+     }, "json");
+}
+
+/**
  * Log activity on a question (question load, attempt)
  */
 function logActivity(teamID, questionID, type, answer, score) {
-  if(!window.config || !window.config.logActivity) { return; }
+  if(typeof window.config == 'undefined') {
+     getConfig(function() {
+        logActivity(teamID, questionID, type, answer, score);
+        });
+     return;
+  }
+  if(!window.config.logActivity) { return; }
   $.post("activity.php", {teamID: teamID, questionID: questionID, type: type, answer: answer, score: score});
 }
 
@@ -766,16 +789,6 @@ var questionIframe = {
       // No more global css file
       //this.addCssFile(contestsRoot + '/' + contestFolder + '/contest_' + contestID + '.css');
 
-      // Get configuration
-      var that = this;
-      $.post("data.php", {action: 'getConfig', p: getParameterByName('p')},
-         function(data) {
-            window.config = data.config;
-            that.inject('window.config = window.parent.config;');
-            // Call image preloading
-            that.addJsFile(window.contestsRoot + '/' + contestFolder + '/contest_' + contestID + '.js', callback);
-         }, "json");
-
       var border = "border: 1px solid #000000;";
       if (newInterface) {
          border = "";
@@ -783,6 +796,28 @@ var questionIframe = {
       this.body.append('<div id="jsContent"></div><div id="container" style="' + border + 'padding: 5px;"><div class="question" style="font-size: 20px; font-weight: bold;">' + t("content_is_loading") + '</div></div>');
 
       this.initialized = true;
+
+      // Get configuration and image preloader
+      var that = this;
+      getConfig(function() {
+         that.inject('window.config = window.parent.config;');
+         // Call image preloading
+         if(contestImagePreload[contestID]) {
+            that.inject(contestImagePreload[contestID]);
+            callback();
+         } else {
+            // Load image preload lists
+            $.get(window.contestsRoot + '/' + contestFolder + "/contest_" + contestID + ".js?origin=" + window.location.protocol + window.location.hostname, function(content) {
+               contestImagePreload[contestID] = content;
+               that.inject(content);
+               callback();
+            }, 'text').fail(function() {
+               // Continue anyway
+               callback();
+            });
+         }
+         });
+
    },
 
    /**
