@@ -715,7 +715,8 @@ function handleGetConfig() {
    $clientConfig = array(
       "imagesURLReplacements" => $config->imagesURLReplacements,
       "imagesURLReplacementsNonStatic" => $config->imagesURLReplacementsNonStatic,
-      "upgradeToHTTPS" => $config->upgradeToHTTPS
+      "upgradeToHTTPS" => $config->upgradeToHTTPS,
+      "logActivity" => $config->contestInterface->logActivity
       );
    exitWithJson(["success" => true, "config" => $clientConfig]);
 }
