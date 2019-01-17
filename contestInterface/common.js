@@ -1163,6 +1163,15 @@ var TimeManager = {
             if (data.success) {
                var remainingSeconds = self.getRemainingSeconds();
                TimeManager.timeStart = TimeManager.timeStart + parseInt(data.remainingSeconds) - remainingSeconds;
+               /*
+               var curDate = new Date();
+               var curTime = curDate.getTime() / 1000;
+               console.log("remainingSeconds before sync : " + remainingSeconds + " timeStart : " + TimeManager.timeStart);
+               TimeManager.timeStart = curTime - (TimeManager.initialRemainingSeconds - parseInt(data.remainingSeconds));
+               remainingSeconds = self.getRemainingSeconds();
+               console.log("remainingSeconds after sync : " + remainingSeconds + " timeStart : " + TimeManager.timeStart);
+               this.prevTime = curTime;
+               */
             } else {
                TimeManager.simpleTimeAdjustment();
             }

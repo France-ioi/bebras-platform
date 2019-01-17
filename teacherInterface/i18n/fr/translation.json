@@ -362,7 +362,7 @@
     "contest_question_noAnswerScore_label": "Score rien",
     "expectedStartTime_long_label": "Heure de passage prévue",
     "option_hidden_contest": "Caché",
-    "colleagues": "<h2>Collègues</h2><p>Voici les autres coordinateurs qui partagent un établissement avec vous. Vous pouvez leur donner accès en lecture ou en écriture à tous vos groupes, en double-cliquant sur la ligne correspondante, et en modifiant la valeur dans la colonne « Accès donné ». Ils peuvent de leur côté vous donner accès à leurs groupes s'ils le souhaitent.</p>",
+    "colleagues": "<h2>Collègues</h2><p>Voici les autres coordinateurs qui partagent un établissement avec vous. Vous pouvez leur donner accès en lecture ou en écriture à tous vos groupes, en double-cliquant sur la ligne correspondante, et en modifiant la valeur dans la colonne « Accès donné ». Ils peuvent de leur côté vous donner accès à leurs groupes s'ils le souhaitent.</p><p>Attention : appuyez bien sur entrée après avoir fait la modification, pour qu'elle soit enregistrée.</p>",
     "cancel": "Annuler",
     "school_select": "Devenir coordinateur dans cet établissement",
     "colleagues_access_given": "Accès donné",
