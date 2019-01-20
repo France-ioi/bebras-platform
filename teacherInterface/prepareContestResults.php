@@ -221,14 +221,25 @@ if ($action == "showStats") {
 
 echo "<h3><a href='".$startUrl."&action=fixSubgroups'>Fix subgroups</a></h3>";
 if ($action == "fixSubgroups") {
-   execQueryAndShowNbRows("Mark groups startTime if subgroup has startTime", "
-      UPDATE `group` gchild
-      JOIN `group` gparent ON gchild.parentGroupID = gparent.ID
-      JOIN `contest` ON `gparent`.contestID = contest.ID
-      SET gparent.startTime = gchild.startTime
+   execQueryAndShowNbRows("Mark groups startTime if subgroup has startTime, sum teams and contestants", "
+      UPDATE `group` gparent
+      JOIN 
+      (SELECT
+      gchild.parentGroupID,
+      MIN(gchild.startTime) AS startTime,
+      SUM(gchild.nbTeamsEffective) AS nbTeamsEffective,
+      SUM(gchild.nbStudentsEffective) AS nbStudentsEffective
+      FROM `group` gchild      
+      JOIN `contest` ON `gchild`.contestID = contest.ID
       WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
-      AND gparent.startTime IS NULL
-      AND gchild.startTime IS NOT NULL",
+      AND gchild.parentGroupID IS NOT NULL
+      GROUP BY gchild.parentGroupID
+      ) gchild
+      ON gchild.parentGroupID = gparent.ID
+      SET gparent.startTime = gchild.startTime,
+      gparent.nbTeamsEffective = gchild.nbTeamsEffective,
+      gparent.nbStudentsEffective = gchild.nbStudentsEffective
+      ",
       array("contestID" => $contestID));
 
 //   TODO : somme des students des enfants dans le parent ?
