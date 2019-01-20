@@ -535,6 +535,10 @@ $viewsModels = array(
             "joins" => array("user_user"),
             "condition" => "((`[PREFIX]user_user`.`accessType` <> 'none' AND `[PREFIX]user_user`.`targetUserID` = :[PREFIX_FIELD]checkAccessUserID) ".
                            "OR (`[PREFIX]group`.`userID` = :[PREFIX_FIELD]checkAccessUserID))"
+         ),
+         "checkNoChild" => array(
+            "condition" => "(`[PREFIX]group`.`parentGroupID` IS NULL)",
+            "ignoreValue" => true
          )
       )
    ),

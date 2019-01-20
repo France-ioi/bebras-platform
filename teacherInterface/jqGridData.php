@@ -539,6 +539,10 @@ function selectRecordsForJQGrid($db, $modelName, $params, $roles) {
    }
    $request["filters"] = $filters;
 
+   if ($modelName == 'group') {
+      $request["filters"]["checkNoChild"] = true;
+   }
+
    if ($modelName == 'award1') {
       $request['filters']['awarded'] = true;
       $request['filters']['showable'] = true;

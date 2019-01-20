@@ -43,7 +43,7 @@ $query = "SELECT `group`.`startTime`, team.password, `team_question`.ffScore, te
 "JOIN contest_question ON contest_question.contestID = `group`.contestID ".
 "JOIN question ON question.ID = contest_question.questionID ".
 "LEFT JOIN team_question ON (team_question.teamID = team.ID AND team_question.questionID = question.ID) ".
-"WHERE `group`.ID = :groupID ".
+"WHERE `group`.ID = :groupID  OR `group`.`parentGroupID` = :groupID ".
 "GROUP BY team.ID, question.ID ".
 "ORDER BY `group`.ID, team.startTime DESC, team.ID, contest_question.`order`";
 
@@ -73,7 +73,8 @@ foreach ($groups as $group) {
       break;
    }
    echo "<p>".sprintf(translate("groups_participated_on"), $group["startTime"])."</p>";
-   echo translate("groups_warning_disabled_during_contest");
+   //echo "<p>".translate("groups_warning_disabled_during_contest")."</p>";
+   echo "<p>".translate("groups_warning_temporary_scores")."</p>";
    echo "<table cellspacing=0><tr><th class='rotate'><div><span>".translate("groups_team")."</span></div></th>";
    foreach ($group["teams"] as $teamID => $team) {
       foreach ($team["questions"] as $questionName => $question) {
