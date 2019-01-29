@@ -68,7 +68,7 @@ function createPersonalCode($contestID) {
 	$registrationID = getRandomID();
    // TODO: make category depend on contest ?
 	$stmt = $db->prepare("INSERT INTO `algorea_registration` (`ID`, `firstName`, `lastName`, `genre`, `userID`, `code`, `category`) VALUES ".
-       "(:ID, :firstName, :lastName, :genre, :userID, :code, 'round2');");
+       "(:ID, :firstName, :lastName, :genre, :userID, :code, 'tour 2');");
 	$stmt->execute([
 		'ID' => $registrationID,
 		'firstName' => $user['firstName'],
