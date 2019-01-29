@@ -21,45 +21,59 @@ if (!isset($_SESSION["userID"])) {
    exit;
 }
 
+$query = "SELECT ID, firstName, lastName, code FROM algorea_registration";// WHERE userID = :userID";
+$stmt = $db->prepare($query);
+$stmt->execute(['userID' => $_SESSION['userID']]);
+$contestants = array();
+$contestantCodes = array();
+while ($row = $stmt->fetchObject()) {
+   $contestants[$row->code] = $row;
+   $contestantCodes[] = "'".$row->code."'";
+}
+$strCodes = implode(",", $contestantCodes);
+
 $db2 = new PDO($dbConnexionString2, $dbUser2, $dbPasswd2);
+
+$items = array(0);
+
+$idTeamItem = "426154796109911742"; // groupe : 337433601613235328
 
 // Query fetching scores on a contest on AlgoreaPlatform
 // To fetch scores on another contest, modify:
 // -users_items.idItem IN (...) with the IDs of the tasks
 // -groups.idTeamItem = '...' with the ID of the chapter on which teams are created
 $query = "SELECT `pixal`.`groups`.ID, `pixal`.`groups`.`sName`,
-`pixal`.`users`.`ID` as `idUser`, tmp.`firstName`, tmp.`lastName`,
+`pixal`.`users`.`ID` as `idUser`,
 `pixal`.`users_items`.`idItem`, `pixal`.`users_items`.`iScore`, date(`pixal`.`users`.`sLastLoginDate`) as lastLogin,
 `pixal`.`alkindi_teams`.rank,
 `pixal`.`alkindi_teams`.rankBigRegion,
 `pixal`.`alkindi_teams`.rankRegion,
 `pixal`.`alkindi_teams`.qualifiedFinal,
 `pixal`.`alkindi_teams`.sPassword AS password,
-tmp.code,
+`login-module`.`badges`.`code`,
 `pixal`.`alkindi_teams`.thirdScore, `pixal`.`alkindi_teams`.thirdTime,
 `pixal`.`alkindi_teams`.isOfficial,
 `pixal`.`alkindi_teams`.score1, `pixal`.`alkindi_teams`.time1, `pixal`.`alkindi_teams`.score2, `pixal`.`alkindi_teams`.time2, `pixal`.`alkindi_teams`.score3, `pixal`.`alkindi_teams`.time3, `pixal`.`alkindi_teams`.score4, `pixal`.`alkindi_teams`.time4
-FROM
-(
-SELECT `login-module`.`badges`.`user_id`, `alkindi2016`.`algorea_registration`.ID as registrationID, `alkindi2016`.`algorea_registration`.firstName, `alkindi2016`.`algorea_registration`.lastName, `alkindi2016`.`algorea_registration`.`code`
-FROM `alkindi2016`.`algorea_registration`
-JOIN `login-module`.`badges` ON `login-module`.`badges`.`code` = `alkindi2016`.`algorea_registration`.`code`
-WHERE `alkindi2016`.`algorea_registration`.`userID` = :userID
-) tmp
-JOIN `pixal`.`users` ON `pixal`.`users`.`loginID` = `tmp`.`user_id`
+FROM `login-module`.`badges`
+JOIN `pixal`.`users` ON `pixal`.`users`.`loginID` = `login-module`.`badges`.`user_id`
 JOIN `pixal`.`groups_groups` ON `pixal`.`groups_groups`.`idGroupChild` = `pixal`.`users`.`idGroupSelf`
 JOIN `pixal`.`groups` ON `pixal`.`groups`.`ID` = `pixal`.`groups_groups`.`idGroupParent`
 LEFT JOIN `pixal`.`alkindi_teams` ON `pixal`.`alkindi_teams`.idGroup = `pixal`.`groups`.`ID`
-LEFT JOIN `pixal`.`users_items` ON (`pixal`.`users`.`ID` = `pixal`.`users_items`.`idUser` AND `users_items`.`idItem` IN (220599740790459496, 1158858004591700590, 197716040621949845, 439985607120600097))
-WHERE `pixal`.`groups`.`sType` = 'Team' AND `pixal`.`groups`.`idTeamItem` = '168412300778778181'
+LEFT JOIN `pixal`.`users_items` ON (`pixal`.`users`.`ID` = `pixal`.`users_items`.`idUser` AND `users_items`.`idItem` IN (".implode(",", $items)."))
+WHERE
+`login-module`.`badges`.`code` IN (".$strCodes.")
+AND `pixal`.`groups`.`sType` = 'Team'
+AND `pixal`.`groups`.`idTeamItem` = ".$idTeamItem."
 GROUP BY `pixal`.`users`.`ID`, `pixal`.`users_items`.`idItem`
 ORDER BY `pixal`.`groups`.ID ASC, `pixal`.`users_items`.`idItem` ASC";
 
 
 
 
+//echo $query;
+
 $stmt = $db2->prepare($query);
-$stmt->execute(['userID' => $_SESSION['userID']]);
+$stmt->execute();
 
 $groups = array();
 $curGroupID = 0;
@@ -86,10 +100,10 @@ while ($row = $stmt->fetchObject()) {
    }
 }
 
-$items = array("220599740790459496", "1158858004591700590", "197716040621949845", "439985607120600097");
 
 echo "<h1>Équipes créées pour le 2e tour</h1>";
-
+echo "<p>Vous pouvez consulter sur cette page les équipes déjà créés par vos élèves.</p><p>Vous pourrez également y consulter les résultats au fur et à mesure de leur participation au 2e tour.</p>";
+/*
 echo "<h2>Équipes qualifiées</h2><p>Les équipes qui ont obtenu 285 points ou plus sont qualifiées pour le 3e tour.</p>
 <p>Le 3e tour dure 1h30 et doit se faire sous surveillance, entre le 19 mars et le 7 avril inclus.</p>
 <h2>Fonctionnement de l'épreuve du 3e tour</h2>
@@ -110,22 +124,26 @@ echo "<h2>Équipes qualifiées</h2><p>Les équipes qui ont obtenu 285 points ou 
 <h2>Classement final</h2>
 <p>Dans les trois dernières colonnes, vous pouvez trouver soit le classement de l'équipe au sein de son académie, sa grande région et au niveau national, soit a mention \"Qualifiée en finale\" si l'équipe est qualifiée.</p>
 <p>Les récompenses attribuées aux meilleures équipes non finalistes seront indiquées plus tard.</p>";
-
+*/
 
 echo "<table class='resultats' cellspacing=0><tr>";
 echo "<td>Nom de l'équipe</td><td>Élèves</td>";
+/*
 echo "<td>Réseau&nbsp;1D<br />(2e tour)</td><td>Réseau&nbsp;2D<br />(2e tour)</td><td>Enigma&nbsp;1<br />(2e tour)</td><td>Enigma&nbsp;2<br />(2e tour)</td><td>Total<br />(2e tour)</td><td>Code secret tour 3</td>";
 echo "<td>Réseau&nbsp;1D<br />(3e tour)</td><td>Réseau&nbsp;2D<br />(3e tour)</td><td>Enigma&nbsp;1<br />(3e tour)</td><td>Enigma&nbsp;2<br />(3e tour)</td><td>Total<br />(3e tour)</td><td>Classement<br/>académie</td><td>Classement<br/>grande région</td><td>Classement<br/>national</td>";
+*/
 echo "</tr>";
 $curGroupID = 0;
 foreach ($groups as $group) {
    echo "<tr>";
    echo "<td>".htmlentities($group->sName)."</td><td>";
    foreach ($group->users as $user) {
-      echo htmlentities($user->firstName)." ".htmlentities($user->lastName)." [".$user->code."]<br/>";
+      echo htmlentities($contestants[$user->code]->firstName)." ".
+            htmlentities($contestants[$user->code]->lastName)." [".$user->code."]<br/>";
    }
    echo "</td>";
    $sum = 0;
+   /*
    foreach ($items as $idItem) {
       echo "<td>";
       if (!isset($group->scores[$idItem])) {
@@ -137,8 +155,10 @@ foreach ($groups as $group) {
       }
       echo "</td>";
    }
-   echo "<td>".$sum."</td>";
-   echo "<td>".$group->password."</td>";
+   */
+   //echo "<td>".$sum."</td>";
+   //echo "<td>".$group->password."</td>";
+   /*
    if($group->thirdScore) {
         echo "<td>".$group->score1." (".$group->time1.")</td>";
         echo "<td>".$group->score2." (".$group->time2.")</td>";
@@ -159,6 +179,7 @@ foreach ($groups as $group) {
       echo "<td>".($group->rankBigRegion ? $group->rankBigRegion : '')."</td>";
       echo "<td>".($group->rank ? $group->rank : '')."</td>";
    }
+   */
    echo "</tr>";
 }
 echo "</table>";
