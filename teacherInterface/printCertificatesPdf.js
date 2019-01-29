@@ -126,7 +126,7 @@ function fillDataDiplomas(params) {
         firstName: contestant.firstName,
         genre: contestant.genre,
         grade: contestant.grade,
-        algoreaCode: contestant.algoreaCode,
+        algoreaCode: contestant.qualificationCode,
         nbContestants: contestant.nbContestants,
         score: parseInt(contestant.score),
         rank: contestant.rank,
