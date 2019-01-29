@@ -198,6 +198,7 @@ function getGroupsColModel() {
          nbStudents: {label: t("group_nbStudents_label"), longLabel: t("group_nbStudents_long_label"), editable: true, required: true, edittype: "text", subtype:"positiveint", width: 100, comment: t("group_nbStudents_comment")},
          userID: {hidden: true, visible: false, hiddenlg: true},
          contestPrintCertificates: {hidden: true, visible: false, hiddenlg: true},
+         contestPrintCodes: {hidden: true, visible: false, hiddenlg: true},
          minCategory: {label: t("group_minCategory_label"), width: 100},
          maxCategory: {label: t("group_maxCategory_label"), width: 100},
          language: {label: t("group_language_label"), width: 100},
@@ -1987,7 +1988,7 @@ function printGroupAwards() {
       return;
    }
    var group = groups[groupID];
-   if (group.participationType != 'Official' || group.contestPrintCertificates != 1) {
+   if (group.participationType != 'Official' || group.contestPrintCodes != 1) {
       jqAlert(t("group_print_awards_impossible"));
       return;
    }

@@ -510,6 +510,7 @@ $viewsModels = array(
          "nbStudents" => array(),
          "userID" => array("fieldName" => "userID", "tableName" => "group"),
          "contestPrintCertificates" => array("fieldName" => "printCertificates", "tableName" => "contest"),
+         "contestPrintCodes" => array("fieldName" => "printCodes", "tableName" => "contest"),
          "minCategory" => array(),
          "maxCategory" => array(),
          "language" => array()
