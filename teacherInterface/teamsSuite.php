@@ -21,7 +21,7 @@ if (!isset($_SESSION["userID"])) {
    exit;
 }
 
-$query = "SELECT ID, firstName, lastName, code FROM algorea_registration";// WHERE userID = :userID";
+$query = "SELECT ID, firstName, lastName, code FROM algorea_registration WHERE userID = :userID";
 $stmt = $db->prepare($query);
 $stmt->execute(['userID' => $_SESSION['userID']]);
 $contestants = array();
