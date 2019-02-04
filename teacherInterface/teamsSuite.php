@@ -34,7 +34,7 @@ $strCodes = implode(",", $contestantCodes);
 
 $db2 = new PDO($dbConnexionString2, $dbUser2, $dbPasswd2);
 
-$items = array(0);
+$items = array("584903297566084865", "114375916575884133", "1521717886447950582", "25760588819857174", "1474323515743870110");
 
 $idTeamItem = "426154796109911742"; // groupe : 337433601613235328
 
@@ -127,9 +127,10 @@ echo "<h2>Équipes qualifiées</h2><p>Les équipes qui ont obtenu 285 points ou 
 */
 
 echo "<table class='resultats' cellspacing=0><tr>";
-echo "<td>Nom de l'équipe</td><td>Élèves</td>";
-/*
-echo "<td>Réseau&nbsp;1D<br />(2e tour)</td><td>Réseau&nbsp;2D<br />(2e tour)</td><td>Enigma&nbsp;1<br />(2e tour)</td><td>Enigma&nbsp;2<br />(2e tour)</td><td>Total<br />(2e tour)</td><td>Code secret tour 3</td>";
+echo "<td rowspan=2>Nom de l'équipe</td><td rowspan=2>Élèves</td><td colspan=6 style='text-align:center;background:lightgray'>2e tour</td></tr>";
+
+echo "<tr><td>Messages 1<br />(2e tour)</td><td>Messages 2<br />(2e tour)</td><td>Messages 3<br />(2e tour)</td><td>Cercle 1<br />(2e tour)</td><td>Cercle 2<br/>(2e tour)</td><td>Total<br />(2e tour)</td>";
+/*"<td>Code secret tour 3</td>";
 echo "<td>Réseau&nbsp;1D<br />(3e tour)</td><td>Réseau&nbsp;2D<br />(3e tour)</td><td>Enigma&nbsp;1<br />(3e tour)</td><td>Enigma&nbsp;2<br />(3e tour)</td><td>Total<br />(3e tour)</td><td>Classement<br/>académie</td><td>Classement<br/>grande région</td><td>Classement<br/>national</td>";
 */
 echo "</tr>";
@@ -143,7 +144,7 @@ foreach ($groups as $group) {
    }
    echo "</td>";
    $sum = 0;
-   /*
+
    foreach ($items as $idItem) {
       echo "<td>";
       if (!isset($group->scores[$idItem])) {
@@ -155,9 +156,9 @@ foreach ($groups as $group) {
       }
       echo "</td>";
    }
-   */
-   //echo "<td>".$sum."</td>";
-   //echo "<td>".$group->password."</td>";
+
+   echo "<td>".$sum."</td>";
+   /*echo "<td>".$group->password."</td>";*/
    /*
    if($group->thirdScore) {
         echo "<td>".$group->score1." (".$group->time1.")</td>";
