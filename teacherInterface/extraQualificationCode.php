@@ -47,9 +47,16 @@ if (isset($_POST["schoolID"])) {
          showError(sprintf(translate("codes_participant_exists"), $_POST["firstName"], $_POST["lastName"], $row->code));
       }
       else {
+         $category = "";
+         if (isset($config->defaultCategory)) {
+            $category = $config->defaultCategory;
+         }
+         if (($_POST["grade"] == -1) && isset($config->defaultTeacherCategory)) {
+            $category = $config->defaultTeacherCategory;
+         }
          $code = generateRandomCode();
          $query = "INSERT INTO algorea_registration (`firstName`, `lastName`, `genre`, `email`, `studentID`, `zipCode`, `code`, `grade`, `schoolID`, `userID`, `category`) ".
-            "VALUES (:firstName, :lastName, 0, '', '', '', :code, :grade, :schoolID, :userID, 'blanche') ";
+            "VALUES (:firstName, :lastName, 0, '', '', '', :code, :grade, :schoolID, :userID, '".$category."') ";
          $stmt = $db->prepare($query);
          $stmt->execute(['userID' => $_SESSION['userID'],
             'schoolID' => $_POST["schoolID"],
@@ -109,6 +116,7 @@ echo "</select>".
      "<tr><td>".translate("codes_firstName")."</td><td><input type='text' name='firstName' /></td></tr>".
      "<tr><td>".translate("codes_grade")."</td><td><select name='grade'>";
 
+   echo "<option value=''>".translate("codes_grade")."</option>";
    foreach ($config->grades as $iGrade) {
       echo "<option value='".$iGrade."'>".translate("grade_short_".$iGrade)."</option>";
    }
