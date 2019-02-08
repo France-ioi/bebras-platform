@@ -86,6 +86,17 @@ $strJS .= "];";
 
 echo $strJS;
 
+if (isset($config->certificates->footer)) {
+   echo "var footer = '".$config->certificates->footer."';\n";
+} else {
+   echo "var footer = '';\n";
+}
+if (isset($config->certificates->defaultFont)) {
+   echo "var defaultFont = '".$config->certificates->defaultFont."';\n";
+} else {
+   echo "var defaultFont = 'Roboto';\n";
+}
+
 ?>
 var contestName = '<?=$config->certificates->title?>';
 var qualificationText = '<?=$config->certificates->qualificationText?>';

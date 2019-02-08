@@ -245,6 +245,9 @@ function getFullPdfDocument(content) {
       pageOrientation: 'landscape',
       pageSize: 'A4',
       content: content,
+      defaultStyle: {
+         font: defaultFont
+      },
       styles: {
          mainColor: { color: mainColor },
          accentColor: { color: accentColor },
@@ -484,6 +487,15 @@ The styles depend on the contest.
         ],
         absolutePosition: {x: 600, y: 490},
         width: 250
+      },
+      {
+         columns: [
+           { width: '*', text: '' },
+           { width: 'auto', text: footer },
+           { width: '*', text: '' }
+         ],
+         absolutePosition: {x: 20, y: 530},
+         width: 750
       }
    ];
    if (showYear) {
@@ -524,6 +536,26 @@ function newGenerateDiplomas(params, iPart) {
       }
 
    }
+   pdfMake.fonts = {
+        Roboto: {
+                normal: 'Roboto-Regular.ttf',
+                bold: 'Roboto-Medium.ttf',
+                italics: 'Roboto-Italic.ttf',
+                bolditalics: 'Roboto-MediumItalic.ttf'
+        },
+        NotoSansArabic: {
+                normal: 'NotoSansArabicUI-Regular.ttf',
+                bold: 'NotoSansArabic-Bold.ttf',
+                italics: 'NotoSansArabicUI-Medium.ttf',
+                bolditalics: 'NotoSansArabic-Bold.ttf'
+        },
+        Coranica: {
+                normal: 'coranica_allerseelen2012_09.ttf',
+                bold: 'coranica_allerseelen2012_09.ttf',
+                italics: 'coranica_allerseelen2012_09.ttf',
+                bolditalics: 'coranica_allerseelen2012_09.ttf'
+        },
+   };
    var docDefinition = getFullPdfDocument(content);
    pdfMake.createPdf(docDefinition).download("diplomes_" + (iPart + 1) + ".pdf")
 }

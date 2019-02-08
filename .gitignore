@@ -6,3 +6,4 @@
 /logs/
 /config_local.php
 /.composer
+/node_modules/
