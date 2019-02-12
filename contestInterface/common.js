@@ -2428,6 +2428,7 @@ function initContestData(data, newContestID) {
       window.backToList(true);
    } else {
       $("#question-iframe-container").addClass("oldInterfaceIframeContainer").show();
+      $("#question-iframe-container").css("position", "absolute");
       $(".newInterface").html("").hide();
       $(".oldInterface").show();
    }
