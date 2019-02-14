@@ -45,6 +45,8 @@ $config->teacherInterface->forceOfficialEmailDomain = false;
  // indicate the ID of the contest for which password will be automatically generated for teachers
 $config->teacherInterface->teacherPersonalCodeContestID = 0;
 
+$config->contestInterface->sAssetsStaticPathNoS3 = 'http://concours.castor-informatique.fr';
+$config->contestInterface->sAbsoluteStaticPathNoS3 = 'http://concours.castor-informatique.fr';
 
 $config->grades = [-1,3,4,5,6,7,8,9,10,11,12,-4];
 $config->defaultCategory = '';
