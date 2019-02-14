@@ -51,6 +51,7 @@ $config->contestInterface->sAbsoluteStaticPathNoS3 = 'http://concours.castor-inf
 $config->grades = [-1,3,4,5,6,7,8,9,10,11,12,-4];
 $config->defaultCategory = '';
 $config->defaultTeacherCategory = '';
+$config->trainingContestID = '56';
 
 
 // URLs
