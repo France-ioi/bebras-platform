@@ -1,0 +1,10 @@
+{
+	"presets": [
+		"@babel/preset-env",
+	],
+	"plugins": [
+		"@babel/plugin-transform-reserved-words",
+		"transform-es3-member-expression-literals",
+		"transform-es3-property-literals",
+	]
+}
