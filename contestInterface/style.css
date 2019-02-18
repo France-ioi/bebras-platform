@@ -1023,3 +1023,136 @@ table td ul:first-child{
 #personalData tr td:first-child {
    font-weight: bold;
 }
+
+
+@media /* Mobiles */
+  screen and (max-width: 767.9px) and (orientation: portrait),
+  screen and (min-width: 480px) and (max-width: 854.9px) and (orientation: landscape) {
+
+  .tabContent {
+    float: none;
+  }
+  .btn {
+    margin-top: 5px;
+  }
+  #contentPublicGroups {
+    max-width: 100%;
+  }
+  #contentPublicGroups td {
+    vertical-align: bottom;
+  }
+  #contentPublicGroups td img {
+    max-width: 100%;
+  }
+  #contentPublicGroups td p {
+    margin-top: 1em;
+    margin-bottom: 5px;
+  }
+}
+@media /* Portrait mobiles and low res display */
+screen and (max-width: 480.9px) {
+  #divHeader {
+    padding-bottom: 0;
+  }
+  #leftTitle {
+    margin: 10px 10px 0 10px;
+    text-align: center;
+  }
+  #leftTitle img {
+    max-width: 60px;
+  }
+  #headerH1 {
+    font-size: 26px;
+    margin: 10px 0 10px;
+  }
+  #headerH2 {
+    font-size: 18px;
+  }
+  #login_link_to_home {
+    font-size: 14px;
+  }
+  #mainContent {
+    margin: 10px 20px;
+  }
+  #mainNav {
+    float: none;
+    margin: 0 -20px 20px;
+  }
+  #mainNav li {
+    letter-spacing: 0.02em;
+    padding: 5px 10px;
+  }
+  #mainNav li::after {
+    content: " ";
+    border-width: 11px;
+    right: 10px;
+    border-left-color: #fff;
+    top: 6px;
+  }
+  .tabContent {
+    float: none;
+  }
+  #contentPublicGroups {
+    width: auto !important;
+  }
+  #contentPublicGroups table,
+  #contentPublicGroups tbody,
+  #contentPublicGroups tr,
+  #contentPublicGroups td {
+    display: block;
+  }
+  #contentPublicGroups td {
+    width: auto !important;
+  }
+
+}
+@media /* Mobiles landscape and tablets portrait and smaller landscape tablets */
+screen and (min-width: 480px) and (max-width: 854.9px) and (orientation: landscape),
+screen and (min-width: 481px) and (orientation: portrait),
+screen and (max-width: 1024px) and (orientation: landscape) {
+  #divHeader {
+    padding-bottom: 0;
+  }
+  #leftTitle {
+    margin: 10px;
+  }
+  #leftTitle img {
+    max-width: 100px;
+  }
+  #headerH1 {
+    font-size: 28px;
+    margin: 10px 0 10px;
+  }
+  #headerH2 {
+    font-size: 18px;
+  }
+  #login_link_to_home {
+    font-size: 14px;
+  }
+  #mainContent {
+    margin: 10px;
+  }
+  #mainNav {
+    float: none;
+    margin: 0px;
+  }
+  #mainNav ul {
+    display: flex;
+  }
+  #mainNav li {
+    padding: 5px;
+    letter-spacing: 0.02em;
+    margin-right: 10px;
+    flex: 1 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  #mainNav li:last-child {
+    margin-right: 0;
+  }
+  #mainNav li::after {
+    content: normal;
+  }
+}
