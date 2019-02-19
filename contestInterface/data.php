@@ -211,7 +211,7 @@ function handleLoadContestData($db) {
    $teamID = $_SESSION["teamID"];
    $stmt = $db->prepare("UPDATE `team` SET `createTime` = UTC_TIMESTAMP() WHERE `ID` = :teamID AND `createTime` IS NULL");
    $stmt->execute(array("teamID" => $teamID));
-
+   
    $questionsData = getQuestions($db, $_SESSION["contestID"], $_SESSION["subsetsSize"], $teamID);
    $mode = null;
    if (isset($_SESSION['mysqlOnly']) && $_SESSION['mysqlOnly']) {
@@ -389,7 +389,6 @@ function createGroupForContestAndRegistrationCode($db, $code, $contestID) {
 }
 
 function handleGroupFromRegistrationCode($db, $code) {
-   global $config;
    $registrationData = getRegistrationData($db, $code);
    if (!$registrationData) {
       return;
@@ -397,8 +396,8 @@ function handleGroupFromRegistrationCode($db, $code) {
    $newCategories = updateRegisteredUserCategory($db, $registrationData->ID, $registrationData->qualifiedCategory, $registrationData->validatedCategory);
    $registrationData->qualifiedCategory = $newCategories["qualifiedCategory"];
    $registrationData->validatedCategory = $newCategories["validatedCategory"];
-
-
+   
+   
    $query = "SELECT IFNULL(tmp.score, 0) as score, tmp.sumScores, tmp.password, tmp.startTime, tmp.contestName, tmp.contestID, tmp.parentContestID, tmp.contestCategory, ".
        "tmp.nbMinutes, tmp.remainingSeconds, tmp.teamID, ".
        "GROUP_CONCAT(CONCAT(CONCAT(contestant.firstName, ' '), contestant.lastName)) as contestants, tmp.rank, tmp.schoolRank, count(*) as nbContestants ".
@@ -423,10 +422,10 @@ function handleGroupFromRegistrationCode($db, $code) {
       $participations[] = $row;
    }
    $registrationData->participations = $participations;
-
+       
    addBackendHint("ClientIP.checkPassword:pass");
    addBackendHint(sprintf("Group(%s):checkPassword", escapeHttpValue($registrationData->ID))); // TODO : check hint
-   $contestID = $config->trainingContestID;
+   $contestID = "485926402649945250"; // hard-coded training contest
    $isOfficialContest = false;
    if (isset($_POST["startOfficial"])) {
       $contestID = "337033997884044050"; // hard-coded real contest
@@ -450,7 +449,7 @@ function handleGroupFromRegistrationCode($db, $code) {
 
 function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "", $registrationData = null, $isOfficialContest = false) {
    global $allCategories, $config;
-
+   
    // Find a group whose code matches the given password.
    $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, UTC_TIMESTAMP()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`askParticipationCode`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`visibility`, `contest`.`askEmail`, `contest`.`askZip`, `contest`.`askGenre`, `contest`.`askGrade`, `contest`.`askStudentId`, `contest`.`name` as `contestName`, `contest`.`allowPauses`, `group`.`isGenerated`, `group`.`language`, `group`.`minCategory`, `group`.`maxCategory` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
    $stmt = $db->prepare($query);
@@ -504,7 +503,7 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "",
    $_SESSION["registrationData"] = $registrationData;
 
    updateSessionWithContestInfos($row);
-
+   
    $query = "SELECT contest.ID as contestID, contest.folder, contest.name, contest.language, contest.categoryColor, contest.customIntro, contest.imageURL, contest.description, contest.allowTeamsOfTwo, contest.askParticipationCode ".
       "FROM contest WHERE parentContestID = :contestID";
    $stmt = $db->prepare($query);
