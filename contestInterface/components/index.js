@@ -8,6 +8,7 @@ import TrainingContestSelection from './TrainingContestSelection';
 import RestartContestForm from './RestartContestForm';
 import GroupUsedForm from './GroupUsedForm';
 import PersonalDataForm from './PersonalDataForm';
+import DescribeTeam from './DescribeTeam';
 import SubcontestSelectionInterface from './SubcontestSelectionInterface';
 import RecoveryPasswordReminder from './RecoveryPasswordReminder';
 import LoadingPage from './LoadingPage';
@@ -17,6 +18,10 @@ import TaskFrame from './TaskFrame';
 import ContestEndWaitingPage from './ContestEndWaitingPage';
 import ContestQuestionRecoveryPage from './ContestQuestionRecoveryPage';
 import ContestEndPage from './ContestEndPage';
+import StartContest from './StartContest';
+import AllContestsDone from './AllContestsDone';
+import PersonalData from './PersonalData';
+
 
 export {
 	MainHeader,
@@ -29,6 +34,7 @@ export {
 	RestartContestForm,
 	GroupUsedForm,
 	PersonalDataForm,
+	DescribeTeam,
 	SubcontestSelectionInterface,
 	RecoveryPasswordReminder,
 	LoadingPage,
@@ -38,4 +44,7 @@ export {
 	ContestEndWaitingPage,
 	ContestQuestionRecoveryPage,
 	ContestEndPage,
+	StartContest,
+	AllContestsDone,
+	PersonalData,
 }

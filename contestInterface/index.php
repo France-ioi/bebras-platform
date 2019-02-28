@@ -470,7 +470,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
 
 
 <div id="divPersonalPage" style="display:none">
-   <h2>Page personnelle</h2> 
+   <h2>Page personnelle</h2>
    <p>
    <table id="personalData">
       <tr><td>Nom :</td><td id="persoLastName"></td></tr>
@@ -479,7 +479,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
       <tr><td>Qualifié pour la catégorie :</td><td id="persoCategory"></td></tr>
    </table>
    </p>
-   <p>   
+   <p>
    <table>
       <tr>
          <td><button type="button" id="buttonStartPreparation" onclick="startPreparation()" class="btn btn-primary">Démarrer une préparation</button></td>
@@ -661,6 +661,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
   script_tag('/bower_components/base64/base64.min.js');
   script_tag('/bower_components/pem-platform/task-pr.js');
   script_tag('/raphael-min.js');
+  script_tag('/build/bundle.js');
   script_tag('/common.js');
   global $config;
 ?>

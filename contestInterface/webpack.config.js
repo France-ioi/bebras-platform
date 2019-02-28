@@ -12,7 +12,7 @@ const config = {
 		path: path.resolve(__dirname, './build'),
 		filename: 'bundle.js',
 		libraryTarget: "var",
-		library: "ui"
+		library: "UI"
 	},
 	externals: {
 		"jquery": "$"

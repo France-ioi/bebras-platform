@@ -16,5 +16,13 @@ export default {
 
 	updateSubTitle (title) {
 		$("#headerH2").html(title);
+	},
+
+	updateLoginLinkVisibility (isShow) {
+		if (isShow) {
+			$("#login_link_to_home").show();
+		} else {
+			$("#login_link_to_home").hide();
+		}
 	}
 };
