@@ -33,7 +33,7 @@ export default {
 	updateQuestionContent (html) {
 		$("#divQuestionsContent").html(html);
 	},
-	getGradersContent (data) {
+	updateGradersContent (data) {
 		if (data.graders) {
 			$('#divGradersContent').html(data.graders);
 		 } else {
@@ -49,5 +49,4 @@ export default {
 	updateSolutionsContent (html) {
 		$('#divSolutionsContent').html(html);
 	}
-
 };

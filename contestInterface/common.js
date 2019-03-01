@@ -1426,7 +1426,7 @@ function loadContestData(contestID, contestFolder, groupPassword)
          $.post("graders.php", {SID: SID, ieMode: window.ieMode, teamID: teamID, groupPassword: groupPassword, p: getParameterByName('p')}, function(data) {
             if (data.status === 'success' && (data.graders || data.gradersUrl)) {
                questionIframe.gradersLoaded = true;
-               UI.GridView.getGradersContent(data.graders);
+               UI.GridView.updateGradersContent(data);
             }
             if (data.status == 'success') { bonusScore = parseInt(data.bonusScore); }
          }, 'json');
