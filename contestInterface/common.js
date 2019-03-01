@@ -976,10 +976,7 @@ var questionIframe = {
    },
 
    setHeight: function(height) {
-      if(height < 700 && !questionIframe.autoHeight) {
-         height = 700;
-      }
-      UI.TaskFrame.updateHeight(height);
+      UI.TaskFrame.updateHeight(height, questionIframe);
    }
 };
 

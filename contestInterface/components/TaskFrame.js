@@ -50,7 +50,10 @@ export default {
 	updatePadding (doc, px) {
 		$('#container', doc).css('padding', px);
 	},
-	updateHeight (height) {
+	updateHeight (height, questionIframe) {
+		if (height < 700 && !questionIframe.autoHeight) {
+			height = 700;
+		}
 		$('#question-iframe').css('height', height + 'px');
 	},
 	loadQuestion (body, questionKey) {
