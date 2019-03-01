@@ -120,12 +120,7 @@ window.utcDateFormatter = function(cellValue) {
 
 
 window.unlockAllLevels = function() {
-   var sortedQuestionIDs = getSortedQuestionIDs(questionsData);
-   for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
-      var questionKey = questionsData[sortedQuestionIDs[iQuestionID]].key;
-      questionUnlockedLevels[questionKey] = 4;
-      UI.GridView.unlockAllLevels(questionKey);
-   }
+   UI.GridView.unlockAllLevels(getSortedQuestionIDs, questionsData, questionUnlockedLevels);
 };
 
 // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
@@ -1338,7 +1333,7 @@ function updateUnlockedLevels(sortedQuestionIDs, updatedQuestionKey, contestEnde
             nbTasksUnlocked[iLevel]--;
          }
       }
-      UI.GridView.unlockAllLevels(questionKey, questionUnlockedLevels[questionKey] == 0);
+      UI.GridView.unlockLevel(questionKey, questionUnlockedLevels[questionKey] == 0);
 
       if ((questionKey == updatedQuestionKey) ||
           (prevQuestionUnlockedLevels[questionKey] != questionUnlockedLevels[questionKey])) {

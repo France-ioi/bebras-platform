@@ -9,7 +9,16 @@ export default {
 		$(".questionListIntro").hide();
 		$(".questionList").hide();
 	},
-	unlockAllLevels (questionKey, isLock = false) {
+	unlockAllLevels (getSortedQuestionIDs, questionsData, questionUnlockedLevels) {
+		var sortedQuestionIDs = getSortedQuestionIDs(questionsData);
+		for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
+		   var questionKey = questionsData[sortedQuestionIDs[iQuestionID]].key;
+		   questionUnlockedLevels[questionKey] = 4;
+		   this.unlockLevel(questionKey, false);
+		}
+	},
+	unlockLevel (questionKey, isLock = false) {
+
 		if (isLock) {
 			$("#row_" + questionKey).hide();
 			$("#place_" + questionKey).show();
