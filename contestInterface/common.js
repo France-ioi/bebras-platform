@@ -759,11 +759,7 @@ var questionIframe = {
       // No more global css file
       //this.addCssFile(contestsRoot + '/' + contestFolder + '/contest_' + contestID + '.css');
 
-      var border = "border: 1px solid #000000;";
-      if (newInterface) {
-         border = "";
-      }
-      UI.TaskFrame.updateBorder(this.body, border, t);
+      UI.TaskFrame.updateBorder(this.body, newInterface, t);
 
       this.initialized = true;
 

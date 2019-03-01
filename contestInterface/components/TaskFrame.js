@@ -44,7 +44,11 @@ export default {
 		// loaded
 		iframe.setAttribute('allowFullScreen', true);
 	},
-	updateBorder (body, border, t) {
+	updateBorder (body, newInterface, t) {
+		var border = "border: 1px solid #000000;";
+		if (newInterface) {
+		   border = "";
+		}
 		body.append('<div id="jsContent"></div><div id="container" style="' + border + 'padding: 5px;"><div class="question" style="font-size: 20px; font-weight: bold;">' + t("content_is_loading") + '</div></div>');
 	},
 	updatePadding (doc, px) {
