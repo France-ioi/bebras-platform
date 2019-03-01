@@ -7,19 +7,22 @@ export default {
 	unload () {
 		$("#divCheckGroup").hide();
 	},
-	showPublicGroups (t) {
-		$("#publicContestExplanation").html(t("tab_public_contests_score_explanation"));
-		//loadPublicGroups(); We don't use this feature anymore, we create this page manually.
-		$("#loadPublicGroups").hide();
-		$("#contentPublicGroups").show();
-	},
-	showHideTab (tabName, isShow) {
-		if (isShow) {
-			$("#tab-" + tabName).show();
-			$("#button-" + tabName).addClass("selected");
-		} else {
-			$("#tab-" + tabName).hide();
-			$("#button-" + tabName).removeClass("selected");
+	selectMainTab (tabName, t) {
+		if (tabName == 'home') {
+			$("#publicContestExplanation").html(t("tab_public_contests_score_explanation"));
+			//loadPublicGroups(); We don't use this feature anymore, we create this page manually.
+			$("#loadPublicGroups").hide();
+			$("#contentPublicGroups").show();
+		}
+		var tabNames = ["school", "home", "continue", "contests"];
+		for (var iTab = 0; iTab < tabNames.length; iTab++) {
+			if (tabNames[iTab] === tabName) {
+				$("#tab-" + tabNames[iTab]).show();
+				$("#button-" + tabNames[iTab]).addClass("selected");
+			} else {
+				$("#tab-" + tabNames[iTab]).hide();
+				$("#button-" + tabNames[iTab]).removeClass("selected");
+			}
 		}
 	},
 	confirmPublicGroup () {

@@ -1169,17 +1169,7 @@ var TimeManager = {
 // Main page
 
 window.selectMainTab = function(tabName) {
-   if (tabName == 'home') {
-      UI.TrainingContestSelection.showPublicGroups(t);
-  }
-   var tabNames = ["school", "home", "continue", "contests"];
-   for(var iTab = 0; iTab < tabNames.length; iTab++) {
-      if (tabNames[iTab] === tabName) {
-         UI.TrainingContestSelection.showHideTab(tabNames[iTab], true);
-      } else {
-         UI.TrainingContestSelection.showHideTab(tabNames[iTab], false);
-      }
-   }
+   UI.TrainingContestSelection.selectMainTab(tabName, t);
 };
 
 window.confirmPublicGroup = UI.TrainingContestSelection.confirmPublicGroup;
