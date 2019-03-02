@@ -2,10 +2,28 @@
 
 export default {
 	load (data, eventListeners) {
-		$("#divLogin").show();
+		$("#divDescribeTeam").show();
 	},
 	unload () {
-		$("#divLogin").hide();
+		$("#divDescribeTeam").hide();
+	},
+	unselect () {
+		$(".nbContestants").removeClass('selected');
+	},
+	updateCheckNbContestantsVisibility (isShow) {
+		if (isShow) {
+			$('#divCheckNbContestants').show();
+		} else {
+			$('#divCheckNbContestants').hide();
+		}
+	},
+	updateLoginVisibility (isShow) {
+		if (isShow) {
+			$("#divLogin").show();
+		} else {
+			$("#divLogin").hide();
+		}
+
 	},
 	init (contestant) {
 		$("#firstName" + contestant).val("");

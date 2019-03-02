@@ -1505,6 +1505,7 @@
    */
    function fillListTeams (teams) {
       UI.RestartContestForm.fillListTeams(teams, t);
+
    }
 
    /*
@@ -1514,10 +1515,10 @@
    var nbContestants;
 
    window.setNbContestants = function (newNbContestants) {
-      UI.DescribeTeam.unselect();
+      UI.PersonalDataForm.unselect();
       nbContestants = newNbContestants;
       UI.PersonalDataForm.setNbContestants(nbContestants);
-      UI.PersonalDataForm.load();
+      UI.PersonalDataForm.updateLoginVisibility(true);
    }
 
 
@@ -1605,7 +1606,7 @@
                createTeam([{lastName: "Anonymous", firstName: "Anonymous", genre: 2, email: null, zipCode: null}]);
             } else {
                setContestBreadcrumb();
-               UI.DescribeTeam.load();
+               UI.PersonalDataForm.load();
                $("#divAccessContest").show();
                if (data.askParticipationCode == 0) {
                   UI.PersonalDataForm.hideAskRegCode();
@@ -1613,12 +1614,12 @@
                   hasRegistration(2, false);
                }
                if (data.allowTeamsOfTwo == 1) {
-                  UI.DescribeTeam.updateCheckNbContestantsVisibility(true);
-                  UI.PersonalDataForm.unload();
+                  UI.PersonalDataForm.updateCheckNbContestantsVisibility(true);
+                  UI.PersonalDataForm.updateLoginVisibility(false);
                } else {
                   window.setNbContestants(1);
-                  UI.DescribeTeam.updateCheckNbContestantsVisibility(false);
-                  UI.PersonalDataForm.load();
+                  UI.PersonalDataForm.updateCheckNbContestantsVisibility(false);
+                  UI.PersonalDataForm.updateLoginVisibility(true);
                }
             }
             if ((data.registrationData != undefined) && (data.registrationData.code != undefined)) {
@@ -2047,9 +2048,9 @@
          function (data) {
             teamID = data.teamID;
             teamPassword = data.password;
-            UI.DescribeTeam.unload();
             UI.PersonalDataForm.unload();
-            UI.DescribeTeam.updateCheckNbContestantsVisibility(false);
+            UI.PersonalDataForm.updateLoginVisibility(false);
+            UI.PersonalDataForm.updateCheckNbContestantsVisibility(false);
             $("#divAccessContest").hide();
             UI.PersonalData.updateTeamPassword(data.password);
             UI.PersonalData.updateVisibilityPassword(true);

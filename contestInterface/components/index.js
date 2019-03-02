@@ -8,7 +8,6 @@ import TrainingContestSelection from './TrainingContestSelection';
 import RestartContestForm from './RestartContestForm';
 import GroupUsedForm from './GroupUsedForm';
 import PersonalDataForm from './PersonalDataForm';
-import DescribeTeam from './DescribeTeam';
 import SubcontestSelectionInterface from './SubcontestSelectionInterface';
 import RecoveryPasswordReminder from './RecoveryPasswordReminder';
 import LoadingPage from './LoadingPage';
@@ -34,7 +33,6 @@ export {
 	RestartContestForm,
 	GroupUsedForm,
 	PersonalDataForm,
-	DescribeTeam,
 	SubcontestSelectionInterface,
 	RecoveryPasswordReminder,
 	LoadingPage,
