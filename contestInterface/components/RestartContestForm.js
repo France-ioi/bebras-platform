@@ -17,12 +17,20 @@ export default {
 			$("#divRelogin").hide();
 		}
 	},
-	updateSelectTeam (html, isAppend=false) {
-		if (!isAppend) {
-			$("#selectTeam").html(html);
-		} else {
-			$("#selectTeam").append(html);
-		}
+	fillListTeams (teams, t) {
+		$("#selectTeam").html("<option value='0'>" + t("tab_view_select_team"));
+		for (var curTeamID in teams) {
+			var team = teams[curTeamID];
+			var teamName = "";
+			for (var iContestant in team.contestants) {
+			   var contestant = team.contestants[iContestant];
+			   if (iContestant == 1) {
+				  teamName += " et "; // XXX: translate
+			   }
+			   teamName += contestant.firstName + " " + contestant.lastName;
+			}
+			$("#selectTeam").append("<option value='" + curTeamID + "'>" + teamName + "</option>");
+		 }
 	},
 	confirmUnsupportedBrowser () {
 		$("#submitParticipationCode").removeClass('needBrowserConfirm');

@@ -1504,19 +1504,7 @@
     * Used to continue a contest if the students didn't write down the team password
    */
    function fillListTeams (teams) {
-      UI.RestartContestForm.updateSelectTeam("<option value='0'>" + t("tab_view_select_team"));
-      for (var curTeamID in teams) {
-         var team = teams[curTeamID];
-         var teamName = "";
-         for (var iContestant in team.contestants) {
-            var contestant = team.contestants[iContestant];
-            if (iContestant == 1) {
-               teamName += " et "; // XXX: translate
-            }
-            teamName += contestant.firstName + " " + contestant.lastName;
-         }
-         UI.RestartContestForm.updateSelectTeam("<option value='" + curTeamID + "'>" + teamName + "</option>", true);
-      }
+      UI.RestartContestForm.fillListTeams(teams, t);
    }
 
    /*
