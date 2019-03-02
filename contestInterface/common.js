@@ -1178,7 +1178,7 @@
    */
 
    function fillListQuestions (sortedQuestionIDs, questionsData) {
-      UI.OldListView.updateQuestionList(sortedQuestionIDs, questionsData, fullFeedback, scores);
+      UI.OldListView.fillListQuestions(sortedQuestionIDs, questionsData, fullFeedback, scores);
       if (fullFeedback) {
          UI.OldContestHeader.updateCssFullfeedback();
          $(".question, #divQuestionParams, #divClosed, .questionsTable, #question-iframe-container").css("left", "245px");
@@ -1186,40 +1186,7 @@
    }
 
    function fillListQuestionsNew (sortedQuestionIDs, questionsData) {
-      var strListQuestions = "";
-      var iQuestionID, questionData;
-      for (iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
-         questionData = questionsData[sortedQuestionIDs[iQuestionID]];
-         var encodedName = questionData.name.replace("'", "&rsquo;").split("[")[0];
-
-         strListQuestions +=
-            "<span id='row_" + questionData.key + "' class='icon' onclick='selectQuestion(\"" + questionData.ID + "\", true)'>" +
-            '<div class="icon_title"><span class="questionBullet" id="bullet_' + questionData.key + '"></span>&nbsp;' + encodedName + '&nbsp;&nbsp;</div>' +
-            '<div class="icon_img">' +
-            '<table>' +
-            '<tr>' +
-            '<td class="icon_img_td" style="vertical-align: middle;">' +
-            '<img src="' + window.contestsRoot + '/' + contestFolder + '/' + questionData.key + '/icon.png" />' +
-            '</td>' +
-            '</tr>' +
-            '</table>' +
-            '</div>' +
-            '<div class="questionScore" style="margin:auto" id="score_' + questionData.key + '"></div>' +
-            '</span>' +
-            '<span id="place_' + questionData.key + '" class="icon">' +
-            '<div class="icon_title" style="color:gray">' + t("question_locked") + '</div>' +
-            '<div class="icon_img">' +
-            '<table>' +
-            '<tr>' +
-            '<td class="icon_img_td" style="vertical-align: middle;">' +
-            '<img src="images/locked_task.png" />' +
-            '</td>' +
-            '</tr>' +
-            '</table>' +
-            '</div>' +
-            '</span>';
-      }
-      UI.OldListView.updateQuestionList(strListQuestions);
+      UI.OldListView.fillListQuestionsNew(sortedQuestionIDs, questionsData, window.contestsRoot, contestFolder);
       updateUnlockedLevels(sortedQuestionIDs);
       for (iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
          questionData = questionsData[sortedQuestionIDs[iQuestionID]];
@@ -1458,10 +1425,7 @@
                   }
 
                   function newLoader () {
-                     var log_fn = function (text) {
-                        UI.OldListView.updateQuestionList("<span style='font-size:2em;padding-left:10px'>" + text + "</span>");
-                     };
-                     var loader = new Loader(window.contestsRoot + '/' + contestFolder + '/', log_fn);
+                     var loader = new Loader(window.contestsRoot + '/' + contestFolder + '/', UI.OldListView.log_fn);
                      loader.run().done(function (content) {
                         UI.GridView.updateQuestionContent(content);
                         startContestTime(data);
