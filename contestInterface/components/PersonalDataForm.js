@@ -7,9 +7,6 @@ export default {
 	unload () {
 		$("#divDescribeTeam").hide();
 	},
-	unselect () {
-		$(".nbContestants").removeClass('selected');
-	},
 	updateCheckNbContestantsVisibility (isShow) {
 		if (isShow) {
 			$('#divCheckNbContestants').show();
@@ -32,6 +29,7 @@ export default {
 		$("#genre" + contestant + "_male").attr('checked', null);
 	},
 	setNbContestants (nbContestants) {
+		$(".nbContestants").removeClass('selected');
 		if (nbContestants === 2) {
 			$("#contestant2").show();
 		}

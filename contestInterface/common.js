@@ -1515,7 +1515,6 @@
    var nbContestants;
 
    window.setNbContestants = function (newNbContestants) {
-      UI.PersonalDataForm.unselect();
       nbContestants = newNbContestants;
       UI.PersonalDataForm.setNbContestants(nbContestants);
       UI.PersonalDataForm.updateLoginVisibility(true);
