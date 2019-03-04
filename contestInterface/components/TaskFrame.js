@@ -44,12 +44,12 @@ export default {
 		// loaded
 		iframe.setAttribute('allowFullScreen', true);
 	},
-	updateBorder (body, newInterface, t) {
+	updateBorder (body, newInterface) {
 		var border = "border: 1px solid #000000;";
 		if (newInterface) {
 		   border = "";
 		}
-		body.append('<div id="jsContent"></div><div id="container" style="' + border + 'padding: 5px;"><div class="question" style="font-size: 20px; font-weight: bold;">' + t("content_is_loading") + '</div></div>');
+		body.append('<div id="jsContent"></div><div id="container" style="' + border + 'padding: 5px;"><div class="question" style="font-size: 20px; font-weight: bold;">' + i18n.t("content_is_loading") + '</div></div>');
 	},
 	updatePadding (doc, px) {
 		$('#container', doc).css('padding', px);
@@ -65,7 +65,7 @@ export default {
 		// We cannot just clone the element, because it'll result in an strange id conflict, even if we put the result in an iframe
 		var questionContent = $('#question-' + questionKey).html();
 		if (!questionContent) {
-			questionContent = t("error_loading_content");
+			questionContent = i18n.t("error_loading_content");
 		}
 		body.find('#container').append('<div id="question-' + questionKey + '" class="question">' + questionContent + '</div>');
 	},

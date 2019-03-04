@@ -7,9 +7,9 @@ export default {
 	unload () {
 		$("#divCheckGroup").hide();
 	},
-	selectMainTab (tabName, t) {
+	selectMainTab (tabName) {
 		if (tabName == 'home') {
-			$("#publicContestExplanation").html(t("tab_public_contests_score_explanation"));
+			$("#publicContestExplanation").html(i18n.t("tab_public_contests_score_explanation"));
 			//loadPublicGroups(); We don't use this feature anymore, we create this page manually.
 			$("#loadPublicGroups").hide();
 			$("#contentPublicGroups").show();

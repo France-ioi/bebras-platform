@@ -35,7 +35,7 @@ export default {
 				'<div class="questionScore" style="margin:auto" id="score_' + questionData.key + '"></div>' +
 				'</span>' +
 				'<span id="place_' + questionData.key + '" class="icon">' +
-				'<div class="icon_title" style="color:gray">' + t("question_locked") + '</div>' +
+				'<div class="icon_title" style="color:gray">' + i18n.t("question_locked") + '</div>' +
 				'<div class="icon_img">' +
 				'<table>' +
 				'<tr>' +

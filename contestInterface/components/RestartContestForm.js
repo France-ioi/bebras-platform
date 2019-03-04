@@ -17,8 +17,8 @@ export default {
 			$("#divRelogin").hide();
 		}
 	},
-	fillListTeams (teams, t) {
-		$("#selectTeam").html("<option value='0'>" + t("tab_view_select_team"));
+	fillListTeams (teams) {
+		$("#selectTeam").html("<option value='0'>" + i18n.t("tab_view_select_team"));
 		for (var curTeamID in teams) {
 			var team = teams[curTeamID];
 			var teamName = "";

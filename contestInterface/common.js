@@ -762,7 +762,7 @@ if (!Object.keys) {
          // No more global css file
          //this.addCssFile(contestsRoot + '/' + contestFolder + '/contest_' + contestID + '.css');
 
-         UI.TaskFrame.updateBorder(this.body, newInterface, t);
+         UI.TaskFrame.updateBorder(this.body, newInterface);
 
          this.initialized = true;
 
@@ -1168,7 +1168,7 @@ if (!Object.keys) {
    // Main page
 
    window.selectMainTab = function (tabName) {
-      UI.TrainingContestSelection.selectMainTab(tabName, t);
+      UI.TrainingContestSelection.selectMainTab(tabName);
    };
 
    window.confirmPublicGroup = UI.TrainingContestSelection.confirmPublicGroup;
@@ -1628,7 +1628,7 @@ if (!Object.keys) {
             * Fills a select field with all the names of the teams (of a given group)
             * Used to continue a contest if the students didn't write down the team password
             */
-            UI.RestartContestForm.fillListTeams(data.teams, t);
+            UI.RestartContestForm.fillListTeams(data.teams);
             UI.NavigationTabs.load();
             UI.RestartContestForm.updateDivReloginVisibility(true);
          }
@@ -2338,7 +2338,7 @@ if (!Object.keys) {
                }
             }
             $(".scoreTotal").hide();
-            UI.OldContestHeader.updateTeamScore(t, teamScore, maxTeamScore);
+            UI.OldContestHeader.updateTeamScore(teamScore, maxTeamScore);
             //      window.selectQuestion(sortedQuestionIDs[0], false);
          }
       }, 'json');

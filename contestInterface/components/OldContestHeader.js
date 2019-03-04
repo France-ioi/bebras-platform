@@ -22,8 +22,8 @@ export default {
 		$("#bullet_" + questionKey).html(image);
 		$("#score_" + questionKey).html("<b>" + score + "</b> / " + maxScore);
 	},
-	updateTeamScore (t, teamScore, maxTeamScore) {
-		$(".chrono").html("<tr><td style='font-size:28px'> " + t("score") + ' ' + teamScore + " / " + maxTeamScore + "</td></tr>");
+	updateTeamScore (teamScore, maxTeamScore) {
+		$(".chrono").html("<tr><td style='font-size:28px'> " + i18n.t("score") + ' ' + teamScore + " / " + maxTeamScore + "</td></tr>");
         $(".chrono").css("background-color", "#F66");
 	},
 	updateFeedbackVisibility (isShow) {
