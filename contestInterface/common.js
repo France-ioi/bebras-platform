@@ -46,7 +46,7 @@ if (!Object.keys) {
 
    // init listerers and such..
    var components = Object.keys(UI);
-   for (var i=0; i<components.length; i++) {
+   for (var i = 0; i < components.length; i++) {
       var component = UI[components[i]];
       if (typeof component.init === 'function') {
          component.init();
@@ -108,14 +108,6 @@ if (!Object.keys) {
    var delaySendingAttempts = 60000;
    var nbSubmissions = 0;
    var t = i18n.t;
-   var childrenContests = [];
-   var preSelectedCategory = "";
-   var selectedCategory = "";
-   var preSelectedLanguage = "";
-   var selectedLanguage = "";
-   var preSelectedContest = "";
-   var contestBreadcrumb = "";
-   var selectedCategory = "";
    var groupCheckedData = null;
    var contestants = {};
    var teamMateHasRegistration = {1: false, 2: false};
@@ -1721,13 +1713,12 @@ if (!Object.keys) {
 
    window.startPreparation = function () {
       updateContestName(personalPageData.contestName);
-      groupMinCategory = personalPageData.minCategory;
-      groupMaxCategory = personalPageData.maxCategory;
-      groupLanguage = personalPageData.language;
+      UI.SubcontestSelectionInterface.groupMinCategory = personalPageData.minCategory;
+      UI.SubcontestSelectionInterface.groupMaxCategory = personalPageData.maxCategory;
+      UI.SubcontestSelectionInterface.groupLanguage = personalPageData.language;
       if (personalPageData.childrenContests.length > 0) {
          UI.PersonalData.unload();
          offerContestSelectionPanels();
-         //offerCategories(personalPageData);
       } else {
          groupWasChecked(personalPageData, "PersonalPage", personalPageData.registrationData.code, false, false);
       }
@@ -1762,7 +1753,7 @@ if (!Object.keys) {
             UI.MainHeader.updateLoginLinkVisibility(false);
             $("#div" + curStep).hide();
 
-            childrenContests = data.childrenContests;
+            UI.SubcontestSelectionInterface.childrenContests = data.childrenContests;
             groupCheckedData = {
                data: data,
                curStep: curStep,
@@ -1778,9 +1769,9 @@ if (!Object.keys) {
             }
             updateContestName(data.contestName);
 
-            groupMinCategory = data.minCategory;
-            groupMaxCategory = data.maxCategory;
-            groupLanguage = data.language;
+            UI.SubcontestSelectionInterface.groupMinCategory = data.minCategory;
+            UI.SubcontestSelectionInterface.groupMaxCategory = data.maxCategory;
+            UI.SubcontestSelectionInterface.groupLanguage = data.language;
 
             if (data.allContestsDone) {
                $("#" + curStep).hide();
@@ -1791,66 +1782,27 @@ if (!Object.keys) {
             if ((!getTeams) && (data.childrenContests != undefined) && (data.childrenContests.length != 0)) {
                $("#" + curStep).hide();
                $('#divAccessContest').show();
-               offerCategories(data);
+               UI.SubcontestSelectionInterface.offerCategories(data);
             } else {
                groupWasChecked(data, curStep, groupCode, getTeams, data.isPublic);
             }
          }, "json").done(function () {Utils.enableButton("button" + curStep);});
    };
 
-   function scrollToTop (el) {
-      // TODO: only animate when necessary,
-      // ie when the content after is longer than the remaining window space
-      UI.SubcontestSelectionInterface.scrollToTop(el);
-   }
-
-
-
-   window.goToCategory = function () {
-      UI.SubcontestSelectionInterface.goToCategory();
-      offerCategories();
-   };
-
-   window.goToLanguage = function () {
-      UI.SubcontestSelectionInterface.goToLanguage();
-      offerLanguages();
-   };
-
-   window.goToSequence = function () {
-      UI.SubcontestSelectionInterface.goToSequence();
-      offerContests();
-   };
-
-
    function offerContestSelectionPanels () {
       UI.Breadcrumbs.updateBreadcrumb();
-      offerCategories(personalPageData);
+      UI.SubcontestSelectionInterface.offerCategories(personalPageData);
       $('#divAccessContest').show();
    }
 
-   UI.SubcontestSelectionInterface.initListeners();
-
-
-   function setContestSelector () {
-      UI.SubcontestSelectionInterface.setContestSelector();
-   }
-
-   window.getContest = function (ID) {
-      for (var iChild = 0; iChild < childrenContests.length; iChild++) {
-         var child = childrenContests[iChild];
-         if (child.contestID == ID) {
-            return child;
-         }
-      }
-   }
-
+   //related to UI.SubcontestSelectionInterface
    window.selectContest = function (ID) {
       $("#selectContest").delay(250).slideUp(400).queue(function () {
          $(this).dequeue();
          if (window.browserIsMobile && typeof scratchToBlocklyContestID[ID] != 'undefined') {
             alert(t("browser_redirect_scratch_to_blockly"));
             ID = scratchToBlocklyContestID[ID];
-            selectedLanguage = 'blockly';
+            UI.SubcontestSelectionInterface.selectedLanguage = 'blockly';
             UI.Breadcrumbs.updateBreadcrumb();
          }
          var contest = window.getContest(ID);
@@ -1863,112 +1815,7 @@ if (!Object.keys) {
       });
    }
 
-   window.offerCategories = function (data) {
-      var categories = {};
-      UI.SubcontestSelectionInterface.hideCategoryChoice();
-      for (var iChild = 0; iChild < childrenContests.length; iChild++) {
-         var child = childrenContests[iChild];
-         if (categories[child.categoryColor] == undefined) {
-            categories[child.categoryColor] = true;
-         }
-      }
-      var allCategories = ["blanche", "jaune", "orange", "verte", "bleue", "cm1cm2", "6e5e", "4e3e", "2depro", "2de", "1reTalepro", "1reTale", "all"]; // TODO: do not hardcode
-      var minReached = (groupMinCategory == "");
-      var maxReached = false;
-      var nbCategories = 0;
-      var lastCategory;
-      for (var iCategory = 0; iCategory < allCategories.length; iCategory++) {
-         var category = allCategories[iCategory];
-         if (category == groupMinCategory) {
-            minReached = true;
-         }
-         if ((!minReached) || maxReached) {
-            categories[category] = false;
-         }
-         if (category == groupMaxCategory) {
-            maxReached = true;
-         }
-         if (categories[category]) {
-            nbCategories++;
-            lastCategory = category;
-            UI.SubcontestSelectionInterface.showCategory(category);
-         }
-      }
-      if (nbCategories > 1) {
-         UI.SubcontestSelectionInterface.showSelectCategory();
-         UI.SubcontestSelectionInterface.updateVisibilityCategoryWarning(data.isOfficialContest);
-      } else {
-         selectCategory(lastCategory);
-      }
-      scrollToTop('#tab-school .tabTitle');
-   }
 
-   window.offerLanguages = function () {
-      var languages = {};
-      var nbLanguages = 0;
-      UI.SubcontestSelectionInterface.hideLanguageSelector();
-      var lastLanguage = "";
-      for (var iChild = 0; iChild < childrenContests.length; iChild++) {
-         var child = childrenContests[iChild];
-         if (groupLanguage != "" && groupLanguage != child.language) {
-            continue;
-         }
-         if (languages[child.language] == undefined) {
-            languages[child.language] = true;
-            nbLanguages++;
-            lastLanguage = child.language;
-            UI.SubcontestSelectionInterface.showLanguage(child.language);
-         }
-      }
-      if (nbLanguages > 1) {
-         UI.SubcontestSelectionInterface.showSelectLanguage();
-      } else {
-         selectLanguage(lastLanguage);
-      }
-      UI.Breadcrumbs.updateBreadcrumb();
-      scrollToTop('#tab-school .tabTitle');
-   }
-
-   window.offerContests = function () {
-      var selectHtml = "";
-      var lastContestID = "";
-      var nbContests = 0;
-      for (var iChild = 0; iChild < childrenContests.length; iChild++) {
-         var child = childrenContests[iChild];
-         if ((selectedCategory == child.categoryColor) &&
-            (selectedLanguage == child.language)) {
-            lastContestID = child.contestID;
-            var contestImage = "";
-            if (child.imageURL != "") {
-               contestImage = '<img src="' + child.imageURL + '"/>';
-            }
-            var trClasses = "contestSelector";
-            /* use of == because contestID is a number, preSelectedContest a string */
-            if (child.contestID == preSelectedContest) {
-               trClasses = trClasses + ' selected';
-            }
-            selectHtml += '<tr data-contestid="' + child.contestID + '" class="' + trClasses + '">' +
-               '<td class="selectorCell">' +
-               '<div class="selector_arrowForward" ><span> </span></div>' +
-               '</td>' +
-               '<td class="selectorTitle"><button type="button" class="btn btn-default">' + child.name + ' →</button></td>' +
-               '<td class="contestDescription">' +
-               child.description +
-               '</td><td class="contestImage">' +
-               contestImage +
-               '</td></tr>';
-            nbContests++;
-         }
-      }
-      if (nbContests > 1) {
-         UI.SubcontestSelectionInterface.updateSelectContestItems(selectHtml);
-         setContestSelector();
-      }
-      else {
-         selectContest(lastContestID);
-      }
-      UI.Breadcrumbs.updateBreadcrumb();
-   }
 
    /*
     * Validates student's information form
