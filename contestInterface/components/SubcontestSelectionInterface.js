@@ -16,8 +16,8 @@ export default {
 		const that = this;
 		// Select contest category
 		$('.categorySelector').click(function (event) {
-			var target = $(event.currentTarget);
-			var category = target.data('category');
+			const target = $(event.currentTarget);
+			const category = target.data('category');
 			if (that.selectedCategory.length && that.selectedCategory !== that.preSelectedCategory) {
 				that.selectedLanguage = "";
 				that.selectedContest = "";
@@ -30,8 +30,8 @@ export default {
 
 		// Select contest language
 		$('.languageSelector').click(function (event) {
-			var target = $(event.currentTarget);
-			var language = target.data('language');
+			const target = $(event.currentTarget);
+			const language = target.data('language');
 			that.preSelectedLanguage = language;
 			$('.languageSelector').removeClass('selected');
 			$('.languageSelector[data-language="' + language + '"]').addClass('selected');
@@ -64,8 +64,8 @@ export default {
 		this.offerLanguages();
 	},
 	getContest (ID) {
-		for (var iChild = 0; iChild < this.childrenContests.length; iChild++) {
-			var child = this.childrenContests[iChild];
+		for (let iChild = 0; iChild < this.childrenContests.length; iChild++) {
+			const child = this.childrenContests[iChild];
 			if (child.contestID == ID) {
 				return child;
 			}
@@ -93,21 +93,21 @@ export default {
 		this.offerContests();
 	},
 	offerCategories (data) {
-		var categories = {};
+		const categories = {};
 		$(".categoryChoice").hide();
-		for (var iChild = 0; iChild < this.childrenContests.length; iChild++) {
-			var child = this.childrenContests[iChild];
+		for (let iChild = 0; iChild < this.childrenContests.length; iChild++) {
+			const child = this.childrenContests[iChild];
 			if (categories[child.categoryColor] == undefined) {
 				categories[child.categoryColor] = true;
 			}
 		}
-		var allCategories = ["blanche", "jaune", "orange", "verte", "bleue", "cm1cm2", "6e5e", "4e3e", "2depro", "2de", "1reTalepro", "1reTale", "all"]; // TODO: do not hardcode
-		var minReached = (this.groupMinCategory == "");
-		var maxReached = false;
-		var nbCategories = 0;
-		var lastCategory;
-		for (var iCategory = 0; iCategory < allCategories.length; iCategory++) {
-			var category = allCategories[iCategory];
+		const allCategories = ["blanche", "jaune", "orange", "verte", "bleue", "cm1cm2", "6e5e", "4e3e", "2depro", "2de", "1reTalepro", "1reTale", "all"]; // TODO: do not hardcode
+		let minReached = (this.groupMinCategory == "");
+		let maxReached = false;
+		let nbCategories = 0;
+		let lastCategory;
+		for (let iCategory = 0; iCategory < allCategories.length; iCategory++) {
+			const category = allCategories[iCategory];
 			if (category == this.groupMinCategory) {
 				minReached = true;
 			}
@@ -136,12 +136,12 @@ export default {
 		this.scrollToTop('#tab-school .tabTitle');
 	},
 	offerLanguages () {
-		var languages = {};
-		var nbLanguages = 0;
+		const languages = {};
+		let nbLanguages = 0;
 		$(".languageSelector").hide();
-		var lastLanguage = "";
-		for (var iChild = 0; iChild < this.childrenContests.length; iChild++) {
-			var child = this.childrenContests[iChild];
+		let lastLanguage = "";
+		for (let iChild = 0; iChild < this.childrenContests.length; iChild++) {
+			const child = this.childrenContests[iChild];
 			if (this.groupLanguage != "" && this.groupLanguage != child.language) {
 				continue;
 			}
@@ -161,19 +161,19 @@ export default {
 		this.scrollToTop('#tab-school .tabTitle');
 	},
 	offerContests () {
-		var selectHtml = "";
-		var lastContestID = "";
-		var nbContests = 0;
-		for (var iChild = 0; iChild < this.childrenContests.length; iChild++) {
-			var child = this.childrenContests[iChild];
+		let selectHtml = "";
+		let lastContestID = "";
+		let nbContests = 0;
+		for (let iChild = 0; iChild < this.childrenContests.length; iChild++) {
+			const child = this.childrenContests[iChild];
 			if ((this.selectedCategory == child.categoryColor) &&
 				(this.selectedLanguage == child.language)) {
 				lastContestID = child.contestID;
-				var contestImage = "";
+				let contestImage = "";
 				if (child.imageURL != "") {
 					contestImage = '<img src="' + child.imageURL + '"/>';
 				}
-				var trClasses = "contestSelector";
+				let trClasses = "contestSelector";
 				/* use of == because contestID is a number, preSelectedContest a string */
 				if (child.contestID == this.preSelectedContest) {
 					trClasses = trClasses + ' selected';
@@ -204,7 +204,7 @@ export default {
 	setContestSelector () {
 		const that = this;
 		$('.contestSelector').click(function (event) {
-			var target = $(event.currentTarget);
+			const target = $(event.currentTarget);
 			that.preSelectedContest = target.data('contestid').toString();
 			$('.contestSelector').removeClass('selected');
 			target.addClass('selected');
