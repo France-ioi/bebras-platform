@@ -1,6 +1,57 @@
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
+// From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
+if (!Object.keys) {
+   Object.keys = (function () {
+      'use strict';
+      var hasOwnProperty = Object.prototype.hasOwnProperty,
+         hasDontEnumBug = !({toString: null}).propertyIsEnumerable('toString'),
+         dontEnums = [
+            'toString',
+            'toLocaleString',
+            'valueOf',
+            'hasOwnProperty',
+            'isPrototypeOf',
+            'propertyIsEnumerable',
+            'constructor'
+         ],
+         dontEnumsLength = dontEnums.length;
+
+      return function (obj) {
+         if (typeof obj !== 'object' && (typeof obj !== 'function' || obj === null)) {
+            throw new TypeError('Object.keys called on non-object');
+         }
+
+         var result = [], prop, i;
+
+         for (prop in obj) {
+            if (hasOwnProperty.call(obj, prop)) {
+               result.push(prop);
+            }
+         }
+
+         if (hasDontEnumBug) {
+            for (i = 0; i < dontEnumsLength; i++) {
+               if (hasOwnProperty.call(obj, dontEnums[i])) {
+                  result.push(dontEnums[i]);
+               }
+            }
+         }
+         return result;
+      };
+   }());
+}
+
+
 !function () {
 
+   // init listerers and such..
+   var components = Object.keys(UI);
+   for (var i=0; i<components.length; i++) {
+      var component = UI[components[i]];
+      if (typeof component.init === 'function') {
+         component.init();
+      }
+   }
    // *** Version of this file
    // It will be checked against config.php's minimumCommonJsVersion; increment
    // this version on each important change, and modify config.php accordingly.
@@ -123,47 +174,6 @@
       UI.GridView.unlockAllLevels(getSortedQuestionIDs, questionsData, questionUnlockedLevels);
    };
 
-   // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
-   if (!Object.keys) {
-      Object.keys = (function () {
-         'use strict';
-         var hasOwnProperty = Object.prototype.hasOwnProperty,
-            hasDontEnumBug = !({toString: null}).propertyIsEnumerable('toString'),
-            dontEnums = [
-               'toString',
-               'toLocaleString',
-               'valueOf',
-               'hasOwnProperty',
-               'isPrototypeOf',
-               'propertyIsEnumerable',
-               'constructor'
-            ],
-            dontEnumsLength = dontEnums.length;
-
-         return function (obj) {
-            if (typeof obj !== 'object' && (typeof obj !== 'function' || obj === null)) {
-               throw new TypeError('Object.keys called on non-object');
-            }
-
-            var result = [], prop, i;
-
-            for (prop in obj) {
-               if (hasOwnProperty.call(obj, prop)) {
-                  result.push(prop);
-               }
-            }
-
-            if (hasDontEnumBug) {
-               for (i = 0; i < dontEnumsLength; i++) {
-                  if (hasOwnProperty.call(obj, dontEnums[i])) {
-                     result.push(dontEnums[i]);
-                  }
-               }
-            }
-            return result;
-         };
-      }());
-   }
 
    /* global error handler */
    var nbErrorsSent = 0;
