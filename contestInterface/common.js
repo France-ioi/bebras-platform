@@ -1604,7 +1604,7 @@
                window.setNbContestants(1);
                createTeam([{lastName: "Anonymous", firstName: "Anonymous", genre: 2, email: null, zipCode: null}]);
             } else {
-               setContestBreadcrumb();
+               UI.Breadcrumbs.updateBreadcrumb();
                UI.PersonalDataForm.load();
                $("#divAccessContest").show();
                if (data.askParticipationCode == 0) {
@@ -1797,20 +1797,7 @@
       UI.SubcontestSelectionInterface.scrollToTop(el);
    }
 
-   // Display contest selection breacrumb
-   function setContestBreadcrumb (val) {
-      if (preSelectedCategory != "") {
-         contestBreadcrumb = '<span class="breadcrumb-item"><span class="breadcrumb-link" onclick="goToCategory()">Catégorie ' + selectedCategory + '</span></span>';
-      }
-      if (preSelectedLanguage != "") {
-         contestBreadcrumb += '<span class="breadcrumb-item"><span class="breadcrumb-separator">/</span><span class="breadcrumb-link" onclick="goToLanguage()">Langage ' + selectedLanguage + '</span></span>';
-      }
-      if (preSelectedContest != "") {
-         var contest = window.getContest(preSelectedContest);
-         contestBreadcrumb += '<span class="breadcrumb-item"><span class="breadcrumb-separator">/</span><span class="breadcrumb-link" onclick="goToSequence()">' + contest.name + '</span></span>';
-      }
-      UI.Breadcrumbs.updateBreadcrumb(contestBreadcrumb);
-   }
+
 
    window.goToCategory = function () {
       UI.SubcontestSelectionInterface.goToCategory();
@@ -1829,7 +1816,7 @@
 
 
    function offerContestSelectionPanels () {
-      setContestBreadcrumb("Catégorie");
+      UI.Breadcrumbs.updateBreadcrumb();
       offerCategories(personalPageData);
       $('#divAccessContest').show();
    }
@@ -1857,7 +1844,7 @@
             alert(t("browser_redirect_scratch_to_blockly"));
             ID = scratchToBlocklyContestID[ID];
             selectedLanguage = 'blockly';
-            setContestBreadcrumb();
+            UI.Breadcrumbs.updateBreadcrumb();
          }
          var contest = window.getContest(ID);
          contestID = ID;
@@ -1931,7 +1918,7 @@
       } else {
          selectLanguage(lastLanguage);
       }
-      setContestBreadcrumb("Langage");
+      UI.Breadcrumbs.updateBreadcrumb();
       scrollToTop('#tab-school .tabTitle');
    }
 
@@ -1973,7 +1960,7 @@
       else {
          selectContest(lastContestID);
       }
-      setContestBreadcrumb("Séquence");
+      UI.Breadcrumbs.updateBreadcrumb();
    }
 
    /*
