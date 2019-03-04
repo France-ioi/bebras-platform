@@ -1499,14 +1499,7 @@
       return window.checkGroupFromCode("Interrupted", password, true, false);
    };
 
-   /*
-    * Fills a select field with all the names of the teams (of a given group)
-    * Used to continue a contest if the students didn't write down the team password
-   */
-   function fillListTeams (teams) {
-      UI.RestartContestForm.fillListTeams(teams, t);
 
-   }
 
    /*
     * Called when students validate the form that asks them if they participate
@@ -1629,7 +1622,11 @@
             }
             UI.NavigationTabs.unload();
          } else {
-            fillListTeams(data.teams);
+            /*
+            * Fills a select field with all the names of the teams (of a given group)
+            * Used to continue a contest if the students didn't write down the team password
+            */
+            UI.RestartContestForm.fillListTeams(data.teams, t);
             UI.NavigationTabs.load();
             UI.RestartContestForm.updateDivReloginVisibility(true);
          }
