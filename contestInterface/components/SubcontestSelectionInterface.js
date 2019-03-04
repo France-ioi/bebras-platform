@@ -38,10 +38,10 @@ export default {
 			that.selectLanguage(preSelectedLanguage);
 		});
 
-		window.getContest = this.getContest;
-		window.goToCategory = this.goToCategory;
-		window.goToLanguage = this.goToLanguage;
-		window.goToSequence = this.goToSequence;
+		window.getContest = this.getContest.bind(this);
+		window.goToCategory = this.goToCategory.bind(this);
+		window.goToLanguage = this.goToLanguage.bind(this);
+		window.goToSequence = this.goToSequence.bind(this);
 
 	},
 	load (data, eventListeners) {
