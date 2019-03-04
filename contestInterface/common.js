@@ -102,15 +102,13 @@ if (!Object.keys) {
    var currentQuestionKey = "";
    // SID is initialized to the empty string so that its encoding in an AJAX query
    // is predictable (rather than being either '' or 'null').
-   var SID = '';
+   window.SID = '';
    var hasAnsweredQuestion = false;
    var hasDisplayedContestStats = false;
    var delaySendingAttempts = 60000;
    var nbSubmissions = 0;
    var t = i18n.t;
    var groupCheckedData = null;
-   var contestants = {};
-   var teamMateHasRegistration = {1: false, 2: false};
    var personalPageData = null;
    // Function listening for resize events
    var bodyOnResize = null;
@@ -979,7 +977,7 @@ if (!Object.keys) {
       }
    };
 
-   var Utils = {
+   window.Utils = {
       disableButton: function (buttonId) {
          var button = $("#" + buttonId);
          if (button.attr("disabled")) {
@@ -1094,7 +1092,7 @@ if (!Object.keys) {
          $(".minutes").html('');
          $(".seconds").html('synchro...');
          var self = this;
-         $.post('data.php', {SID: SID, action: 'getRemainingSeconds', teamID: teamID},
+         $.post('data.php', {SID: window.SID, action: 'getRemainingSeconds', teamID: teamID},
             function (data) {
                if (data.success) {
                   var remainingSeconds = self.getRemainingSeconds();
@@ -1277,7 +1275,7 @@ if (!Object.keys) {
    }
 
    function startContestTime (data) {
-      $.post("data.php", {SID: SID, action: "startTimer", teamID: teamID},
+      $.post("data.php", {SID: window.SID, action: "startTimer", teamID: teamID},
          function (dataStartTimer) {
             var contestData = {
                ended: dataStartTimer.ended,
@@ -1404,7 +1402,7 @@ if (!Object.keys) {
             showQuestionIframe();
             UI.LoadingPage.unload();
 
-            $.post("data.php", {SID: SID, action: "loadContestData", groupPassword: groupPassword, teamID: teamID},
+            $.post("data.php", {SID: window.SID, action: "loadContestData", groupPassword: groupPassword, teamID: teamID},
                function (data) {
                   if (!data.success) {
                      UI.MainHeader.load();
@@ -1476,7 +1474,7 @@ if (!Object.keys) {
       if (!groupCode || !groupPass) {return false;}
       UI.GroupUsedForm.updateRecoverGroupResult('');
       Utils.disableButton("buttonRecoverGroup");
-      $.post("data.php", {SID: SID, action: "recoverGroup", groupCode: groupCode, groupPass: groupPass},
+      $.post("data.php", {SID: window.SID, action: "recoverGroup", groupCode: groupCode, groupPass: groupPass},
          function (data) {
             if (!data.success) {
                if (data.message) {
@@ -1501,76 +1499,6 @@ if (!Object.keys) {
       return window.checkGroupFromCode("Interrupted", password, true, false);
    };
 
-
-
-   /*
-    * Called when students validate the form that asks them if they participate
-    * alone or in a team of two students.
-   */
-   var nbContestants;
-
-   window.setNbContestants = function (newNbContestants) {
-      nbContestants = newNbContestants;
-      UI.PersonalDataForm.setNbContestants(nbContestants);
-      UI.PersonalDataForm.updateLoginVisibility(true);
-   }
-
-
-   var fieldsHidden = {};
-
-   var hideLoginFields = function (postData) {
-      var contestFieldMapping = {
-         askEmail: 'email',
-         askGrade: 'grade',
-         askStudentId: 'studentId',
-         askZip: 'zipCode',
-         askGenre: 'genre'
-      };
-      for (var contestFieldName in contestFieldMapping) {
-         var loginFieldName = contestFieldMapping[contestFieldName];
-         if (postData[contestFieldName]) {
-            fieldsHidden[loginFieldName] = false;
-            UI.PersonalDataForm.updateLoginFieldVisibility(loginFieldName, true);
-         } else {
-            fieldsHidden[loginFieldName] = true;
-            UI.PersonalDataForm.updateLoginFieldVisibility(loginFieldName, false);
-         }
-      }
-   };
-
-   window.hasRegistration = function (teamMate, hasReg, lock) {
-      UI.PersonalDataForm.updateLoginResult("");
-      teamMateHasRegistration[teamMate] = hasReg;
-      UI.PersonalDataForm.updateRegisterTeamMate(teamMate, hasReg, lock);
-   }
-
-   window.validateRegistrationCode = function (teamMate) {
-      UI.PersonalDataForm.updateLoginResult("");
-      var code = UI.PersonalDataForm.getTeamMateRegCode(teamMate);
-      UI.PersonalDataForm.updateErrorRegCodeForTeamMate(teamMate, '');
-      $.post("data.php", {SID: SID, action: "checkRegistration", code: code},
-         function (data) {
-            if (data.success) {
-               var contestant = {
-                  "registrationCode": code,
-                  "firstName": data.firstName,
-                  "lastName": data.lastName
-               };
-               contestants[teamMate] = contestant;
-               UI.PersonalDataForm.updateErrorRegCodeForTeamMate(teamMate, "Bienvenue " + data.firstName + " " + data.lastName);
-            } else {
-               UI.PersonalDataForm.updateErrorRegCodeForTeamMate(teamMate, "code inconnu");
-            }
-         }, "json");
-   }
-
-   $(".nbContestants").click(function (event) {
-      var target = $(event.currentTarget);
-      nbContestants = target.data('nbcontestants');
-      window.setNbContestants(nbContestants);
-      target.addClass('selected');
-   });
-
    window.groupWasChecked = function (data, curStep, groupCode, getTeams, isPublic, contestID) {
       initContestData(data, contestID);
       UI.MainHeader.updateSubTitle(data.name);
@@ -1593,35 +1521,9 @@ if (!Object.keys) {
             }
          }
          $("#div" + curStep).hide();
-         hideLoginFields(data);
+         UI.PersonalDataForm.hideLoginFields(data);
          if (curStep === "CheckGroup") {
-            if (isPublic) {
-               window.setNbContestants(1);
-               createTeam([{lastName: "Anonymous", firstName: "Anonymous", genre: 2, email: null, zipCode: null}]);
-            } else {
-               UI.Breadcrumbs.updateBreadcrumb();
-               UI.PersonalDataForm.load();
-               $("#divAccessContest").show();
-               if (data.askParticipationCode == 0) {
-                  UI.PersonalDataForm.hideAskRegCode();
-                  hasRegistration(1, false);
-                  hasRegistration(2, false);
-               }
-               if (data.allowTeamsOfTwo == 1) {
-                  UI.PersonalDataForm.updateCheckNbContestantsVisibility(true);
-                  UI.PersonalDataForm.updateLoginVisibility(false);
-               } else {
-                  window.setNbContestants(1);
-                  UI.PersonalDataForm.updateCheckNbContestantsVisibility(false);
-                  UI.PersonalDataForm.updateLoginVisibility(true);
-               }
-            }
-            if ((data.registrationData != undefined) && (data.registrationData.code != undefined)) {
-               contestants[1] = {registrationCode: data.registrationData.code};
-               UI.PersonalDataForm.updateRegCodeForTeamMate("1", data.registrationData.code);
-               hasRegistration(1, true, true);
-               UI.PersonalDataForm.updateErrorRegCodeForTeamMate("1", "Bienvenue " + data.registrationData.firstName + " " + data.registrationData.lastName);
-            }
+            UI.PersonalDataForm.updateLoginForm(isPublic, data);
             UI.NavigationTabs.unload();
          } else {
             /*
@@ -1737,7 +1639,7 @@ if (!Object.keys) {
       UI.GroupUsedForm.unload();
       $('#browserAlert').hide();
       $("#" + curStep + "Result").html('');
-      $.post("data.php", {SID: SID, action: "checkPassword", password: groupCode, getTeams: getTeams, language: language, startOfficial: startOfficial, commonJsVersion: commonJsVersion, timestamp: window.timestamp, commonJsTimestamp: commonJsTimestamp},
+      $.post("data.php", {SID: window.SID, action: "checkPassword", password: groupCode, getTeams: getTeams, language: language, startOfficial: startOfficial, commonJsVersion: commonJsVersion, timestamp: window.timestamp, commonJsTimestamp: commonJsTimestamp},
          function (data) {
             if (!data.success) {
                if (data.message) {
@@ -1815,68 +1717,11 @@ if (!Object.keys) {
       });
    }
 
-
-
-   /*
-    * Validates student's information form
-    * then creates team
-   */
-   window.validateLoginForm = function () {
-      UI.PersonalDataForm.updateLoginResult("");
-      for (var iContestant = 1; iContestant <= nbContestants; iContestant++) {
-         var strTeamMate = "Équipier " + iContestant + " : ";
-         if (teamMateHasRegistration[iContestant]) {
-            if ((contestants[iContestant] == undefined) || (contestants[iContestant].registrationCode == undefined)) {
-               UI.PersonalDataForm.updateLoginResult(strTeamMate + "entrez et validez le code");
-               return;
-            }
-            if ((contestants[3 - iContestant] != undefined) &&
-               (contestants[3 - iContestant].registrationCode == contestants[iContestant].registrationCode)) {
-               UI.PersonalDataForm.updateLoginResult("Les deux codes ne peuvent pas être identiques !");
-            }
-         } else {
-            var contestant = {
-               "lastName": $.trim($("#lastName" + iContestant).val()),
-               "firstName": $.trim($("#firstName" + iContestant).val()),
-               "genre": $("input[name='genre" + iContestant + "']:checked").val(),
-               "grade": $("#grade" + iContestant).val(),
-               "email": $.trim($("#email" + iContestant).val()),
-               "zipCode": $.trim($("#zipCode" + iContestant).val()),
-               "studentId": $.trim($("#studentId" + iContestant).val())
-            };
-            contestants[iContestant] = contestant;
-            if (!contestant.lastName && !fieldsHidden.lastName) {
-               UI.PersonalDataForm.updateLoginResult(strTeamMate + t("lastname_missing"));
-               return;
-            } else if (!contestant.firstName && !fieldsHidden.firstName) {
-               UI.PersonalDataForm.updateLoginResult(strTeamMate + t("firstname_missing"));
-               return;
-            } else if (!contestant.genre && !fieldsHidden.genre) {
-               UI.PersonalDataForm.updateLoginResult(strTeamMate + t("genre_missing"));
-               return;
-            } else if (!contestant.email && !fieldsHidden.email) {
-               UI.PersonalDataForm.updateLoginResult(strTeamMate + t("email_missing"));
-               return;
-            } else if (!contestant.zipCode && !fieldsHidden.zipCode) {
-               UI.PersonalDataForm.updateLoginResult(strTeamMate + t("zipCode_missing"));
-               return;
-            } else if (!contestant.studentId && !fieldsHidden.studentId) {
-               UI.PersonalDataForm.updateLoginResult(strTeamMate + t("studentId_missing"));
-               return;
-            } else if (!contestant.grade && !fieldsHidden.grade) {
-               UI.PersonalDataForm.updateLoginResult(strTeamMate + t("grade_missing"));
-               return;
-            }
-         }
-      }
-      Utils.disableButton("buttonLogin"); // do not re-enable
-      createTeam(contestants);
-   };
-
    /*
     * Creates a new team using contestants information
    */
-   function createTeam (contestants) {
+   //related to UI.SubcontestSelectionInterface
+   window.createTeam = function (contestants) {
       if (window.browserIsMobile && typeof scratchToBlocklyContestID[contestID] != 'undefined') {
          alert(t("browser_redirect_scratch_to_blockly"));
          contestID = scratchToBlocklyContestID[contestID];
@@ -1884,13 +1729,11 @@ if (!Object.keys) {
          contestFolder = contest.folder;
          customIntro = contest.customIntro;
       }
-      $.post("data.php", {SID: SID, action: "createTeam", contestants: contestants, contestID: contestID},
+      $.post("data.php", {SID: window.SID, action: "createTeam", contestants: contestants, contestID: contestID},
          function (data) {
             teamID = data.teamID;
             teamPassword = data.password;
             UI.PersonalDataForm.unload();
-            UI.PersonalDataForm.updateLoginVisibility(false);
-            UI.PersonalDataForm.updateCheckNbContestantsVisibility(false);
             $("#divAccessContest").hide();
             UI.PersonalData.updateTeamPassword(data.password);
             UI.PersonalData.updateVisibilityPassword(true);
@@ -2021,9 +1864,9 @@ if (!Object.keys) {
     * Otherwise, displays the list of public groups.
    */
    function loadSession () {
-      $.post("data.php", {SID: SID, action: 'loadSession'},
+      $.post("data.php", {SID: window.SID, action: 'loadSession'},
          function (data) {
-            SID = data.SID;
+            window.SID = data.SID;
             if (data.teamID) {
                if (!confirm(data.message)) { // t("restart_previous_contest") json not loaded yet!
                   destroySession();
@@ -2039,10 +1882,10 @@ if (!Object.keys) {
    }
 
    function destroySession () {
-      SID = null; // are we sure about that?
+      window.SID = null; // are we sure about that?
       $.post("data.php", {action: 'destroySession'},
          function (data) {
-            SID = data.SID;
+            window.SID = data.SID;
          }, "json");
    }
 
@@ -2081,7 +1924,7 @@ if (!Object.keys) {
    */
    function init () {
       for (var contestant = 1; contestant <= 2; contestant++) {
-         UI.PersonalDataForm.init(contestant);
+         UI.PersonalDataForm.initContestant(contestant);
       }
       initErrorHandler();
       loadSession();
@@ -2165,7 +2008,7 @@ if (!Object.keys) {
    */
    function finalCloseContest (message) {
       TimeManager.stopNow();
-      $.post("data.php", {SID: SID, action: "closeContest", teamID: teamID, teamPassword: teamPassword},
+      $.post("data.php", {SID: window.SID, action: "closeContest", teamID: teamID, teamPassword: teamPassword},
          function () {}, "json"
       ).always(function () {
          window.onbeforeunload = function () {};
@@ -2304,7 +2147,7 @@ if (!Object.keys) {
 
    // Send the computed scores, then load the solutions
    function sendScores () {
-      $.post('scores.php', {scores: scores, SID: SID}, function (data) {
+      $.post('scores.php', {scores: scores, SID: window.SID}, function (data) {
          if (data.status === 'success') {
             loadSolutionsHat();
             if (bonusScore) {
@@ -2608,7 +2451,7 @@ if (!Object.keys) {
          return;
       }
       try {
-         $.post("answer.php", {SID: SID, "answers": answersToSend, teamID: teamID, teamPassword: teamPassword},
+         $.post("answer.php", {SID: window.SID, "answers": answersToSend, teamID: teamID, teamPassword: teamPassword},
             function (data) {
                sending = false;
                if (!data.success) {
@@ -2644,7 +2487,7 @@ if (!Object.keys) {
    }
 
    function loadSolutionsHat () {
-      $.post('solutions.php', {SID: SID, ieMode: window.ieMode}, function (data) {
+      $.post('solutions.php', {SID: window.SID, ieMode: window.ieMode}, function (data) {
          if (data.success) {
             if (data.solutions) {
                UI.GridView.updateSolutionsContent(data.solutions);
