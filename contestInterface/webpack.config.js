@@ -1,6 +1,6 @@
 // Imports
 const path = require('path');
-require("@babel/register");
+require("babel-register");
 
 // Webpack Configuration
 const config = {
@@ -20,11 +20,12 @@ const config = {
 	// Loaders
 	module: {
 		rules: [
-			// JavaScript/JSX Files
 			{
-				test: /\.jsx$/,
-				exclude: /node_modules/,
-				use: ['babel-loader']
+				test: /\.js$/,
+				exclude: /(node_modules|bower_components)/,
+				use: {
+					loader: "babel-loader"
+				  }
 			}
 		]
 	},
