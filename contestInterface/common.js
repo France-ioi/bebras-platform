@@ -109,7 +109,6 @@ if (!Object.keys) {
    var nbSubmissions = 0;
    var t = i18n.t;
    var groupCheckedData = null;
-   var personalPageData = null;
    // Function listening for resize events
    var bodyOnResize = null;
 
@@ -159,10 +158,10 @@ if (!Object.keys) {
       return window.dateToDisplay(localDate);
    }
 
-
-   window.unlockAllLevels = function () {
-      UI.GridView.unlockAllLevels(getSortedQuestionIDs, questionsData, questionUnlockedLevels);
-   };
+   // no references
+   // window.unlockAllLevels = function () {
+   //    UI.GridView.unlockAllLevels(getSortedQuestionIDs, questionsData, questionUnlockedLevels);
+   // };
 
 
    /* global error handler */
@@ -248,7 +247,6 @@ if (!Object.keys) {
 
    window.logError = logError;
 
-   var updateContestName = UI.MainHeader.updateTitle;
 
    /**
     * Old IE versions does not implement the Array.indexOf function
@@ -276,7 +274,7 @@ if (!Object.keys) {
     *
     * @param {bool} toggle
     */
-   function toggleMetaViewport (toggle) {
+   window.toggleMetaViewport = function (toggle) {
       if (toggle) {
          if ($('meta[name=viewport]').length) {return;}
          // Add
@@ -637,7 +635,7 @@ if (!Object.keys) {
          this.tbody = this.doc.getElementsByTagName('body')[0];
          this.autoHeight = false;
          $('body').removeClass('autoHeight');
-         toggleMetaViewport(false);
+         window.toggleMetaViewport(false);
 
          this.setHeight(0);
          this.body.css('width', '782px');
@@ -804,7 +802,7 @@ if (!Object.keys) {
                if (questionIframe.autoHeight) {
                   $('body').addClass('autoHeight');
                   UI.TaskFrame.updatePadding(questionIframe.doc, '');
-                  toggleMetaViewport(true);
+                  window.toggleMetaViewport(true);
                   questionIframe.updateHeight();
                }
             });
@@ -933,7 +931,7 @@ if (!Object.keys) {
 
          setTimeout(function () {
             questionIframe.run(taskViews, function () {
-               loadSolutionChoices(questionKey);
+               UI.TaskFrame.updateSolutionChoices(questionIframe, questionKey);
                callback();
             });
          }, 100);
@@ -948,7 +946,7 @@ if (!Object.keys) {
       load: function (taskViews, questionKey, callback) {
          var that = this;
          var cb = function () {
-            showQuestionIframe();
+            UI.TaskFrame.showQuestionIframe();
             that.loadQuestion(taskViews, questionKey, callback);
          };
          if (this.loaded) {
@@ -1163,14 +1161,6 @@ if (!Object.keys) {
       }
    };
 
-   // Main page
-
-   window.selectMainTab = function (tabName) {
-      UI.TrainingContestSelection.selectMainTab(tabName);
-   };
-
-   window.confirmPublicGroup = UI.TrainingContestSelection.confirmPublicGroup;
-
    // Contest startup
 
    /*
@@ -1379,12 +1369,21 @@ if (!Object.keys) {
     * if temID/password are incorrect, this means we're in the middle of re-login after an interruption
     * and the password provided is incorrect
    */
-   function loadContestData (contestID, contestFolder, groupPassword) {
+   window.loadContestData = function (_contestID, _contestFolder, _groupPassword) {
+      if (!_contestID) {
+         _contestID = contestID;
+      }
+      if (!_contestFolder) {
+         _contestFolder = contestFolder;
+      }
+      if (!_groupPassword) {
+         _groupPassword = groupPassword;
+      }
       $('#browserAlert').hide();
       UI.LoadingPage.load();
       questionIframe.initialize(function () {
          if (fullFeedback) {
-            $.post("graders.php", {SID: SID, ieMode: window.ieMode, teamID: teamID, groupPassword: groupPassword, p: getParameterByName('p')}, function (data) {
+            $.post("graders.php", {SID: SID, ieMode: window.ieMode, teamID: teamID, groupPassword: _groupPassword, p: getParameterByName('p')}, function (data) {
                if (data.status === 'success' && (data.graders || data.gradersUrl)) {
                   questionIframe.gradersLoaded = true;
                   UI.GridView.updateGradersContent(data);
@@ -1399,10 +1398,10 @@ if (!Object.keys) {
             if (fullFeedback) {
                UI.OldContestHeader.updateFeedbackVisibility(true);
             }
-            showQuestionIframe();
+            UI.TaskFrame.showQuestionIframe();
             UI.LoadingPage.unload();
 
-            $.post("data.php", {SID: window.SID, action: "loadContestData", groupPassword: groupPassword, teamID: teamID},
+            $.post("data.php", {SID: window.SID, action: "loadContestData", groupPassword: _groupPassword, teamID: teamID},
                function (data) {
                   if (!data.success) {
                      UI.MainHeader.load();
@@ -1418,14 +1417,14 @@ if (!Object.keys) {
                   UI.NavigationTabs.unload();
 
                   function oldLoader () {
-                     $.get(window.contestsRoot + '/' + contestFolder + "/contest_" + contestID + ".html", function (content) {
+                     $.get(window.contestsRoot + '/' + _contestFolder + "/contest_" + _contestID + ".html", function (content) {
                         UI.GridView.updateQuestionContent(content);
                         startContestTime(data);
                      });
                   }
 
                   function newLoader () {
-                     var loader = new Loader(window.contestsRoot + '/' + contestFolder + '/', UI.OldListView.log_fn);
+                     var loader = new Loader(window.contestsRoot + '/' + _contestFolder + '/', UI.OldListView.log_fn);
                      loader.run().done(function (content) {
                         UI.GridView.updateQuestionContent(content);
                         startContestTime(data);
@@ -1440,64 +1439,9 @@ if (!Object.keys) {
                }, "json");
          });
 
-         questionIframe.iframe.contentWindow.ImagesLoader.preload(contestFolder);
+         questionIframe.iframe.contentWindow.ImagesLoader.preload(_contestFolder);
       });
    }
-
-   /**
-    * Update the number of preloaded images
-    * Called by the task
-    *
-    * @param {string} content
-    */
-   window.setNbImagesLoaded = UI.LoadingPage.updateImagesLoaded;
-
-   // Team connexion
-
-   /*
-    * Called when confirming a participation from an unsupported browser
-    */
-   window.confirmUnsupportedBrowser = UI.RestartContestForm.confirmUnsupportedBrowser;
-
-   /*
-    * Called when starting a contest by providing a group code on the main page.
-   */
-   window.checkGroup = function () {
-      var groupCode = UI.RestartContestForm.getGroupCode();
-      return window.checkGroupFromCode("CheckGroup", groupCode, false, false);
-   };
-
-   window.recoverGroup = function () {
-      var curStep = 'CheckGroup';
-      var groupCode = UI.RestartContestForm.getGroupCode();
-      var groupPass = UI.GroupUsedForm.getGroupPass();
-      if (!groupCode || !groupPass) {return false;}
-      UI.GroupUsedForm.updateRecoverGroupResult('');
-      Utils.disableButton("buttonRecoverGroup");
-      $.post("data.php", {SID: window.SID, action: "recoverGroup", groupCode: groupCode, groupPass: groupPass},
-         function (data) {
-            if (!data.success) {
-               if (data.message) {
-                  UI.GroupUsedForm.updateRecoverGroupResult(data.message);
-               } else {
-                  UI.GroupUsedForm.updateRecoverGroupResult(t("invalid_code"));
-               }
-               return;
-            }
-            window.checkGroup();
-         },
-         'json').done(function () {Utils.enableButton("buttonRecoverGroup");});
-   };
-
-   /*
-    * Called when trying to continue a contest after an interruption
-    * The password can either be a group password (leading to another page)
-    * or directly a team password (to re-login directly)
-   */
-   window.checkPasswordInterrupted = function () {
-      var password = UI.RestartContestForm.getInterruptedPassword()
-      return window.checkGroupFromCode("Interrupted", password, true, false);
-   };
 
    window.groupWasChecked = function (data, curStep, groupCode, getTeams, isPublic, contestID) {
       initContestData(data, contestID);
@@ -1507,7 +1451,7 @@ if (!Object.keys) {
          $("#div" + curStep).hide();
          teamID = data.teamID;
          teamPassword = groupCode;
-         loadContestData(contestID, contestFolder);
+         window.loadContestData(contestID, contestFolder);
       } else {
          if ((data.nbMinutesElapsed > 30) && (!data.isPublic) && (!data.isGenerated) && (!getTeams)) {
             if (parseInt(data.bRecovered)) {
@@ -1536,95 +1480,6 @@ if (!Object.keys) {
          }
       }
    };
-
-   window.rankToStr = function (rank, nameGrade, nbContestants) {
-      var strRank = "-";
-      if (rank !== null) {
-         strRank = rank;
-         rank = parseInt(rank);
-         if (rank == 1) {
-            strRank += "er";
-         } else {
-            strRank += "e";
-         }
-         strRank += "<br/>" + $nameGrade + " ";
-         if (nbContestants == 1) {
-            strRank += "individuels";
-         } else {
-            strRank += "binômes";
-         }
-      }
-      return strRank;
-   }
-
-   window.showPersonalPage = function (data) {
-      personalPageData = data;
-      $nameGrade = t("grade_" + data.registrationData.grade).toLowerCase();
-      data.persoGrade = $nameGrade;
-      UI.PersonalData.load(data);
-      var htmlParticipations = "";
-      for (var iParticipation = 0; iParticipation < data.registrationData.participations.length; iParticipation++) {
-         var participation = data.registrationData.participations[iParticipation];
-         var status;
-         if (participation.startTime == null) {
-            status = "Non démarrée";
-         } else if ((parseInt(participation.nbMinutes) == 0) || (parseInt(participation.remainingSeconds) > 0)) {
-            status = "En cours";
-         } else {
-            status = "Terminé";
-         }
-         var score = "-";
-         if (participation.sumScores !== null) {
-            score = parseInt(participation.sumScores);
-            if (participation.score !== null) {
-               score = Math.max(score, parseInt(participation.score));
-            }
-         } else if (participation.score !== null) {
-            score = parseInt(participation.score);
-         }
-         var rank = rankToStr(participation.rank, $nameGrade, participation.nbContestants);
-         var schoolRank = rankToStr(participation.schoolRank, $nameGrade, participation.nbContestants);
-
-         htmlParticipations += "<tr><td>" + participation.contestName + "</td>" +
-            "<td>" + window.utcDateFormatter(participation.startTime) + "</td>" +
-            "<td>" + participation.contestants + "</td>" +
-            "<td>" + status + "</td>" +
-            "<td>" + score + "</td>" +
-            "<td>" + rank + "</td>" +
-            "<td>" + schoolRank + "</td>" +
-            "<td><a href='" + location.pathname + "?team=" + participation.password + "' target='_blank'>ouvrir</a></td></tr>";
-      }
-      UI.PersonalData.updatePastParticipations(htmlParticipations);
-   }
-
-   window.startContest = function () {
-      UI.PersonalData.unload();
-      UI.StartContest.load();
-   }
-
-   window.cancelStartContest = function () {
-      UI.AllContestsDone.unload();
-      UI.StartContest.unload();
-      UI.PersonalData.load();
-   }
-
-   window.reallyStartContest = function () {
-      UI.StartContest.unload();
-      checkGroupFromCode("CheckGroup", personalPageData.registrationData.code, false, false, null, true);
-   }
-
-   window.startPreparation = function () {
-      updateContestName(personalPageData.contestName);
-      UI.SubcontestSelectionInterface.groupMinCategory = personalPageData.minCategory;
-      UI.SubcontestSelectionInterface.groupMaxCategory = personalPageData.maxCategory;
-      UI.SubcontestSelectionInterface.groupLanguage = personalPageData.language;
-      if (personalPageData.childrenContests.length > 0) {
-         UI.PersonalData.unload();
-         offerContestSelectionPanels();
-      } else {
-         groupWasChecked(personalPageData, "PersonalPage", personalPageData.registrationData.code, false, false);
-      }
-   }
 
    /*
     * Checks if a group is valid and loads information about the group and corresponding contest,
@@ -1666,10 +1521,10 @@ if (!Object.keys) {
 
 
             if ((data.registrationData != undefined) && (!data.isOfficialContest)) {
-               window.showPersonalPage(data);
+               UI.PersonalData.showPersonalPage(data);
                return;
             }
-            updateContestName(data.contestName);
+            UI.MainHeader.updateTitle(data.contestName);
 
             UI.SubcontestSelectionInterface.groupMinCategory = data.minCategory;
             UI.SubcontestSelectionInterface.groupMaxCategory = data.maxCategory;
@@ -1686,16 +1541,11 @@ if (!Object.keys) {
                $('#divAccessContest').show();
                UI.SubcontestSelectionInterface.offerCategories(data);
             } else {
-               groupWasChecked(data, curStep, groupCode, getTeams, data.isPublic);
+               window.groupWasChecked(data, curStep, groupCode, getTeams, data.isPublic);
             }
          }, "json").done(function () {Utils.enableButton("button" + curStep);});
    };
 
-   function offerContestSelectionPanels () {
-      UI.Breadcrumbs.updateBreadcrumb();
-      UI.SubcontestSelectionInterface.offerCategories(personalPageData);
-      $('#divAccessContest').show();
-   }
 
    //related to UI.SubcontestSelectionInterface
    window.selectContest = function (ID) {
@@ -1713,14 +1563,13 @@ if (!Object.keys) {
          customIntro = contest.customIntro;
          groupCheckedData.data.allowTeamsOfTwo = contest.allowTeamsOfTwo;
          groupCheckedData.data.askParticipationCode = contest.askParticipationCode;
-         groupWasChecked(groupCheckedData.data, groupCheckedData.curStep, groupCheckedData.groupCode, groupCheckedData.getTeams, groupCheckedData.isPublic, contestID);
+         window.groupWasChecked(groupCheckedData.data, groupCheckedData.curStep, groupCheckedData.groupCode, groupCheckedData.getTeams, groupCheckedData.isPublic, contestID);
       });
    }
 
    /*
     * Creates a new team using contestants information
    */
-   //related to UI.SubcontestSelectionInterface
    window.createTeam = function (contestants) {
       if (window.browserIsMobile && typeof scratchToBlocklyContestID[contestID] != 'undefined') {
          alert(t("browser_redirect_scratch_to_blockly"));
@@ -1740,97 +1589,72 @@ if (!Object.keys) {
          }, "json");
    }
 
-   /*
-    * Called when students acknowledge their new team password
-    * hides password and loads contest
-   */
-   window.confirmTeamPassword = function () {
-      if (!Utils.disableButton("buttonConfirmTeamPassword")) { // Do not re-enable
-         return;
-      }
-      UI.PersonalData.updateVisibilityPassword(false);
-      loadContestData(contestID, contestFolder);
-   };
-
-   /*
-    * Called when students select their team in the list of teams of their group,
-    * and the teacher enters the group password (to continue after an interruption)
-    * Tries to load the corresponding contest.
-   */
-   window.relogin = function () {
-      teamID = UI.RestartContestForm.getSelectTeam();
-      var groupPassword = UI.RestartContestForm.getGroupPassword();
-      if (teamID == '0') {
-         UI.RestartContestForm.updateReloginResult(t("select_team"));
-         return;
-      }
-      Utils.disableButton("buttonRelogin");
-      UI.TrainingContestSelection.unload();
-      loadContestData(contestID, contestFolder, groupPassword);
-   };
+   window.setTeamID = function (_teamID) {
+      teamID = _teamID;
+   }
 
    /*
     * Generates the html for the list of public groups
    */
-   function getPublicGroupsList (groups) {
-      var arrGroups = {};
-      var years = {};
-      var categories = {};
-      var year, group, category;
-      var maxYear = 0;
-      for (var iGroup = 0; iGroup < groups.length; iGroup++) {
-         group = groups[iGroup];
-         if (!arrGroups[group.level]) {
-            arrGroups[group.level] = {};
-         }
-         year = group.year % 10000;
-         arrGroups[group.level][group.category] = group;
-         years[year] = true;
-         if (!categories[year]) {
-            categories[year] = {};
-         }
-         categories[year][group.category] = true;
-         maxYear = Math.max(maxYear, year);
-      }
-      var levels = [
-         {name: t("level_1_name"), i18name: "level_1_name", id: 1},
-         {name: t("level_2_name"), i18name: "level_2_name", id: 2},
-         {name: t("level_3_name"), i18name: "level_3_name", id: 3},
-         {name: t("level_4_name"), i18name: "level_4_name", id: 4},
-         {name: t("level_all_questions_name"), i18name: "level_all_questions_name", id: 0}
-      ];
-      var strGroups = "<table style='border:solid 1px black; border-collapse:collapse;' cellspacing=0 cellpadding=5>";
-      for (year = maxYear; years[year] === true; year--) {
-         for (category in categories[year]) {
-            var nbGroupsInCategory = 0;
-            var thisCategoryStrGroup = '';
-            strGroups += "<tr class='groupRow'><td style='width:100px;border:solid 1px black;text-align:center'><b>" + category + "</b></td>";
-            for (var iLevel = 0; iLevel < levels.length; iLevel++) {
-               var level = levels[iLevel];
-               group = undefined;
-               if (arrGroups[level.id]) {
-                  group = arrGroups[level.id][category];
-               }
-               if (group) {
-                  thisCategoryStrGroup += "<td style='width:100px;border:solid 1px black;text-align:center'>" +
-                     "<a href='#' onclick='checkGroupFromCode(\"CheckGroup\", \"" + group.code + "\", false, true)' data-i18n=\"[html]" + level.i18name + "\"> " + level.name + "</a></td>";
-                  nbGroupsInCategory = nbGroupsInCategory + 1;
-               } else {
-                  thisCategoryStrGroup += "<td width=20%></td>";
-               }
-            }
-            if (nbGroupsInCategory == 1 && arrGroups[0] && arrGroups[0][category]) {
-               group = arrGroups[0][category];
-               thisCategoryStrGroup = "<td colspan=\"5\" style='width:500px;border:solid 1px black;text-align:center'>" +
-                  "<a href='#' onclick='checkGroupFromCode(\"CheckGroup\", \"" + group.code + "\", false, true)' data-i18n=\"[html]level_all_levels_name\"> " + t("level_all_levels_name") + "</a></td>";
-            }
-            strGroups = strGroups + thisCategoryStrGroup;
-            strGroups += "</tr>";
-         }
-      }
-      strGroups += "</table>";
-      return strGroups;
-   }
+   // function getPublicGroupsList (groups) {
+   //    var arrGroups = {};
+   //    var years = {};
+   //    var categories = {};
+   //    var year, group, category;
+   //    var maxYear = 0;
+   //    for (var iGroup = 0; iGroup < groups.length; iGroup++) {
+   //       group = groups[iGroup];
+   //       if (!arrGroups[group.level]) {
+   //          arrGroups[group.level] = {};
+   //       }
+   //       year = group.year % 10000;
+   //       arrGroups[group.level][group.category] = group;
+   //       years[year] = true;
+   //       if (!categories[year]) {
+   //          categories[year] = {};
+   //       }
+   //       categories[year][group.category] = true;
+   //       maxYear = Math.max(maxYear, year);
+   //    }
+   //    var levels = [
+   //       {name: t("level_1_name"), i18name: "level_1_name", id: 1},
+   //       {name: t("level_2_name"), i18name: "level_2_name", id: 2},
+   //       {name: t("level_3_name"), i18name: "level_3_name", id: 3},
+   //       {name: t("level_4_name"), i18name: "level_4_name", id: 4},
+   //       {name: t("level_all_questions_name"), i18name: "level_all_questions_name", id: 0}
+   //    ];
+   //    var strGroups = "<table style='border:solid 1px black; border-collapse:collapse;' cellspacing=0 cellpadding=5>";
+   //    for (year = maxYear; years[year] === true; year--) {
+   //       for (category in categories[year]) {
+   //          var nbGroupsInCategory = 0;
+   //          var thisCategoryStrGroup = '';
+   //          strGroups += "<tr class='groupRow'><td style='width:100px;border:solid 1px black;text-align:center'><b>" + category + "</b></td>";
+   //          for (var iLevel = 0; iLevel < levels.length; iLevel++) {
+   //             var level = levels[iLevel];
+   //             group = undefined;
+   //             if (arrGroups[level.id]) {
+   //                group = arrGroups[level.id][category];
+   //             }
+   //             if (group) {
+   //                thisCategoryStrGroup += "<td style='width:100px;border:solid 1px black;text-align:center'>" +
+   //                   "<a href='#' onclick='checkGroupFromCode(\"CheckGroup\", \"" + group.code + "\", false, true)' data-i18n=\"[html]" + level.i18name + "\"> " + level.name + "</a></td>";
+   //                nbGroupsInCategory = nbGroupsInCategory + 1;
+   //             } else {
+   //                thisCategoryStrGroup += "<td width=20%></td>";
+   //             }
+   //          }
+   //          if (nbGroupsInCategory == 1 && arrGroups[0] && arrGroups[0][category]) {
+   //             group = arrGroups[0][category];
+   //             thisCategoryStrGroup = "<td colspan=\"5\" style='width:500px;border:solid 1px black;text-align:center'>" +
+   //                "<a href='#' onclick='checkGroupFromCode(\"CheckGroup\", \"" + group.code + "\", false, true)' data-i18n=\"[html]level_all_levels_name\"> " + t("level_all_levels_name") + "</a></td>";
+   //          }
+   //          strGroups = strGroups + thisCategoryStrGroup;
+   //          strGroups += "</tr>";
+   //       }
+   //    }
+   //    strGroups += "</table>";
+   //    return strGroups;
+   // }
 
    function initContestData (data, newContestID) {
       if (newContestID == null) {
@@ -1838,7 +1662,7 @@ if (!Object.keys) {
          contestFolder = data.contestFolder;
          customIntro = $("<textarea/>").html(data.customIntro).text();
       }
-      updateContestName(data.contestName);
+      UI.MainHeader.updateTitle(data.contestName);
       fullFeedback = parseInt(data.fullFeedback);
       nextQuestionAuto = parseInt(data.nextQuestionAuto);
       nbUnlockedTasksInitial = parseInt(data.nbUnlockedTasksInitial);
@@ -1875,7 +1699,7 @@ if (!Object.keys) {
                teamID = data.teamID;
                initContestData(data);
                UI.TrainingContestSelection.unload();
-               loadContestData(contestID, contestFolder);
+               window.loadContestData(contestID, contestFolder);
                return;
             }
          }, "json");
@@ -1965,9 +1789,9 @@ if (!Object.keys) {
       Utils.disableButton("buttonClose");
       Utils.disableButton("buttonCloseNew");
       $('body').removeClass('autoHeight');
-      toggleMetaViewport(false);
+      window.toggleMetaViewport(false);
       updateDivQuestionsVisibility(false);
-      hideQuestionIframe();
+      UI.TaskFrame.hideQuestionIframe();
       if (questionIframe.task) {
          questionIframe.task.unload(function () {
             doCloseContest(message);
@@ -2040,7 +1864,7 @@ if (!Object.keys) {
             }
          } else {
             updateDivQuestionsVisibility(false);
-            hideQuestionIframe();
+            UI.TaskFrame.hideQuestionIframe();
             UI.LoadingPage.load();
             UI.MainHeader.load();
 
@@ -2235,15 +2059,6 @@ if (!Object.keys) {
       }
       questionsData[prevQuestionID].nextQuestionID = "0";
    }
-
-   window.backToList = function (initial) {
-      $('body').removeClass('autoHeight');
-      toggleMetaViewport(false);
-      UI.GridView.load();
-      UI.OldListView.updateButtonCloseVisibility(true);
-      UI.TaskFrame.unload();
-      UI.ContestHeader.updateButtonReturnListEnability(true);
-   };
 
    window.selectQuestion = function (questionID, clicked, noLoad) {
       // Prevent double-click until we fix the issue with timeouts
@@ -2482,10 +2297,6 @@ if (!Object.keys) {
 
    // Solutions
 
-   function loadSolutionChoices (questionKey) {
-      UI.TaskFrame.updateSolutionChoices(questionIframe, questionKey);
-   }
-
    function loadSolutionsHat () {
       $.post('solutions.php', {SID: window.SID, ieMode: window.ieMode}, function (data) {
          if (data.success) {
@@ -2514,7 +2325,7 @@ if (!Object.keys) {
       }
 
       updateDivQuestionsVisibility(false);
-      hideQuestionIframe();
+      UI.TaskFrame.hideQuestionIframe();
       UI.LoadingPage.load();
       UI.MainHeader.load();
 
@@ -2526,7 +2337,7 @@ if (!Object.keys) {
          questionIframe.iframe.contentWindow.ImagesLoader.setCallback(function () {
             UI.MainHeader.unload();
             updateDivQuestionsVisibility(true);
-            showQuestionIframe();
+            UI.TaskFrame.showQuestionIframe();
             UI.ContestEndPage.unload();
             $('#question-iframe-container').css('left', '273px');
             UI.LoadingPage.unload();
@@ -2614,72 +2425,6 @@ if (!Object.keys) {
 
       return string;
    }
-
-   var hideQuestionIframe = UI.TaskFrame.hideQuestionIframe;
-
-   var showQuestionIframe = UI.TaskFrame.showQuestionIframe;
-
-   var fullscreenActive = false;
-   var fullscreenEvents = false;
-   window.toggleFullscreen = function () {
-      if (!fullscreenEvents) {
-         // Register events to update fullscreen state
-         document.addEventListener("fullscreenchange", updateFullscreen);
-         document.addEventListener("webkitfullscreenchange", updateFullscreen);
-         document.addEventListener("mozfullscreenchange", updateFullscreen);
-         document.addEventListener("MSFullscreenChange", updateFullscreen);
-         fullscreenEvents = true;
-      }
-
-      if (fullscreenActive) {
-         // Exit fullscreen
-         var el = document;
-         if (el.exitFullscreen) {
-            el.exitFullscreen();
-         } else if (el.mozCancelFullScreen) {
-            el.mozCancelFullScreen();
-         } else if (el.webkitExitFullscreen) {
-            el.webkitExitFullscreen();
-         } else if (el.msExitFullscreen) {
-            el.msExitFullscreen();
-         }
-         fullscreenActive = false;
-      } else {
-         var el = document.documentElement;
-         if (el.requestFullscreen) {
-            el.requestFullscreen();
-         } else if (el.mozRequestFullScreen) {
-            el.mozRequestFullScreen();
-         } else if (el.webkitRequestFullscreen) {
-            el.webkitRequestFullscreen();
-         } else if (el.msRequestFullscreen) {
-            el.msRequestFullscreen();
-         }
-         fullscreenActive = true;
-      }
-   }
-
-   function updateFullscreen () {
-      // Update fullscreen state when receiving event
-      if (document.fullscreenElement || document.msFullscreenElement || document.mozFullScreen || document.webkitIsFullScreen) {
-         fullscreenActive = true;
-      } else {
-         fullscreenActive = false;
-      }
-   }
-
-   function checkFullscreen () {
-      // Checks whether fullscreen is available, else hides the button
-      var el = document.documentElement;
-      var available = false;
-      try {
-         available = el.requestFullscreen || el.mozRequestFullScreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
-      } catch (e) {}
-      if (!available) {
-         UI.ContestHeader.hideHeaderButtonFullscreen();
-      }
-   }
-
 
    //
    // Loader
@@ -2889,7 +2634,7 @@ if (!Object.keys) {
          init();
       }
       window.addEventListener('resize', questionIframe.onBodyResize);
-      checkFullscreen();
+      UI.ContestHeader.checkFullscreen();
    });
 
 }();

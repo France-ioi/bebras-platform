@@ -1,11 +1,41 @@
 
 
 export default {
+	init () {
+		/*
+		 * Called when trying to continue a contest after an interruption
+		 * The password can either be a group password (leading to another page)
+		 * or directly a team password (to re-login directly)
+		*/
+		window.checkPasswordInterrupted = this.checkPasswordInterrupted.bind(this);
+		/*
+		* Called when students select their team in the list of teams of their group,
+		* and the teacher enters the group password (to continue after an interruption)
+		* Tries to load the corresponding contest.
+		*/
+		window.relogin = this.relogin.bind(this);
+	},
 	load (data, eventListeners) {
 
 	},
 	unload () {
 
+	},
+	relogin () {
+		const teamID = this.getSelectTeam();
+		window.setTeamID(teamID);
+		const groupPassword = this.getGroupPassword();
+		if (teamID == '0') {
+			this.updateReloginResult(i18n.t("select_team"));
+			return;
+		}
+		Utils.disableButton("buttonRelogin");
+		UI.TrainingContestSelection.unload();
+		window.loadContestData(null, null, groupPassword);
+	},
+	checkPasswordInterrupted () {
+		const password = this.getInterruptedPassword()
+		return window.checkGroupFromCode("Interrupted", password, true, false);
 	},
 	updateReloginResult (html) {
 		$("#ReloginResult").html(html);
@@ -23,20 +53,14 @@ export default {
 			var team = teams[curTeamID];
 			var teamName = "";
 			for (var iContestant in team.contestants) {
-			   var contestant = team.contestants[iContestant];
-			   if (iContestant == 1) {
-				  teamName += " et "; // XXX: translate
-			   }
-			   teamName += contestant.firstName + " " + contestant.lastName;
+				var contestant = team.contestants[iContestant];
+				if (iContestant == 1) {
+					teamName += " et "; // XXX: translate
+				}
+				teamName += contestant.firstName + " " + contestant.lastName;
 			}
 			$("#selectTeam").append("<option value='" + curTeamID + "'>" + teamName + "</option>");
-		 }
-	},
-	confirmUnsupportedBrowser () {
-		$("#submitParticipationCode").removeClass('needBrowserConfirm');
-	},
-	getGroupCode () {
-		return $("#groupCode").val();
+		}
 	},
 	getSelectTeam () {
 		return $("#selectTeam").val();

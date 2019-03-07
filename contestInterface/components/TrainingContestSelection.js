@@ -1,6 +1,10 @@
 
 
 export default {
+	init () {
+		window.selectMainTab = this.selectMainTab.bind(this);
+		window.confirmPublicGroup = this.confirmPublicGroup.bind(this);
+	},
 	load (data, eventListeners) {
 		$("#divCheckGroup").show();
 	},
