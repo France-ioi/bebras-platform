@@ -1370,13 +1370,13 @@ if (!Object.keys) {
     * and the password provided is incorrect
    */
    window.loadContestData = function (_contestID, _contestFolder, _groupPassword) {
-      if (!_contestID) {
+      if (_contestID === null) {
          _contestID = contestID;
       }
-      if (!_contestFolder) {
+      if (_contestFolder === null) {
          _contestFolder = contestFolder;
       }
-      if (!_groupPassword) {
+      if (_groupPassword === null) {
          _groupPassword = groupPassword;
       }
       $('#browserAlert').hide();
@@ -1837,7 +1837,7 @@ if (!Object.keys) {
       ).always(function () {
          window.onbeforeunload = function () {};
          if (!contestShowSolutions) {
-            UI.ContestEndWaitingPage.hide();
+            UI.ContestEndWaitingPage.unload();
             UI.ContestEndPage.updateClosedMessage(message);
             var listAnswers = [];
             for (var questionID in answersToSend) {
