@@ -360,11 +360,11 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
       $strQuestions.= $strQuestion;
       contestAddContent($strQuestion, $nameParts, $buffer, $numPart, false);
    }
-   contestCopyFile(__DIR__.'/bebras-tasks/modules/img/castor.png', 'castor.png');
-   contestCopyFile(__DIR__.'/bebras-tasks/modules/img/laptop_success.png', 'laptop_success.png');
-   contestCopyFile(__DIR__.'/bebras-tasks/modules/img/laptop_warning.png', 'laptop_warning.png');
-   contestCopyFile(__DIR__.'/bebras-tasks/modules/img/laptop_error.png', 'laptop_error.png');
-   contestCopyFile(__DIR__.'/bebras-tasks/modules/img/fleche-bulle.png', 'fleche-bulle.png');
+   contestCopyFile(__DIR__.'/bebras-tasks/_common/modules/img/castor.png', 'castor.png');
+   contestCopyFile(__DIR__.'/bebras-tasks/_common/modules/img/laptop_success.png', 'laptop_success.png');
+   contestCopyFile(__DIR__.'/bebras-tasks/_common/modules/img/laptop_warning.png', 'laptop_warning.png');
+   contestCopyFile(__DIR__.'/bebras-tasks/_common/modules/img/laptop_error.png', 'laptop_error.png');
+   contestCopyFile(__DIR__.'/bebras-tasks/_common/modules/img/fleche-bulle.png', 'fleche-bulle.png');
    $images[] = joinPaths($config->teacherInterface->sAbsoluteStaticPath, 'contests/'.$contestFolder.'/castor.png');
    $images[] = joinPaths($config->teacherInterface->sAbsoluteStaticPath, 'contests/'.$contestFolder.'/fleche-bulle.png');
 
