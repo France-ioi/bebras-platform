@@ -389,6 +389,7 @@ function createGroupForContestAndRegistrationCode($db, $code, $contestID) {
 }
 
 function handleGroupFromRegistrationCode($db, $code) {
+   global $config;
    $registrationData = getRegistrationData($db, $code);
    if (!$registrationData) {
       return;
@@ -426,6 +427,9 @@ function handleGroupFromRegistrationCode($db, $code) {
    addBackendHint("ClientIP.checkPassword:pass");
    addBackendHint(sprintf("Group(%s):checkPassword", escapeHttpValue($registrationData->ID))); // TODO : check hint
    $contestID = "485926402649945250"; // hard-coded training contest
+   if (isset($config->currentContestID)) {
+      $contestID = $config->currentContestID;
+   }
    $isOfficialContest = false;
    if (isset($_POST["startOfficial"])) {
       $contestID = "288404405033703399"; // hard-coded real contest
