@@ -78,7 +78,7 @@ echo "</ul>";
 echo "<p>".translate("results_students_may_appear_twice")."</p>";
 
 $mainContestID = "822122511136074554";
-$allContestIDs = ["822122511136074554","337033997884044050"];
+$allContestIDs = ["822122511136074554","337033997884044050", "288404405033703399"];
 
 $query = "SELECT ID, name FROM contest WHERE ID IN (".join(",", $allContestIDs).")";
 $stmt = $db->prepare($query);
