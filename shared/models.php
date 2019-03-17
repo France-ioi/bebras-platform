@@ -370,7 +370,7 @@ $viewsModels = array(
          "full_groups" => array("srcTable" => "team", "srcField" => "groupID", "dstField" => "ID"),
          "school" => array("srcTable" => "full_groups", "srcField" => "schoolID", "dstField" => "ID"),
          "contest" => array("srcTable" => "full_groups", "srcField" => "contestID", "dstField" => "ID"),
-         "algorea_registration" => array("type" => "LEFT", "srcTable" => "contestant", "srcField" => "ID", "dstField" => "contestantID")
+         "algorea_registration" => array("type" => "LEFT", "srcTable" => "contestant", "srcField" => "registrationID", "dstField" => "ID")
       ),
       "fields" => array(
          "schoolID" => array("tableName" => "full_groups", "access" => array("write" => array(), "read" => array("user")), "groupBy" => "`contestant`.`ID`"),
