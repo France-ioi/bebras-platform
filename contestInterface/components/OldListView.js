@@ -84,5 +84,11 @@ export default {
 	},
 	updateQuestionPoints (html) {
 		$("#questionPoints").html(html);
+	},
+	updateCss () {
+		$(".question, #divQuestionParams, #divClosed, .questionsTable, #question-iframe-container").css("left", "245px");
+	},
+	showButtonClose () {
+		$('.buttonClose').show();
 	}
 };

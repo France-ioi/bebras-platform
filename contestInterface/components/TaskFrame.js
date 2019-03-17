@@ -117,5 +117,8 @@ export default {
 			questionIframe.body.find('#container .' + questionKey + "_choice_" + (iChoice + 1))
 				.html(questionIframe.body.find('#container #answerButton_' + questionKey + "_" + (iChoice + 1) + " input").val());
 		}
+	},
+	updateContainerCss () {
+		$('#question-iframe-container').css('left', '273px');
 	}
 };

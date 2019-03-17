@@ -1054,7 +1054,7 @@ if (!Object.keys) {
             this.interval = setInterval(this.updateTime, 1000);
             this.minuteInterval = setInterval(this.minuteIntervalHandler, 60000);
          } else {
-            $(".header_time").hide(); // common for both old+new interfaces
+            UI.OldContestHeader.hideHeaderTime();
          }
       },
 
@@ -1087,8 +1087,8 @@ if (!Object.keys) {
          this.syncCounter += 1;
          TimeManager.synchronizing = true;
          // common selector, edits many places
-         $(".minutes").html('');
-         $(".seconds").html('synchro...');
+         UI.OldContestHeader.updateMinutes('');
+         UI.OldContestHeader.updateSeconds('synchro...');
          var self = this;
          $.post('data.php', {SID: window.SID, action: 'getRemainingSeconds', teamID: teamID},
             function (data) {
@@ -1138,8 +1138,8 @@ if (!Object.keys) {
          var remainingSeconds = TimeManager.getRemainingSeconds();
          var minutes = Math.floor(remainingSeconds / 60);
          var seconds = Math.floor(remainingSeconds - 60 * minutes);
-         $(".minutes").html(minutes);
-         $(".seconds").html(Utils.pad2(seconds));
+         UI.OldContestHeader.updateMinutes(minutes);
+         UI.OldContestHeader.updateSeconds(Utils.pad2(seconds));
          if (remainingSeconds <= 0) {
             clearInterval(this.interval);
             clearInterval(this.minuteInterval);
@@ -1171,7 +1171,7 @@ if (!Object.keys) {
       UI.OldListView.fillListQuestions(sortedQuestionIDs, questionsData, fullFeedback, scores);
       if (fullFeedback) {
          UI.OldContestHeader.updateCssFullfeedback();
-         $(".question, #divQuestionParams, #divClosed, .questionsTable, #question-iframe-container").css("left", "245px");
+         UI.OldListView.updateCss();
       }
    }
 
@@ -1182,7 +1182,7 @@ if (!Object.keys) {
          questionData = questionsData[sortedQuestionIDs[iQuestionID]];
          drawStars("score_" + questionData.key, 4, 20, getQuestionScoreRate(questionData), "normal", getNbLockedStars(questionData)); // stars under question icon
       }
-      $("#divFooter").show();
+      UI.ContestEndPage.showFooter();
    }
 
    function getQuestionScoreRate (questionData) {
@@ -1343,8 +1343,7 @@ if (!Object.keys) {
             hasAnsweredQuestion = true;
          }
       }
-
-      $('.buttonClose').show();
+      UI.OldListView.showButtonClose();
 
       // Starts the timer
       TimeManager.init(
@@ -1394,7 +1393,7 @@ if (!Object.keys) {
          // The callback will be used by the task
          questionIframe.iframe.contentWindow.ImagesLoader.setCallback(function () {
             UI.MainHeader.unload();
-            updateDivQuestionsVisibility(true);
+            UI.OldContestHeader.updateDivQuestionsVisibility(true);
             if (fullFeedback) {
                UI.OldContestHeader.updateFeedbackVisibility(true);
             }
@@ -1407,7 +1406,7 @@ if (!Object.keys) {
                      UI.MainHeader.load();
                      UI.TrainingContestSelection.load();
                      UI.RestartContestForm.updateReloginResult(t("invalid_password"));
-                     updateDivQuestionsVisibility(false);
+                     UI.OldContestHeader.updateDivQuestionsVisibility(false);
                      UI.OldContestHeader.updateFeedbackVisibility(false);
                      UI.NavigationTabs.load();
                      Utils.enableButton("buttonRelogin");
@@ -1492,15 +1491,15 @@ if (!Object.keys) {
    window.checkGroupFromCode = function (curStep, groupCode, getTeams, isPublic, language, startOfficial) {
       Utils.disableButton("button" + curStep);
       UI.GroupUsedForm.unload();
-      $('#browserAlert').hide();
-      $("#" + curStep + "Result").html('');
+      UI.TrainingContestSelection.hideBrowserAlert();
+      UI.TrainingContestSelection.updateCurStepResult(curStep, '');
       $.post("data.php", {SID: window.SID, action: "checkPassword", password: groupCode, getTeams: getTeams, language: language, startOfficial: startOfficial, commonJsVersion: commonJsVersion, timestamp: window.timestamp, commonJsTimestamp: commonJsTimestamp},
          function (data) {
             if (!data.success) {
                if (data.message) {
-                  $("#" + curStep + "Result").html(data.message);
+                  UI.TrainingContestSelection.updateCurStepResult(curStep, data.message);
                } else {
-                  $("#" + curStep + "Result").html(t("invalid_code"));
+                  UI.TrainingContestSelection.updateCurStepResult(curStep, t("invalid_code"));
                }
                return;
             } else {
@@ -1538,7 +1537,7 @@ if (!Object.keys) {
 
             if ((!getTeams) && (data.childrenContests != undefined) && (data.childrenContests.length != 0)) {
                $("#" + curStep).hide();
-               $('#divAccessContest').show();
+               UI.SubcontestSelectionInterface.load();
                UI.SubcontestSelectionInterface.offerCategories(data);
             } else {
                window.groupWasChecked(data, curStep, groupCode, getTeams, data.isPublic);
@@ -1549,7 +1548,7 @@ if (!Object.keys) {
 
    //related to UI.SubcontestSelectionInterface
    window.selectContest = function (ID) {
-      $("#selectContest").delay(250).slideUp(400).queue(function () {
+      UI.SubcontestSelectionInterface.selectContest(function () {
          $(this).dequeue();
          if (window.browserIsMobile && typeof scratchToBlocklyContestID[ID] != 'undefined') {
             alert(t("browser_redirect_scratch_to_blockly"));
@@ -1583,7 +1582,7 @@ if (!Object.keys) {
             teamID = data.teamID;
             teamPassword = data.password;
             UI.PersonalDataForm.unload();
-            $("#divAccessContest").hide();
+            UI.SubcontestSelectionInterface.unload();
             UI.PersonalData.updateTeamPassword(data.password);
             UI.PersonalData.updateVisibilityPassword(true);
          }, "json");
@@ -1660,14 +1659,14 @@ if (!Object.keys) {
       if (newContestID == null) {
          contestID = data.contestID;
          contestFolder = data.contestFolder;
-         customIntro = $("<textarea/>").html(data.customIntro).text();
+         customIntro = UI.GridView.updateNGetCustomIntro(data.customIntro);
       }
       UI.MainHeader.updateTitle(data.contestName);
       fullFeedback = parseInt(data.fullFeedback);
       nextQuestionAuto = parseInt(data.nextQuestionAuto);
       nbUnlockedTasksInitial = parseInt(data.nbUnlockedTasksInitial);
       newInterface = !!parseInt(data.newInterface);
-      customIntro = $("<textarea/>").html(data.customIntro).text();
+      customIntro = UI.GridView.updateNGetCustomIntro(data.customIntro);
       contestOpen = !!parseInt(data.contestOpen);
       contestVisibility = data.contestVisibility;
       contestShowSolutions = !!parseInt(data.contestShowSolutions);
@@ -1790,7 +1789,7 @@ if (!Object.keys) {
       Utils.disableButton("buttonCloseNew");
       $('body').removeClass('autoHeight');
       window.toggleMetaViewport(false);
-      updateDivQuestionsVisibility(false);
+      UI.OldContestHeader.updateDivQuestionsVisibility(false);
       UI.TaskFrame.hideQuestionIframe();
       if (questionIframe.task) {
          questionIframe.task.unload(function () {
@@ -1863,7 +1862,7 @@ if (!Object.keys) {
                UI.RecoveryPasswordReminder.showScoreReminder();
             }
          } else {
-            updateDivQuestionsVisibility(false);
+            UI.OldContestHeader.updateDivQuestionsVisibility(false);
             UI.TaskFrame.hideQuestionIframe();
             UI.LoadingPage.load();
             UI.MainHeader.load();
@@ -1913,7 +1912,7 @@ if (!Object.keys) {
    }
 
    function showScores (data) {
-      $(".scoreTotal").hide();
+      UI.OldContestHeader.hideScoreTotal();
       // Compute scores
       teamScore = parseInt(data.bonusScore);
       maxTeamScore = parseInt(data.bonusScore);
@@ -1977,8 +1976,7 @@ if (!Object.keys) {
             if (bonusScore) {
                UI.OldContestHeader.updateBonusScore(bonusScore);
             }
-            $(".questionScore").css("width", "50px");
-            $(".question, #divClosed").css("left", "272px");
+            UI.GridView.updateCss();
             UI.OldContestHeader.updateCssLoadSolutions();
             var sortedQuestionIDs = getSortedQuestionIDs(questionsData);
             for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
@@ -2004,7 +2002,7 @@ if (!Object.keys) {
                   UI.OldContestHeader.updateBulletAndScores(questionKey, image, score, maxScore);
                }
             }
-            $(".scoreTotal").hide();
+            UI.OldContestHeader.hideScoreTotal();
             UI.OldContestHeader.updateTeamScore(teamScore, maxTeamScore);
             //      window.selectQuestion(sortedQuestionIDs[0], false);
          }
@@ -2099,17 +2097,14 @@ if (!Object.keys) {
          var minScore = questionData.minScore;
          var maxScore = questionData.maxScore;
          var noAnswerScore = questionData.noAnswerScore;
-         $("#question-" + currentQuestionKey).hide();
-         $("#question-" + questionKey).show();
-         $("#link_" + currentQuestionKey).attr("class", "questionLink");
-         $("#link_" + questionKey).attr("class", "questionLinkSelected");
+         UI.GridView.updateNextStep(questionKey, currentQuestionKey);
          if (!fullFeedback) {
             UI.OldListView.updateQuestionPoints("<table class='questionScores' cellspacing=0><tr><td>" + t("no_answer") + "</td><td>" + t("bad_answer") + "</td><td>" + t("good_answer") + "</td></tr>" +
                "<tr><td><span class='scoreNothing'>" + noAnswerScore + "</span></td>" +
                "<td><span class='scoreBad'>" + minScore + "</span></td>" +
                "<td><span class='scoreGood'>+" + maxScore + "</span></td></tr></table>");
          }
-         $(".questionTitle").html(questionName);
+         UI.OldContestHeader.updateQuestionTitle(questionName);
          if (newInterface) {
             drawStars('questionStars', 4, 24, getQuestionScoreRate(questionData), "normal", getNbLockedStars(questionData)); // stars under icon on main page
             drawStars('questionIframeStars', 4, 24, getQuestionScoreRate(questionData), "normal", getNbLockedStars(questionData)); // stars under icon on main page
@@ -2309,7 +2304,7 @@ if (!Object.keys) {
                   loadSolutions(data);
                }).fail(function () {
                   logError('a problem occured while fetching the solutions, please report to the administrators.');
-                  updateDivQuestionsVisibility(true);
+                  UI.OldContestHeader.updateDivQuestionsVisibility(true);
                });
             }
          }
@@ -2321,10 +2316,10 @@ if (!Object.keys) {
       for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
          var questionID = sortedQuestionIDs[iQuestionID];
          var questionData = questionsData[questionID];
-         $("#question-" + questionData.key).append("<hr>" + $("#solution-" + questionData.key).html());
+         UI.GridView.appendQuestionData(questionData.key);
       }
 
-      updateDivQuestionsVisibility(false);
+      UI.OldContestHeader.updateDivQuestionsVisibility(false);
       UI.TaskFrame.hideQuestionIframe();
       UI.LoadingPage.load();
       UI.MainHeader.load();
@@ -2336,10 +2331,10 @@ if (!Object.keys) {
       setTimeout(function () {
          questionIframe.iframe.contentWindow.ImagesLoader.setCallback(function () {
             UI.MainHeader.unload();
-            updateDivQuestionsVisibility(true);
+            UI.OldContestHeader.updateDivQuestionsVisibility(true);
             UI.TaskFrame.showQuestionIframe();
             UI.ContestEndPage.unload();
-            $('#question-iframe-container').css('left', '273px');
+            UI.TaskFrame.updateContainerCss();
             UI.LoadingPage.unload();
             if (!currentQuestionKey) {
                return;
@@ -2525,7 +2520,7 @@ if (!Object.keys) {
    };
 
    var drawStars = function (id, nbStars, starWidth, rate, mode, nbStarsLocked) {
-      $('#' + id).addClass('stars');
+      UI.ContestHeader.addClassStars(id);
 
       function clipPath (coords, xClip) {
          var result = [[coords[0][0], coords[0][1]]];
@@ -2572,8 +2567,7 @@ if (!Object.keys) {
          [[5, 37], [35, 30], [50, 5], [65, 30], [95, 37], [75, 60], [25, 60]],
          [[22, 90], [50, 77], [78, 90], [75, 60], [25, 60]]
       ];
-
-      $('#' + id).html('');
+      UI.ContestHeader.setStar(id);
       var paper = new Raphael(id, starWidth * nbStars, starWidth * 0.95);
       for (var iStar = 0; iStar < nbStars; iStar++) {
          var scaleFactor = starWidth / 100;
@@ -2608,13 +2602,7 @@ if (!Object.keys) {
       }
    };
 
-   function updateDivQuestionsVisibility (isShow) {
-      if (isShow) {
-         $("#divQuestions").show();
-      } else {
-         $("#divQuestions").hide();
-      }
-   }
+
 
    function getParameterByName (name) {
       var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),

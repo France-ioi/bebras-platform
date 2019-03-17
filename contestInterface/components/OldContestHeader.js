@@ -24,14 +24,36 @@ export default {
 	},
 	updateTeamScore (teamScore, maxTeamScore) {
 		$(".chrono").html("<tr><td style='font-size:28px'> " + i18n.t("score") + ' ' + teamScore + " / " + maxTeamScore + "</td></tr>");
-        $(".chrono").css("background-color", "#F66");
+		$(".chrono").css("background-color", "#F66");
 	},
 	updateFeedbackVisibility (isShow) {
 		if (isShow) {
 			$('.chrono').css('font-size', '1.3em');
-            $('.fullFeedback').show();
+			$('.fullFeedback').show();
 		} else {
 			$('.fullFeedback').hide();
+		}
+	},
+	hideHeaderTime () {
+		$(".header_time").hide();
+	},
+	updateMinutes (html) {
+		$(".minutes").html(html);
+	},
+	updateSeconds (html) {
+		$(".seconds").html(html);
+	},
+	updateQuestionTitle (html) {
+		$(".questionTitle").html(html);
+	},
+	hideScoreTotal () {
+		$(".scoreTotal").hide();
+	},
+	updateDivQuestionsVisibility (isShow) {
+		if (isShow) {
+			$("#divQuestions").show();
+		} else {
+			$("#divQuestions").hide();
 		}
 	}
 };

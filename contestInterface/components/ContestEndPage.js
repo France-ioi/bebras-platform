@@ -13,5 +13,8 @@ export default {
 	showError (error) {
 		$("#contentError").html(error);
 		$("#divError").show();
+	},
+	showFooter () {
+		$("#divFooter").show();
 	}
 };

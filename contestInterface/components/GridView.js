@@ -12,9 +12,9 @@ export default {
 	unlockAllLevels (getSortedQuestionIDs, questionsData, questionUnlockedLevels) {
 		var sortedQuestionIDs = getSortedQuestionIDs(questionsData);
 		for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
-		   var questionKey = questionsData[sortedQuestionIDs[iQuestionID]].key;
-		   questionUnlockedLevels[questionKey] = 4;
-		   this.unlockLevel(questionKey, false);
+			var questionKey = questionsData[sortedQuestionIDs[iQuestionID]].key;
+			questionUnlockedLevels[questionKey] = 4;
+			this.unlockLevel(questionKey, false);
 		}
 	},
 	unlockLevel (questionKey, isLock = false) {
@@ -36,9 +36,9 @@ export default {
 	updateGradersContent (data) {
 		if (data.graders) {
 			$('#divGradersContent').html(data.graders);
-		 } else {
+		} else {
 			$('#divGradersContent').load(data.gradersUrl);
-		 }
+		}
 	},
 	updateGradersContent (html) {
 		$('#divGradersContent').html(html);
@@ -48,5 +48,21 @@ export default {
 	},
 	updateSolutionsContent (html) {
 		$('#divSolutionsContent').html(html);
+	},
+	updateCss () {
+		$(".questionScore").css("width", "50px");
+		$(".question, #divClosed").css("left", "272px");
+	},
+	updateNextStep (questionKey, currentQuestionKey) {
+		$("#question-" + currentQuestionKey).hide();
+		$("#question-" + questionKey).show();
+		$("#link_" + currentQuestionKey).attr("class", "questionLink");
+		$("#link_" + questionKey).attr("class", "questionLinkSelected");
+	},
+	appendQuestionData (key) {
+		$("#question-" + key).append("<hr>" + $("#solution-" + key).html());
+	},
+	updateNGetCustomIntro (customIntro) {
+		return $("<textarea/>").html(customIntro).text();
 	}
 };

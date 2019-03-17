@@ -45,10 +45,10 @@ export default {
 
 	},
 	load (data, eventListeners) {
-
+		$("#divAccessContest").show();
 	},
 	unload () {
-
+		$("#divAccessContest").hide();
 	},
 	selectLanguage (language) {
 		this.selectedLanguage = language;
@@ -216,4 +216,7 @@ export default {
 			scrollTop: $(el).offset().top
 		}, 250);
 	},
+	selectContest (func) {
+		$("#selectContest").delay(250).slideUp(400).queue(func);
+	}
 };

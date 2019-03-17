@@ -33,5 +33,11 @@ export default {
 		$("#warningPublicGroups").hide();
 		$("#publicGroups").show();
 	},
+	updateCurStepResult (curStep, html) {
+		$("#" + curStep + "Result").html(html);
+	},
+	hideBrowserAlert () {
+		$('#browserAlert').hide();
+	}
 
 };

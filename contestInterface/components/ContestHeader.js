@@ -90,5 +90,11 @@ export default {
 	},
 	hideHeaderButtonFullscreen () {
 		$('.header_button_fullscreen').hide();
+	},
+	addClassStars (id) {
+		$('#' + id).addClass('stars');
+	},
+	setStar (id) {
+		$('#' + id).html('');
 	}
 };
