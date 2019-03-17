@@ -1270,7 +1270,7 @@ if ($action == "makeGroupOfficial") {
    }
 }
 
-echo "<h3><a href='".$startUrl."&action=mergeStudents'>Merge students with same name, grade, user and school</a></h3>";
+echo "<h3><a href='".$startUrl."&action=mergeStudents'>Merge students with same name, grade, user and school (official participations only)</a></h3>";
 if ($action == "mergeStudents") {
 
       execQueryAndShowNbRows("Attach students with no registrationID to identical registered students", "
@@ -1284,7 +1284,8 @@ if ($action == "mergeStudents") {
          AND contestant.lastName = algorea_registration.lastName
          AND contestant.grade = algorea_registration.grade
          SET contestant.registrationID = algorea_registration.ID
-         WHERE contestant.registrationID IS NULL",
+         WHERE contestant.registrationID IS NULL
+         AND team.participationType = 'Official'",
          array());
 }
 
@@ -1472,21 +1473,28 @@ if ($action == "updateRegistrationCategory") {
       JOIN registration_category ON tmp.ID = registration_category.ID
       SET registration_category.dateBestScoreTeam = tmp.maxTime",
       array());
+
+      execQueryAndShowNbRows("Reset total Algorea score", 
+         "UPDATE algorea_registration
+         SET totalScoreAlgorea = 0",
+         array()
+      );
+
+      $categoryMinScore = array("blanche" => 0, "jaune" => 1000, "orange" => 2000, "verte" => 3000);
       
-   execQueryAndShowNbRows("Update total Algorea score", 
-      "   UPDATE algorea_registration
-      JOIN (
-      SELECT algorea_registration.ID, 
-       SUM(GREATEST(GREATEST(IFNULL(bestScoreIndividual, 0),
-                         IFNULL(bestScoreTeam, 0)),
-                IF(algorea_registration.category != registration_category.category, 160, 0))) as totalScore
-       FROM algorea_registration
-       JOIN registration_category
-       ON algorea_registration.ID = registration_category.registrationID
-       GROUP BY algorea_registration.ID
-       ) tmp ON tmp.ID = algorea_registration.ID
-      SET algorea_registration.totalScoreAlgorea = tmp.totalScore",
-      array());
+      foreach ($categoryMinScore as $category => $minScore) {
+         execQueryAndShowNbRows("Update total Algorea score", 
+            "UPDATE algorea_registration
+            JOIN registration_category
+            ON algorea_registration.ID = registration_category.registrationID
+            SET totalScoreAlgorea = 
+               ".$minScore." + GREATEST(IFNULL(bestScoreIndividual, 0), IFNULL(bestScoreTeam, 0))
+            WHERE registration_category.category = '".$category."'
+            AND (bestScoreIndividual > 0 OR bestScoreTeam > 0)
+            ",
+            array()
+         );
+      }
 }
 
 
