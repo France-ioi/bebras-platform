@@ -50,6 +50,7 @@ $query = "SELECT `pixal`.`groups`.ID, `pixal`.`groups`.`sName`,
 `pixal`.`alkindi_teams2`.rankRegion,
 `pixal`.`alkindi_teams2`.qualifiedThird,
 `pixal`.`alkindi_teams2`.sPassword AS password,
+`pixal`.`alkindi_teams2`.isCh AS suisse,
 `login-module`.`badges`.`code`,
 `pixal`.`alkindi_teams2`.thirdScore, `pixal`.`alkindi_teams2`.thirdTime,
 `pixal`.`alkindi_teams2`.isOfficial,
@@ -159,7 +160,9 @@ foreach ($groups as $group) {
    }
 
    echo "<td>".$sum."</td>";
-   if($group->password) {
+   if($group->suisse == 1) {
+      echo "<td><i>(résultats bientôt)</i></td>";
+   } elseif($group->password) {
       echo "<td>".$group->password."</td>";
    } else {
       echo "<td><i>(non qualifiée)</i></td>";
