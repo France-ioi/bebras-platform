@@ -160,9 +160,7 @@ foreach ($groups as $group) {
    }
 
    echo "<td>".$sum."</td>";
-   if($group->suisse == 1) {
-      echo "<td><i>(résultats bientôt)</i></td>";
-   } elseif($group->password) {
+   if($group->password) {
       echo "<td>".$group->password."</td>";
    } else {
       echo "<td><i>(non qualifiée)</i></td>";
