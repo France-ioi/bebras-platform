@@ -113,9 +113,7 @@ echo "<h2>Équipes qualifiées</h2><p>Les équipes qui ont obtenu 100 points ou 
 
 <p>Les sujets sont les mêmes que pour le 2e tour, mais avec des données différentes. Pour chaque sujet, l'équipe peut effectuer plusieurs tentatives pendant la durée de l'épreuve.</p>
 
-<p>Les élèves ne doivent utiliser rien d'autre que le site du concours, des feuilles de brouillon et des crayons.</p>
-
-<p>Il n'y a pas de limite au nombre d'ordinateurs qu'une équipe peut utiliser. Par contre l'équipe ne doit utiliser rien d'autre que le site du concours, des feuilles de brouillon et des crayons. En particulier, vous ne pouvez pas écrire ni utiliser de programmes pour résoudre ou vous aider à résoudre les sujets.</p>
+<p>Il n'y a pas de limite au nombre d'ordinateurs qu'une équipe peut utiliser. Par contre l'équipe ne doit utiliser rien d'autre que le site du concours, des feuilles de brouillon, des crayons et d'éventuelles notes manuscrites ou imprimées. En particulier, elles ne peuvent pas écrire ni utiliser de programmes pour résoudre ou aider à résoudre les sujets.</p>
 
 <h2>Calcul du score et départage des équipes</h2>
 <p>Le score d'une équipe au 3e tour sera calculé de la même manière que lors du 2e tour. On considèrera pour chaque sujet, la tentative de meilleur score parmi celles effectuées pendant l'épreuve. Le score total sera la somme des scores des 5 sujets.</p>
