@@ -149,7 +149,7 @@ export default {
 				languages[child.language] = true;
 				nbLanguages++;
 				lastLanguage = child.language;
-				$(".languageSelector[data-language='" + language + "']").show();
+				$(".languageSelector[data-language='" + child.language + "']").show();
 			}
 		}
 		if (nbLanguages > 1) {
