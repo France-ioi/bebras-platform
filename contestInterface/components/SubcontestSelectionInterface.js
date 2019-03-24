@@ -35,7 +35,7 @@ export default {
 			that.preSelectedLanguage = language;
 			$('.languageSelector').removeClass('selected');
 			$('.languageSelector[data-language="' + language + '"]').addClass('selected');
-			that.selectLanguage(preSelectedLanguage);
+			that.selectLanguage(language);
 		});
 
 		window.getContest = this.getContest.bind(this);
