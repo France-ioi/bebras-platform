@@ -75,7 +75,7 @@ export default {
 					this.updateLoginResult("Les deux codes ne peuvent pas être identiques !");
 				}
 			} else {
-				const contestant = getContestant(iContestant);
+				const contestant = this.getContestant(iContestant);
 				this.contestants[iContestant] = contestant;
 				if (!contestant.lastName && !this.fieldsHidden.lastName) {
 					this.updateLoginResult(strTeamMate + i18n.t("lastname_missing"));
