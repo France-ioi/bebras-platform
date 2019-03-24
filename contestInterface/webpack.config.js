@@ -1,7 +1,9 @@
 // Imports
 const path = require('path');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 require("babel-register");
 
+const isDev = process.env.NODE_ENV !== 'production';
 // Webpack Configuration
 const config = {
 	// Entry
@@ -32,11 +34,16 @@ const config = {
 	// Plugins
 	plugins: [
 	],
+	optimization: {
+		minimize: !isDev,
+		minimizer: [new UglifyJsPlugin()],
+	},
+
 	// OPTIONAL
 	// Reload On File Change
-	watch: true,
+	watch: isDev,
 	// Development Tools (Map Errors To Source File)
-	devtool: 'source-map',
+	devtool: isDev ? 'source-map': false,
 };
 // Exports
 module.exports = config;
