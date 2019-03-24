@@ -5,8 +5,8 @@
   "main": "common.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "NODE_ENV=production webpack --config webpack.config.js -p",
-    "build:dev": "NODE_ENV=development webpack --config webpack.config.js -p"
+    "build": "cross-env NODE_ENV=production webpack --config webpack.config.js -p",
+    "build:dev": "cross-env NODE_ENV=development webpack --config webpack.config.js -p"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +23,7 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-es2015-ie": "^6.7.0",
     "babel-register": "^6.26.0",
+    "cross-env": "^5.2.0",
     "uglifyjs-webpack-plugin": "^2.1.2",
     "webpack": "^4.29.4",
     "webpack-cli": "^3.2.3",
