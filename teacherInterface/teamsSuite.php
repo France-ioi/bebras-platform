@@ -42,6 +42,7 @@ $idTeamItem = "426154796109911742"; // groupe : 337433601613235328
 // To fetch scores on another contest, modify:
 // -users_items.idItem IN (...) with the IDs of the tasks
 // -groups.idTeamItem = '...' with the ID of the chapter on which teams are created
+/*
 $query = "SELECT `pixal`.`groups`.ID, `pixal`.`groups`.`sName`,
 `pixal`.`users`.`ID` as `idUser`,
 `pixal`.`users_items`.`idItem`, `pixal`.`users_items`.`iScore`, date(`pixal`.`users`.`sLastLoginDate`) as lastLogin,
@@ -67,6 +68,47 @@ AND `pixal`.`groups`.`sType` = 'Team'
 AND `pixal`.`groups`.`idTeamItem` = ".$idTeamItem."
 GROUP BY `pixal`.`users`.`ID`, `pixal`.`users_items`.`idItem`
 ORDER BY `pixal`.`groups`.ID ASC, `pixal`.`users_items`.`idItem` ASC";
+*/
+$query = "SELECT 
+groups_items_scores.idItem,
+groups_items_scores.iScore,
+date(`pixal`.`users`.`sLastLoginDate`) as lastLogin,
+`pixal`.`users`.`ID` as `idUser`,
+`pixal`.`groups`.`sName`,
+`pixal`.`alkindi_teams2`.rank,
+`pixal`.`alkindi_teams2`.rankBigRegion,
+`pixal`.`alkindi_teams2`.rankRegion,
+`pixal`.`alkindi_teams2`.qualifiedThird,
+`pixal`.`alkindi_teams2`.sPassword AS password,
+`pixal`.`alkindi_teams2`.isCh AS suisse,
+`login-module`.`badges`.`code`,
+`pixal`.`alkindi_teams2`.thirdScore, `pixal`.`alkindi_teams2`.thirdTime,
+`pixal`.`alkindi_teams2`.isOfficial,
+`pixal`.`alkindi_teams2`.score1, `pixal`.`alkindi_teams2`.time1, `pixal`.`alkindi_teams2`.score2, `pixal`.`alkindi_teams2`.time2, `pixal`.`alkindi_teams2`.score3, `pixal`.`alkindi_teams2`.time3, `pixal`.`alkindi_teams2`.score4, `pixal`.`alkindi_teams2`.time4
+FROM (
+SELECT
+`pixal`.`groups`.ID,
+`pixal`.`users_items`.`idItem`,
+`pixal`.`users_items`.`iScore`
+FROM `login-module`.`badges`
+JOIN `pixal`.`users` ON `pixal`.`users`.`loginID` = `login-module`.`badges`.`user_id`
+JOIN `pixal`.`groups_groups` ON `pixal`.`groups_groups`.`idGroupChild` = `pixal`.`users`.`idGroupSelf`
+JOIN `pixal`.`groups` ON `pixal`.`groups`.`ID` = `pixal`.`groups_groups`.`idGroupParent`
+LEFT JOIN `pixal`.`users_items` ON (`pixal`.`users`.`ID` = `pixal`.`users_items`.`idUser` AND `users_items`.`idItem` IN (".implode(",", $items)."))
+WHERE
+`login-module`.`badges`.`code` IN (".$strCodes.")
+AND `pixal`.`groups`.`sType` = 'Team'
+AND `pixal`.`groups`.`idTeamItem` = ".$idTeamItem."
+GROUP BY `pixal`.`users_items`.`idItem`
+ORDER BY `pixal`.`groups`.ID ASC, `pixal`.`users_items`.`idItem` ASC
+) as groups_items_scores
+JOIN `pixal`.`groups` ON `pixal`.`groups`.ID = groups_items_scores.`ID`
+JOIN `pixal`.`groups_groups` ON `pixal`.`groups_groups`.`idGroupParent`= groups_items_scores.`ID`
+JOIN `pixal`.`users` ON `pixal`.`groups_groups`.`idGroupChild` = `pixal`.`users`.`idGroupSelf`
+LEFT JOIN `login-module`.`badges` ON `pixal`.`users`.`loginID` = `login-module`.`badges`.`user_id`
+LEFT JOIN `pixal`.`alkindi_teams2` ON `pixal`.`alkindi_teams2`.idGroup = groups_items_scores.`ID`";
+
+
 
 
 
