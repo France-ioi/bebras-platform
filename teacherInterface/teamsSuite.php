@@ -75,6 +75,8 @@ groups_items_scores.idItem,
 groups_items_scores.iScore,
 date(`pixal`.`users`.`sLastLoginDate`) as lastLogin,
 `pixal`.`users`.`ID` as `idUser`,
+`pixal`.`users`.`sFirstName`,
+`pixal`.`users`.`sLastName`,
 `pixal`.`groups`.`sName`,
 `pixal`.`alkindi_teams2`.rank,
 `pixal`.`alkindi_teams2`.rankBigRegion,
@@ -100,7 +102,7 @@ WHERE
 `login-module`.`badges`.`code` IN (".$strCodes.")
 AND `pixal`.`groups`.`sType` = 'Team'
 AND `pixal`.`groups`.`idTeamItem` = ".$idTeamItem."
-GROUP BY `pixal`.`users_items`.`idItem`
+GROUP BY `pixal`.`groups`.ID, `pixal`.`users_items`.`idItem`
 ORDER BY `pixal`.`groups`.ID ASC, `pixal`.`users_items`.`idItem` ASC
 ) as groups_items_scores
 JOIN `pixal`.`groups` ON `pixal`.`groups`.ID = groups_items_scores.`ID`
@@ -182,8 +184,12 @@ foreach ($groups as $group) {
    echo "<tr>";
    echo "<td>".htmlentities($group->sName)."</td><td>";
    foreach ($group->users as $user) {
-      echo htmlentities($contestants[$user->code]->firstName)." ".
-            htmlentities($contestants[$user->code]->lastName)." [".$user->code."]<br/>";
+      if (isset($contestants[$user->code])) {
+         echo htmlentities($contestants[$user->code]->firstName)." ".
+               htmlentities($contestants[$user->code]->lastName)." [".$user->code."]<br/>";
+      } else {
+         echo htmlentities($user->sFirstName)." ".htmlentities($user->sLastName)." [sans code de participant]<br/>";
+      }
    }
    echo "</td>";
    $sum = 0;
