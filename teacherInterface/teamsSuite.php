@@ -70,6 +70,7 @@ GROUP BY `pixal`.`users`.`ID`, `pixal`.`users_items`.`idItem`
 ORDER BY `pixal`.`groups`.ID ASC, `pixal`.`users_items`.`idItem` ASC";
 */
 $query = "SELECT 
+groups_items_scores.ID,
 groups_items_scores.idItem,
 groups_items_scores.iScore,
 date(`pixal`.`users`.`sLastLoginDate`) as lastLogin,
