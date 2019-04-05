@@ -3,7 +3,7 @@
 export default {
 	fullscreenActive: false,
 	fullscreenEvents: false,
-
+	events: [],
 
 	init () {
 		window.backToList = this.backToList.bind(this);
@@ -14,6 +14,10 @@ export default {
 	},
 	unload () {
 		$(".newInterface").html("").hide();
+		for(var i=0; i<this.events.length; i++) {
+			document.removeEventListener(this.events[i], this.updateFullscreen);
+		}
+		this.events = [];
 	},
 	checkFullscreen () {
 		// Checks whether fullscreen is available, else hides the button
@@ -29,10 +33,16 @@ export default {
 	toggleFullscreen () {
 		if (!this.fullscreenEvents) {
 			// Register events to update fullscreen state
-			document.addEventListener("fullscreenchange", this.updateFullscreen);
-			document.addEventListener("webkitfullscreenchange", this.updateFullscreen);
-			document.addEventListener("mozfullscreenchange", this.updateFullscreen);
-			document.addEventListener("MSFullscreenChange", this.updateFullscreen);
+			var types = [
+				'fullscreenchange',
+				'webkitfullscreenchange',
+				'mozfullscreenchange',
+				'MSFullscreenChange'
+			]
+			for(var t in types) {
+				document.addEventListener(t, this.updateFullscreen);
+				this.events.push(t);
+			}
 			this.fullscreenEvents = true;
 		}
 
