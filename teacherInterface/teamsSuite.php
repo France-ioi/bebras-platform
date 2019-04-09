@@ -92,7 +92,7 @@ FROM (
 SELECT
 `pixal`.`groups`.ID,
 `pixal`.`users_items`.`idItem`,
-`pixal`.`users_items`.`iScore`
+MAX(`pixal`.`users_items`.`iScore`) AS iScore
 FROM `login-module`.`badges`
 JOIN `pixal`.`users` ON `pixal`.`users`.`loginID` = `login-module`.`badges`.`user_id`
 JOIN `pixal`.`groups_groups` ON `pixal`.`groups_groups`.`idGroupChild` = `pixal`.`users`.`idGroupSelf`
