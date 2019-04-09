@@ -5,7 +5,7 @@ export default {
 
 	},
 	unload () {
-
+		$(".questionList").html('');
 	},
 	updateScore (key, score, maxScore) {
 		$('#score_' + key).html(score + " / " + maxScore);

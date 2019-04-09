@@ -5,6 +5,7 @@ export default {
 
 	},
 	unload () {
+		$('#selection-breadcrumb').html('');
 	},
 	updateBreadcrumb () {
 		const {

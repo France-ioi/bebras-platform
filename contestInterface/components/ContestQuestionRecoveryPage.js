@@ -6,6 +6,7 @@ export default {
 	},
 	unload () {
 		$("#divClosedEncodedAnswers").hide();
+		$("#encodedAnswers").html('');
 	},
 	updateEncodedAnswers (encodedAnswers) {
 		$("#encodedAnswers").html(encodedAnswers);
