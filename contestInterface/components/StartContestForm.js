@@ -15,7 +15,7 @@ export default {
 
 	},
 	unload () {
-
+		$("#groupCode").val('');
 	},
 	checkGroup () {
 		const groupCode = UI.StartContestForm.getGroupCode();

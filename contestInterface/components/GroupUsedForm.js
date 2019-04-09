@@ -9,6 +9,7 @@ export default {
 	},
 	unload () {
 		$("#recoverGroup").hide();
+		$('#recoverGroupPass').val('');
 	},
 	recoverGroup () {
 		const groupCode = UI.StartContestForm.getGroupCode();

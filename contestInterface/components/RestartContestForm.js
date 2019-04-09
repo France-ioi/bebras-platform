@@ -19,7 +19,9 @@ export default {
 
 	},
 	unload () {
-
+		$("#selectTeam").val('');
+		$("#groupPassword").val('');
+		$("#interruptedPassword").val('');
 	},
 	relogin () {
 		const teamID = this.getSelectTeam();
