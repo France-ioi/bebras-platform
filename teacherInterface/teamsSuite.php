@@ -82,12 +82,14 @@ date(`pixal`.`users`.`sLastLoginDate`) as lastLogin,
 `pixal`.`alkindi_teams2`.rankBigRegion,
 `pixal`.`alkindi_teams2`.rankRegion,
 `pixal`.`alkindi_teams2`.qualifiedThird,
+`pixal`.`alkindi_teams2`.qualifiedFinal,
 `pixal`.`alkindi_teams2`.sPassword AS password,
 `pixal`.`alkindi_teams2`.isCh AS suisse,
 `login-module`.`badges`.`code`,
 `pixal`.`alkindi_teams2`.thirdScore, `pixal`.`alkindi_teams2`.thirdTime,
 `pixal`.`alkindi_teams2`.isOfficial,
-`pixal`.`alkindi_teams2`.score1, `pixal`.`alkindi_teams2`.time1, `pixal`.`alkindi_teams2`.score2, `pixal`.`alkindi_teams2`.time2, `pixal`.`alkindi_teams2`.score3, `pixal`.`alkindi_teams2`.time3, `pixal`.`alkindi_teams2`.score4, `pixal`.`alkindi_teams2`.time4
+`pixal`.`alkindi_teams2`.score1, `pixal`.`alkindi_teams2`.time1, `pixal`.`alkindi_teams2`.score2, `pixal`.`alkindi_teams2`.time2, `pixal`.`alkindi_teams2`.score3, `pixal`.`alkindi_teams2`.time3, `pixal`.`alkindi_teams2`.score4, `pixal`.`alkindi_teams2`.time4,
+`pixal`.`alkindi_teams2`.score5, `pixal`.`alkindi_teams2`.time5
 FROM (
 SELECT
 `pixal`.`groups`.ID,
@@ -173,12 +175,16 @@ echo "<h2>Classement final</h2>
 echo "<table class='resultats' cellspacing=0><tr>";
 echo "<td rowspan=2>Nom de l'équipe</td><td rowspan=2>Élèves</td><td colspan=6 style='text-align:center;background:lightgray'>2e tour</td>";
 echo "<td rowspan=2>Code secret<br />tour 3</td>";
+echo "<td colspan=6 style='text-align:center;background:lightgray'>3e tour</td>";
+echo "<td colspan=3 style='text-align:center;'>Classement</td>";
 echo "</tr>";
 
 echo "<tr><td>Messages 1<br />(2e tour)</td><td>Messages 2<br />(2e tour)</td><td>Messages 3<br />(2e tour)</td><td>Cercle 1<br />(2e tour)</td><td>Cercle 2<br/>(2e tour)</td><td>Total<br />(2e tour)</td>";
-/*echo "<td>Réseau&nbsp;1D<br />(3e tour)</td><td>Réseau&nbsp;2D<br />(3e tour)</td><td>Enigma&nbsp;1<br />(3e tour)</td><td>Enigma&nbsp;2<br />(3e tour)</td><td>Total<br />(3e tour)</td><td>Classement<br/>académie</td><td>Classement<br/>grande région</td><td>Classement<br/>national</td>";
-*/
+echo "<td>Messages 1<br />(3e tour)</td><td>Messages 2<br />(3e tour)</td><td>Messages 3<br />(3e tour)</td><td>Cercle 1<br />(3e tour)</td><td>Cercle 2<br/>(3e tour)</td><td>Total<br />(3e tour)</td>";
+echo "<td>Classement<br/>académie</td><td>Classement<br/>grande région</td><td>Classement<br/>national</td>";
+
 echo "</tr>";
+
 $curGroupID = 0;
 foreach ($groups as $group) {
    echo "<tr>";
@@ -210,30 +216,27 @@ foreach ($groups as $group) {
    if($group->password) {
       echo "<td>".$group->password."</td>";
    } else {
-      echo "<td><i>(non qualifiée)</i></td>";
+      echo "<td colspan='10'><i>(non qualifiée pour le 3e tour)</i></td>";
    }
-   /*
-   if($group->thirdScore) {
-        echo "<td>".$group->score1." (".$group->time1.")</td>";
-        echo "<td>".$group->score2." (".$group->time2.")</td>";
-        echo "<td>".$group->score3." (".$group->time3.")</td>";
-        echo "<td>".$group->score4." (".$group->time4.")</td>";
-        echo "<td>".$group->thirdScore." (".$group->thirdTime.")</td>";
-   } elseif($sum >= 285) {
-        echo '<td colspan="5">Participation ou résultats en attente</td>';
-   } else {
-        echo '<td colspan="5">Non qualifiée</td>';
+   if($group->thirdScore !== null) {
+      echo "<td>".$group->score1." (".$group->time1.")</td>";
+      echo "<td>".$group->score2." (".$group->time2.")</td>";
+      echo "<td>".$group->score3." (".$group->time3.")</td>";
+      echo "<td>".$group->score4." (".$group->time4.")</td>";
+      echo "<td>".$group->score5." (".$group->time5.")</td>";
+      echo "<td>".$group->thirdScore." (".$group->thirdTime.")</td>";
+      if ($group->qualifiedFinal == 1) {
+         echo "<td colspan=3><b>Qualifiée en finale</b></td>";
+      } else if ($group->isOfficial != 1) {
+         echo "<td colspan=3><i>(hors classement)</i></td>";
+      } else {
+         echo "<td>".($group->rankRegion ? $group->rankRegion : '')."</td>";
+         echo "<td>".($group->rankBigRegion ? $group->rankBigRegion : '')."</td>";
+         echo "<td>".($group->rank ? $group->rank : '')."</td>";
+      }
+   } elseif($group->password) {
+      echo '<td colspan="9">Résultats en attente, ou n\'a pas participé au 3e tour</td>';
    }
-   if ($group->qualifiedFinal == 1) {
-      echo "<td colspan=3>Qualifiée en finale</td>";
-   } else if ($group->isOfficial != 1) {
-      echo "<td colspan=3>Hors classement</td>";
-   } else {
-      echo "<td>".($group->rankRegion ? $group->rankRegion : '')."</td>";
-      echo "<td>".($group->rankBigRegion ? $group->rankBigRegion : '')."</td>";
-      echo "<td>".($group->rank ? $group->rank : '')."</td>";
-   }
-   */
    echo "</tr>";
 }
 echo "</table>";
