@@ -627,7 +627,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
    </div>
    <div id="divClosedRemindPassword" style="display:none">
       <p>
-         <b data-i18n="closed_remind_password"></b>
+         <b data-i18n="[html]closed_remind_password"></b>
       </p>
       <p>
          <span data-i18n="closed_your_password"></span> <span class='selectable' id="remindTeamPassword"></span>
