@@ -3,6 +3,7 @@ import Utils from './common/Utils';
 import Tracker from './common/Tracker';
 import TimeManager from './common/TimeManager';
 import questionIframe from './common/QuestionIframe';
+import drawStars from './common/DrawStars';
 
 // Questions tools
 function getSortedQuestionIDs(questionsData) {
@@ -134,17 +135,17 @@ function selectQuestion(questionID, clicked, noLoad) {
                 "questionStars",
                 4,
                 24,
-                app.getQuestionScoreRate(questionData),
+                getQuestionScoreRate(questionData),
                 "normal",
-                app.getNbLockedStars(questionData)
+                getNbLockedStars(questionData)
             ); // stars under icon on main page
             drawStars(
                 "questionIframeStars",
                 4,
                 24,
-                app.getQuestionScoreRate(questionData),
+                getQuestionScoreRate(questionData),
                 "normal",
-                app.getNbLockedStars(questionData)
+                getNbLockedStars(questionData)
             ); // stars under icon on main page
         }
         app.currentQuestionKey = questionKey;
@@ -237,8 +238,8 @@ function fillListQuestionsNew(sortedQuestionIDs, questionsData) {
         app.contestFolder
     );
     updateUnlockedLevels(sortedQuestionIDs);
-    for (iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
-        questionData = questionsData[sortedQuestionIDs[iQuestionID]];
+    for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
+        var questionData = questionsData[sortedQuestionIDs[iQuestionID]];
         drawStars(
             "score_" + questionData.key,
             4,

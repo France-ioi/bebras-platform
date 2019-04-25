@@ -1,3 +1,9 @@
+/*
+
+Legacy code. Actual code in app/ dir.
+
+*/
+
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
 if (!Object.keys) {

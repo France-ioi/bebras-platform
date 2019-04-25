@@ -175,17 +175,10 @@ var platform = {
             };
         }
         var sortedQuestionIDs = questions.getSortedQuestionIDs(app.questionsData);
-        for (
-            var iQuestionID = 0;
-            iQuestionID < sortedQuestionIDs.length;
-            iQuestionID++
-        ) {
+        for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
             var questionID = sortedQuestionIDs[iQuestionID];
             var questionData = app.questionsData[questionID];
-            if (
-                app.questionUnlockedLevels[questionData.key] > 0 &&
-                !questionData.visited
-            ) {
+            if (app.questionUnlockedLevels[questionData.key] > 0 && !questionData.visited ) {
                 setTimeout(timeoutFunFactory(questionID), delay);
                 return;
             }
