@@ -1,1 +1,2 @@
-ALTER TABLE `contestant` CHANGE `tmpIsOfficial` `tmpIsOfficial` TINYINT(4) NULL DEFAULT NULL;
+-- contestant.tmpIsOfficial not exists
+-- ALTER TABLE `contestant` CHANGE `tmpIsOfficial` `tmpIsOfficial` TINYINT(4) NULL DEFAULT NULL;

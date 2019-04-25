@@ -1,4 +1,7 @@
-
+import UI from '../components';
+import Utils from '../common/Utils';
+import contest from '../contest';
+import group from '../group';
 
 export default {
 	init () {
@@ -25,7 +28,7 @@ export default {
 	},
 	relogin () {
 		const teamID = this.getSelectTeam();
-		window.setTeamID(teamID);
+		app.teamID = teamID;
 		const groupPassword = this.getGroupPassword();
 		if (teamID == '0') {
 			this.updateReloginResult(i18n.t("select_team"));
@@ -33,11 +36,11 @@ export default {
 		}
 		Utils.disableButton("buttonRelogin");
 		UI.TrainingContestSelection.unload();
-		window.loadContestData(null, null, groupPassword);
+		contest.loadContestData(null, null, groupPassword);
 	},
 	checkPasswordInterrupted () {
 		const password = this.getInterruptedPassword()
-		return window.checkGroupFromCode("Interrupted", password, true, false);
+		return group.checkGroupFromCode("Interrupted", password, true, false);
 	},
 	updateReloginResult (html) {
 		$("#ReloginResult").html(html);

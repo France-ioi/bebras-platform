@@ -1,3 +1,6 @@
+import UI from '../components';
+import group from '../group';
+
 export default {
 	init () {
 		window.cancelStartContest = this.cancelStartContest.bind(this);
@@ -17,7 +20,7 @@ export default {
 	},
 	reallyStartContest () {
 		this.unload();
-		window.checkGroupFromCode("CheckGroup", personalPageData.registrationData.code, false, false, null, true);
+		group.checkGroupFromCode("CheckGroup", personalPageData.registrationData.code, false, false, null, true);
 	}
 
 }

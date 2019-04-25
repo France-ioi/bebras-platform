@@ -1,3 +1,9 @@
+import UI from '../components';
+import Utils from '../common/Utils';
+import DateFormat from '../common/DateFormat';
+import contest from '../contest';
+import group from '../group';
+
 export default {
 	personalPageData: null,
 
@@ -32,7 +38,7 @@ export default {
 			return;
 		}
 		this.updateVisibilityPassword(false);
-		window.loadContestData(null, null);
+		contest.loadContestData(null, null);
 	},
 	startPreparation () {
 		UI.MainHeader.updateTitle(this.personalPageData.contestName);
@@ -45,7 +51,7 @@ export default {
 			UI.SubcontestSelectionInterface.offerCategories(this.personalPageData);
 			$('#divAccessContest').show();
 		} else {
-			window.groupWasChecked(this.personalPageData, "PersonalPage", this.personalPageData.registrationData.code, false, false);
+			group.groupWasChecked(this.personalPageData, "PersonalPage", this.personalPageData.registrationData.code, false, false);
 		}
 	},
 	startContest () {
@@ -81,7 +87,7 @@ export default {
 			const schoolRank = this.rankToStr(participation.schoolRank, $nameGrade, participation.nbContestants);
 
 			htmlParticipations += "<tr><td>" + participation.contestName + "</td>" +
-				"<td>" + window.utcDateFormatter(participation.startTime) + "</td>" +
+				"<td>" + DateFormat.utc(participation.startTime) + "</td>" +
 				"<td>" + participation.contestants + "</td>" +
 				"<td>" + status + "</td>" +
 				"<td>" + score + "</td>" +

@@ -1,4 +1,4 @@
-
+import UI from '../components';
 
 export default {
 	load (data, eventListeners) {

@@ -1,4 +1,5 @@
-
+import UI from '../components';
+import group from '../group';
 
 export default {
 	init () {
@@ -19,7 +20,7 @@ export default {
 	},
 	checkGroup () {
 		const groupCode = UI.StartContestForm.getGroupCode();
-		return window.checkGroupFromCode("CheckGroup", groupCode, false, false);
+		return group.checkGroupFromCode("CheckGroup", groupCode, false, false);
 	},
 	slideUp () {
 		$("#submitParticipationCode").delay(250).slideUp(400);

@@ -14,8 +14,6 @@ export default {
 	selectMainTab (tabName) {
 		if (tabName == 'home') {
 			$("#publicContestExplanation").html(i18n.t("tab_public_contests_score_explanation"));
-			//loadPublicGroups(); We don't use this feature anymore, we create this page manually.
-			$("#loadPublicGroups").hide();
 			$("#contentPublicGroups").show();
 		}
 		var tabNames = ["school", "home", "continue", "contests"];

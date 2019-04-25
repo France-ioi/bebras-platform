@@ -1,4 +1,5 @@
-
+import UI from '../components';
+import metaViewport from '../common/MetaViewport';
 
 export default {
 	fullscreenActive: false,
@@ -83,7 +84,7 @@ export default {
 	},
 	backToList (initial) {
 		$('body').removeClass('autoHeight');
-		window.toggleMetaViewport(false);
+		metaViewport.toggle(false);
 		UI.GridView.load();
 		UI.OldListView.updateButtonCloseVisibility(true);
 		UI.TaskFrame.unload();

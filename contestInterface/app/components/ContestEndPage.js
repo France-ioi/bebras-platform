@@ -1,6 +1,11 @@
-
+import contest from '../contest'
 
 export default {
+	init () {
+		$('#buttonCloseNew').click(function() {
+			contest.tryCloseContest();
+		})
+	},
 	load (data, eventListeners) {
 		$("#divClosed").show();
 	},

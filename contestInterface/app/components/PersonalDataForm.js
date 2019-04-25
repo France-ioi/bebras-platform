@@ -1,3 +1,6 @@
+import UI from '../components';
+import Utils from '../common/Utils';
+import team from '../team'
 
 
 export default {
@@ -30,7 +33,7 @@ export default {
 	updateLoginForm (isPublic, data) {
 		if (isPublic) {
 			this.setNbContestants(1);
-			window.createTeam([{lastName: "Anonymous", firstName: "Anonymous", genre: 2, email: null, zipCode: null}]);
+			team.createTeam([{lastName: "Anonymous", firstName: "Anonymous", genre: 2, email: null, zipCode: null}]);
 		} else {
 			UI.Breadcrumbs.updateBreadcrumb();
 			this.load();
@@ -102,14 +105,14 @@ export default {
 			}
 		}
 		Utils.disableButton("buttonLogin"); // do not re-enable
-		window.createTeam(this.contestants);
+		team.createTeam(this.contestants);
 	},
 	validateRegistrationCode (teamMate) {
 		this.updateLoginResult("");
 		const code = this.getTeamMateRegCode(teamMate);
 		this.updateErrorRegCodeForTeamMate(teamMate, '');
 		const that = this;
-		$.post("data.php", {SID: window.SID, action: "checkRegistration", code: code},
+		$.post("data.php", {SID: app.SID, action: "checkRegistration", code: code},
 			function (data) {
 				if (data.success) {
 					const contestant = {

@@ -1,4 +1,5 @@
-
+import UI from '../components';
+import contest from '../contest';
 
 export default {
 	preSelectedCategory: "",
@@ -197,7 +198,7 @@ export default {
 			this.setContestSelector();
 		}
 		else {
-			window.selectContest(lastContestID);
+			contest.selectContest(lastContestID);
 		}
 		UI.Breadcrumbs.updateBreadcrumb();
 	},
@@ -208,7 +209,7 @@ export default {
 			that.preSelectedContest = target.data('contestid').toString();
 			$('.contestSelector').removeClass('selected');
 			target.addClass('selected');
-			window.selectContest(that.preSelectedContest);
+			contest.selectContest(that.preSelectedContest);
 		});
 	},
 	scrollToTop (el) {

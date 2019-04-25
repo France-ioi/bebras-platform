@@ -1,4 +1,5 @@
-
+import UI from '../components';
+import Utils from '../common/Utils';
 
 export default {
 	init () {
@@ -17,7 +18,7 @@ export default {
 		if (!groupCode || !groupPass) {return false;}
 		this.updateRecoverGroupResult('');
 		Utils.disableButton("buttonRecoverGroup");
-		$.post("data.php", {SID: window.SID, action: "recoverGroup", groupCode: groupCode, groupPass: groupPass},
+		$.post("data.php", {SID: app.SID, action: "recoverGroup", groupCode: groupCode, groupPass: groupPass},
 		   function (data) {
 			  if (!data.success) {
 				 if (data.message) {

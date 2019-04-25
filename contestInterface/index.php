@@ -535,7 +535,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
       </div>
       <p></p>
       <div style="text-align:center;width:180px;">
-         <button type="button" id="buttonClose" class="buttonClose" style="display:none;" data-i18n="questions_finish_early" onclick='tryCloseContest()'></button>
+         <button type="button" id="buttonClose" class="buttonClose" style="display:none;" data-i18n="questions_finish_early"></button>
       </div>
       <table class="questionsTable">
          <tr><td>
@@ -602,7 +602,6 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
 </div>
 
 <div id="question-iframe-container" style="display:none" autocomplete="off">
-   <!--<div class="questionIframeLoading" data-i18n="questions_loading"></div>-->
    <div class="newInterface questionIframeHeader">
       <span class="questionTitle" style="padding-right: 20px"></span><span id="questionIframeStars"></span>
    </div>
@@ -610,7 +609,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
 </div>
 <div id="divFooter" style="display:none;text-align:center" autocomplete="off">
    <div class="header_sep_bottom"></div>
-   <button type="button" id="buttonCloseNew" class="buttonClose" data-i18n="questions_finish_early" onclick='tryCloseContest()'></button>
+   <button type="button" id="buttonCloseNew" class="buttonClose" data-i18n="questions_finish_early"></button>
 </div>
 
 <div id="divClosed" style="display:none" class="dialog" autocomplete="off">
@@ -661,8 +660,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
   script_tag('/bower_components/base64/base64.min.js');
   script_tag('/bower_components/pem-platform/task-pr.js');
   script_tag('/raphael-min.js');
-  script_tag('/build/bundle.js');
-  script_tag('/common.js');
+  script_tag('/build/app.js');
   global $config;
 ?>
 <script>

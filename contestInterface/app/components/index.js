@@ -22,7 +22,7 @@ import AllContestsDone from './AllContestsDone';
 import PersonalData from './PersonalData';
 
 
-export {
+var UI = {
 	MainHeader,
 	ContestHeader,
 	OldContestHeader,
@@ -46,3 +46,15 @@ export {
 	AllContestsDone,
 	PersonalData,
 }
+
+
+var components = Object.keys(UI);
+for (var i = 0; i < components.length; i++) {
+	var component = UI[components[i]];
+	if (typeof component.init === "function") {
+		component.init();
+	}
+}
+
+
+export default UI;

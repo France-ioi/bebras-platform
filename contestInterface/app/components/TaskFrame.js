@@ -1,6 +1,12 @@
-
+import contest from '../contest'
+import questionIframe from '../common/QuestionIframe';
 
 export default {
+	init () {
+		$('#buttonClose').click(function() {
+			contest.tryCloseContest();
+		})
+	},
 	load (data, eventListeners) {
 		$("#question-iframe-container").show();
 	},
@@ -37,8 +43,9 @@ export default {
 
 		iframe.contentWindow.document.open('text/html', 'replace');
 		iframe.contentWindow.document.write(content);
-		if (typeof iframe.contentWindow.document.close === 'function')
+		if (typeof iframe.contentWindow.document.close === 'function') {
 			iframe.contentWindow.document.close();
+		}
 
 		// Chrome doesn't allow to set this attribute until iframe contents are
 		// loaded

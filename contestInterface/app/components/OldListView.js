@@ -1,4 +1,4 @@
-
+import questions from '../questions';
 
 export default {
 	load (data, eventListeners) {
@@ -14,14 +14,13 @@ export default {
 		$(".questionList").html("<span style='font-size:2em;padding-left:10px'>" + text + "</span>");
 	},
 	fillListQuestionsNew (sortedQuestionIDs, questionsData, contestsRoot, contestFolder) {
-		var strListQuestions = "";
-		var iQuestionID, questionData;
-		for (iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
-			questionData = questionsData[sortedQuestionIDs[iQuestionID]];
+		var list = $(".questionList");
+		list.html('');
+		for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
+			var questionData = questionsData[sortedQuestionIDs[iQuestionID]];
 			var encodedName = questionData.name.replace("'", "&rsquo;").split("[")[0];
-
-			strListQuestions +=
-				"<span id='row_" + questionData.key + "' class='icon' onclick='selectQuestion(\"" + questionData.ID + "\", true)'>" +
+			var el = $(
+				"<span id='row_" + questionData.key + "' class='icon'>" +
 				'<div class="icon_title"><span class="questionBullet" id="bullet_' + questionData.key + '"></span>&nbsp;' + encodedName + '&nbsp;&nbsp;</div>' +
 				'<div class="icon_img">' +
 				'<table>' +
@@ -45,17 +44,29 @@ export default {
 				'</tr>' +
 				'</table>' +
 				'</div>' +
-				'</span>';
+				'</span>'
+			);
+
+			el.click((function() {
+				var id = questionData.ID;
+				return function() {
+					questions.selectQuestion(id, true)
+				}
+			})());
+			list.append(el)
 		}
-		$(".questionList").html(strListQuestions);
+		//$(".questionList").html(strListQuestions);
 	},
 	fillListQuestions (sortedQuestionIDs, questionsDataAll, fullFeedback, scores) {
+		var list = $(".questionList");
+		list.html('');
+		var table = $('<table>');
+		list.append(table);
 		var strListQuestions = "";
 		for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
 			var questionID = sortedQuestionIDs[iQuestionID];
 			var questionData = questionsDataAll[questionID];
 			var encodedName = questionData.name.replace("'", "&rsquo;").split("[")[0];
-
 			var strScore = "";
 			if (fullFeedback) {
 				if (scores[questionData.key] !== undefined) {
@@ -64,16 +75,23 @@ export default {
 					strScore = questionData.noAnswerScore + " / " + questionData.maxScore;
 				}
 			}
-			strListQuestions += "<tr id='row_" + questionData.key + "'><td class='questionBullet' id='bullet_" + questionData.key + "'></td>" +
-				"<td class='questionLink' id='link_" + questionData.key + "' " + "onclick='selectQuestion(\"" + questionData.ID + "\", true)'>" +
+			var row = $(
+				"<tr id='row_" + questionData.key + "'><td class='questionBullet' id='bullet_" + questionData.key + "'></td>" +
+				"<td class='questionLink' id='link_" + questionData.key + "'>" +
 				encodedName +
 				"</td>" +
 				"<td class='questionScore' id='score_" + questionData.key + "'>" +
 				strScore +
-				"</td></tr>";
-
+				"</td></tr>"
+			);
+			row.click((function() {
+				var id = questionData.ID;
+				return function() {
+					questions.selectQuestion(id, true)
+				}
+			})());
+			table.append(row);
 		}
-		$(".questionList").html("<table>" + strListQuestions + "</table>");
 	},
 	updateButtonCloseVisibility (isShow) {
 		if (isShow) {
