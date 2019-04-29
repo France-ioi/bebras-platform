@@ -1,5 +1,5 @@
 import UI from '../components';
-import TimeManager from "./TimeManager";
+import timeManager from './TimeManager';
 import logActivity from './LogActivity';
 import logError from './LogError';
 import questionIframe from './QuestionIframe';
@@ -78,7 +78,7 @@ var platform = {
     },
 
     validateWithQuestionKey: function(mode, success, error, questionKey) {
-        if (TimeManager.isContestOver()) {
+        if (timeManager.isContestOver()) {
             alert(i18n.t("contest_closed_answers_readonly"));
             if (error) {
                 error();

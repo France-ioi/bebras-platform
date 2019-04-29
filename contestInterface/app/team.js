@@ -1,4 +1,5 @@
 import UI from './components';
+import fetch from './common/Fetch';
 /*
     * Creates a new team using contestants information
     */
@@ -10,7 +11,7 @@ function createTeam(contestants) {
         app.contestFolder = contest.folder;
         app.customIntro = contest.customIntro;
     }
-    $.post(
+    fetch(
         "data.php",
         {
             SID: app.SID,
@@ -25,8 +26,7 @@ function createTeam(contestants) {
             UI.SubcontestSelectionInterface.unload();
             UI.PersonalData.updateTeamPassword(data.password);
             UI.PersonalData.updateVisibilityPassword(true);
-        },
-        "json"
+        }
     );
 };
 

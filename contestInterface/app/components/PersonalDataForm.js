@@ -1,7 +1,7 @@
 import UI from '../components';
 import Utils from '../common/Utils';
 import team from '../team'
-
+import fetch from '../common/Fetch';
 
 export default {
 	nbContestants: 1,
@@ -112,7 +112,9 @@ export default {
 		const code = this.getTeamMateRegCode(teamMate);
 		this.updateErrorRegCodeForTeamMate(teamMate, '');
 		const that = this;
-		$.post("data.php", {SID: app.SID, action: "checkRegistration", code: code},
+		fetch(
+			"data.php",
+			{SID: app.SID, action: "checkRegistration", code: code},
 			function (data) {
 				if (data.success) {
 					const contestant = {
@@ -125,7 +127,8 @@ export default {
 				} else {
 					that.updateErrorRegCodeForTeamMate(teamMate, "code inconnu");
 				}
-			}, "json");
+			}
+		);
 	},
 	hasRegistration (teamMate, hasReg, lock) {
 		this.updateLoginResult("");

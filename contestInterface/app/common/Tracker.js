@@ -1,4 +1,4 @@
-var Tracker = {
+var tracker = {
     disabled: true,
 
     trackData: function(data) {
@@ -16,4 +16,4 @@ var Tracker = {
 }
 
 
-export default Tracker;
+export default tracker;

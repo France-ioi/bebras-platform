@@ -1,5 +1,6 @@
 import contest from '../contest'
 import questionIframe from '../common/QuestionIframe';
+import logError from '../common/LogError';
 
 export default {
 	init () {

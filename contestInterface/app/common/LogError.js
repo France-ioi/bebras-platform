@@ -1,3 +1,5 @@
+import fetch from './Fetch';
+
 var logToConsole = function (logStr) {
     if (window.console) {
        console.error(logStr);
@@ -70,11 +72,11 @@ var logError = function () {
     if (nbErrorsSent > 10) {
         return;
     }
-    $.post('logError.php', {errormsg: logStr, questionKey: app.currentQuestionKey}, function (data) {
+    fetch('logError.php', {errormsg: logStr, questionKey: app.currentQuestionKey}, function (data) {
         if (!data || !data.success) {
         logToConsole('error from logError.php');
         }
-    }, 'json').fail(function () {
+    }).fail(function () {
         logToConsole('error calling logError.php');
     });
 };

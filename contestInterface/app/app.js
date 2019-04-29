@@ -1,16 +1,11 @@
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
-/*
-TODO:
-logError from 'log_error'
-   window.onerror used too
-*/
 
 require('./polyfills/ObjectKeys.js');
 import UI from './components';
 import url from './common/ParseURL';
 import questionIframe from './common/QuestionIframe';
 import session from './common/Session';
-
+import debugPanel from './debug/Panel';
 
 
 window.app = {
@@ -113,8 +108,8 @@ window.app = {
             }
         });
     }
-}
 
+}
 
 
 $(document).on("ready", function() {
@@ -128,6 +123,7 @@ $(document).on("ready", function() {
     } else {
         app.init();
     }
+    debugPanel.init();
     window.addEventListener("resize", questionIframe.onBodyResize);
     UI.ContestHeader.checkFullscreen();
 });

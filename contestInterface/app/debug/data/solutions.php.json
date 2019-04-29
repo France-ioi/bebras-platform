@@ -1,0 +1,7 @@
+{
+    "success": true,
+    "message": "message str",
+    "solutions": "",
+    "solutionsUrl": "/",
+    "error": "s3 error msg"
+}

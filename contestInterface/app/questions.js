@@ -1,9 +1,10 @@
 import UI from './components';
 import Utils from './common/Utils';
-import Tracker from './common/Tracker';
-import TimeManager from './common/TimeManager';
+import tracker from './common/Tracker';
+import timeManager from './common/TimeManager';
 import questionIframe from './common/QuestionIframe';
 import drawStars from './common/DrawStars';
+import logError from './common/LogError';
 
 // Questions tools
 function getSortedQuestionIDs(questionsData) {
@@ -98,7 +99,7 @@ function selectQuestion(questionID, clicked, noLoad) {
     }
 
     var nextStep = function() {
-        Tracker.trackData({
+        tracker.trackData({
             dataType: "selectQuestion",
             teamID: app.teamID,
             questionKey: questionKey,
@@ -157,7 +158,7 @@ function selectQuestion(questionID, clicked, noLoad) {
         if (questionIframe.gradersLoaded || app.fullFeedback) {
             taskViews.grader = true;
         }
-        if (TimeManager.isContestOver()) {
+        if (timeManager.isContestOver()) {
             taskViews.solution = true;
         }
         if (!noLoad) {
@@ -168,7 +169,7 @@ function selectQuestion(questionID, clicked, noLoad) {
     if (questionIframe.task) {
         questionIframe.task.getAnswer(
             function(answer) {
-                if (!TimeManager.isContestOver() &&
+                if (!timeManager.isContestOver() &&
                     (answer !==
                         app.defaultAnswers[questionIframe.questionKey] ||
                         typeof app.answers[questionIframe.questionKey] !=

@@ -1,4 +1,5 @@
 import UI from '../components';
+import fetch from '../common/Fetch';
 import Utils from '../common/Utils';
 
 export default {
@@ -18,7 +19,7 @@ export default {
 		if (!groupCode || !groupPass) {return false;}
 		this.updateRecoverGroupResult('');
 		Utils.disableButton("buttonRecoverGroup");
-		$.post("data.php", {SID: app.SID, action: "recoverGroup", groupCode: groupCode, groupPass: groupPass},
+		fetch("data.php", {SID: app.SID, action: "recoverGroup", groupCode: groupCode, groupPass: groupPass},
 		   function (data) {
 			  if (!data.success) {
 				 if (data.message) {
@@ -29,8 +30,8 @@ export default {
 				 return;
 			  }
 			  window.checkGroup();
-		   },
-		   'json').done(function () {Utils.enableButton("buttonRecoverGroup");});
+		   }
+		).done(function () {Utils.enableButton("buttonRecoverGroup");});
 	 },
 	getGroupPass () {
 		return $('#recoverGroupPass').val();

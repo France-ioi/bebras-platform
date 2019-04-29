@@ -5,10 +5,13 @@ import scores from './scores';
 import group from './group';
 import answers from './answers';
 import questions from './questions';
-import TimeManager from './common/TimeManager';
-import Tracker from './common/Tracker';
+import timeManager from './common/TimeManager';
+import tracker from './common/Tracker';
 import Loader from './common/Loader';
 import metaViewport from "./common/MetaViewport";
+import fetch from './common/Fetch';
+import logError from './common/LogError';
+import base64 from './common/Base64';
 
 var contestShowSolutions;
 var contestVisibility; // TODO: value not used
@@ -16,7 +19,7 @@ var contestOpen; // TODO: value not used
 
 // local
 function startContestTime(data) {
-    $.post(
+    fetch(
         "data.php",
         { SID: app.SID, action: "startTimer", teamID: app.teamID },
         function(dataStartTimer) {
@@ -30,8 +33,7 @@ function startContestTime(data) {
                 teamPassword: data.teamPassword
             };
             setupContest(contestData);
-        },
-        "json"
+        }
     );
 }
 
@@ -107,7 +109,7 @@ function setupContest(data) {
     UI.OldListView.showButtonClose();
 
     // Starts the timer
-    TimeManager.init(
+    timeManager.init(
         data.isTimed,
         data.remainingSeconds,
         data.ended,
@@ -143,7 +145,7 @@ function loadContestData(_contestID, _contestFolder, _groupPassword) {
     UI.LoadingPage.load();
     questionIframe.initialize(function() {
         if (app.fullFeedback) {
-            $.post(
+            fetch(
                 "graders.php",
                 {
                     SID: SID,
@@ -160,8 +162,7 @@ function loadContestData(_contestID, _contestFolder, _groupPassword) {
                     if (data.status == "success") {
                         app.bonusScore = parseInt(data.bonusScore);
                     }
-                },
-                "json"
+                }
             );
         }
         // The callback will be used by the task
@@ -175,7 +176,7 @@ function loadContestData(_contestID, _contestFolder, _groupPassword) {
                 UI.TaskFrame.showQuestionIframe();
                 UI.LoadingPage.unload();
 
-                $.post(
+                fetch(
                     "data.php",
                     {
                         SID: app.SID,
@@ -227,8 +228,7 @@ function loadContestData(_contestID, _contestFolder, _groupPassword) {
 
                         // XXX: select loader here
                         newLoader();
-                    },
-                    "json"
+                    }
                 );
             }
         );
@@ -304,7 +304,7 @@ function initContestData(data, newContestID) {
 * Called when a student clicks on the button to stop before the timer ends
 */
 function tryCloseContest() {
-    var remainingSeconds = TimeManager.getRemainingSeconds();
+    var remainingSeconds = timeManager.getRemainingSeconds();
     var nbMinutes = Math.floor(remainingSeconds / 60);
     if (nbMinutes > 1) {
         if (!confirm(i18n.t("time_remaining_1") + nbMinutes + i18n.t("time_remaining_2"))) {
@@ -356,8 +356,8 @@ function doCloseContest(message) {
     UI.MainHeader.load();
     UI.ContestEndPage.load();
     if ($.isEmptyObject(app.answersToSend)) {
-        Tracker.trackData({ send: true });
-        Tracker.disabled = true;
+        tracker.trackData({ send: true });
+        tracker.disabled = true;
         finalCloseContest(message);
     } else {
         UI.ContestEndWaitingPage.load();
@@ -379,8 +379,8 @@ function doCloseContest(message) {
     * If the contest is not resticted, show the team's scores
     */
 function finalCloseContest(message) {
-    TimeManager.stopNow();
-    $.post(
+    timeManager.stopNow();
+    fetch(
         "data.php",
         {
             SID: app.SID,
@@ -388,8 +388,7 @@ function finalCloseContest(message) {
             teamID: app.teamID,
             teamPassword: app.teamPassword
         },
-        function() {},
-        "json"
+        function() {}
     ).always(function() {
         window.onbeforeunload = function() {};
         if (!contestShowSolutions) {

@@ -1,7 +1,8 @@
 import UI from './components';
 import questionIframe from './common/QuestionIframe';
 import questions from './questions';
-
+import fetch from './common/Fetch';
+import logError from './common/LogError';
 
 function loadSolutions(data) {
     var sortedQuestionIDs = questions.getSortedQuestionIDs(app.questionsData);
@@ -79,7 +80,7 @@ function loadSolutions(data) {
 
 
 function loadSolutionsHat() {
-    $.post(
+    fetch(
         "solutions.php",
         { SID: app.SID, ieMode: window.ieMode },
         function(data) {
@@ -97,8 +98,7 @@ function loadSolutionsHat() {
                     });
                 }
             }
-        },
-        "json"
+        }
     );
 }
 

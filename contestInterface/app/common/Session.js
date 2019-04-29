@@ -1,3 +1,4 @@
+import fetch from './Fetch';
 import UI from '../components';
 import contest from '../contest';
 
@@ -6,7 +7,7 @@ import contest from '../contest';
     * Otherwise, displays the list of public groups.
     */
 function load() {
-    $.post(
+    fetch(
         "data.php",
         { SID: app.SID, action: "loadSession" },
         function(data) {
@@ -23,20 +24,18 @@ function load() {
                 contest.loadContestData(app.contestID, app.contestFolder);
                 return;
             }
-        },
-        "json"
+        }
     );
 }
 
 function destroy() {
     app.SID = null; // are we sure about that?
-    $.post(
+    fetch(
         "data.php",
         { action: "destroySession" },
         function(data) {
             app.SID = data.SID;
-        },
-        "json"
+        }
     );
 }
 

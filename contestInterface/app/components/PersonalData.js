@@ -1,6 +1,6 @@
 import UI from '../components';
 import Utils from '../common/Utils';
-import DateFormat from '../common/DateFormat';
+import dateFormat from '../common/DateFormat';
 import contest from '../contest';
 import group from '../group';
 
@@ -87,7 +87,7 @@ export default {
 			const schoolRank = this.rankToStr(participation.schoolRank, $nameGrade, participation.nbContestants);
 
 			htmlParticipations += "<tr><td>" + participation.contestName + "</td>" +
-				"<td>" + DateFormat.utc(participation.startTime) + "</td>" +
+				"<td>" + dateFormat.utc(participation.startTime) + "</td>" +
 				"<td>" + participation.contestants + "</td>" +
 				"<td>" + status + "</td>" +
 				"<td>" + score + "</td>" +

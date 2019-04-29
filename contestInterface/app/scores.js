@@ -2,7 +2,8 @@ import url from './common/ParseURL';
 import UI from './components';
 import questionIframe from './common/QuestionIframe';
 import questions from './questions';
-
+import fetch from './common/Fetch';
+import logError from './common/LogError';
 
 var ffMaxTeamScore = 0;
 var teamScore = 0;
@@ -43,7 +44,7 @@ function gradeQuestion(i) {
 // Send the computed scores, then load the solutions
 // local
 function sendScores() {
-    $.post(
+    fetch(
         "scores.php",
         { scores: app.scores, SID: app.SID },
         function(data) {
@@ -90,8 +91,7 @@ function sendScores() {
                 );
                 //      questions.selectQuestion(sortedQuestionIDs[0], false);
             }
-        },
-        "json"
+        }
     );
 }
 
@@ -108,7 +108,7 @@ function showScoresHat () {
         showScores({bonusScore: bonusScore});
         return;
     }
-    $.post(
+    fetch(
         "graders.php",
         {
             SID: SID,
@@ -131,8 +131,7 @@ function showScoresHat () {
                     });
                 }
             }
-        },
-        "json"
+        }
     );
 }
 

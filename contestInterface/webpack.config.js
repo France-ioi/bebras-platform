@@ -1,8 +1,11 @@
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 require('babel-register');
+const webpack = require('webpack');
 
 const isDev = process.env.NODE_ENV !== 'production';
+const isDebug = process.env.DEBUG === '1';
+
 // Webpack Configuration
 module.exports = {
 	// Entry
@@ -30,6 +33,9 @@ module.exports = {
 	},
 	// Plugins
 	plugins: [
+		new webpack.DefinePlugin({
+			__DEBUG__: JSON.stringify(isDebug)
+		})
 	],
 	optimization: {
 		minimize: !isDev,

@@ -1,4 +1,5 @@
 import url from './ParseURL';
+import fetch from './Fetch';
 
 /**
  * Fetch configuration
@@ -11,7 +12,7 @@ function get(callback) {
         return;
     }
 
-    $.post(
+    fetch(
         "data.php",
         { action: "getConfig", p: url.getParameterByName("p") },
         function(data) {
@@ -19,8 +20,7 @@ function get(callback) {
             if (callback) {
                 callback();
             }
-        },
-        "json"
+        }
     );
 }
 

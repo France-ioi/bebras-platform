@@ -1,4 +1,5 @@
 import config from './Config';
+import fetch from './Fetch';
 /**
  * Log activity on a question (question load, attempt)
  */
@@ -12,7 +13,7 @@ function logActivity(teamID, questionID, type, answer, score) {
     if (!window.config.logActivity) {
         return;
     }
-    $.post("activity.php", {
+    fetch("activity.php", {
         teamID: teamID,
         questionID: questionID,
         type: type,

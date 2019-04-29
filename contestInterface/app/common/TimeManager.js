@@ -1,3 +1,4 @@
+import fetch from './Fetch';
 import Utils from "./Utils";
 import UI from '../components';
 
@@ -74,7 +75,7 @@ var TimeManager = {
         UI.OldContestHeader.updateMinutes("");
         UI.OldContestHeader.updateSeconds("synchro...");
         var self = this;
-        $.post(
+        fetch(
             "data.php",
             { SID: app.SID, action: "getRemainingSeconds", teamID: app.teamID },
             function(data) {
@@ -96,8 +97,7 @@ var TimeManager = {
                 } else {
                     TimeManager.simpleTimeAdjustment();
                 }
-            },
-            "json"
+            }
         )
             .done(function() {
                 var curDate = new Date();

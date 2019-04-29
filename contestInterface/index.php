@@ -79,7 +79,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
          <button type="button" onclick="confirmPublicGroup();return false;" data-i18n="[html]tab_home_button_confirm_choice"></button>
       </div>
       <div id="publicGroups" style="display:block">
-         <span id="loadPublicGroups" style="color:red" data-i18n="tab_public_loading"></span>
+         <span id="loadPublicGroups" style="color:red; display: none;" data-i18n="tab_public_loading"></span>
          <div id="contentPublicGroups" style="display:none;width:800px">
             <p><b data-i18n="[html]tab_public_contests_info"></b></p>
             <p id="publicContestExplanation"></p>

@@ -1,11 +1,13 @@
 import UI from './components';
-import Tracker from './common/Tracker';
+import tracker from './common/Tracker';
+import fetch from './common/Fetch';
+import logError from './common/LogError';
 
 var sending = false;
 var nbSubmissions = 0; // TODO: value not used
 
 function failedSendingAnswers() {
-    Tracker.disabled = true;
+    tracker.disabled = true;
     sending = false;
     for (var questionID in app.answersToSend) {
         app.answersToSend[questionID].sending = false;
@@ -31,7 +33,7 @@ function sendAnswers() {
         return;
     }
     try {
-        $.post(
+        fetch(
             "answer.php",
             {
                 SID: app.SID,
@@ -68,8 +70,7 @@ function sendAnswers() {
                 if (answersRemaining) {
                     setTimeout(sendAnswers, 1000);
                 }
-            },
-            "json"
+            }
         ).fail(failedSendingAnswers);
     } catch (exception) {
         failedSendingAnswers();
@@ -92,7 +93,7 @@ function submitAnswer(questionKey, answer, score) {
         score: score
     };
     nbSubmissions++;
-    Tracker.trackData({
+    tracker.trackData({
         dataType: "answer",
         teamID: app.teamID,
         questionKey: questionKey,
