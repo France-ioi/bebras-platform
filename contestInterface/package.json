@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cross-env NODE_ENV=production webpack --config webpack.config.js -p",
     "build:dev": "cross-env NODE_ENV=development webpack --config webpack.config.js -p",
-    "debug": "NODE_ENV=development DEBUG=1 webpack --watch --progress --colors"
+    "debug": "NODE_ENV=debug webpack --watch --progress --colors"
   },
   "keywords": [],
   "author": "",
