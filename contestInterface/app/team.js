@@ -3,7 +3,7 @@ import fetch from './common/Fetch';
 /*
     * Creates a new team using contestants information
     */
-function createTeam(contestants) {
+function createTeam(contestants, callback) {
     if (window.browserIsMobile && typeof app.scratchToBlocklyContestID[contestID] != "undefined") {
         alert(i18n.t("browser_redirect_scratch_to_blockly"));
         app.contestID = app.scratchToBlocklyContestID[contestID];
@@ -26,6 +26,7 @@ function createTeam(contestants) {
             UI.SubcontestSelectionInterface.unload();
             UI.PersonalData.updateTeamPassword(data.password);
             UI.PersonalData.updateVisibilityPassword(true);
+            callback && callback();
         }
     );
 };

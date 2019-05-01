@@ -123,7 +123,9 @@ $(document).on("ready", function() {
     } else {
         app.init();
     }
-    debugPanel.init();
+    if(__DEBUG__) {
+        debugPanel.init();
+    }
     window.addEventListener("resize", questionIframe.onBodyResize);
     UI.ContestHeader.checkFullscreen();
 });

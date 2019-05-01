@@ -10,24 +10,7 @@
     },
     "loadSession": {
         "success": true,
-        "SID": "1",
-        "message": "loadSession str",
-        "teamID": "1",
-        "nbMinutes": 100,
-        "bonusScore": 1,
-        "allowTeamsOfTwo": false,
-        "askParticipationCode": true,
-        "newInterface": false,
-        "customIntro": "customIntro str",
-        "fullFeedback": false,
-        "nbUnlockedTasksInitial": 1,
-        "contestID": "1",
-        "isPublic": true,
-        "contestFolder": "/",
-        "contestName": "contestName str",
-        "contestOpen": true,
-        "contestShowSolutions": true,
-        "contestVisibility": true
+        "SID": "1"
     },
     "destroySession": {
         "success": true,
@@ -46,33 +29,112 @@
             }
         ]
     },
+    "checkPassword": {
+        "success": true,
+        "groupID": "0",
+        "nbMinutes": 0,
+        "contestID": "93896034086587102",
+        "contestName": "test contest",
+        "contestFolder": ".1554936722",
+        "contestOpen": "Open",
+        "contestShowSolutions": 0,
+        "contestVisibility": "Visible",
+        "bonusScore": 0,
+        "allowTeamsOfTwo": 0,
+        "askParticipationCode": 0,
+        "newInterface": 0,
+        "nextQuestionAuto": 1,
+        "customIntro": "",
+        "fullFeedback": 0,
+        "nbUnlockedTasksInitial": 4,
+        "subsetsSize": 0,
+        "name": "test group",
+        "teams": "",
+        "bRecovered": "0",
+        "nbMinutesElapsed": 0,
+        "askEmail": true,
+        "askZip": true,
+        "askGenre": true,
+        "askGrade": true,
+        "askStudentId": false,
+        "extraMessage": "",
+        "isPublic": 0,
+        "isGenerated": 0,
+        "minCategory": "",
+        "maxCategory": "",
+        "language": "en",
+        "childrenContests": [],
+        "registrationData": null,
+        "isOfficialContest": false,
+        "allContestsDone": false
+    },
+    "createTeam": {
+        "success": true,
+        "teamID": "1",
+        "password": "123123"
+    },
     "getRemainingSeconds": {
         "success": true,
         "remainingSeconds": 1000
     },
     "startTimer": {
         "success": true,
-        "remainingSeconds": 1000,
+        "remainingSeconds": 0,
         "ended": false
     },
-    "checkRegistration": {
-
-    },
-
+    "checkRegistration": {},
 
     "loadContestData": {
         "success": true,
-        "message": "message str",
-        "questionsData": [
-
-        ]
+        "questionsData": {
+            "143": {
+                "ID": "143",
+                "key": "2010-art-castor",
+                "path": "2010/2010-art-castor/index.html",
+                "name": "Art Castor",
+                "minScore": 0,
+                "noAnswerScore": 0,
+                "maxScore": 100,
+                "options": {},
+                "answerType": "0",
+                "order": 0
+            },
+            "115": {
+                "ID": "115",
+                "key": "2012-RU-03",
+                "path": "2012/2012-RU-03/index.html",
+                "name": "Affichage digital",
+                "minScore": 0,
+                "noAnswerScore": 0,
+                "maxScore": 100,
+                "options": {},
+                "answerType": "0",
+                "order": 0
+            },
+            "27": {
+                "ID": "27",
+                "key": "2011-NL-08",
+                "path": "2011/2011-NL-08/index.html",
+                "name": "Alphabet noir et blanc",
+                "minScore": 0,
+                "noAnswerScore": 0,
+                "maxScore": 100,
+                "options": {},
+                "answerType": "1",
+                "order": 0
+            }
+        },
+        "scores": [],
+        "answers": [],
+        "isTimed": false,
+        "teamPassword": "123123"
+    },
+    "closeContest": {
+        "success": true
     },
     "recoverGroup": {
         "success": true,
         "message": "message str"
-    },
-    "closeContest": {
-        "success": true,
-        "message": "message str"
     }
+
 }
