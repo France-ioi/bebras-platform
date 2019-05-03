@@ -1,30 +1,49 @@
 import team from '../team';
 import contest from '../contest';
 
+
+var page_storage = {
+
+    key: 'DEBUG_PANEL_PAGE_IDX',
+
+    get: function() {
+        var idx = window.localStorage.getItem(this.key);
+        return parseInt(JSON.parse(idx), 10);
+    },
+
+    set: function(idx) {
+        window.localStorage.setItem(this.key, JSON.stringify(idx));
+    }
+}
+
+
+
+
+
 var panel = {
 
     pages: [
         {
-            title: '1. Start contest',
+            title: 'Start contest',
             callback: function() {
                 window.selectMainTab('school');
             }
         },
         {
-            title: '1.1. Start contest - Personal Information',
+            title: '-- Start contest - Personal Information',
             callback: function() {
                 window.checkGroup();
             }
         },
         {
-            title: '1.2. Start contest - Access Code',
+            title: '-- Start contest - Access Code',
             callback: function() {
                 window.checkGroup();
                 team.createTeam([]);
             }
         },
         {
-            title: '2. Contest (old interface)',
+            title: 'Contest',
             callback: function() {
                 window.checkGroup();
                 team.createTeam([], function() {
@@ -33,7 +52,7 @@ var panel = {
             }
         },
         {
-            title: '2.1. Contest - Thanks for participating',
+            title: '-- Contest - Thanks for participating',
             callback: function() {
                 window.checkGroup();
                 team.createTeam([], function() {
@@ -44,9 +63,6 @@ var panel = {
                 });
             }
         },
-
-
-
         {
             title: 'Practice',
             callback: function() {
@@ -78,17 +94,18 @@ var panel = {
             '<div>'
         );
         $(document.body).append(panel);
-        var self = this;
-        panel.find('select').on('change', function() {
-            var idx = $(this).val();
-            if(self.pages[idx]) {
-                self.pages[idx].callback();
-            }
+        var select = panel.find('select');
+        select.on('change', function() {
+            var page_idx = $(this).val();
+            page_storage.set(page_idx);
+            window.location.reload();
         });
-    },
 
-
-    setMode: function() {
+        var page_idx = page_storage.get();
+        if(this.pages[page_idx]) {
+            this.pages[page_idx].callback();
+            select.val(page_idx);
+        }
 
     }
 
