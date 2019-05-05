@@ -432,7 +432,7 @@ function handleGroupFromRegistrationCode($db, $code) {
    }
    $isOfficialContest = false;
    if (isset($_POST["startOfficial"])) {
-      $contestID = "288404405033703399"; // hard-coded real contest
+      $contestID = "288404405033703401"; // hard-coded real contest
       if (isset($config->currentContestID)) {
          $contestID = $config->currentContestID;
       }
