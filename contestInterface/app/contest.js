@@ -429,7 +429,7 @@ function finalCloseContest(message) {
             UI.LoadingPage.load();
             UI.MainHeader.load();
 
-            showScoresHat();
+            scores.showScoresHat();
             if (app.newInterface) {
                 var sortedQuestionIDs = questions.getSortedQuestionIDs(app.questionsData);
                 questions.updateUnlockedLevels(sortedQuestionIDs, null, true);

@@ -2,6 +2,7 @@ import url from './common/ParseURL';
 import UI from './components';
 import questionIframe from './common/QuestionIframe';
 import questions from './questions';
+import solutions from './solutions';
 import fetch from './common/Fetch';
 import logError from './common/LogError';
 
@@ -111,7 +112,7 @@ function showScoresHat () {
     fetch(
         "graders.php",
         {
-            SID: SID,
+            SID: app.SID,
             ieMode: window.ieMode,
             p: url.getParameterByName("p")
         },

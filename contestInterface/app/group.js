@@ -3,6 +3,7 @@ import Utils from './common/Utils';
 import contest from './contest';
 import fetch from './common/Fetch';
 
+
 function groupWasChecked(data, curStep, groupCode, getTeams, isPublic, contestID) {
     contest.initContestData(data, contestID);
     UI.MainHeader.updateSubTitle(data.name);
