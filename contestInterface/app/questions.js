@@ -13,7 +13,7 @@ function getSortedQuestionIDs(questionsData) {
     var order;
     for (var questionID in questionsData) {
         var questionData = questionsData[questionID];
-        order = parseInt(questionData.order);
+        order = parseInt(questionData.order, 10);
         if (questionsByOrder[order] === undefined) {
             questionsByOrder[order] = [];
             orders.push(order);
@@ -28,7 +28,7 @@ function getSortedQuestionIDs(questionsData) {
     });
     var sortedQuestionsIDs = [];
     // teamID is a string representing a very long integer, let's take only the 5 last digits:
-    var baseOrderKey = parseInt(app.teamID.slice(-5));
+    var baseOrderKey = parseInt(app.teamID.slice(-5), 10);
     for (var iOrder = 0; iOrder < orders.length; iOrder++) {
         order = orders[iOrder];
         questionsByOrder[order].sort(function(id1, id2) {

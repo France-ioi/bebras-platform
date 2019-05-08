@@ -114,7 +114,7 @@ export default {
 		const that = this;
 		fetch(
 			"data.php",
-			{SID: app.SID, action: "checkRegistration", code: code},
+			{SID: app.SID, controller: "Auth", action: "checkRegistration", code: code},
 			function (data) {
 				if (data.success) {
 					const contestant = {

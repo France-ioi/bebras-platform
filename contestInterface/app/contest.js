@@ -21,7 +21,7 @@ var contestOpen; // TODO: value not used
 function startContestTime(data) {
     fetch(
         "data.php",
-        { SID: app.SID, action: "startTimer", teamID: app.teamID },
+        { SID: app.SID, controller: "Timer", action: "start", teamID: app.teamID },
         function(dataStartTimer) {
             var contestData = {
                 ended: dataStartTimer.ended,
@@ -180,7 +180,8 @@ function loadContestData(_contestID, _contestFolder, _groupPassword) {
                     "data.php",
                     {
                         SID: app.SID,
-                        action: "loadContestData",
+                        controller: "Contest",
+                        action: "loadData",
                         groupPassword: _groupPassword,
                         teamID: app.teamID
                     },
@@ -384,7 +385,8 @@ function finalCloseContest(message) {
         "data.php",
         {
             SID: app.SID,
-            action: "closeContest",
+            controller: "Contest",
+            action: "close",
             teamID: app.teamID,
             teamPassword: app.teamPassword
         },

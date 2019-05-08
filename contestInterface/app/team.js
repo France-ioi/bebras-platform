@@ -15,7 +15,8 @@ function createTeam(contestants, callback) {
         "data.php",
         {
             SID: app.SID,
-            action: "createTeam",
+            controller: "Team",
+            action: "create",
             contestants: contestants,
             contestID: app.contestID
         },

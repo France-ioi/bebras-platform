@@ -77,7 +77,7 @@ var TimeManager = {
         var self = this;
         fetch(
             "data.php",
-            { SID: app.SID, action: "getRemainingSeconds", teamID: app.teamID },
+            { SID: app.SID, controller: "Timer", action: "getRemainingSeconds", teamID: app.teamID },
             function(data) {
                 if (data.success) {
                     var remainingSeconds = self.getRemainingSeconds();

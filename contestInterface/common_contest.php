@@ -217,7 +217,7 @@ function updateTeamCategories($db, $teamID) {
    $stmt->execute(array("teamID" => $teamID));
    $qualifiedCategories = array();
    while ($row = $stmt->fetchObject()) {
-      updateRegisteredUserCategory($db, $row->ID, $row->qualifiedCategory, $row->validatedCategory); 
+      updateRegisteredUserCategory($db, $row->ID, $row->qualifiedCategory, $row->validatedCategory);
    }
 }
 
@@ -265,4 +265,12 @@ function updateRegisteredUserCategory($db, $ID, $prevQualifiedCategory, $prevVal
       ));
    }
    return array("qualifiedCategory" => $maxQualifiedCategory, "validatedCategory" => $maxValidatedCategory);
+}
+
+
+function getRandomID()
+{
+    $rand = (string)mt_rand(100000, 999999999);
+    $rand .= (string)mt_rand(1000000, 999999999);
+    return $rand;
 }

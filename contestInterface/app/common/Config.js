@@ -14,7 +14,7 @@ function get(callback) {
 
     fetch(
         "data.php",
-        { action: "getConfig", p: url.getParameterByName("p") },
+        { controller: "Config", action: "get", p: url.getParameterByName("p") },
         function(data) {
             window.config = data.config;
             if (callback) {

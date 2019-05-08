@@ -65,6 +65,7 @@ function checkGroupFromCode(curStep, groupCode, getTeams, isPublic, language, st
         "data.php",
         {
             SID: app.SID,
+            controller: "Auth",
             action: "checkPassword",
             password: groupCode,
             getTeams: getTeams,
@@ -136,7 +137,7 @@ function checkGroupFromCode(curStep, groupCode, getTeams, isPublic, language, st
 function loadPublicGroups() {
     fetch(
         "data.php",
-        {action: 'loadPublicGroups'},
+        {controller: "Group", action: 'loadPublicGroups'},
         function(data) {
             //$("#classroomGroups").show();
             if ((data.groups.length !== 0) && (data.groups.length < 10)) { // Temporary limit for fr platform

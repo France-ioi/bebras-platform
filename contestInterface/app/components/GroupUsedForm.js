@@ -19,7 +19,7 @@ export default {
 		if (!groupCode || !groupPass) {return false;}
 		this.updateRecoverGroupResult('');
 		Utils.disableButton("buttonRecoverGroup");
-		fetch("data.php", {SID: app.SID, action: "recoverGroup", groupCode: groupCode, groupPass: groupPass},
+		fetch("data.php", {SID: app.SID, controller: "Group", action: "recover", groupCode: groupCode, groupPass: groupPass},
 		   function (data) {
 			  if (!data.success) {
 				 if (data.message) {

@@ -9,7 +9,7 @@ import contest from '../contest';
 function load() {
     fetch(
         "data.php",
-        { SID: app.SID, action: "loadSession" },
+        { SID: app.SID, controller: "Session", action: "load" },
         function(data) {
             app.SID = data.SID;
             if (data.teamID) {
@@ -32,7 +32,7 @@ function destroy() {
     app.SID = null; // are we sure about that?
     fetch(
         "data.php",
-        { action: "destroySession" },
+        { controller: "Session", action: "destroy" },
         function(data) {
             app.SID = data.SID;
         }
