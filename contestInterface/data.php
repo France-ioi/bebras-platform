@@ -12,7 +12,6 @@ $action = isset($_POST['action']) ? $_POST['action'] : null;
 
 $class_name = $controller . 'Controller';
 $class_file = 'backend/controllers/' . $class_name . '.php';
-//die($class_name.' '.$class_file);
 if (!file_exists($class_file)) {
     exitWithJsonFailure('Controller file not found');
 }
