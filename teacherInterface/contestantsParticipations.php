@@ -80,7 +80,7 @@ echo "<p>".translate("results_students_may_appear_twice")."</p>";
 echo "<p><b>Classement Algoréa :</b> un classement unique par niveau scolaire est calculé pour chaque participant et mis à jour après chaque tour. Dans chaque niveau scolaire, sont classés en tête les participants ayant obtenu des points dans la catégorie verte par ordre de leur score, puis ceux ayant des points dans la catégorie orange, puis la jaune, puis la blanche.</p>";
 
 $mainContestID = "822122511136074554";
-$allContestIDs = ["822122511136074554","337033997884044050", "288404405033703399"];
+$allContestIDs = ["822122511136074554","337033997884044050", "288404405033703399", "288404405033703401"];
 
 $query = "SELECT ID, name FROM contest WHERE ID IN (".join(",", $allContestIDs).")";
 $stmt = $db->prepare($query);
