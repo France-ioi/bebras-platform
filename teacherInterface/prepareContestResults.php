@@ -1381,8 +1381,8 @@ if ($action == "updateCategories") {
      array());
 }
 
-echo "<h3><a href='".$startUrl."&action=updateRegistrationCategory'>Update students best scores in each category</a></h3>";
-if ($action == "updateRegistrationCategory") {
+echo "<h3><a href='".$startUrl."&action=createRegistrationCategory'>Create records for each students best scores in each category</a></h3>";
+if ($action == "createRegistrationCategory") {
 
    execQueryAndShowNbRows("Create records for white category", 
       "INSERT IGNORE INTO registration_category (registrationID, category) SELECT ID, 'blanche' FROM algorea_registration WHERE algorea_registration.category IN ('blanche', 'jaune', 'orange', 'verte', 'bleue')",
@@ -1399,6 +1399,9 @@ if ($action == "updateRegistrationCategory") {
    execQueryAndShowNbRows("Create records for green category", 
       "INSERT IGNORE INTO registration_category (registrationID, category) SELECT ID, 'verte' FROM algorea_registration WHERE algorea_registration.category IN ('verte', 'bleue')",
       array());
+
+echo "<h3><a href='".$startUrl."&action=updateRegistrationCategory'>Update students best scores in each category</a></h3>";
+if ($action == "updateRegistrationCategory") {
 
    execQueryAndShowNbRows("Update best score for individual participations", 
       "UPDATE
@@ -1473,7 +1476,10 @@ if ($action == "updateRegistrationCategory") {
       JOIN registration_category ON tmp.ID = registration_category.ID
       SET registration_category.dateBestScoreTeam = tmp.maxTime",
       array());
+}
 
+echo "<h3><a href='".$startUrl."&action=computeAlgoreaTotalScore'>Compute algorea total scores</a></h3>";
+if ($action == "computeAlgoreaTotalScore") {
       execQueryAndShowNbRows("Reset total Algorea score", 
          "UPDATE algorea_registration
          SET totalScoreAlgorea = 0",
@@ -1566,4 +1572,9 @@ if ($action == "updateAlgoreaRanks") {
           SET `c1`.`algoreaSchoolRank` = `c2`.`algoreaSchoolRank` 
           WHERE `c1`.`ID` = `c2`.`ID`",
           array());
+          
+          
+   execQueryAndShowNbRows("Remove ranks when total Algorea score is 0", 
+     "UPDATE algorea_registration SET algoreaRank = NULL, algoreaSchoolRank = NULL WHERE totalScoreAlgorea = 0" ,
+        array());
 }
