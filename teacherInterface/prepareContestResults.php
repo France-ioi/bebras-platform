@@ -1399,6 +1399,7 @@ if ($action == "createRegistrationCategory") {
    execQueryAndShowNbRows("Create records for green category", 
       "INSERT IGNORE INTO registration_category (registrationID, category) SELECT ID, 'verte' FROM algorea_registration WHERE algorea_registration.category IN ('verte', 'bleue')",
       array());
+}
 
 echo "<h3><a href='".$startUrl."&action=updateRegistrationCategory'>Update students best scores in each category</a></h3>";
 if ($action == "updateRegistrationCategory") {
