@@ -394,11 +394,11 @@ foreach ($schools as $schoolID => $school) {
       }
       echo "<td>";
       if ($contestant["infos"]["algoreaRank"] != null) {
-         echo $contestant["infos"]["algoreaRank"]."e<br/>des ".translate("grade_short_".$contestant["infos"]["grade"])."<br/>(1er tour)";
+         echo $contestant["infos"]["algoreaRank"]."e<br/>des ".translate("grade_short_".$contestant["infos"]["grade"])."<br/>(2e tour)";
       } echo "</td>";
       echo "<td>";
       if ($contestant["infos"]["algoreaSchoolRank"] != null) {
-         echo $contestant["infos"]["algoreaSchoolRank"]."e<br/>des ".translate("grade_short_".$contestant["infos"]["grade"])."<br/>(1er tour)";
+         echo $contestant["infos"]["algoreaSchoolRank"]."e<br/>des ".translate("grade_short_".$contestant["infos"]["grade"])."<br/>(2e tour)";
       } echo "</td>";
       /*
       echo "<td>";
