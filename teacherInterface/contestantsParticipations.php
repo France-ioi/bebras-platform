@@ -331,9 +331,7 @@ foreach ($schools as $schoolID => $school) {
    }
    echo "<td rowspan=2 style='width:100px'>".translate("results_ranking_national")."</td>";
    echo "<td rowspan=2 style='width:100px'>".translate("results_ranking_school")."</td>";
-   /*
    echo "<td rowspan=2 style='width:70px'>".translate("results_semi_finals")."</td>";
-   */
    echo "</tr><tr>";
    foreach ($contestIDs as $mainContestKey) {
       if (!isset($contests[$mainContestKey])) {
@@ -394,23 +392,24 @@ foreach ($schools as $schoolID => $school) {
       }
       echo "<td>";
       if ($contestant["infos"]["algoreaRank"] != null) {
-         echo $contestant["infos"]["algoreaRank"]."e<br/>des ".translate("grade_short_".$contestant["infos"]["grade"])."<br/>(2e tour)";
+         echo $contestant["infos"]["algoreaRank"]."e<br/>des ".translate("grade_short_".$contestant["infos"]["grade"])."<br/>(3e tour)";
       } echo "</td>";
       echo "<td>";
       if ($contestant["infos"]["algoreaSchoolRank"] != null) {
-         echo $contestant["infos"]["algoreaSchoolRank"]."e<br/>des ".translate("grade_short_".$contestant["infos"]["grade"])."<br/>(2e tour)";
+         echo $contestant["infos"]["algoreaSchoolRank"]."e<br/>des ".translate("grade_short_".$contestant["infos"]["grade"])."<br/>(3e tour)";
       } echo "</td>";
-      /*
       echo "<td>";
       if ($contestant["infos"]["round"] == "1") {
-         $score = $contestant["infos"]["scoreDemi2018"];
+         echo "qualifié";
+         /*
+         $score = $contestant["infos"]["scoreDemi2019"];
          if (($score != null) && ($score > 0)) {
             echo $score;
             echo "<br/>";
             $qualifiedFinal = $contestant["infos"]["qualifiedFinal"];
             echo "<span class='rank'>";
             if ($qualifiedFinal == "0") {
-               echo $contestant["infos"]["rankDemi2018"]."e des ".translate("grade_short_".$contestant["infos"]["grade"])."<br/>".
+               echo $contestant["infos"]["rankDemi2019"]."e des ".translate("grade_short_".$contestant["infos"]["grade"])."<br/>".
                translate("results_not_qualified_to_finals");
             } else if ($qualifiedFinal == "1") {
                echo translate("results_qualified_to_finals");
@@ -421,11 +420,12 @@ foreach ($schools as $schoolID => $school) {
          } else {
             echo "-";
          }
+         */
       } else {
          echo "-";
       }
       echo "</td>";
-      */
+      
       echo "</tr>";
    }
 
