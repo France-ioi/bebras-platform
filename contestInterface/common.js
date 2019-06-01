@@ -1857,6 +1857,11 @@ window.showPersonalPage = function(data) {
    $nameGrade = t("grade_" + data.registrationData.grade).toLowerCase();
    $("#persoGrade").html($nameGrade);
    $("#persoCategory").html(data.registrationData.qualifiedCategory);
+   if (data.registrationData.round == 1) {
+      $("#persoSemifinal").html("oui : participation sur <a href='http://concours.algorea.org'>concours.algorea.org</a>");
+   } else {
+      $("#persoSemifinal").html("non");
+   }
    if (data.registrationData.allowContestAtHome == "0") {
       $("#buttonStartContest").attr("disabled", "disabled");
       $("#contestAtHomePrevented").show();

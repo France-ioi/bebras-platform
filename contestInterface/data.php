@@ -360,7 +360,8 @@ function handleCheckPassword($db) {
 
 function getRegistrationData($db, $code) {
    $query = "SELECT `algorea_registration`.`ID`, `code`, `category` as `qualifiedCategory`, `validatedCategory`, `firstName`, `lastName`, `genre`, `grade`, `studentID`, `email`, `zipCode`, ".
-      "IFNULL(`algorea_registration`.`schoolID`, 0) as `schoolID`, IFNULL(`algorea_registration`.  `userID`, 0) as `userID`, IFNULL(`school_user`.`allowContestAtHome`, 1) as `allowContestAtHome` ".
+      "IFNULL(`algorea_registration`.`schoolID`, 0) as `schoolID`, IFNULL(`algorea_registration`.  `userID`, 0) as `userID`, IFNULL(`school_user`.`allowContestAtHome`, 1) as `allowContestAtHome`,
+      `round` ".
       "FROM `algorea_registration` ".
       "LEFT JOIN `school_user` ON (`school_user`.`schoolID` = `algorea_registration`.`schoolID` AND `school_user`.`userID` = `algorea_registration`.`userID`) ".
       "WHERE `code` = :code";
