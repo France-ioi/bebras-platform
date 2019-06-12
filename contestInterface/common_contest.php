@@ -3,7 +3,7 @@
 
 require_once '../shared/tinyORM.php';
 
-$allCategories = array("blanche", "jaune", "orange", "verte", "bleue", "cm1cm2", "6e5e", "4e3e", "2depro", "2de", "1reTalepro", "1reTale", "all");
+$allCategories = array("blanche", "jaune", "orange", "verte", "bleue", "cm1cm2", "6e5e", "4e3e", "2depro", "2de", "1reTalepro", "1reTale", "demifinale", "all");
 
 
 $backend_hints = array();
