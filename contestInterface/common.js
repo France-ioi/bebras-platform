@@ -2136,7 +2136,7 @@ window.offerCategories = function(data) {
          categories[child.categoryColor] = true;
       }
    }
-   var allCategories = ["blanche", "jaune", "orange", "verte", "bleue", "cm1cm2", "6e5e", "4e3e", "2depro", "2de", "1reTalepro", "1reTale", "all"]; // TODO: do not hardcode
+   var allCategories = ["blanche", "jaune", "orange", "verte", "bleue", "cm1cm2", "6e5e", "4e3e", "2depro", "2de", "1reTalepro", "1reTale", "demifinale", "all"]; // TODO: do not hardcode
    var minReached = (groupMinCategory == "");
    var maxReached = false;
    var nbCategories = 0;
