@@ -1858,7 +1858,7 @@ window.showPersonalPage = function(data) {
    $("#persoGrade").html($nameGrade);
    $("#persoCategory").html(data.registrationData.qualifiedCategory);
    if (data.registrationData.round == 1) {
-      $("#persoSemifinal").html("oui : participation sur <a href='http://concours.algorea.org'>concours.algorea.org</a>");
+      $("#persoSemifinal").html("oui" + t("semifinal_comment"));
    } else {
       $("#persoSemifinal").html("non");
    }
