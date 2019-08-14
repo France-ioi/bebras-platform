@@ -71,6 +71,9 @@ a {
   -khtml-user-select: text;
 }
 
+.section {
+  margin-bottom: 40px;
+}
 
 /* Contest home */
 #divHeader {

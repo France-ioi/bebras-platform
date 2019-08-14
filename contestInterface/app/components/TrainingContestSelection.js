@@ -3,15 +3,15 @@
 export default {
 	init () {
 		window.selectMainTab = this.selectMainTab.bind(this);
-		window.confirmPublicGroup = this.confirmPublicGroup.bind(this);
 	},
 	load (data, eventListeners) {
-		$("#divCheckGroup").show();
+		$("#homePage").show();
 	},
 	unload () {
-		$("#divCheckGroup").hide();
+		$("#homePage").hide();
 	},
 	selectMainTab (tabName) {
+		alert(tabName)
 		if (tabName == 'home') {
 			$("#publicContestExplanation").html(i18n.t("tab_public_contests_score_explanation"));
 			$("#contentPublicGroups").show();
@@ -26,10 +26,6 @@ export default {
 				$("#button-" + tabNames[iTab]).removeClass("selected");
 			}
 		}
-	},
-	confirmPublicGroup () {
-		$("#warningPublicGroups").hide();
-		$("#publicGroups").show();
 	},
 	updateCurStepResult (curStep, html) {
 		$("#" + curStep + "Result").html(html);

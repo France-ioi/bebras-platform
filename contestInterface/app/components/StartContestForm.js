@@ -2,7 +2,7 @@ import UI from '../components';
 import group from '../group';
 
 export default {
-	init () {
+	init() {
 		/*
 		 * Called when confirming a participation from an unsupported browser
 		 */
@@ -16,10 +16,10 @@ export default {
 
 	},
 	unload () {
-		$("#groupCode").val('');
+		$('#groupCode').val('');
 	},
 	checkGroup () {
-		const groupCode = UI.StartContestForm.getGroupCode();
+		const groupCode = this.getGroupCode();
 		return group.checkGroupFromCode("CheckGroup", groupCode, false, false);
 	},
 	slideUp () {
@@ -29,6 +29,6 @@ export default {
 		$("#submitParticipationCode").removeClass('needBrowserConfirm');
 	},
 	getGroupCode () {
-		return $("#groupCode").val();
+		return $('#groupCode').val();
 	},
 };

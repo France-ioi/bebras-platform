@@ -30,14 +30,16 @@ function groupWasChecked(data, curStep, groupCode, getTeams, isPublic, contestID
         UI.PersonalDataForm.hideLoginFields(data);
         if (curStep === "CheckGroup") {
             UI.PersonalDataForm.updateLoginForm(isPublic, data);
-            UI.NavigationTabs.unload();
+            //UI.NavigationTabs.unload();
+            UI.HomePage.unload();
         } else {
             /*
              * Fills a select field with all the names of the teams (of a given group)
              * Used to continue a contest if the students didn't write down the team password
              */
             UI.RestartContestForm.fillListTeams(data.teams);
-            UI.NavigationTabs.load();
+            //UI.NavigationTabs.load();
+            UI.HomePage.load();
             UI.RestartContestForm.updateDivReloginVisibility(true);
         }
     }
@@ -85,7 +87,8 @@ function checkGroupFromCode(curStep, groupCode, getTeams, isPublic, language, st
                 return;
             }
             UI.StartContestForm.slideUp();
-            UI.NavigationTabs.unload();
+            //UI.NavigationTabs.unload();
+            UI.HomePage.unload();
             UI.MainHeader.updateLoginLinkVisibility(false);
             $("#div" + curStep).hide();
 

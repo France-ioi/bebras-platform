@@ -1,7 +1,5 @@
-
-
 export default {
-	load (data, eventListeners) {
+	load(data, eventListeners) {
 		$('#mainNav').show();
 	},
 	unload () {

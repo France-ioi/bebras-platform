@@ -2,7 +2,7 @@ import MainHeader from './MainHeader';
 import ContestHeader from './ContestHeader';
 import OldContestHeader from './OldContestHeader';
 import Breadcrumbs from './Breadcrumbs';
-import NavigationTabs from './NavigationTabs';
+//import NavigationTabs from './NavigationTabs';
 import StartContestForm from './StartContestForm';
 import TrainingContestSelection from './TrainingContestSelection';
 import RestartContestForm from './RestartContestForm';
@@ -20,6 +20,7 @@ import ContestEndPage from './ContestEndPage';
 import StartContest from './StartContest';
 import AllContestsDone from './AllContestsDone';
 import PersonalData from './PersonalData';
+import HomePage from './HomePage';
 
 
 var UI = {
@@ -27,7 +28,7 @@ var UI = {
 	ContestHeader,
 	OldContestHeader,
 	Breadcrumbs,
-	NavigationTabs,
+	//NavigationTabs,
 	StartContestForm,
 	TrainingContestSelection,
 	RestartContestForm,
@@ -45,6 +46,7 @@ var UI = {
 	StartContest,
 	AllContestsDone,
 	PersonalData,
+	HomePage
 }
 
 

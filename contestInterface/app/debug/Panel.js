@@ -24,11 +24,18 @@ var panel = {
 
     pages: [
         {
+            title: 'Home page',
+            callback: function() {
+            }
+        },
+        /*
+        {
             title: 'Start contest',
             callback: function() {
                 window.selectMainTab('school');
             }
         },
+        */
         {
             title: '-- Start contest - Personal Information',
             callback: function() {
@@ -63,6 +70,7 @@ var panel = {
                 });
             }
         },
+        /*
         {
             title: 'Practice',
             callback: function() {
@@ -75,6 +83,7 @@ var panel = {
                 window.selectMainTab('continue');
             }
         },
+        */
     ],
 
 

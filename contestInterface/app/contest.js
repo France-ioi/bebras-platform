@@ -192,12 +192,14 @@ function loadContestData(_contestID, _contestFolder, _groupPassword) {
                             UI.RestartContestForm.updateReloginResult(i18n.t("invalid_password"));
                             UI.OldContestHeader.updateDivQuestionsVisibility(false);
                             UI.OldContestHeader.updateFeedbackVisibility(false);
-                            UI.NavigationTabs.load();
+                            //UI.NavigationTabs.load();
+                            UI.HomePage.load();
                             Utils.enableButton("buttonRelogin");
                             return;
                         }
                         UI.TrainingContestSelection.unload();
-                        UI.NavigationTabs.unload();
+                        //UI.NavigationTabs.unload();
+                        UI.HomePage.unload();
 
                         function oldLoader() {
                             $.get(

@@ -1,4 +1,15 @@
 {
+    "home_code_header": "Start with a code",
+    "home_code_text": "Enter your participation code or group code provided by your teacher:",
+    "home_code_submit": "Start",
+    "home_nocode_header": "Don't have a code?",
+    "home_nocode_guest": "Try as a guest",
+    "home_nocode_register": "Register",
+    "home_continue_header": "Continue after interruption",
+    "home_continue_text1": "If you where interrupted, input your recovery code.",
+    "home_continue_text2": "If you don't have it, you may input the group code or participation code you ysed to start.",
+    "home_continue_submit": "Reload my participation",
+
     "general_page_title": "Bebras - the platform",
     "general_instructions": "For a general impression of the Bebras Contest, go to <a href=\"http://castor-informatique.fr\">the French home page</a>.",
     "browser_support_bebras-platform": "<p>The platform works with the following web browsers :</p><ul><li>Google Chrome versions 5.0 and up ;</li><li>Firefox versions 3.6 and up ;</li><li>Internet Explorer versions 8.0 and up ;</li><li>Safari versions 3.0 and up (works on iPad).</li></ul>",

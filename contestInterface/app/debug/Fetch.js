@@ -4,6 +4,8 @@ function fetch(url, params, callback) {
 
     var callbacks = {};
 
+    console.log('fetch', url, params)
+
     $.getJSON('app/debug/data/' + url + '.json', function(json) {
         data[url] = json;
         if(params.action && !data[url][params.action]) {

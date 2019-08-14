@@ -19,19 +19,29 @@ export default {
 		if (!groupCode || !groupPass) {return false;}
 		this.updateRecoverGroupResult('');
 		Utils.disableButton("buttonRecoverGroup");
-		fetch("data.php", {SID: app.SID, controller: "Group", action: "recover", groupCode: groupCode, groupPass: groupPass},
-		   function (data) {
-			  if (!data.success) {
-				 if (data.message) {
-					this.updateRecoverGroupResult(data.message);
-				 } else {
-					this.updateRecoverGroupResult(i18n.t("invalid_code"));
-				 }
-				 return;
-			  }
-			  window.checkGroup();
-		   }
-		).done(function () {Utils.enableButton("buttonRecoverGroup");});
+		fetch(
+			"data.php",
+			{
+				SID: app.SID,
+				controller: "Group",
+				action: "recover",
+				groupCode: groupCode,
+				groupPass: groupPass
+			},
+		   	function (data) {
+			  	if (!data.success) {
+				 	if (data.message) {
+						this.updateRecoverGroupResult(data.message);
+				 	} else {
+						this.updateRecoverGroupResult(i18n.t("invalid_code"));
+				 	}
+				 	return;
+				}
+				window.checkGroup();
+		   	}
+		).done(function () {
+			Utils.enableButton("buttonRecoverGroup");
+		});
 	 },
 	getGroupPass () {
 		return $('#recoverGroupPass').val();
