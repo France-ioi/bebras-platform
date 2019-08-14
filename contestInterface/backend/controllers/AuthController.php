@@ -4,6 +4,7 @@ class AuthController extends Controller
 {
 
 
+
     public function checkRegistration()
     {
         $code = $_POST["code"];
@@ -15,7 +16,6 @@ class AuthController extends Controller
             exitWithJson($registrationData);
         }
     }
-
 
 
     public function checkPassword()
@@ -85,8 +85,9 @@ class AuthController extends Controller
                 "en" => "The contest associated with this group is not open",
                 "ar" => "المسابقة لم تبدأ بعد"
             );
-            if (isset($messages[$config->defaultLanguage])) {
-                $message = $messages[$config->defaultLanguage];
+            $lang = (isset($_SESSION['language']) ? $_SESSION['language'] : $config->defaultLanguage);
+            if (isset($messages[$lang])) {
+                $message = $messages[$lang];
             } else {
                 $message = $messages["en"];
             }

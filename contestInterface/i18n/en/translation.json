@@ -12,6 +12,7 @@
 
     "general_page_title": "Bebras - the platform",
     "general_instructions": "For a general impression of the Bebras Contest, go to <a href=\"http://castor-informatique.fr\">the French home page</a>.",
+    "general_interface_language": "Select language",
     "browser_support_bebras-platform": "<p>The platform works with the following web browsers :</p><ul><li>Google Chrome versions 5.0 and up ;</li><li>Firefox versions 3.6 and up ;</li><li>Internet Explorer versions 8.0 and up ;</li><li>Safari versions 3.0 and up (works on iPad).</li></ul>",
     "browser_support_quickAlgo": "<p>The Algoréa contest works with the following web browser :</p><ul><li>Google Chrome versions 35 and up ;</li><li>Firefox versions 43 and up ;</li><li>Microsoft Edge versions 12 and up ;</li><li>Safari versions 9 and up.</li></ul>",
     "browser_support_confirm": "Your browser is unsupported, the contest may not work properly or at all. We advise you strongly to use an up-to-date browser such as Chrome.<br>Are you sure you want to participate anyway?",

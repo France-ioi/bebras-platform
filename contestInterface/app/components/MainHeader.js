@@ -1,6 +1,11 @@
-
+import fetch from '../common/Fetch';
 
 export default {
+
+	init() {
+		window.changeInterfaceLanguage = this.onLanguageChange.bind(this);
+	},
+
 	load (data, eventListeners) {
 		$("#divHeader").show();
 	},
@@ -24,5 +29,20 @@ export default {
 		} else {
 			$("#login_link_to_home").hide();
 		}
+	},
+
+	onLanguageChange() {
+		fetch(
+            'data.php',
+            {
+                SID: app.SID,
+                controller: 'Language',
+                action: 'set',
+                language: $('#interface_language').val()
+            },
+            function(data) {
+                window.location.href = window.location.href;
+            }
+        );
 	}
 };

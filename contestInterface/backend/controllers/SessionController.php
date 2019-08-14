@@ -17,10 +17,11 @@ class SessionController extends Controller
         addBackendHint("ClientIP.loadSession:found");
         addBackendHint(sprintf("SessionId(%s):loadSession", escapeHttpValue($sid)));
         $message = "Voulez-vous reprendre l'épreuve commencée ?";
-        if ($config->defaultLanguage == "es") {
+        $lang = (isset($_SESSION['language']) ? $_SESSION['language'] : $config->defaultLanguage);
+        if ($lang == "es") {
             $message = "¿Desea reiniciar la prueba comenzada anteriormente?";
         }
-        if ($config->defaultLanguage == "en") {
+        if ($lang == "en") {
             $message = "Would you like to continue the participation that was started?";
         }
         exitWithJson(array(

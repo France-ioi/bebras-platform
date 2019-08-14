@@ -83,6 +83,9 @@ a {
   border-bottom: 1px solid #ededed;
   padding-bottom: 1em;
 }
+#divHeader .language_panel {
+  margin: 10px;
+}
 #leftTitle {
   float: left;
   margin: 10px 3em 0 32px;
@@ -1028,12 +1031,11 @@ table td ul:first-child{
 }
 
 
-
 #debug-panel {
   position: fixed;
   z-index: 100000;
   right: 10px;
-  top: 10px;
+  bottom: 10px;
   background: #FFF;
   border: 1px solid #2482bf;
   -webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);

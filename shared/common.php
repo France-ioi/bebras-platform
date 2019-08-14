@@ -31,12 +31,16 @@ function initSession() {
 }
 
 function restartSession() {
+   $lang = isset($_SESSION['language']) ? $_SESSION['language'] : null;
    if (isset($_SESSION)) {
       session_destroy();
       session_unset();
    }
    session_start();
    $_SESSION['CREATED'] = time();  // update creation time
+   if($lang) {
+      $_SESSION['language'] = $lang;
+   }
 }
 
 function pickSubset($questionsData, $subsetSize, $contestID, $teamID) {
@@ -103,7 +107,7 @@ function genAccessCode($db) {
    $query = "SELECT `ID` FROM `group` WHERE `password` = ? OR `code` = ? UNION ".
             "SELECT `ID` FROM `team` WHERE `password` = ? UNION ".
             "SELECT `ID` FROM `contestant` WHERE `algoreaCode` = ?";
-   $stmt = $db->prepare($query); 
+   $stmt = $db->prepare($query);
    while(true) {
       $code = "";
       for ($pos = 0; $pos < 8; $pos++) {
@@ -141,7 +145,7 @@ function getTotalContestants($contestID, $grade, $nbContestants = null) {
 
 function translate($key) {
    global $config;
-   
+
    static $teacherTranslationStrings = null;
    if (!$teacherTranslationStrings) {
       $teacherTranslationStrings = json_decode(file_get_contents(__DIR__.'/../teacherInterface/i18n/'.$config->defaultLanguage.'/translation.json'), true);
