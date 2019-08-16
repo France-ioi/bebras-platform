@@ -20,34 +20,36 @@ import ContestEndPage from './ContestEndPage';
 import StartContest from './StartContest';
 import AllContestsDone from './AllContestsDone';
 import PersonalData from './PersonalData';
+import PersonalDataEditor from './PersonalDataEditor';
 import HomePage from './HomePage';
 
 
 var UI = {
-	MainHeader,
-	ContestHeader,
-	OldContestHeader,
-	Breadcrumbs,
-	//NavigationTabs,
-	StartContestForm,
-	TrainingContestSelection,
-	RestartContestForm,
-	GroupUsedForm,
-	PersonalDataForm,
-	SubcontestSelectionInterface,
-	RecoveryPasswordReminder,
-	LoadingPage,
-	GridView,
-	OldListView,
-	TaskFrame,
-	ContestEndWaitingPage,
-	ContestQuestionRecoveryPage,
-	ContestEndPage,
-	StartContest,
-	AllContestsDone,
-	PersonalData,
-	HomePage
-}
+    MainHeader,
+    ContestHeader,
+    OldContestHeader,
+    Breadcrumbs,
+    //NavigationTabs,
+    StartContestForm,
+    TrainingContestSelection,
+    RestartContestForm,
+    GroupUsedForm,
+    PersonalDataForm,
+    SubcontestSelectionInterface,
+    RecoveryPasswordReminder,
+    LoadingPage,
+    GridView,
+    OldListView,
+    TaskFrame,
+    ContestEndWaitingPage,
+    ContestQuestionRecoveryPage,
+    ContestEndPage,
+    StartContest,
+    AllContestsDone,
+    PersonalData,
+    PersonalDataEditor,
+    HomePage
+};
 
 
 var components = Object.keys(UI);

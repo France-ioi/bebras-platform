@@ -1,4 +1,7 @@
 {
+    "save": "Save",
+    "cancel": "Cancel",
+
     "home_code_header": "Start with a code",
     "home_code_text": "Enter your participation code or group code provided by your teacher:",
     "home_code_submit": "Start",
@@ -214,5 +217,11 @@
     "category_grades_11_12": "Grades 11 and 12 →",
     "category_grades_11_12_description": "<p>For students near the end of high school</p>",
     "category_grades_all": "All grades →",
-    "category_grades_all_description": "<p>Challenges from all grades combined</p>"
+    "category_grades_all_description": "<p>Challenges from all grades combined</p>",
+    "personal_data_title": "Personal page",
+    "personal_data_edit": "Edit personal info",
+    "personal_data_fname": "First name:",
+    "personal_data_lname": "Last name:",
+    "personal_data_grade": "Grade:",
+    "personal_data_category": "Algorea category:"
 }
