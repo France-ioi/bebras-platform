@@ -759,6 +759,7 @@ session_start();
       <p data-i18n="[html]closed_connexion_error">
       </p>
       <textarea cols=60 rows=20 id="encodedAnswers"></textarea>
+      <button type="button" onclick="saveEncodedAnswers()" data-i18n="download_encoded_answers" class="btn btn-primary"></button>
     </div>
     <div id="divClosedRemindPassword" style="display:none">
       <p>

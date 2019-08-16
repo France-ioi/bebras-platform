@@ -223,5 +223,6 @@
     "personal_data_fname": "First name:",
     "personal_data_lname": "Last name:",
     "personal_data_grade": "Grade:",
-    "personal_data_category": "Algorea category:"
+    "personal_data_category": "Algorea category:",
+    "download_encoded_answers": "Download"
 }
