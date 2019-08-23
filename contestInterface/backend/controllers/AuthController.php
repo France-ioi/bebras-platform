@@ -322,13 +322,41 @@ class AuthController extends Controller
 
     private function getRegistrationData($code)
     {
-        $query = "SELECT `algorea_registration`.`ID`, `code`, `category` as `qualifiedCategory`, `validatedCategory`, `firstName`, `lastName`, `genre`, `grade`, `studentID`, `email`, `zipCode`, " .
+        $query = "SELECT `algorea_registration`.`ID`, `code`, `category` as `qualifiedCategory`, `validatedCategory`, `firstName`, `lastName`, `genre`, `grade`, `studentID`, `email`, `zipCode`, `algorea_registration`.`confirmed`, " .
             "IFNULL(`algorea_registration`.`schoolID`, 0) as `schoolID`, IFNULL(`algorea_registration`.  `userID`, 0) as `userID`, IFNULL(`school_user`.`allowContestAtHome`, 1) as `allowContestAtHome` " .
             "FROM `algorea_registration` " .
             "LEFT JOIN `school_user` ON (`school_user`.`schoolID` = `algorea_registration`.`schoolID` AND `school_user`.`userID` = `algorea_registration`.`userID`) " .
             "WHERE `code` = :code";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array("code" => $code));
+        $res = $stmt->fetchObject();
+        if($res) {
+            $res->original = $this->getUserOriginal($res->ID);
+        }
+        return $res;
+    }
+
+
+    private function getUserOriginal($id)
+    {
+        $stmt = $this->db->prepare("
+            SELECT
+                `firstName`,
+                `lastName`,
+                `grade`,
+                `genre`,
+                `email`,
+                `zipCode`,
+                `studentID`
+            FROM
+                `algorea_registration_original`
+            WHERE
+                `ID` = :ID
+            LIMIT 1
+        ");
+        $stmt->execute([
+            'ID' => $id
+        ]);
         return $stmt->fetchObject();
     }
 }

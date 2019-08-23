@@ -25,11 +25,48 @@ export default {
         $('input[name="pde_genre"]').val([user.genre]);
         $('#pde_email').val(user.email);
         $('#pde_zipCode').val(user.zipCode);
-        $('#pde_studentId').val(user.studentId);
+        $('#pde_studentID').val(user.studentID);
+        this.refreshTooltips(user);
         this.load();
         this.callbacks = callbacks;
     },
 
+    refreshTooltips(user) {
+        $('#divPersonalDataEditor .confirmed_value').hide();
+        if(parseInt(user.confirmed, 10) == 1) return;
+
+        function show(key, value) {
+            $('#pde_' + key + '_confirmed').show().attr('title', i18n.t('personal_data_confirmed_value') + value);
+        }
+
+        if(user.firstName != user.original.firstName) {
+            show('firstName', user.original.firstName);
+        }
+        if(user.lastName != user.original.lastName) {
+            show('lastName', user.original.lastName);
+        }
+        if(user.grade != user.original.grade) {
+            show('grade', i18n.t('grade_' + user.original.grade));
+        }
+        if(user.genre != user.original.genre) {
+            var t = '';
+            if(user.original.genre == "1") {
+                t = i18n.t('login_female')
+            } else if(user.original.genre == "2") {
+                t = i18n.t('login_male')
+            }
+            show('genre', t);
+        }
+        if(user.email != user.original.email) {
+            show('email', user.original.email);
+        }
+        if(user.zipCode != user.original.zipCode) {
+            show('zipCode', user.original.zipCode);
+        }
+        if(user.studentID != user.original.studentID) {
+            show('studentID', user.original.studentID);
+        }
+    },
 
     personalDataEditorCancel() {
         this.unload();
@@ -58,7 +95,7 @@ export default {
             grade: $('#pde_grade').val(),
             email: $.trim($('#pde_email').val()),
             zipCode: $.trim($('#pde_zipCode').val()),
-            studentId: $.trim($('#pde_studentId').val())
+            studentID: $.trim($('#pde_studentID').val())
         };
     },
 
@@ -83,7 +120,7 @@ export default {
         } else if (!user.zipCode) {
             this.showError('zipCode_missing');
             return false;
-        } else if (!user.studentId) {
+        } else if (!user.studentID) {
             this.showError('studentId_missing');
             return false;
         }

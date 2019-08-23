@@ -1030,6 +1030,19 @@ table td ul:first-child{
    font-weight: bold;
 }
 
+#divPersonalDataEditor .confirmed_value {
+  font-size: 200%;
+}
+
+
+/* common styles */
+
+.alert {
+  color: #F00;
+}
+
+
+/* debug panel */
 
 #debug-panel {
   position: fixed;
@@ -1047,3 +1060,4 @@ table td ul:first-child{
   border: 0;
   margin: 0;
 }
+

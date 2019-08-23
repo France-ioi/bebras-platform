@@ -1,14 +1,14 @@
-
+import UI from './index';
 
 export default {
 	init () {
 		window.selectMainTab = this.selectMainTab.bind(this);
 	},
 	load (data, eventListeners) {
-		$("#homePage").show();
+		UI.HomePage.load();
 	},
 	unload () {
-		$("#homePage").hide();
+		UI.HomePage.unload();
 	},
 	selectMainTab (tabName) {
 		alert(tabName)

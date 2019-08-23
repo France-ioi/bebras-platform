@@ -6,21 +6,26 @@
                 <p>
                     <span data-i18n="[html]login_input_firstname"></span>
                     <input id="pde_firstName" type="text" autocomplete="off" class="form-control" />
+                    <span id="pde_firstName_confirmed" class="alert confirmed_value">*</span>
                 </p>
                 <p>
                     <span data-i18n="[html]login_input_lastname"></span>
                     <input id="pde_lastName" type="text" autocomplete="off" class="form-control" />
+                    <span id="pde_lastName_confirmed" class="alert confirmed_value">*</span>
                 </p>
                 <p>
                     <span data-i18n="[html]login_input_email"></span>
                     <input id="pde_email" type="text" autocomplete="off" class="form-control" />
+                    <span id="pde_email_confirmed" class="alert confirmed_value">*</span>
                 </p>
                 <p>
                     <span data-i18n="[html]login_input_zipCode"></span>
                     <input id="pde_zipCode" type="text" autocomplete="off" class="form-control" />
+                    <span id="pde_zipCode_confirmed" class="alert confirmed_value">*</span>
                 </p>
                 <div>
                     <span data-i18n="login_ask_gender"></span>
+                    <span id="pde_genre_confirmed" class="alert confirmed_value">*</span>
                     <br />
                     <div class="divInput">
                         <input type="radio" id="pde_male" name="pde_genre" value="2" autocomplete="off"><label for="pde_male" data-i18n="login_male"></label>
@@ -37,10 +42,12 @@
                             }
                         ?>
                     </select>
+                    <span id="pde_grade_confirmed" class="alert confirmed_value">*</span>
                 </p>
                 <p>
                     <span data-i18n="[html]login_input_studentId"></span>
-                    <input id="pde_studentId" type="text" autocomplete="off" class="form-control" />
+                    <input id="pde_studentID" type="text" autocomplete="off" class="form-control" />
+                    <span id="pde_studentID_confirmed" class="alert confirmed_value">*</span>
                 </p>
             </div>
         </div>
