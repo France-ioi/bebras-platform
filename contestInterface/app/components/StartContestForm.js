@@ -1,5 +1,6 @@
 import UI from '../components';
 import group from '../group';
+import group_confirmation from '../group_confirmation';
 
 export default {
 	init() {
@@ -19,8 +20,11 @@ export default {
 		$('#groupCode').val('');
 	},
 	checkGroup () {
+		$('#CheckGroupResult').html('');
 		const groupCode = this.getGroupCode();
-		return group.checkGroupFromCode("CheckGroup", groupCode, false, false);
+		group_confirmation.check(groupCode, function() {
+			return group.checkGroupFromCode("CheckGroup", groupCode, false, false);
+		})
 	},
 	slideUp () {
 		$("#submitParticipationCode").delay(250).slideUp(400);
@@ -30,5 +34,5 @@ export default {
 	},
 	getGroupCode () {
 		return $('#groupCode').val();
-	},
+	}
 };

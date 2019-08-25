@@ -22,6 +22,7 @@ import AllContestsDone from './AllContestsDone';
 import PersonalData from './PersonalData';
 import PersonalDataEditor from './PersonalDataEditor';
 import HomePage from './HomePage';
+import GroupConfirmation from './GroupConfirmation';
 
 
 var UI = {
@@ -48,7 +49,8 @@ var UI = {
     AllContestsDone,
     PersonalData,
     PersonalDataEditor,
-    HomePage
+    HomePage,
+    GroupConfirmation
 };
 
 

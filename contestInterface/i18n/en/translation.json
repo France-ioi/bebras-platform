@@ -225,5 +225,13 @@
     "personal_data_grade": "Grade:",
     "personal_data_category": "Algorea category:",
     "personal_data_confirmed_value": "Until confirmed by the teacher: ",
-    "download_encoded_answers": "Download"
+    "download_encoded_answers": "Download",
+    "group_confirmation_title": "Group confirmation",
+    "group_confirmation_group": "Group name:",
+    "group_confirmation_grade": "Grade:",
+    "group_confirmation_contest": "Contest:",
+    "group_confirmation_time": "Planned start time:",
+    "group_confirmation_text": "Do you confirm that this the correct group?",
+    "group_confirmation_yes": "Yes, start now",
+    "group_confirmation_no": "No, cancel"
 }

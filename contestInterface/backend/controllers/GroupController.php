@@ -59,4 +59,36 @@ class GroupController extends Controller
         }
         exitWithJson(array("success" => true, "groups" => $groups));
     }
+
+
+
+
+    public function checkConfirmationInterval() {
+        global $config;
+
+        $q = "
+            SELECT
+                g.grade as `grade`,
+                g.name as `group`,
+                c.name as `contest`,
+                g.expectedStartTime as `expectedStartTime`
+            FROM
+                `group` as g
+            LEFT JOIN
+                `contest` as c
+            ON
+                g.contestID = c.ID
+            WHERE
+                g.code = :code AND
+                g.expectedStartTime >= DATE_ADD(NOW(), INTERVAL ".$config->contestInterface->groupConfirmationInterval." DAY)
+            LIMIT 1";
+        $stmt = $this->db->prepare($q);
+        $stmt->execute([
+            "code" => $_POST["code"]
+        ]);
+        exitWithJson([
+            "group" => $stmt->fetchObject()
+        ]);
+    }
+
 }
