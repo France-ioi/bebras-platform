@@ -9,7 +9,7 @@ import RestartContestForm from './RestartContestForm';
 import GroupUsedForm from './GroupUsedForm';
 import PersonalDataForm from './PersonalDataForm';
 import SubcontestSelectionInterface from './SubcontestSelectionInterface';
-import RecoveryPasswordReminder from './RecoveryPasswordReminder';
+import ContestEndReminder from './ContestEndReminder';
 import LoadingPage from './LoadingPage';
 import GridView from './GridView';
 import OldListView from './OldListView';
@@ -37,7 +37,7 @@ var UI = {
     GroupUsedForm,
     PersonalDataForm,
     SubcontestSelectionInterface,
-    RecoveryPasswordReminder,
+    ContestEndReminder,
     LoadingPage,
     GridView,
     OldListView,

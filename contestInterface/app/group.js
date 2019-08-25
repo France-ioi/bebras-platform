@@ -102,6 +102,10 @@ function checkGroupFromCode(curStep, groupCode, getTeams, isPublic, language, st
             };
 
             if (data.registrationData != undefined && !data.isOfficialContest) {
+                app.user = {
+                    firstName: data.registrationData.firstName,
+                    lastName: data.registrationData.lastName
+                }
                 UI.PersonalData.showPersonalPage(data);
                 return;
             }

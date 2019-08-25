@@ -16,6 +16,7 @@ function update(user, callback) {
     );
 }
 
+
 export default {
     update
 };

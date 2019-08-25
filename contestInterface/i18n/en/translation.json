@@ -233,5 +233,7 @@
     "group_confirmation_time": "Planned start time:",
     "group_confirmation_text": "Do you confirm that this the correct group?",
     "group_confirmation_yes": "Yes, start now",
-    "group_confirmation_no": "No, cancel"
+    "group_confirmation_no": "No, cancel",
+    "closed_reminder_personal_page": "Return to personal page",
+    "closed_reminder_logout": "Log out"
 }

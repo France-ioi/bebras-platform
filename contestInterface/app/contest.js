@@ -421,12 +421,16 @@ function finalCloseContest(message) {
                     })
                 );
             }
-            UI.RecoveryPasswordReminder.updateTeamPassword(app.teamPassword);
-            UI.RecoveryPasswordReminder.load();
-            if (app.fullFeedback) {
-                UI.RecoveryPasswordReminder.updateTeamScore(app.ffTeamScore);
-                UI.RecoveryPasswordReminder.showScoreReminder();
+            if(app.user) {
+                UI.ContestEndReminder.showNav();
+            } else {
+                UI.ContestEndReminder.updateTeamPassword(app.teamPassword);
             }
+            if (app.fullFeedback) {
+                UI.ContestEndReminder.updateTeamScore(app.ffTeamScore);
+                UI.ContestEndReminder.showScoreReminder();
+            }
+            UI.ContestEndReminder.load();
         } else {
             UI.OldContestHeader.updateDivQuestionsVisibility(false);
             UI.TaskFrame.hideQuestionIframe();

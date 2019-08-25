@@ -28,13 +28,15 @@ function load() {
     );
 }
 
-function destroy() {
+function destroy(callback) {
     app.SID = null; // are we sure about that?
     fetch(
         "data.php",
         { controller: "Session", action: "destroy" },
         function(data) {
             app.SID = data.SID;
+            app.user = false;
+            callback && callback();
         }
     );
 }

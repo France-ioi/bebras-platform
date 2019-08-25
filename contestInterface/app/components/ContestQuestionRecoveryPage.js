@@ -25,6 +25,14 @@ export default {
 
 	saveEncodedAnswers () {
 		var blob = new Blob($("#encodedAnswers").html(), {type: "text/plain;charset=utf-8"});
-		saveAs(blob, "answers.dat");
+		var postfix = "";
+		if(app.user) {
+			postfix =
+				"_" +
+				$.trim(app.user.firstName).replace(/ /g,"_") +
+				"_" +
+				$.trim(app.user.lastName).replace(/ /g,"_");
+		}
+		saveAs(blob, "answers" + postfix + ".dat");
 	}
 };

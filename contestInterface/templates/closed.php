@@ -8,15 +8,22 @@
         <textarea cols=60 rows=20 id="encodedAnswers"></textarea>
         <button type="button" onclick="saveEncodedAnswers()" data-i18n="download_encoded_answers" class="btn btn-primary"></button>
     </div>
-    <div id="divClosedRemindPassword" style="display:none">
-        <p>
-            <b data-i18n="closed_remind_password"></b>
-        </p>
-        <p>
-            <span data-i18n="closed_your_password"></span> <span class='selectable' id="remindTeamPassword"></span>
-        </p>
+    <div id="divClosedReminder" style="display:none">
+        <div id="closedReminderPassword" style="display: none">
+            <p>
+                <b data-i18n="closed_remind_password"></b>
+            </p>
+            <p>
+                <span data-i18n="closed_your_password"></span>
+                <span class='selectable' id="remindTeamPassword"></span>
+            </p>
+        </div>
         <p id="scoreReminder" style="display:none">
             <span data-i18n="score"></span> <span id="remindScore"></span>
+        </p>
+        <p id="closedReminderNav" style="display: none">
+            <button type="button" onclick="navPersonalPage()" data-i18n="closed_reminder_personal_page" class="btn btn-primary"></button>
+            <button type="button" onclick="navLogout()" data-i18n="closed_reminder_logout" class="btn btn-primary"></button>
         </p>
     </div>
 </div>
