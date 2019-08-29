@@ -205,7 +205,7 @@
     "contest_level_label": "Level",
     "option_undefined": "Undefined",
     "option_grades_6_7": "6th/7th grade",
-    "option_grades_8_9": "8th/9th grade", 
+    "option_grades_8_9": "8th/9th grade",
     "option_grades_12": "12th grade",
     "option_grades_10_11": "10th/11th grade",
     "option_grades_all": "All grades",
@@ -564,5 +564,11 @@
     "certificates_option_display": "Print settings for scores and ranks",
     "certificates_min_score_displayed": "Print the score if it's at least %s points.",
     "certificates_max_school_rank_percentile_displayed": "Print the school rank for the top %s%% only.",
-    "certificates_max_rank_percentile_displayed": "Print the national rank for the top %s%% only."
+    "certificates_max_rank_percentile_displayed": "Print the national rank for the top %s%% only.",
+    "action": "Action",
+    "verify": "Verify",
+    "old_value": "Old value",
+    "new_value": "New value",
+    "approve": "Approve",
+    "reject": "Reject"
 }
