@@ -1,5 +1,5 @@
 {
-    "save": "Save",
+    "submit": "Submit",
     "cancel": "Cancel",
 
     "home_code_header": "Start with a code",
@@ -220,6 +220,7 @@
     "category_grades_all_description": "<p>Challenges from all grades combined</p>",
     "personal_data_title": "Personal page",
     "personal_data_edit": "Edit personal info",
+    "personal_data_register": "Registration",
     "personal_data_fname": "First name:",
     "personal_data_lname": "Last name:",
     "personal_data_grade": "Grade:",
@@ -235,5 +236,23 @@
     "group_confirmation_yes": "Yes, start now",
     "group_confirmation_no": "No, cancel",
     "closed_reminder_personal_page": "Return to personal page",
-    "closed_reminder_logout": "Log out"
+    "closed_reminder_logout": "Log out",
+
+    "participation_not_started": "Non démarrée",
+    "participation_in_progress": "En cours",
+    "participation_finished": "Terminé",
+
+    "contests_practice": "Practice",
+    "contests_participation": "Contests",
+    "contests_open": "Open contests",
+    "contests_past": "Past participations",
+    "contest_points": " points on ",
+    "contest_in_lang": " in ",
+    "contest_position": " out of ",
+    "contest_locked": "Locked",
+    "contest_type_algorea_white": "Algorea, white category",
+    "contest_type_algorea_yellow": "Algorea, yellow category",
+    "contest_type_algorea_orange": "Algorea, orange category",
+    "contest_type_algorea_green": "Algorea, green category",
+    "contest_type_alkindi": "Alkindi"
 }

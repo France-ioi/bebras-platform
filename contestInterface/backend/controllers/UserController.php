@@ -3,6 +3,19 @@
 class UserController extends Controller
 {
 
+/*
+    Create user
+    `
+*/
+
+
+
+
+
+/*
+    Update user data
+*/
+
     public function update()
     {
         $old = $this->loadUser($_POST['user']['ID']);

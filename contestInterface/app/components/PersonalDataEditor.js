@@ -1,5 +1,3 @@
-import user from '../user';
-
 export default {
 
     init() {
@@ -18,21 +16,24 @@ export default {
     },
 
     edit(user, callbacks) {
-        this.user_data = user;
-        $('#pde_firstName').val(user.firstName);
-        $('#pde_lastName').val(user.lastName);
-        $('#pde_grade').val(user.grade);
-        $('input[name="pde_genre"]').val([user.genre]);
-        $('#pde_email').val(user.email);
-        $('#pde_zipCode').val(user.zipCode);
-        $('#pde_studentID').val(user.studentID);
-        this.refreshTooltips(user);
+        $('#pde_caption').html(user ? i18n.t("personal_data_edit") : i18n.t("personal_data_register"));
+        this.user_data = user || {};
+        $('#pde_firstName').val(this.user_data.firstName || '');
+        $('#pde_lastName').val(this.user_data.lastName || '');
+        $('#pde_grade').val(this.user_data.grade || '');
+        $('input[name="pde_genre"]').val(this.user_data.genre ? [this.user_data.genre] : []);
+        $('#pde_email').val(this.user_data.email || '');
+        $('#pde_zipCode').val(this.user_data.zipCode || '');
+        $('#pde_studentID').val(this.user_data.studentID);
+        this.refreshTooltips(this.user_data);
         this.load();
         this.callbacks = callbacks;
     },
 
     refreshTooltips(user) {
         $('#divPersonalDataEditor .confirmed_value').hide();
+
+        if(!user.ID) return;
         if(parseInt(user.confirmed, 10) == 1) return;
 
         function show(key, value) {
@@ -78,12 +79,9 @@ export default {
         if (!user_data) return;
         $('#buttonPersonalDataEditorSubmit').prop('disabled', true);
         $('#buttonPersonalDataEditorCancel').prop('disabled', true);
-        var self = this;
         user_data = Object.assign({}, this.user_data, user_data)
-        user.update(user_data, function () {
-            self.unload();
-            self.callbacks.onEdit(user_data);
-        });
+        this.unload();
+        this.callbacks.onEdit(user_data);
     },
 
 

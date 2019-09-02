@@ -19,11 +19,13 @@
             <?php include('templates/startContest.php'); ?>
             <?php include('templates/allContestsDone.php'); ?>
             <?php include('templates/personalPage.php'); ?>
+            <?php include('templates/contests.php'); ?>
             <?php include('templates/password.php'); ?>
         </form>
         <?php include('templates/loadingPage.php'); ?>
         <?php include('templates/questions.php'); ?>
         <?php include('templates/personalDataEditor.php'); ?>
+        <?php include('templates/guest.php'); ?>
         <?php include('templates/questionIframe.php'); ?>
         <?php include('templates/footer.php'); ?>
         <?php include('templates/closed.php'); ?>

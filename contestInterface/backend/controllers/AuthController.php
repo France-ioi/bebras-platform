@@ -71,7 +71,47 @@ class AuthController extends Controller
         global $allCategories, $config;
 
         // Find a group whose code matches the given password.
-        $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, UTC_TIMESTAMP()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`askParticipationCode`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`visibility`, `contest`.`askEmail`, `contest`.`askZip`, `contest`.`askGenre`, `contest`.`askGrade`, `contest`.`askStudentId`, `contest`.`name` as `contestName`, `contest`.`allowPauses`, `group`.`isGenerated`, `group`.`language`, `group`.`minCategory`, `group`.`maxCategory` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
+        $query = "
+            SELECT
+                `group`.`ID`,
+                `group`.`name`,
+                `group`.`bRecovered`,
+                `group`.`contestID`,
+                `group`.`isPublic`,
+                `group`.`schoolID`,
+                `group`.`startTime`,
+                TIMESTAMPDIFF(MINUTE, `group`.`startTime`, UTC_TIMESTAMP()) as `nbMinutesElapsed`,
+                `contest`.`nbMinutes`,
+                `contest`.`bonusScore`,
+                `contest`.`allowTeamsOfTwo`,
+                `contest`.`askParticipationCode`,
+                `contest`.`newInterface`,
+                `contest`.`customIntro`,
+                `contest`.`fullFeedback`,
+                `contest`.`nextQuestionAuto`,
+                `contest`.`folder`,
+                `contest`.`nbUnlockedTasksInitial`,
+                `contest`.`subsetsSize`,
+                `contest`.`open`,
+                `contest`.`showSolutions`,
+                `contest`.`visibility`,
+                `contest`.`askEmail`,
+                `contest`.`askZip`,
+                `contest`.`askGenre`,
+                `contest`.`askGrade`,
+                `contest`.`askStudentId`,
+                `contest`.`name` as `contestName`,
+                `contest`.`allowPauses`,
+                `group`.`isGenerated`,
+                `group`.`language`,
+                `group`.`minCategory`,
+                `group`.`maxCategory`
+            FROM
+                `group`
+            JOIN
+                `contest` ON (`group`.`contestID` = `contest`.`ID`)
+            WHERE
+                `code` = ?";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array($password));
         $row = $stmt->fetchObject();
@@ -126,8 +166,22 @@ class AuthController extends Controller
 
         updateSessionWithContestInfos($row);
 
-        $query = "SELECT contest.ID as contestID, contest.folder, contest.name, contest.language, contest.categoryColor, contest.customIntro, contest.imageURL, contest.description, contest.allowTeamsOfTwo, contest.askParticipationCode " .
-            "FROM contest WHERE parentContestID = :contestID";
+        $query = "
+            SELECT
+                contest.ID as contestID,
+                contest.folder,
+                contest.name,
+                contest.language,
+                contest.categoryColor,
+                contest.customIntro,
+                contest.imageURL,
+                contest.description,
+                contest.allowTeamsOfTwo,
+                contest.askParticipationCode
+            FROM
+                contest
+            WHERE
+                parentContestID = :contestID";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array("contestID" => $row->contestID));
         $childrenContests = array();
@@ -223,23 +277,53 @@ class AuthController extends Controller
         $registrationData->validatedCategory = $newCategories["validatedCategory"];
 
 
-        $query = "SELECT IFNULL(tmp.score, 0) as score, tmp.sumScores, tmp.password, tmp.startTime, tmp.contestName, tmp.contestID, tmp.parentContestID, tmp.contestCategory, " .
-            "tmp.nbMinutes, tmp.remainingSeconds, tmp.teamID, " .
-            "GROUP_CONCAT(CONCAT(CONCAT(contestant.firstName, ' '), contestant.lastName)) as contestants, tmp.rank, tmp.schoolRank, count(*) as nbContestants " .
-            "FROM (" .
-            "SELECT team.ID as teamID, team.score, SUM(team_question.ffScore) as sumScores, contestant.rank, contestant.schoolRank, team.password, team.startTime, contest.ID as contestID, contest.parentContestID, contest.name as contestName, contest.categoryColor as contestCategory, " .
-            "team.nbMinutes, (team.`nbMinutes` * 60) - TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), `team`.`startTime`)) as remainingSeconds " .
-            "FROM `contestant` " .
-            "JOIN team ON `contestant`.teamID = `team`.ID " .
-            "JOIN `group` ON team.groupID = `group`.ID " .
-            "JOIN `contest` ON `group`.contestID = `contest`.ID " .
-            "LEFT JOIN `team_question` ON team_question.teamID = team.ID " .
-            "WHERE contestant.registrationID = :registrationID " .
-            "GROUP BY team.ID" .
-            ") tmp " .
-            "JOIN contestant ON tmp.teamID = contestant.teamID " .
-            "GROUP BY tmp.teamID " .
-            "ORDER BY tmp.startTime ASC";
+        $query = "
+            SELECT
+                IFNULL(tmp.score, 0) as score,
+                tmp.sumScores,
+                tmp.password,
+                tmp.startTime,
+                tmp.contestName,
+                tmp.contestID,
+                tmp.parentContestID,
+                tmp.contestCategory,
+                tmp.nbMinutes,
+                tmp.remainingSeconds,
+                tmp.teamID,
+                GROUP_CONCAT(CONCAT(CONCAT(contestant.firstName, ' '), contestant.lastName)) as contestants,
+                tmp.rank,
+                tmp.schoolRank,
+                count(*) as nbContestants
+            FROM
+                (
+                    SELECT
+                        team.ID as teamID,
+                        team.score,
+                        SUM(team_question.ffScore) as sumScores,
+                        contestant.rank,
+                        contestant.schoolRank,
+                        team.password,
+                        team.startTime,
+                        contest.ID as contestID,
+                        contest.parentContestID,
+                        contest.name as contestName,
+                        contest.categoryColor as contestCategory,
+                        team.nbMinutes,
+                        (team.`nbMinutes` * 60) - TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), `team`.`startTime`)) as remainingSeconds
+                    FROM
+                        `contestant`
+                    JOIN team ON `contestant`.teamID = `team`.ID
+                    JOIN `group` ON team.groupID = `group`.ID
+                    JOIN `contest` ON `group`.contestID = `contest`.ID
+                    LEFT JOIN `team_question` ON team_question.teamID = team.ID
+                    WHERE
+                        contestant.registrationID = :registrationID
+                    GROUP BY team.ID
+                ) tmp
+            JOIN contestant ON tmp.teamID = contestant.teamID
+            GROUP BY tmp.teamID
+            ORDER BY tmp.startTime ASC
+        ";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array("registrationID" => $registrationData->ID));
         $participations = array();
@@ -289,8 +373,46 @@ class AuthController extends Controller
         $groupCode = genAccessCode($this->db);
         $groupPassword = genAccessCode($this->db);
         $groupID = getRandomID();
-        $query = "INSERT INTO `group` (`ID`, `name`, `contestID`, `schoolID`, `userID`, `grade`, `expectedStartTime`, `startTime`, `code`, `password`, `isGenerated`, nbStudents, nbStudentsEffective, nbTeamsEffective) " .
-            "SELECT :groupID, LEFT(CONCAT(CONCAT(CONCAT('Indiv', `algorea_registration`.`grade`), ' '), `contest`.`name`), 50), :contestID, `algorea_registration`.`schoolID`, `algorea_registration`.`userID`, `algorea_registration`.`grade`, NOW(), NOW(), :groupCode, :password, 1, 0, 0, 0 FROM `contest`, `algorea_registration` WHERE `contest`.`ID` = :contestID AND `algorea_registration`.`code` = :code";
+        $query = "
+            INSERT INTO
+                `group`
+                (
+                    `ID`,
+                    `name`,
+                    `contestID`,
+                    `schoolID`,
+                    `userID`,
+                    `grade`,
+                    `expectedStartTime`,
+                    `startTime`,
+                    `code`,
+                    `password`,
+                    `isGenerated`,
+                    nbStudents,
+                    nbStudentsEffective,
+                    nbTeamsEffective
+                )
+                SELECT
+                    :groupID,
+                    LEFT(CONCAT(CONCAT(CONCAT('Indiv', `algorea_registration`.`grade`), ' '), `contest`.`name`), 50),
+                    :contestID,
+                    `algorea_registration`.`schoolID`,
+                    `algorea_registration`.`userID`,
+                    `algorea_registration`.`grade`,
+                    NOW(),
+                    NOW(),
+                    :groupCode,
+                    :password,
+                    1,
+                    0,
+                    0,
+                    0
+                FROM
+                    `contest`,
+                    `algorea_registration`
+                WHERE
+                    `contest`.`ID` = :contestID AND
+                    `algorea_registration`.`code` = :code";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array(
             "contestID" => $contestID,
@@ -305,7 +427,25 @@ class AuthController extends Controller
 
     private function getGroupTeams($groupID)
     {
-        $stmt = $this->db->prepare("SELECT `team`.`ID`, `contestant`.`lastName`, `contestant`.`firstName` FROM `contestant` JOIN `team` ON `contestant`.`teamID` = `team`.`ID` JOIN `group` ON `team`.groupID = `group`.ID WHERE `team`.`groupID` = :groupID OR `group`.`parentGroupID` = :groupID");
+        $stmt = $this->db->prepare("
+            SELECT
+                `team`.`ID`,
+                `contestant`.`lastName`,
+                `contestant`.`firstName`
+            FROM
+                `contestant`
+            JOIN
+                `team`
+            ON
+                `contestant`.`teamID` = `team`.`ID`
+            JOIN
+                `group`
+            ON
+                `team`.groupID = `group`.ID
+            WHERE
+                `team`.`groupID` = :groupID OR
+                `group`.`parentGroupID` = :groupID
+        ");
         $stmt->execute(array("groupID" => $groupID));
         $teams = array();
         while ($row = $stmt->fetchObject()) {
@@ -322,11 +462,33 @@ class AuthController extends Controller
 
     private function getRegistrationData($code)
     {
-        $query = "SELECT `algorea_registration`.`ID`, `code`, `category` as `qualifiedCategory`, `validatedCategory`, `firstName`, `lastName`, `genre`, `grade`, `studentID`, `email`, `zipCode`, `algorea_registration`.`confirmed`, " .
-            "IFNULL(`algorea_registration`.`schoolID`, 0) as `schoolID`, IFNULL(`algorea_registration`.  `userID`, 0) as `userID`, IFNULL(`school_user`.`allowContestAtHome`, 1) as `allowContestAtHome` " .
-            "FROM `algorea_registration` " .
-            "LEFT JOIN `school_user` ON (`school_user`.`schoolID` = `algorea_registration`.`schoolID` AND `school_user`.`userID` = `algorea_registration`.`userID`) " .
-            "WHERE `code` = :code";
+        $query = "
+            SELECT
+                `algorea_registration`.`ID`,
+                `code`,
+                `category` as `qualifiedCategory`,
+                `validatedCategory`,
+                `firstName`,
+                `lastName`,
+                `genre`,
+                `grade`,
+                `studentID`,
+                `email`,
+                `zipCode`,
+                `algorea_registration`.`confirmed`,
+                IFNULL(`algorea_registration`.`schoolID`, 0) as `schoolID`,
+                IFNULL(`algorea_registration`.  `userID`, 0) as `userID`,
+                IFNULL(`school_user`.`allowContestAtHome`, 1) as `allowContestAtHome`
+            FROM
+                `algorea_registration`
+            LEFT JOIN
+                `school_user`
+            ON (
+                `school_user`.`schoolID` = `algorea_registration`.`schoolID` AND
+                `school_user`.`userID` = `algorea_registration`.`userID`)
+            WHERE
+                `code` = :code
+        ";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array("code" => $code));
         $res = $stmt->fetchObject();

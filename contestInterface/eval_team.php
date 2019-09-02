@@ -1,4 +1,4 @@
-<?php 
+<?php
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 
 require_once("../shared/common.php");

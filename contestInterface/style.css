@@ -1034,11 +1034,66 @@ table td ul:first-child{
   font-size: 200%;
 }
 
+/* contest lists */
+
+.contests_list {
+  overflow: hidden;
+}
+
+.contests_list .contest_item {
+  float: left;
+  width: 240px;
+  margin: 0 20px 20px 0;
+  border: 1px solid #999;
+}
+
+.contests_list .contest_clickable {
+  cursor: pointer;
+}
+
+.contests_list .contest_caption {
+  padding: 10px;
+  font-weight: bold;
+}
+
+.contests_list .contest_thumb {
+  height: 180px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.contests_list .contest_info {
+  padding: 10px;
+}
+
+.contests_list .locked {
+  opacity: 0.5;
+}
 
 /* common styles */
 
 .alert {
   color: #F00;
+}
+
+
+.tabs {
+  overflow: hidden;
+}
+
+.tabs .tab {
+  float: left;
+  padding: 10px 20px;
+  background: #F0F0F0;
+  color: #000;
+  cursor: pointer;
+}
+
+.tabs .active {
+  background: #337ab7;
+  color: #fff;
+  cursor: default;
 }
 
 

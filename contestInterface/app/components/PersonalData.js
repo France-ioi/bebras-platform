@@ -3,6 +3,7 @@ import Utils from '../common/Utils';
 import dateFormat from '../common/DateFormat';
 import contest from '../contest';
 import group from '../group';
+import user from '../user';
 
 export default {
     personalPageData: null,
@@ -29,10 +30,12 @@ export default {
                 $('#contestAtHomePrevented').show();
             }
             this.data = data;
-		}
+        }
+        UI.Contests.load();
     },
     unload() {
         $('#divPersonalPage').hide();
+        UI.Contests.unload();
     },
     confirmTeamPassword() {
         if (!Utils.disableButton('buttonConfirmTeamPassword')) {
@@ -70,11 +73,11 @@ export default {
             const participation = data.registrationData.participations[iParticipation];
             let status;
             if (participation.startTime == null) {
-                status = 'Non démarrée';
+                status = i18n.t('participation_not_started');
             } else if (parseInt(participation.nbMinutes) == 0 || parseInt(participation.remainingSeconds) > 0) {
-                status = 'En cours';
+                status = i18n.t('participation_in_progress');
             } else {
-                status = 'Terminé';
+                status = i18n.t('participation_finished');
             }
             let score = '-';
             if (participation.sumScores !== null) {
@@ -88,7 +91,15 @@ export default {
             const rank = this.rankToStr(participation.rank, $nameGrade, participation.nbContestants);
             const schoolRank = this.rankToStr(participation.schoolRank, $nameGrade, participation.nbContestants);
 
-            htmlParticipations += '<tr><td>' + participation.contestName + '</td>' + '<td>' + dateFormat.utc(participation.startTime) + '</td>' + '<td>' + participation.contestants + '</td>' + '<td>' + status + '</td>' + '<td>' + score + '</td>' + '<td>' + rank + '</td>' + '<td>' + schoolRank + '</td>' + "<td><a href='" + location.pathname + '?team=' + participation.password + "' target='_blank'>ouvrir</a></td></tr>";
+            htmlParticipations +=
+                '<tr><td>' + participation.contestName + '</td>' +
+                '<td>' + dateFormat.utc(participation.startTime) + '</td>' +
+                '<td>' + participation.contestants + '</td>' +
+                '<td>' + status + '</td>' +
+                '<td>' + score + '</td>' +
+                '<td>' + rank + '</td>' +
+                '<td>' + schoolRank + '</td>' +
+                "<td><a href='" + location.pathname + '?team=' + participation.password + "' target='_blank'>ouvrir</a></td></tr>";
         }
         $('#pastParticipations').append(htmlParticipations);
     },
@@ -135,8 +146,11 @@ export default {
     },
 
     onPersonalDataEdit: function (user_data) {
-        this.data.registrationData = user_data;
-        this.load(this.data);
+        var self = this;
+        user.update(user_data, function () {
+            self.data.registrationData = user_data;
+            self.load(self.data);
+        });
     }
 
 };

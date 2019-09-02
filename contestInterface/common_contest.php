@@ -209,10 +209,19 @@ function reloginTeam($db, $password, $teamID) {
 }
 
 function updateTeamCategories($db, $teamID) {
-   $query = "SELECT `algorea_registration`.`ID`, `algorea_registration`.`category` as `qualifiedCategory`, `algorea_registration`.`validatedCategory` ".
-      "FROM `contestant` ".
-      "JOIN `algorea_registration` ON `algorea_registration`.`ID` = `contestant`.`registrationID` ".
-      "WHERE `contestant`.`teamID` = :teamID";
+   $query = "
+      SELECT
+         `algorea_registration`.`ID`,
+         `algorea_registration`.`category` as `qualifiedCategory`,
+         `algorea_registration`.`validatedCategory`
+      FROM
+         `contestant`
+      JOIN
+         `algorea_registration`
+      ON
+         `algorea_registration`.`ID` = `contestant`.`registrationID`
+      WHERE
+         `contestant`.`teamID` = :teamID";
    $stmt = $db->prepare($query);
    $stmt->execute(array("teamID" => $teamID));
    $qualifiedCategories = array();

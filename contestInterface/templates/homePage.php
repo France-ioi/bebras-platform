@@ -8,7 +8,7 @@
             <div class="tabTitle" data-i18n="home_code_header"></div>
             <p class="stepName" data-i18n="home_code_text"></p>
             <div class="divInput form-inline">
-                <input id="groupCode" type="text" class="form-control" autocorrect="off" autocapitalize="none" />
+                <input value="111" id="groupCode" type="text" class="form-control" autocorrect="off" autocapitalize="none" />
                 <button type="button" onclick="checkGroup()" data-i18n="home_code_submit" class="btn btn-primary"></button>
                 <div>
                     <span id="CheckGroupResult" style="color:red"></span>
@@ -31,8 +31,8 @@
     <div class="section">
         <div class="tabTitle" data-i18n="home_nocode_header"></div>
         <div class="divInput form-inline">
-            <button type="button" id="home_nocode_guest" class="btn btn-primary" data-i18n="home_nocode_guest"></button>
-            <button type="button" id="home_nocode_register" class="btn btn-primary" data-i18n="home_nocode_register"></button>
+            <button type="button" onclick="guestUser()" class="btn btn-primary" data-i18n="home_nocode_guest"></button>
+            <button type="button" onclick="registerUser()" class="btn btn-primary" data-i18n="home_nocode_register"></button>
         </div>
     </div>
 

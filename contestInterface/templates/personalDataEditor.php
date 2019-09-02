@@ -1,6 +1,6 @@
 <div id="divPersonalDataEditor" style="display:none">
     <div class="panel" cellspacing=0>
-        <div class="panel-head"><b data-i18n="personal_data_edit"></b></div>
+        <div class="panel-head"><b id="pde_caption"></b></div>
         <div class="panel-body">
             <div class="form-inline">
                 <p>
@@ -53,7 +53,7 @@
         </div>
     </div>
     <div class="clearfix">
-        <button type="button" id="buttonPersonalDataEditorSubmit" onclick="personalDataEditorSubmit()" data-i18n="save" class="btn btn-default"></button>
+        <button type="button" id="buttonPersonalDataEditorSubmit" onclick="personalDataEditorSubmit()" data-i18n="submit" class="btn btn-default"></button>
         <button type="button" id="buttonPersonalDataEditorCancel" onclick="personalDataEditorCancel()" data-i18n="cancel" class="btn btn-default"></button>
         <p><span id="personalDataEditorResult" style="color:red;font-weight:bold"></span></p>
     </div>

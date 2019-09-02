@@ -68,9 +68,41 @@ class TeamController extends Controller
         $_SESSION["teamPassword"] = $password;
         foreach ($contestants as $contestant) {
             if (isset($contestant["registrationCode"])) {
-                $stmt = $this->db->prepare("INSERT INTO `contestant` (`ID`, `lastName`, `firstName`, `genre`, `grade`, `studentId`, `teamID`, `cached_schoolID`, `saniValid`, `email`, `zipCode`, `registrationID`)
-              SELECT :contestantID, `lastName`, `firstName`, `genre`, `grade`, `studentId`, :teamID, `schoolID`, 1, `email`, `zipCode`, `ID`
-              FROM `algorea_registration` WHERE `algorea_registration`.`code` = :code");
+                $stmt = $this->db->prepare("
+                    INSERT INTO
+                        `contestant`
+                        (
+                            `ID`,
+                            `lastName`,
+                            `firstName`,
+                            `genre`,
+                            `grade`,
+                            `studentId`,
+                            `teamID`,
+                            `cached_schoolID`,
+                            `saniValid`,
+                            `email`,
+                            `zipCode`,
+                            `registrationID`
+                        )
+                        SELECT
+                            :contestantID,
+                            `lastName`,
+                            `firstName`,
+                            `genre`,
+                            `grade`,
+                            `studentId`,
+                            :teamID,
+                            `schoolID`,
+                            1,
+                            `email`,
+                            `zipCode`,
+                            `ID`
+                        FROM
+                            `algorea_registration`
+                        WHERE
+                            `algorea_registration`.`code` = :code
+                ");
                 $stmt->execute(array(
                     "contestantID" => getRandomID(),
                     "code" => $contestant["registrationCode"],
@@ -89,9 +121,37 @@ class TeamController extends Controller
                 list($contestant["firstName"], $contestant["lastName"], $saniValid, $trash) =
                     DataSanitizer::formatUserNames($contestant["firstName"], $contestant["lastName"]);
                 $stmt = $this->db->prepare("
-                 INSERT INTO `contestant` (`ID`, `lastName`, `firstName`, `genre`, `grade`, `studentId`, `teamID`, `cached_schoolID`, `saniValid`, `email`, `zipCode`)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                $stmt->execute(array(getRandomID(), $contestant["lastName"], $contestant["firstName"], $contestant["genre"], $contestant["grade"], $contestant["studentId"], $teamID, $_SESSION["schoolID"], $saniValid, $contestant["email"], $contestant["zipCode"]));
+                    INSERT INTO
+                        `contestant`
+                        (
+                            `ID`,
+                            `lastName`,
+                            `firstName`,
+                            `genre`,
+                            `grade`,
+                            `studentId`,
+                            `teamID`,
+                            `cached_schoolID`,
+                            `saniValid`,
+                            `email`,
+                            `zipCode`
+                        )
+                        VALUES
+                        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ");
+                $stmt->execute(array(
+                    getRandomID(),
+                    $contestant["lastName"],
+                    $contestant["firstName"],
+                    $contestant["genre"],
+                    $contestant["grade"],
+                    $contestant["studentId"],
+                    $teamID,
+                    $_SESSION["schoolID"],
+                    $saniValid,
+                    $contestant["email"],
+                    $contestant["zipCode"]
+                ));
             }
         }
         addBackendHint(sprintf("ClientIP.createTeam:%s", $_SESSION['isPublic'] ? 'public' : 'private'));
