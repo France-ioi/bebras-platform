@@ -46,13 +46,17 @@ export default {
 
 
     render(data) {
-        this.renderPracticeContests(data.contests.practice, data.results);
-        this.renderOpenContests(data.contests.open);
-        this.renderPastContests(data.contests.past, data.results);
+        this.renderPracticeContests(data.practice);
+        if(data['open']) {
+            this.renderOpenContests(data.open);
+        }
+        if(data['past']) {
+            this.renderPastContests(data.past);
+        }
     },
 
 
-    renderPracticeContests(contests, results) {
+    renderPracticeContests(contests) {
         $('#contests_practice').empty();
         for(var i=0; i<types_order.length; i++) {
             var type = types_order[i];
@@ -65,7 +69,7 @@ export default {
                     '<div class="contest_item contest_clickable" onclick="startContestByID(' + contest.ID + ')">' +
                         this.getContestCaption(contest) +
                         this.getContestImage(contest) +
-                        this.getContestResultInfo(contest, results) +
+                        this.getContestResultInfo(contest) +
                     '</div>';
             }
             if(html != '') {
@@ -111,7 +115,7 @@ export default {
                     '<div class="contest_item">' +
                         this.getContestCaption(contest) +
                         this.getContestImage(contest) +
-                        this.getContestResultInfo(contest, results) +
+                        this.getContestResultInfo(contest) +
                     '</div>';
             }
             if(html != '') {
@@ -129,19 +133,22 @@ export default {
     },
 
     getContestImage(contest) {
-        var url = 'images/img-placeholder.png';
+        var url = contest.hasThumbnail == 1 ? 'contests/' + contest.folder : 'images/img-placeholder.png';
         return '<div class="contest_thumb" style="background-image: url(' + url + ')"></div>';
     },
 
-    getContestResultInfo(contest, results) {
+    getContestResultInfo(contest) {
+        if(!contest['group']) return '';
         var lines = [];
-        for(var id in contest.languages) {
-            if(id in results) {
+
+        for(var contest_id in contest.group) {
+            if(contest.group[contest_id].score) {
                 lines.push(
-                    results[id].score +
+                    contest.group[contest_id].score +
                     i18n.t('contest_points') +
-                    results[id].date +
-                    (contest.languages[id] ? i18n.t('contest_in_lang') + contest.languages[id] : '')
+                    contest.group[contest_id].date +
+                    i18n.t('contest_in_lang') +
+                    contest.group[contest_id].language
                 );
             }
         }
