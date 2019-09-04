@@ -1,2 +1,2 @@
 ALTER TABLE `contest`
-ADD `hasThumbnail` tinyint NOT NULL DEFAULT '0';
+ADD `thumbnail` varchar(50) COLLATE 'utf8_general_ci' NULL;

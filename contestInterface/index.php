@@ -25,7 +25,6 @@
         <?php include('templates/loadingPage.php'); ?>
         <?php include('templates/questions.php'); ?>
         <?php include('templates/personalDataEditor.php'); ?>
-        <?php include('templates/guest.php'); ?>
         <?php include('templates/questionIframe.php'); ?>
         <?php include('templates/footer.php'); ?>
         <?php include('templates/closed.php'); ?>

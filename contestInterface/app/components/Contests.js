@@ -133,7 +133,11 @@ export default {
     },
 
     getContestImage(contest) {
-        var url = contest.hasThumbnail == 1 ? 'contests/' + contest.folder : 'images/img-placeholder.png';
+        if(contest.thumbnail) {
+            var url = 'contests/' + contest.folder + '/' + contest.thumbnail;
+        } else {
+            var url = 'images/img-placeholder.png';
+        }
         return '<div class="contest_thumb" style="background-image: url(' + url + ')"></div>';
     },
 

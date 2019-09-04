@@ -173,7 +173,7 @@
             <button type="button" id="buttonDeleteSelected_team_view" data-i18n="teams_delete_selected" style="display:none" class="btn btn-default"></button>
              <h2 id="group_print_certificates_title" data-i18n="group_print_certificates_title"></h2>
             <p id="team_print_certificates_help" data-i18n="team_print_certificates_help"></p>
-            <button type="button" id="buttonPrintCertificates_team" onclick="preparePrintTeamCertificates()" data-i18n="team_print_certificates" class="btn btn-default"></button> <button type="button" id="buttonDoPrintCertificates_team" onclick="printTeamCertificates()" class="btn btn-default" style="display:none"></button> 
+            <button type="button" id="buttonPrintCertificates_team" onclick="preparePrintTeamCertificates()" data-i18n="team_print_certificates" class="btn btn-default"></button> <button type="button" id="buttonDoPrintCertificates_team" onclick="printTeamCertificates()" class="btn btn-default" style="display:none"></button>
         </div>
 
          <div id="tabs-contestants">
@@ -215,7 +215,10 @@
             <button type="button" id="buttonComputeScoresContest" data-i18n="contests_total_scores" onclick="computeTotalScoresContest()" class="btn btn-default"></button>
             <button type="button" id="buttonRankContest" data-i18n="contests_rank" onclick="rankContest()" class="btn btn-default"></button>
             <!--<button style="display:none;" type="button" id="buttonGenerateAlgoreaCodes" data-i18n="generate_algorea_codes" onclick="generateAlgoreaCodes()" class="btn btn-default"></button>-->
-            <button type="button" id="buttonUnofficializeContest" data-i18n="contests_switch_to_unofficial" onclick="alert(t('admin.feature_not_available'))" class="btn btn-default"></button><br/>
+            <button type="button" id="buttonUnofficializeContest" data-i18n="contests_switch_to_unofficial" onclick="alert(t('admin.feature_not_available'))" class="btn btn-default"></button>
+            <br/>
+            <a data-i18n="contests_thumbnails_manager" class="btn btn-default" href="contestsThumbnails.php" target="_blank"></a>
+            <br/>
             <div id="gradeContestState"></div>
             <br/><br/>
             <h2 data-i18n="contests_questions"></h2>
@@ -225,6 +228,7 @@
             </div>
             <button type="button" data-i18n="contests_questions_add" onclick="newContestQuestion()" class="btn btn-default"></button>
             <button type="button" id="buttonDeleteSelected_contest_question" data-i18n="contests_questions_delete" class="btn btn-default"></button>
+
          </div>
 
          <div id="tabs-awards">
@@ -254,7 +258,7 @@
       <p data-i18n="schools_search_text">
       </p>
       <table id="grid_school_search"><tbody><tr><td/></tr></tbody></table>
-      <div id="pager_school_search"></div> 
+      <div id="pager_school_search"></div>
       <button type="button" data-i18n="school_select" onclick="selectSchool()"></button>
       <p>
          <span data-i18n="schools_create_text"></span>

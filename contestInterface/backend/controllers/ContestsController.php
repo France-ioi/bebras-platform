@@ -24,7 +24,7 @@ class ContestsController extends Controller
                 contest.year,
                 contest.type ,
                 contest.category,
-                contest.hasThumbnail,
+                contest.thumbnail,
                 team.score,
                 DATE(team.endTime) as `date`
             FROM
@@ -81,7 +81,7 @@ class ContestsController extends Controller
                 contest.year,
                 contest.type,
                 contest.category,
-                contest.hasThumbnail,
+                contest.thumbnail,
                 (team.nbMinutes * 60) - TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), team.startTime)) as `remainingSeconds`,
                 team.ID as teamID
             FROM
@@ -107,7 +107,7 @@ class ContestsController extends Controller
                 contest.year,
                 contest.type,
                 contest.category,
-                contest.hasThumbnail,
+                contest.thumbnail,
                 team.score,
                 team.nbContestants,
                 contestant.rank,
