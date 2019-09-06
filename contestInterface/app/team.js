@@ -25,8 +25,8 @@ function createTeam(contestants, callback) {
             app.teamPassword = data.password;
             UI.PersonalDataForm.unload();
             UI.SubcontestSelectionInterface.unload();
-            UI.PersonalData.updateTeamPassword(data.password);
-            UI.PersonalData.updateVisibilityPassword(true);
+            //UI.PersonalData.updateTeamPassword(data.password);
+            //UI.PersonalData.updateVisibilityPassword(true);
             callback && callback();
         }
     );

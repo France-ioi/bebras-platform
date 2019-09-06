@@ -27,6 +27,13 @@ export default {
     },
 
 
+    show(guest_mode) {
+        $('#contests_tabs').toggle(!guest_mode);
+        this.selectContestsTab('practice');
+        this.load();
+    },
+
+
     unload() {
         $('#divContests').hide();
     },

@@ -16,7 +16,7 @@ export default {
          * Called when students acknowledge their new team password
          * hides password and loads contest
          */
-        window.window.confirmTeamPassword = this.confirmTeamPassword.bind(this);
+        window.confirmTeamPassword = this.confirmTeamPassword.bind(this);
     },
     load(data, eventListeners) {
         $('#divPersonalPage').show();

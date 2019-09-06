@@ -1,6 +1,10 @@
+// Remove this?
+
 import UI from '../components';
 import group from '../group';
 import PersonalData from './PersonalData'
+
+
 
 export default {
 	init () {
@@ -17,11 +21,11 @@ export default {
 	cancelStartContest () {
 		UI.AllContestsDone.unload();
 		this.unload();
-		UI.PersonalData.load();
+		UI.PersonalPage.load();
 	},
 	reallyStartContest () {
 		this.unload();
-		group.checkGroupFromCode("CheckGroup", PersonalData.personalPageData.registrationData.code, false, false, null, true);
+		group.checkGroupFromCode("CheckGroup", PersonalPage.registrationData.code, false, false, null, true);
 	}
 
 }

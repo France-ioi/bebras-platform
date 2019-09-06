@@ -1,16 +1,17 @@
 import UI from '../components';
 import user from '../user';
+//import group_confirmation from '../group_confirmation'
+import group from '../group';
 
 export default {
 
 
 	init () {
         window.registerUser = this.registerUser.bind(this);
-        window.guestUser = this.guestUser.bind(this);
+        window.createGuest = this.createGuest.bind(this);
 	},
 
     load(data, eventListeners) {
-
         $('#homePage').show();
     },
 
@@ -29,14 +30,19 @@ export default {
 
 
     onRegistrationData(user_data) {
-        user.create(user_data, function(res) {
-
+        user.createRegular(user_data, function(res) {
+            console.log(res)
+            UI.HomePage.unload();
+            UI.PersonalPage.show(res.registrationData);
         })
     },
 
 
-    guestUser() {
-        this.unload();
+    createGuest() {
+        user.createGuest(function(res) {
+            UI.HomePage.unload();
+            UI.PersonalPage.show(res.registrationData);
+        });
     }
 
 };

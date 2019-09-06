@@ -19,7 +19,7 @@ import ContestQuestionRecoveryPage from './ContestQuestionRecoveryPage';
 import ContestEndPage from './ContestEndPage';
 import StartContest from './StartContest';
 import AllContestsDone from './AllContestsDone';
-import PersonalData from './PersonalData';
+import PersonalPage from './PersonalPage';
 import PersonalDataEditor from './PersonalDataEditor';
 import HomePage from './HomePage';
 import GroupConfirmation from './GroupConfirmation';
@@ -31,7 +31,6 @@ var UI = {
     ContestHeader,
     OldContestHeader,
     Breadcrumbs,
-    //NavigationTabs,
     StartContestForm,
     TrainingContestSelection,
     RestartContestForm,
@@ -48,7 +47,7 @@ var UI = {
     ContestEndPage,
     StartContest,
     AllContestsDone,
-    PersonalData,
+    PersonalPage,
     PersonalDataEditor,
     HomePage,
     GroupConfirmation,

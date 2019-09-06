@@ -56,6 +56,7 @@ class AuthController extends Controller
         // a team in that group (and end the request).
         $this->handleCheckGroupPassword($password, $getTeams);
 
+
         $this->handleGroupFromRegistrationCode($password);
 
         // If no matching group was found, look for a team with the entered password.
@@ -343,6 +344,7 @@ class AuthController extends Controller
         if (isset($_SERVER['HTTP_HOST']) && ($_SERVER['HTTP_HOST'] == "chticode.algorea.org")) {
             $contestID = "100001";
         }
+
         $query = "SELECT `code` FROM `group` WHERE `contestID` = :contestID AND `schoolID` = :schoolID AND `userID` = :userID AND `grade` = :grade AND isGenerated = 1";
         $stmt = $this->db->prepare($query);
         $stmt->execute(array("contestID" => $contestID, "schoolID" => $registrationData->schoolID, "userID" => $registrationData->userID, "grade" => $registrationData->grade));
@@ -476,6 +478,7 @@ class AuthController extends Controller
                 `email`,
                 `zipCode`,
                 `algorea_registration`.`confirmed`,
+                `guest`,
                 IFNULL(`algorea_registration`.`schoolID`, 0) as `schoolID`,
                 IFNULL(`algorea_registration`.  `userID`, 0) as `userID`,
                 IFNULL(`school_user`.`allowContestAtHome`, 1) as `allowContestAtHome`

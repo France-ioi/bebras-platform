@@ -31,7 +31,7 @@
     <div class="section">
         <div class="tabTitle" data-i18n="home_nocode_header"></div>
         <div class="divInput form-inline">
-            <button type="button" onclick="guestUser()" class="btn btn-primary" data-i18n="home_nocode_guest"></button>
+            <button type="button" onclick="createGuest()" class="btn btn-primary" data-i18n="home_nocode_guest"></button>
             <button type="button" onclick="registerUser()" class="btn btn-primary" data-i18n="home_nocode_register"></button>
         </div>
     </div>

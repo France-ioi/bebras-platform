@@ -106,7 +106,7 @@ function checkGroupFromCode(curStep, groupCode, getTeams, isPublic, language, st
                     firstName: data.registrationData.firstName,
                     lastName: data.registrationData.lastName
                 }
-                UI.PersonalData.showPersonalPage(data);
+                UI.PersonalPage.show(data.registrationData);
                 return;
             }
             UI.MainHeader.updateTitle(data.contestName);
