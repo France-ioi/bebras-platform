@@ -222,6 +222,7 @@
     "personal_data_title_guest": "Guest access",
     "personal_data_edit": "Edit personal info",
     "personal_data_register": "Registration",
+    "personal_data_code": "Access code:",
     "personal_data_fname": "First name:",
     "personal_data_lname": "Last name:",
     "personal_data_grade": "Grade:",

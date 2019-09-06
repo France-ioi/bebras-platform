@@ -8,7 +8,7 @@
             <div class="tabTitle" data-i18n="home_code_header"></div>
             <p class="stepName" data-i18n="home_code_text"></p>
             <div class="divInput form-inline">
-                <input value="111" id="groupCode" type="text" class="form-control" autocorrect="off" autocapitalize="none" />
+                <input value="8ki94wyg" id="groupCode" type="text" class="form-control" autocorrect="off" autocapitalize="none" />
                 <button type="button" onclick="checkGroup()" data-i18n="home_code_submit" class="btn btn-primary"></button>
                 <div>
                     <span id="CheckGroupResult" style="color:red"></span>

@@ -1,6 +1,7 @@
 import UI from '../components';
 import contests from '../contests';
-import ContestQuestionRecoveryPage from './ContestQuestionRecoveryPage';
+import contest from '../contest';
+import team from '../team';
 
 var types_order = [
     'algorea_white',
@@ -39,8 +40,18 @@ export default {
     },
 
 
-    startContestByID(id) {
-        console.log(startContestByID, id)
+    startContestByID(ID) {
+        UI.PersonalPage.unload();
+        contest.get(ID, function(data) {
+            app.contestID = ID;
+            app.contestFolder = data.folder;
+            var user = Object.assign({}, UI.PersonalPage.registrationData);
+            user.registrationCode = UI.PersonalPage.registrationData.code;
+            team.createTeam([user], function() {
+                contest.initContestData(data, ID);
+                contest.loadContestData(ID, data.folder);
+            });
+        });
     },
 
 
@@ -73,7 +84,7 @@ export default {
                 var contest = contests[j];
                 if(contest.type != type) continue;
                 html +=
-                    '<div class="contest_item contest_clickable" onclick="startContestByID(' + contest.ID + ')">' +
+                    '<div class="contest_item contest_clickable" onclick="startContestByID(\'' + contest.ID + '\')">' +
                         this.getContestCaption(contest) +
                         this.getContestImage(contest) +
                         this.getContestResultInfo(contest) +

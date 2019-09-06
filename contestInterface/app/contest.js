@@ -449,10 +449,28 @@ function finalCloseContest(message) {
 }
 
 
+
+function get(ID, callback) {
+    fetch(
+        "data.php",
+        {
+            controller: "Contest",
+            action: "get",
+            SID: app.SID,
+            ID: ID
+        },
+        function(data) {
+            callback && callback(data.contest);
+        }
+    );
+}
+
+
 export default {
     selectContest,
     initContestData,
     loadContestData,
     closeContest,
-    tryCloseContest
+    tryCloseContest,
+    get
 }

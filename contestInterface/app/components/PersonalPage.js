@@ -14,7 +14,7 @@ export default {
 
     load(data, eventListeners) {
         $('#divPersonalPage').show();
-        UI.Contests.show(this.registrationData.guest);
+        UI.Contests.show(this.registrationData.guest == 1);
     },
 
     unload() {
@@ -52,6 +52,12 @@ export default {
             $('#pp_row_category').show();
         } else {
             $('#pp_row_category').hide();
+        }
+        if(this.registrationData.code != '') {
+            $('#persoCode').html(this.registrationData.code);
+            $('#pp_row_code').show();
+        } else {
+            $('#pp_row_code').hide();
         }
     },
 

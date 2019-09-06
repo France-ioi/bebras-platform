@@ -2,7 +2,6 @@
 
 import UI from '../components';
 import group from '../group';
-import PersonalData from './PersonalData'
 
 
 
@@ -25,7 +24,7 @@ export default {
 	},
 	reallyStartContest () {
 		this.unload();
-		group.checkGroupFromCode("CheckGroup", PersonalPage.registrationData.code, false, false, null, true);
+		group.checkGroupFromCode("CheckGroup", UI.PersonalPage.registrationData.code, false, false, null, true);
 	}
 
 }

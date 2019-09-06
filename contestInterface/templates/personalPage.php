@@ -20,6 +20,10 @@
                     <td data-i18n="personal_data_category"></td>
                     <td id="persoCategory"></td>
                 </tr>
+                <tr id="pp_row_code">
+                    <td data-i18n="personal_data_code"></td>
+                    <td id="persoCode"></td>
+                </tr>
             </table>
         </p>
     </div>

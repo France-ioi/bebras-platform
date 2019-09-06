@@ -37,7 +37,7 @@ export default {
 
 	navPersonalPage () {
 		this.unload();
-		PersonalData.load();
+		PersonalPage.load();
 	},
 
 	navLogout () {

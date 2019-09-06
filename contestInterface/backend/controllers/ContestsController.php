@@ -22,26 +22,26 @@ class ContestsController extends Controller
                 contest.language,
                 contest.name,
                 contest.year,
-                contest.type ,
+                contest.type,
                 contest.category,
-                contest.thumbnail,
-                team.score,
-                DATE(team.endTime) as `date`
+                contest.folder,
+                contest.thumbnail
             FROM
                 `group`
-            LEFT JOIN
+            JOIN
                 contest
             ON
                 contest.ID = group.contestID
-            LEFT JOIN
-                team
-            ON
-                team.contestID = contest.ID
             WHERE
                 group.isPublic = 1";
         $stmt = $this->db->prepare($q);
         $stmt->execute();
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        /*
+        team.score,
+        DATE(team.endTime) as `date`
+        */
 
         // group by category
         $res = array();
@@ -51,8 +51,8 @@ class ContestsController extends Controller
             $contest['group'] = array();
             $contest['group'][$contest['ID']] = array(
                 'language' => $contest['language'],
-                'score' => $contest['score'],
-                'date' => $contest['date']
+                //'score' => $contest['score'],
+                //'date' => $contest['date']
             );
             $grouped[$contest['ID']] = true;
             if($contest['language']) {
@@ -62,8 +62,8 @@ class ContestsController extends Controller
                     $grouped[$jID] = true;
                     $contest['group'][$jID] = array(
                         'language' => $rows[$j]['language'],
-                        'score' => $rows[$j]['score'],
-                        'date' => $rows[$j]['date']
+                        //'score' => $rows[$j]['score'],
+                        //'date' => $rows[$j]['date']
                     );
                 }
             }
@@ -81,6 +81,7 @@ class ContestsController extends Controller
                 contest.year,
                 contest.type,
                 contest.category,
+                contest.folder,
                 contest.thumbnail,
                 (team.nbMinutes * 60) - TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), team.startTime)) as `remainingSeconds`,
                 team.ID as teamID
@@ -107,6 +108,7 @@ class ContestsController extends Controller
                 contest.year,
                 contest.type,
                 contest.category,
+                contest.folder,
                 contest.thumbnail,
                 team.score,
                 team.nbContestants,
@@ -157,6 +159,12 @@ class ContestsController extends Controller
             }
         }
         return $rows;
+    }
+
+
+
+    function getResults() {
+
     }
 
 

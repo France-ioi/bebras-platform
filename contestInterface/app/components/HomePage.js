@@ -31,7 +31,6 @@ export default {
 
     onRegistrationData(user_data) {
         user.createRegular(user_data, function(res) {
-            console.log(res)
             UI.HomePage.unload();
             UI.PersonalPage.show(res.registrationData);
         })

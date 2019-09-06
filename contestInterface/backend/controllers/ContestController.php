@@ -80,4 +80,15 @@ class ContestController extends Controller
         addBackendHint(sprintf("Team(%s):closeContest", escapeHttpValue($teamID)));
         exitWithJson((object)array("success" => true));
     }
+
+
+    public function get() {
+        $q = "SELECT * FROM contest WHERE ID = ? LIMIT 1";
+        $stmt = $this->db->prepare($q);
+        $stmt->execute(array($_POST['ID']));
+        exitWithJson(array(
+            "success" => true,
+            "contest" => $stmt->fetchObject()
+        ));
+    }
 }
