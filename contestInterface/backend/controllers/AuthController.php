@@ -497,10 +497,6 @@ class AuthController extends Controller
         $res = $stmt->fetchObject();
         if($res) {
             $res->original = $this->getUserOriginal($res->ID);
-            $_SESSION['registrationID'] = $res->ID;
-            $_SESSION['guest'] = false;
-        } else {
-            unset($_SESSION['registrationID']);
         }
         return $res;
     }

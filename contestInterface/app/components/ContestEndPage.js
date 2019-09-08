@@ -8,6 +8,8 @@ export default {
 	},
 	load (data, eventListeners) {
 		$("#divClosed").show();
+		$('#divClosedReminder').show();
+		$('#closedReminderNav').show();
 	},
 	unload () {
 		$("#divClosed").hide();

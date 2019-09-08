@@ -57,6 +57,7 @@ window.app = {
     delaySendingAttempts: 60000,
     groupCheckedData: null,
     t: i18n.t,
+    user: false,
 
     /*
      * Initialisation
@@ -107,6 +108,14 @@ window.app = {
                 }
             }
         });
+    },
+
+    setUser: function(registrationData) {
+        this.user = registrationData ? {
+            firstName: registrationData.firstName,
+            lastName: registrationData.lastName,
+            guest: registrationData.guest
+        } : false;
     }
 
 }

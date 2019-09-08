@@ -35,7 +35,7 @@ function destroy(callback) {
         { controller: "Session", action: "destroy" },
         function(data) {
             app.SID = data.SID;
-            app.user = false;
+            app.setUser(false);
             callback && callback();
         }
     );

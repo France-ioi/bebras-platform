@@ -86,9 +86,12 @@ class ContestController extends Controller
         $q = "SELECT * FROM contest WHERE ID = ? LIMIT 1";
         $stmt = $this->db->prepare($q);
         $stmt->execute(array($_POST['ID']));
+        $contest = $stmt->fetchObject();
+        $_SESSION["contestID"] = $contest->ID;
+        $_SESSION["nbMinutes"] = $contest->nbMinutes;
         exitWithJson(array(
             "success" => true,
-            "contest" => $stmt->fetchObject()
+            "contest" => $contest
         ));
     }
 }

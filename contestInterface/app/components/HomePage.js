@@ -32,6 +32,7 @@ export default {
     onRegistrationData(user_data) {
         user.createRegular(user_data, function(res) {
             UI.HomePage.unload();
+            app.setUser(res.registrationData);
             UI.PersonalPage.show(res.registrationData);
         })
     },
@@ -40,8 +41,8 @@ export default {
     createGuest() {
         user.createGuest(function(res) {
             UI.HomePage.unload();
+            app.setUser(res.registrationData);
             UI.PersonalPage.show(res.registrationData);
         });
     }
-
 };

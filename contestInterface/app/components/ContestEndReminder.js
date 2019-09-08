@@ -1,5 +1,5 @@
 import Session from '../common/Session'
-import PersonalData from './PersonalData'
+import UI from '../components'
 
 export default {
 
@@ -37,7 +37,8 @@ export default {
 
 	navPersonalPage () {
 		this.unload();
-		PersonalPage.load();
+		UI.ContestEndPage.unload();
+		UI.PersonalPage.load();
 	},
 
 	navLogout () {

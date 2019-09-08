@@ -10,7 +10,7 @@ class ContestsController extends Controller
             ),
             'results' => $this->getResults()
         );
-        if(isset($_SESSION['registrationID'])) {
+        if(isset($_SESSION['registrationData']) && !$_SESSION['registrationData']->guest) {
             $res['contests']['open'] = $this->getOpenContests();
         }
         exitWithJson($res);
@@ -209,7 +209,7 @@ class ContestsController extends Controller
         ";
         $stmt = $this->db->prepare($q);
         $stmt->execute(array(
-            "registrationID" => $_SESSION['registrationID']
+            "registrationID" => $_SESSION['registrationData']->ID
         ));
         $res = array();
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

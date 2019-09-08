@@ -10,10 +10,7 @@ class TeamController extends Controller
         if (!isset($_POST["contestants"])) {
             exitWithJsonFailure("Informations sur les candidats manquantes");
         }
-        if (!isset($_SESSION["groupID"])) {
-            exitWithJsonFailure("Groupe non chargé");
-        }
-        if ($_SESSION["groupClosed"]) {
+        if (isset($_SESSION["groupClosed"]) && $_SESSION["groupClosed"]) {
             error_log("Hack attempt ? trying to create team on closed group " . $_SESSION["groupID"]);
             exitWithJsonFailure("Groupe fermé");
         }
@@ -28,6 +25,9 @@ class TeamController extends Controller
                 $_SESSION["groupID"] = $groupData["ID"];
             }
         }
+        if (!isset($_SESSION["groupID"])) {
+            exitWithJsonFailure("Groupe non chargé");
+        }
         // $_SESSION['userCode'] is set by optional password handling function,
         // see comments of createTeamFromUserCode in common_contest.php.
         $groupID = $_SESSION["groupID"];
@@ -40,7 +40,13 @@ class TeamController extends Controller
         unset($_SESSION["userCodeGroupCode"]);
         $teamID = getRandomID();
         $stmt = $this->db->prepare("INSERT INTO `team` (`ID`, `groupID`, `password`, `nbMinutes`, `contestID`) VALUES (?, ?, ?, ?, ?)");
-        $stmt->execute(array($teamID, $groupID, $password, $_SESSION["nbMinutes"], $_SESSION["contestID"]));
+        $stmt->execute(array(
+            $teamID,
+            $groupID,
+            $password,
+            isset($_SESSION["nbMinutes"]) ? $_SESSION["nbMinutes"] : 0,
+            $_SESSION["contestID"]
+        ));
         if ($config->db->use == 'dynamoDB') {
             try {
                 $tinyOrm->insert('team', array(
@@ -154,7 +160,7 @@ class TeamController extends Controller
                 ));
             }
         }
-        addBackendHint(sprintf("ClientIP.createTeam:%s", $_SESSION['isPublic'] ? 'public' : 'private'));
+        addBackendHint(sprintf("ClientIP.createTeam:%s", isset($_SESSION['isPublic']) &&  $_SESSION['isPublic'] ? 'public' : 'private'));
         addBackendHint(sprintf("Group(%s):createTeam", escapeHttpValue($groupID)));
         exitWithJson((object)array("success" => true, "teamID" => $teamID, "password" => $password));
     }
