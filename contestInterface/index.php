@@ -29,6 +29,7 @@
         <?php include('templates/footer.php'); ?>
         <?php include('templates/closed.php'); ?>
         <?php include('templates/groupConfirmation.php'); ?>
+        <?php include('templates/startContestMenu.php'); ?>
         <?php include('templates/error.php'); ?>
         <?php include('templates/scripts.php'); ?>
     </body>

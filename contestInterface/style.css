@@ -1101,7 +1101,7 @@ table td ul:first-child{
 .popup {}
 
 .popup .popup-overlay {
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
   width: 100%;
@@ -1111,7 +1111,7 @@ table td ul:first-child{
 }
 
 .popup .popup-window {
-  position: absolute;
+  position: fixed;
   background: #FFF;
   top: 15%;
   width: 50%;

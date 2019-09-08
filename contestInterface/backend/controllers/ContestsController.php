@@ -5,11 +5,13 @@ class ContestsController extends Controller
 
     public function getData() {
         $res = array(
-            'practice' => $this->getPracticeContests(),
+            'contests' => array(
+                'practice' => $this->getPracticeContests(),
+            ),
+            'results' => $this->getResults()
         );
         if(isset($_SESSION['registrationID'])) {
-            $res['open'] = $this->getOpenContests();
-            $res['past'] = $this->getPastContests();
+            $res['contests']['open'] = $this->getOpenContests();
         }
         exitWithJson($res);
     }
@@ -33,7 +35,10 @@ class ContestsController extends Controller
             ON
                 contest.ID = group.contestID
             WHERE
-                group.isPublic = 1";
+                group.isPublic = 1 AND
+                contest.practice = 1
+            ORDER BY
+                year DESC";
         $stmt = $this->db->prepare($q);
         $stmt->execute();
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -48,22 +53,21 @@ class ContestsController extends Controller
         $grouped = array();
         for($i=0; $i<count($rows); $i++) {
             $contest = $rows[$i];
+            if(isset($grouped[$contest['ID']])) continue;
             $contest['group'] = array();
-            $contest['group'][$contest['ID']] = array(
-                'language' => $contest['language'],
-                //'score' => $contest['score'],
-                //'date' => $contest['date']
+            $contest['group'][] = array(
+                'ID' => $contest['ID'],
+                'language' => $contest['language']
             );
             $grouped[$contest['ID']] = true;
             if($contest['language']) {
                 for($j=0; $j<count($rows); $j++) {
                     $jID = $rows[$j]['ID'];
-                    if($grouped[$jID] || $rows[$j]['category'] != $contest['category']) continue;
+                    if(isset($grouped[$jID]) || $rows[$j]['category'] != $contest['category']) continue;
                     $grouped[$jID] = true;
-                    $contest['group'][$jID] = array(
-                        'language' => $rows[$j]['language'],
-                        //'score' => $rows[$j]['score'],
-                        //'date' => $rows[$j]['date']
+                    $contest['group'][] = array(
+                        'ID' => $jID,
+                        'language' => $rows[$j]['language']
                     );
                 }
             }
@@ -92,14 +96,15 @@ class ContestsController extends Controller
             ON
                 team.contestID = contest.ID
             WHERE
-                UTC_TIMESTAMP() BETWEEN contest.startDate AND contest.endDate";
+                UTC_TIMESTAMP() BETWEEN contest.startDate AND contest.endDate AND
+                contest.practice = 0";
         $stmt = $this->db->prepare($q);
         $stmt->execute();
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $rows;
     }
 
-
+/*
     private function getPastContests() {
         $q = "
             SELECT
@@ -160,12 +165,56 @@ class ContestsController extends Controller
         }
         return $rows;
     }
-
+*/
 
 
     function getResults() {
-
+        $q = "
+            SELECT
+                IFNULL(tmp.score, 0) as score,
+                tmp.sumScores,
+                tmp.password,
+                DATE(tmp.startTime) as date,
+                tmp.contestID,
+                tmp.nbMinutes,
+                tmp.remainingSeconds,
+                tmp.rank,
+                tmp.schoolRank,
+                tmp.grade,
+                count(*) as nbContestants
+            FROM
+                (
+                    SELECT
+                        team.score,
+                        team.contestID,
+                        SUM(team_question.ffScore) as sumScores,
+                        contestant.rank,
+                        contestant.schoolRank,
+                        team.password,
+                        team.startTime,
+                        team.nbMinutes,
+                        team.ID as teamID,
+                        (team.`nbMinutes` * 60) - TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), `team`.`startTime`)) as remainingSeconds,
+                        group.grade
+                    FROM `contestant`
+                    JOIN team ON `contestant`.teamID = `team`.ID
+                    JOIN `group` ON team.groupID = `group`.ID
+                    LEFT JOIN `team_question` ON team_question.teamID = team.ID
+                    WHERE contestant.registrationID = :registrationID
+                    GROUP BY team.ID
+                ) tmp
+            JOIN contestant ON tmp.teamID = contestant.teamID
+            GROUP BY tmp.teamID
+            ORDER BY tmp.startTime ASC
+        ";
+        $stmt = $this->db->prepare($q);
+        $stmt->execute(array(
+            "registrationID" => $_SESSION['registrationID']
+        ));
+        $res = array();
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $res[$row['contestID']] = $row;
+        }
+        return $res;
     }
-
-
 }

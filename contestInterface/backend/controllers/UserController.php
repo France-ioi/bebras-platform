@@ -22,8 +22,9 @@ class UserController extends Controller
             'confirmed' => 1
         );
         $user['ID'] = $this->insertUser($user);
+        $_SESSION['registrationID'] = $user['ID'];
+        $_SESSION['guest'] = true;
         $registrationData = $this->getRegistrationData($user);
-        $_SESSION["registrationData"] = $registrationData;
         exitWithJson([
             "success" => true,
             "registrationData" => $registrationData
@@ -42,8 +43,9 @@ class UserController extends Controller
         $user['guest'] = 0;
         $user['confirmed'] = 1;
         $user['ID'] = $this->insertUser($user);
+        $_SESSION['registrationID'] = $user['ID'];
+        $_SESSION['guest'] = false;
         $registrationData = $this->getRegistrationData($user);
-        $_SESSION["registrationData"] = $registrationData;
         exitWithJson([
             "success" => true,
             "registrationData" => $registrationData
@@ -86,6 +88,8 @@ class UserController extends Controller
             'confirmed' => $_POST['user']['guest'] == 1 ? 1 : 0
         ];
         $this->saveUser($new);
+
+        $_SESSION['guest'] = false;
 
         $new['guest'] = 0;
         $new['original'] = $this->getUserOriginal($new['ID']);

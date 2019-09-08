@@ -2,6 +2,7 @@ import UI from '../components';
 import contests from '../contests';
 import contest from '../contest';
 import team from '../team';
+import group from '../group';
 
 var types_order = [
     'algorea_white',
@@ -18,13 +19,14 @@ export default {
 	init () {
         window.selectContestsTab = this.selectContestsTab.bind(this);
         window.startContestByID = this.startContestByID.bind(this);
+        window.startPracticeByID = this.startPracticeByID.bind(this);
 	},
 
 
     load(data, eventListeners) {
         $('#divContests').show();
         this.selectContestsTab('practice');
-        contests.getData(this.render.bind(this))
+        contests.getData(this.onContestsData.bind(this))
     },
 
 
@@ -40,8 +42,56 @@ export default {
     },
 
 
+    // start contests or restore participation
+    startPracticeByID(ID) {
+        var contest_group;
+        for(var i=0; i<this.data.contests.practice.length; i++) {
+            if(this.data.contests.practice[i].ID == ID) {
+                contest_group = this.data.contests.practice[i].group;
+                break;
+            }
+        }
+
+        // one contest in group
+        if(contest_group.length == 1) {
+            UI.PersonalPage.unload();
+            if(this.data.results[contest_group[0].ID]) {
+                group.checkGroupFromCode("PersonalPage", this.data.results[contest_group[0].ID].password, false, false);
+            } else {
+                this.startContestByID(ID);
+            }
+            return;
+        }
+
+        // multiple contests in group
+        var options = [];
+        for(var i=0; i<contest_group.length; i++) {
+            if(this.data.results[contest_group[i].ID]) {
+                options.push({
+                    text: i18n.t('contest_continue_language') + contest_group[i].language,
+                    password: this.data.results[contest_group[i].ID].password
+                });
+            } else {
+                options.push({
+                    text: i18n.t('contest_start_language') + contest_group[i].language,
+                    ID: contest_group[i].ID
+                });
+            }
+        }
+
+        var self = this;
+        UI.StartContestMenu.show(options, function(selection) {
+            UI.PersonalPage.unload();
+            if(selection['password']) {
+                group.checkGroupFromCode("PersonalPage", selection['password'], false, false);
+            } else if(selection['ID']) {
+                self.startContestByID(selection['ID']);
+            }
+        })
+    },
+
+
     startContestByID(ID) {
-        UI.PersonalPage.unload();
         contest.get(ID, function(data) {
             app.contestID = ID;
             app.contestFolder = data.folder;
@@ -55,6 +105,9 @@ export default {
     },
 
 
+
+    // tabs
+
     selectContestsTab(tab) {
         $('#contests_tabs .tab').removeClass('active');
         $('#contests_tabs div[data-tab="' + tab + '"]').addClass('active');
@@ -63,18 +116,25 @@ export default {
     },
 
 
-    render(data) {
-        this.renderPracticeContests(data.practice);
-        if(data['open']) {
-            this.renderOpenContests(data.open);
+
+    // render lists
+
+
+    onContestsData(data) {
+        this.data = data;
+        this.renderPracticeContests(data.contests.practice, data.results);
+        if(data.contests['open']) {
+            this.renderOpenContests(data.contests.open);
         }
+        /*
         if(data['past']) {
             this.renderPastContests(data.past);
         }
+        */
     },
 
 
-    renderPracticeContests(contests) {
+    renderPracticeContests(contests, results) {
         $('#contests_practice').empty();
         for(var i=0; i<types_order.length; i++) {
             var type = types_order[i];
@@ -84,10 +144,10 @@ export default {
                 var contest = contests[j];
                 if(contest.type != type) continue;
                 html +=
-                    '<div class="contest_item contest_clickable" onclick="startContestByID(\'' + contest.ID + '\')">' +
+                    '<div class="contest_item contest_clickable" onclick="startPracticeByID(\'' + contest.ID + '\')">' +
                         this.getContestCaption(contest) +
                         this.getContestImage(contest) +
-                        this.getContestResultInfo(contest) +
+                        this.getContestResultInfo(contest, results) +
                     '</div>';
             }
             if(html != '') {
@@ -99,7 +159,7 @@ export default {
         }
     },
 
-    renderOpenContests(contests) {
+    renderOpenContests(contests, results) {
         $('#contests_open').empty();
         var html = '', contest;
         for(var j=0; j<contests.length; j++) {
@@ -159,19 +219,26 @@ export default {
         return '<div class="contest_thumb" style="background-image: url(' + url + ')"></div>';
     },
 
-    getContestResultInfo(contest) {
+    getContestResultInfo(contest, results) {
         if(!contest['group']) return '';
         var lines = [];
-
-        for(var contest_id in contest.group) {
-            if(contest.group[contest_id].score) {
+        for(var i=0; i<contest.group.length; i++) {
+            var group_item = contest.group[i];
+            var result = results[group_item.ID];
+            if(result) {
                 lines.push(
-                    contest.group[contest_id].score +
+                    this.formatScore(result) +
                     i18n.t('contest_points') +
-                    contest.group[contest_id].date +
-                    i18n.t('contest_in_lang') +
-                    contest.group[contest_id].language
+                    result.date +
+                    (group_item.language ? i18n.t('contest_in_lang') + group_item.language : '')
                 );
+                // TODO: add rank
+                if(contest.practice == 0) {
+                    lines.push(
+                        i18n.t('grade_' + data.registrationData.grade) +
+                        i18n.t('contest_info_' + (result.nbContestants == 1 ? 'individual' : 'teams'))
+                    );
+                }
             }
         }
         return '<div class="contest_info">' + lines.join('<br>') + '</div>';
@@ -180,6 +247,20 @@ export default {
     getOpenContestInfo(contest) {
         var status = 'todo';
         return '<div class="contest_info">' + status + '</div>';
+    },
+
+
+    formatScore(result) {
+        var score = '-';
+        if (result.sumScores !== null) {
+            score = parseInt(result.sumScores, 10);
+            if (result.score !== null) {
+                score = Math.max(score, parseInt(result.score, 10));
+            }
+        } else if (result.score !== null) {
+            score = parseInt(result.score, 10);
+        }
+        return score;
     }
 
 }

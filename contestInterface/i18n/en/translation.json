@@ -253,9 +253,13 @@
     "contest_in_lang": " in ",
     "contest_position": " out of ",
     "contest_locked": "Locked",
+    "contest_info_individual": "individual",
+    "contest_info_team": "teams",
     "contest_type_algorea_white": "Algorea, white category",
     "contest_type_algorea_yellow": "Algorea, yellow category",
     "contest_type_algorea_orange": "Algorea, orange category",
     "contest_type_algorea_green": "Algorea, green category",
-    "contest_type_alkindi": "Alkindi"
+    "contest_type_alkindi": "Alkindi",
+    "contest_start_language": "Start in ",
+    "contest_continue_language": "Open in "
 }
