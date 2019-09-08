@@ -246,6 +246,7 @@ class UserController extends Controller
         $user['qualifiedCategory'] = '';
         $user['validatedCategory'] = '';
         $user['allowContestAtHome'] = 1;
+        $user['algoreaCategory'] = 1;
         return $user;
     }
 

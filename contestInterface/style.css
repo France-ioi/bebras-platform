@@ -1068,7 +1068,7 @@ table td ul:first-child{
   padding: 10px;
 }
 
-.contests_list .locked {
+.contests_list .contest_locked {
   opacity: 0.5;
 }
 

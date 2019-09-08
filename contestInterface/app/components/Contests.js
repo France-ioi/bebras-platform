@@ -168,15 +168,32 @@ export default {
     },
 
     renderOpenContests(contests, results) {
+        var colors = ['blanche', 'jaune', 'orange', 'verte', 'bleue'];
+
         $('#contests_open').empty();
         var html = '', contest;
         for(var j=0; j<contests.length; j++) {
             var contest = contests[j];
+
+            var locked = false;
+            if(contest.categoryColor !== null && app.user.algoreaCategory !== null) {
+                var contextColorIdx = colors.indexOf(contest.categoryColor);
+                var userColorIdx = colors.indexOf(app.user.algoreaCategory);
+                if(userColorIdx < contextColorIdx) {
+                    locked = true;
+                }
+            }
+
+            if(locked) {
+                html += '<div class="contest_item contest_locked">';
+            } else {
+                html += '<div class="contest_item contest_clickable" onclick="startOpenContestByID(\'' + contest.ID + '\')">';
+            }
+
             html +=
-                '<div class="contest_item contest_clickable" onclick="startOpenContestByID(\'' + contest.ID + '\')">' +
                     this.getContestCaption(contest) +
                     this.getContestImage(contest) +
-                    this.getOpenContestInfo(contest, results) +
+                    (locked ? this.getLockedContestInfo() : this.getOpenContestInfo(contest, results)) +
                 '</div>';
         }
         if(html != '') {
@@ -260,10 +277,13 @@ export default {
         } else {
             lines.push(i18n.t('contest_open_until') + contest.endDate);
         }
-        //todo: locked
         return '<div class="contest_info">' + lines.join('<br>') + '</div>';
     },
 
+
+    getLockedContestInfo() {
+        return '<div class="contest_info">' + i18n.t('contest_locked') + '</div>';
+    },
 
     getPastContestInfo(contest) {
         var lines = [];

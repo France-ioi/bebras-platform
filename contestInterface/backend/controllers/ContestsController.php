@@ -86,6 +86,7 @@ class ContestsController extends Controller
                 year,
                 type,
                 category,
+                categoryColor,
                 folder,
                 thumbnail,
                 DATE(endDate) as endDate
