@@ -18,8 +18,8 @@ export default {
 
 	init () {
         window.selectContestsTab = this.selectContestsTab.bind(this);
-        window.startContestByID = this.startContestByID.bind(this);
         window.startPracticeByID = this.startPracticeByID.bind(this);
+        window.startOpenContestByID = this.startOpenContestByID.bind(this);
 	},
 
 
@@ -91,6 +91,16 @@ export default {
     },
 
 
+    startOpenContestByID(ID) {
+        UI.PersonalPage.unload();
+        if(this.data.results[ID]) {
+            group.checkGroupFromCode("PersonalPage", this.data.results[ID].password, false, false);
+        } else {
+            this.startContestByID(ID);
+        }
+    },
+
+
     startContestByID(ID) {
         contest.get(ID, function(data) {
             app.contestID = ID;
@@ -124,13 +134,11 @@ export default {
         this.data = data;
         this.renderPracticeContests(data.contests.practice, data.results);
         if(data.contests['open']) {
-            this.renderOpenContests(data.contests.open);
+            this.renderOpenContests(data.contests.open, data.results);
         }
-        /*
-        if(data['past']) {
-            this.renderPastContests(data.past);
+        if(data.contests['past']) {
+            this.renderPastContests(data.contests.past);
         }
-        */
     },
 
 
@@ -147,7 +155,7 @@ export default {
                     '<div class="contest_item contest_clickable" onclick="startPracticeByID(\'' + contest.ID + '\')">' +
                         this.getContestCaption(contest) +
                         this.getContestImage(contest) +
-                        this.getContestResultInfo(contest, results) +
+                        this.getPracticeContestInfo(contest, results) +
                     '</div>';
             }
             if(html != '') {
@@ -165,10 +173,10 @@ export default {
         for(var j=0; j<contests.length; j++) {
             var contest = contests[j];
             html +=
-                '<div class="contest_item contest_clickable" onclick="startContestByID(' + contest.ID + ')">' +
+                '<div class="contest_item contest_clickable" onclick="startOpenContestByID(\'' + contest.ID + '\')">' +
                     this.getContestCaption(contest) +
                     this.getContestImage(contest) +
-                    this.getOpenContestInfo(contest) +
+                    this.getOpenContestInfo(contest, results) +
                 '</div>';
         }
         if(html != '') {
@@ -193,7 +201,7 @@ export default {
                     '<div class="contest_item">' +
                         this.getContestCaption(contest) +
                         this.getContestImage(contest) +
-                        this.getContestResultInfo(contest) +
+                        this.getPastContestInfo(contest) +
                     '</div>';
             }
             if(html != '') {
@@ -210,6 +218,7 @@ export default {
         return '<div class="contest_caption">' + contest.name + ' ' + contest.year + '</div>';
     },
 
+
     getContestImage(contest) {
         if(contest.thumbnail) {
             var url = 'contests/' + contest.folder + '/' + contest.thumbnail;
@@ -219,7 +228,8 @@ export default {
         return '<div class="contest_thumb" style="background-image: url(' + url + ')"></div>';
     },
 
-    getContestResultInfo(contest, results) {
+
+    getPracticeContestInfo(contest, results) {
         if(!contest['group']) return '';
         var lines = [];
         for(var i=0; i<contest.group.length; i++) {
@@ -232,21 +242,47 @@ export default {
                     result.date +
                     (group_item.language ? i18n.t('contest_in_lang') + group_item.language : '')
                 );
-                // TODO: add rank
-                if(contest.practice == 0) {
-                    lines.push(
-                        i18n.t('grade_' + data.registrationData.grade) +
-                        i18n.t('contest_info_' + (result.nbContestants == 1 ? 'individual' : 'teams'))
-                    );
-                }
             }
         }
         return '<div class="contest_info">' + lines.join('<br>') + '</div>';
     },
 
-    getOpenContestInfo(contest) {
-        var status = 'todo';
-        return '<div class="contest_info">' + status + '</div>';
+
+    getOpenContestInfo(contest, results) {
+        var lines = [];
+
+        if(results[contest.ID] && results[contest.ID].remainingSeconds > 0 && results[contest.ID].date !== null) {
+            lines.push(
+                i18n.t('contest_started') +
+                Math.floor(results[contest.ID].remainingSeconds / 60) +
+                i18n.t('contest_mins_left')
+            );
+        } else {
+            lines.push(i18n.t('contest_open_until') + contest.endDate);
+        }
+        //todo: locked
+        return '<div class="contest_info">' + lines.join('<br>') + '</div>';
+    },
+
+
+    getPastContestInfo(contest) {
+        var lines = [];
+        lines.push(
+            contest.score +
+            i18n.t('contest_points') +
+            contest.date +
+            (contest.language ? i18n.t('contest_in_lang') + contest.language : '')
+        );
+        lines.push(
+            contest.rank +
+            i18n.t('contest_position') +
+            contest.rankTotal
+        );
+        lines.push(
+            i18n.t('grade_' + contest.grade) +
+            (contest.nbContestants !== null ? ', ' + i18n.t('contest_info_' + (contest.nbContestants == 1 ? 'individual' : 'team')) : '')
+        );
+        return '<div class="contest_info">' + lines.join('<br>') + '</div>';
     },
 
 

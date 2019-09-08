@@ -12,6 +12,7 @@ class ContestsController extends Controller
         );
         if(isset($_SESSION['registrationData']) && !$_SESSION['registrationData']->guest) {
             $res['contests']['open'] = $this->getOpenContests();
+            $res['contests']['past'] = $this->getPastContests();
         }
         exitWithJson($res);
     }
@@ -80,21 +81,16 @@ class ContestsController extends Controller
     private function getOpenContests() {
         $q = "
             SELECT
-                contest.ID,
-                contest.name,
-                contest.year,
-                contest.type,
-                contest.category,
-                contest.folder,
-                contest.thumbnail,
-                (team.nbMinutes * 60) - TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), team.startTime)) as `remainingSeconds`,
-                team.ID as teamID
+                ID,
+                name,
+                year,
+                type,
+                category,
+                folder,
+                thumbnail,
+                DATE(endDate) as endDate
             FROM
                 contest
-            LEFT JOIN
-                team
-            ON
-                team.contestID = contest.ID
             WHERE
                 UTC_TIMESTAMP() BETWEEN contest.startDate AND contest.endDate AND
                 contest.practice = 0";
@@ -104,7 +100,7 @@ class ContestsController extends Controller
         return $rows;
     }
 
-/*
+
     private function getPastContests() {
         $q = "
             SELECT
@@ -115,7 +111,9 @@ class ContestsController extends Controller
                 contest.category,
                 contest.folder,
                 contest.thumbnail,
+                contest.language,
                 team.score,
+                DATE(team.startTime) as date,
                 team.nbContestants,
                 contestant.rank,
                 contestant.grade
@@ -130,10 +128,11 @@ class ContestsController extends Controller
             ON
                 team.contestID = contest.ID
             WHERE
-                contestant.registrationID = :registrationID";
+                contestant.registrationID = :registrationID AND
+                contest.practice = 0";
         $stmt = $this->db->prepare($q);
         $stmt->execute(array(
-            'registrationID' => $_SESSION['registrationID']
+            'registrationID' => $_SESSION['registrationData']->ID
         ));
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -165,7 +164,7 @@ class ContestsController extends Controller
         }
         return $rows;
     }
-*/
+
 
 
     function getResults() {
