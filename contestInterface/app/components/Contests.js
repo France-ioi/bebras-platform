@@ -311,7 +311,7 @@ export default {
         if (result.sumScores !== null) {
             score = parseInt(result.sumScores, 10);
             if (result.score !== null) {
-                score = Math.max(score, parseInt(result.score, 10));
+                score = Math.max(score, parseInt(result.score, 10)) + i18n.t('contest_tmp_score');
             }
         } else if (result.score !== null) {
             score = parseInt(result.score, 10);

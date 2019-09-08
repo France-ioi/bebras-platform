@@ -264,5 +264,6 @@
     "contest_type_algorea_green": "Algorea, green category",
     "contest_type_alkindi": "Alkindi",
     "contest_start_language": "Start in ",
-    "contest_continue_language": "Open in "
+    "contest_continue_language": "Open in ",
+    "contest_tmp_score": " (temporary) "
 }
