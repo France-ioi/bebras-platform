@@ -94,4 +94,39 @@ class ContestController extends Controller
             "contest" => $contest
         ));
     }
+
+    private function readDir($path, $rel_path = '') {
+        $res = array();
+        $data = scandir($path);
+        foreach($data as $item) {
+            if($item == '.' ||
+                $item == '..' ||
+                $item == '.htaccess' ||
+                strpos($item, '_sols.html') !== false ||
+                strpos($item, '_graders.html') !== false ||
+                $item == 'bebras.js') {
+                continue;
+            }
+            $subpath = $path.'/'.$item;
+            $rel_subpath = ($rel_path != '' ? $rel_path.'/' : '').$item;
+            if(is_dir($subpath)) {
+                $subitems = $this->readDir($subpath, $rel_subpath);
+                if(count($subitems)) {
+                    $res = array_merge($res, $subitems);
+                }
+            } else {
+                $res[] = $rel_subpath;
+            }
+        }
+        return $res;
+    }
+
+
+    public function getFilesList() {
+        $path = dirname(__FILE__).'/../../contests/'.$_POST['folder'];
+        exitWithJson(array(
+            "success" => true,
+            "list" => $this->readDir($path, $_POST['folder'])
+        ));
+    }
 }

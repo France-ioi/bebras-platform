@@ -1045,7 +1045,7 @@ table td ul:first-child{
   width: 320px;
   margin: 0 20px 20px 0;
   border: 1px solid #999;
-  height: 320px;
+  height: 340px;
 }
 
 .contests_list .contest_clickable {
@@ -1064,8 +1064,12 @@ table td ul:first-child{
   background-size: cover;
 }
 
+.contests_list .contest_preload {
+  margin: 10px;
+}
+
 .contests_list .contest_info {
-  padding: 10px;
+  margin: 10px;
 }
 
 .contests_list .contest_locked {

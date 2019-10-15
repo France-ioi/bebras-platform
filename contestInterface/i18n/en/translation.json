@@ -265,5 +265,11 @@
     "contest_type_alkindi": "Alkindi",
     "contest_start_language": "Start in ",
     "contest_continue_language": "Open in ",
-    "contest_tmp_score": " (temporary) "
+    "contest_tmp_score": " (temporary) ",
+
+    "contest_download": "Download to start offline",
+    "contest_downloading": "Downloading...",
+    "contest_download_error": "Download error",
+    "contest_downloaded": "Ready to start offline",
+    "contest_loading": "Loading..."
 }

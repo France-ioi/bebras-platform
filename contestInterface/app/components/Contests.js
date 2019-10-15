@@ -3,6 +3,7 @@ import contests from '../contests';
 import contest from '../contest';
 import team from '../team';
 import group from '../group';
+import Preloader from '../common/Preloader';
 
 var types_order = [
     'algorea_white',
@@ -20,6 +21,7 @@ export default {
         window.selectContestsTab = this.selectContestsTab.bind(this);
         window.startPracticeByID = this.startPracticeByID.bind(this);
         window.startOpenContestByID = this.startOpenContestByID.bind(this);
+        this.preloader = Preloader({});
 	},
 
 
@@ -143,7 +145,7 @@ export default {
 
 
     renderPracticeContests(contests, results) {
-        $('#contests_practice').empty();
+        var container = $('#contests_practice').empty();
         for(var i=0; i<types_order.length; i++) {
             var type = types_order[i];
 
@@ -156,21 +158,23 @@ export default {
                         this.getContestCaption(contest) +
                         this.getContestImage(contest) +
                         this.getPracticeContestInfo(contest, results) +
+                        this.getPreloaderCode(contest)
                     '</div>';
             }
             if(html != '') {
-                $('#contests_practice').append(
+                container.append(
                     '<h2>' + i18n.t('contest_type_' + type) + '</h2>' +
                     '<div class="contests_list">' + html + '</div>'
                 );
             }
         }
+        this.refreshPreloaderState(container);
     },
 
     renderOpenContests(contests, results) {
         var colors = ['blanche', 'jaune', 'orange', 'verte', 'bleue'];
 
-        $('#contests_open').empty();
+        var container = $('#contests_open').empty();
         var html = '', contest;
         for(var j=0; j<contests.length; j++) {
             var contest = contests[j];
@@ -194,14 +198,16 @@ export default {
                     this.getContestCaption(contest) +
                     this.getContestImage(contest) +
                     (locked ? this.getLockedContestInfo() : this.getOpenContestInfo(contest, results)) +
+                    this.getPreloaderCode(contest)
                 '</div>';
         }
         if(html != '') {
-            $('#contests_open').append(
+            container.append(
                 '<h2>' + i18n.t('contests_open') + '</h2>' +
                 '<div class="contests_list">' + html + '</div>'
             );
         }
+        this.refreshPreloaderState(container);
     },
 
 
@@ -317,6 +323,52 @@ export default {
             score = parseInt(result.score, 10);
         }
         return score;
+    },
+
+
+    getPreloaderCode(contest) {
+        if(!this.preloader) {
+            return '';
+        }
+        return '<div class="contest_preload" data-contest-folder="' + contest.folder + '"></div>';
+    },
+
+
+    refreshPreloaderState(container) {
+        if(!this.preloader) {
+            return;
+        }
+        var self = this;
+        container.find('div[data-contest-folder]').each(function() {
+            var el = $(this).empty();
+            el.html(i18n.t('contest_loading'));
+            var folder = el.data('contest-folder');
+            self.preloader.check(folder, function(exists) {
+                if(exists) {
+                    el.text(i18n.t('contest_downloaded'));
+                } else {
+                    var btn = $('<button>' + i18n.t('contest_download') + '</button>');
+                    btn.click(function(e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        contest.getFilesList(folder, function(list) {
+                            self.preloader.add(list, function(success) {
+                                if(success) {
+                                    el.text(i18n.t('contest_downloaded'));
+                                } else {
+                                    el.text(i18n.t('contest_download_error'));
+                                }
+                            })
+                        })
+                    })
+                    el.empty().append(btn);
+                }
+            })
+        })
+    },
+
+    preloadConstest(folder) {
+
     }
 
 }

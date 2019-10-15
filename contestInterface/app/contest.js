@@ -466,11 +466,28 @@ function get(ID, callback) {
 }
 
 
+function getFilesList(folder, callback) {
+    fetch(
+        "data.php",
+        {
+            SID: app.SID,
+            controller: "Contest",
+            action: "getFilesList",
+            folder: folder
+        },
+        function(data) {
+            callback && callback(data.list);
+        }
+    );
+}
+
+
 export default {
     selectContest,
     initContestData,
     loadContestData,
     closeContest,
     tryCloseContest,
-    get
+    get,
+    getFilesList
 }
