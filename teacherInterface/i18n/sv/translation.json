@@ -520,7 +520,7 @@
     "user_email_already_used": "Ett konto finns redan för e-postadressen %s.",
     "site_under_maintainance": "Tyvärr, sajten är stängd på grund av uppdateringar tills %s",
     "login_invalid_identifier": "Felaktig inloggning",
-    "login_email_not_validated": "Inloggningen är korrekt, men din e-postadress har inte validerats än. Klicka på länken i det valideringsmeddelande (på franska) du borde ha fått i din e-post efter din registrering. Om du inte har fått något sådant meddelande (kolla även spamfilter), eller om du gjort valideringen men det fortfarande inte fungerar, vänligen kontakta oss: %s",
+    "login_email_not_validated": "Inloggningen är korrekt, men din e-postadress %s har inte validerats än. Klicka på länken i det valideringsmeddelande (på franska) du borde ha fått i din e-post efter din registrering. Om du inte har fått något sådant meddelande (kolla även spamfilter), eller om du gjort valideringen men det fortfarande inte fungerar, vänligen kontakta oss: %s",
     "login_user_not_validated": "Inloggningen är korrekt och din e-postadress har validerats.",
     "login_no_official_email": "Inloggningen är korrekt, men vi kan inte automatiskt validera din epost-adress baserat på din domän.",
     "login_manual_validation_required": "Din registrering behöver godkännas manuellt av en administratör. Vänligen kontakta oss på %s om du inte redan gjort det, eller om du inte fått svar inom rimlig tid.",
