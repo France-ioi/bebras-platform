@@ -926,6 +926,10 @@ var questionIframe = {
          if(callback) { callback(); }
       } else {
          questionIframe.task.getHeight(function(height) {
+            if(!window.addEventListener && window.attachEvent) {
+               // IE8
+               height += 500;
+            }
             height = Math.max(fullHeight, height + 25);
             platform.updateDisplay({height: height});
             if(callback) { callback(); }
@@ -3505,7 +3509,11 @@ $(document).on('ready', function() {
    } else {
       init();
    }
-   window.addEventListener('resize', questionIframe.onBodyResize);
+   if(window.addEventListener) {
+      window.addEventListener('resize', questionIframe.onBodyResize);
+   } else if(window.attachEvent) { // IE 8
+      window.attachEvent('resize', questionIframe.onBodyResize);
+   }
    checkFullscreen();
 });
 
