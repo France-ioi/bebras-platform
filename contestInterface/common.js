@@ -302,15 +302,31 @@ function toggleMetaViewport(toggle) {
  * Fetch configuration
  */
 function getConfig(callback) {
+  if(!callback) { callback = function(){}; }
   if(window.config) {
-     if(callback) { callback(); }
+     callback();
      return;
   }
 
   $.post("data.php", {action: 'getConfig', p: getParameterByName('p')},
      function(data) {
         window.config = data.config;
-        if(callback) { callback(); }
+
+        // Test HTTPS connectivity, downgrade to HTTP if HTTPS doesn't work
+        if(!window.config.httpsTestUrl || window.config.upgradeToHTTPS) {
+            callback();
+            return;
+        }
+        $.ajax({
+            url: window.config.httpsTestUrl,
+            timeout: 10000
+            })
+            .fail(function() {
+                window.config.downgradeToHTTP = true;
+            })
+            .always(function() {
+                callback();
+            });
      }, "json");
 }
 
@@ -759,6 +775,9 @@ var questionIframe = {
                     srcImage = srcImage.replace(window.config.imagesURLReplacementsNonStatic[i][0], window.config.imagesURLReplacements[i][1]); \n\
                 } \n\
                 that.newUrlImages[that.imagesToPreload[that.nbImagesLoaded]] = srcImage; \n\
+            } \n\
+            if(window.config.downgradeToHTTP) { \n\
+                srcImage = srcImage.replace(/^https:/, "http:"); \n\
             } \n\
             if(window.config.upgradeToHTTPS) { \n\
                 srcImage = srcImage.replace(/^http:/, "https:"); \n\
@@ -3308,6 +3327,9 @@ Loader.prototype.assemble = function() {
       var data = self.parts.join('');
       for(var i=0; i<window.config.imagesURLReplacements.length; i++) {
          data = data.replace(new RegExp(window.config.imagesURLReplacements[i][0], 'g'), window.config.imagesURLReplacements[i][1]);
+      }
+      if(window.config.downgradeToHTTP) {
+         data = data.replace(/https:\/\//g, "http://");
       }
       if(window.config.upgradeToHTTPS) {
          if(window.config.upgradeToHTTPS.length) {
