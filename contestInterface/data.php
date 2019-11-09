@@ -723,6 +723,7 @@ function handleGetConfig() {
    $clientConfig = array(
       "imagesURLReplacements" => $config->imagesURLReplacements,
       "imagesURLReplacementsNonStatic" => $config->imagesURLReplacementsNonStatic,
+      "httpsTestUrl" => $config->contestInterface->httpsTestUrl,
       "upgradeToHTTPS" => $config->upgradeToHTTPS,
       "logActivity" => $config->contestInterface->logActivity
       );

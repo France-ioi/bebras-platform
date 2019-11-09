@@ -45,7 +45,7 @@ if($config->contestInterface->browserCheck) {
                 $browser->isBrowser('Chrome', '<', '64') ||
                 $browser->isBrowser('Silk', '<', '64') ||
                 $browser->isBrowser('Safari', '<', '9') ||
-                $browser->isBrowser('Edge', '<', '41') ||
+                $browser->isBrowser('Edge', '<', '17') ||
                 $browser->isBrowser('Internet Explorer');
 }
 

@@ -302,15 +302,31 @@ function toggleMetaViewport(toggle) {
  * Fetch configuration
  */
 function getConfig(callback) {
+  if(!callback) { callback = function(){}; }
   if(window.config) {
-     if(callback) { callback(); }
+     callback();
      return;
   }
 
   $.post("data.php", {action: 'getConfig', p: getParameterByName('p')},
      function(data) {
         window.config = data.config;
-        if(callback) { callback(); }
+
+        // Test HTTPS connectivity, downgrade to HTTP if HTTPS doesn't work
+        if(!window.config.httpsTestUrl || window.config.upgradeToHTTPS) {
+            callback();
+            return;
+        }
+        $.ajax({
+            url: window.config.httpsTestUrl,
+            timeout: 10000
+            })
+            .fail(function() {
+                window.config.downgradeToHTTP = true;
+            })
+            .always(function() {
+                callback();
+            });
      }, "json");
 }
 
@@ -760,6 +776,9 @@ var questionIframe = {
                 } \n\
                 that.newUrlImages[that.imagesToPreload[that.nbImagesLoaded]] = srcImage; \n\
             } \n\
+            if(window.config.downgradeToHTTP) { \n\
+                srcImage = srcImage.replace(/^https:/, "http:"); \n\
+            } \n\
             if(window.config.upgradeToHTTPS) { \n\
                 srcImage = srcImage.replace(/^http:/, "https:"); \n\
             } \n\
@@ -907,6 +926,10 @@ var questionIframe = {
          if(callback) { callback(); }
       } else {
          questionIframe.task.getHeight(function(height) {
+            if(!window.addEventListener && window.attachEvent) {
+               // IE8
+               height += 500;
+            }
             height = Math.max(fullHeight, height + 25);
             platform.updateDisplay({height: height});
             if(callback) { callback(); }
@@ -3309,6 +3332,9 @@ Loader.prototype.assemble = function() {
       for(var i=0; i<window.config.imagesURLReplacements.length; i++) {
          data = data.replace(new RegExp(window.config.imagesURLReplacements[i][0], 'g'), window.config.imagesURLReplacements[i][1]);
       }
+      if(window.config.downgradeToHTTP) {
+         data = data.replace(/https:\/\//g, "http://");
+      }
       if(window.config.upgradeToHTTPS) {
          if(window.config.upgradeToHTTPS.length) {
             for(var i=0; i<window.config.upgradeToHTTPS.length; i++) {
@@ -3483,7 +3509,11 @@ $(document).on('ready', function() {
    } else {
       init();
    }
-   window.addEventListener('resize', questionIframe.onBodyResize);
+   if(window.addEventListener) {
+      window.addEventListener('resize', questionIframe.onBodyResize);
+   } else if(window.attachEvent) { // IE 8
+      window.attachEvent('resize', questionIframe.onBodyResize);
+   }
    checkFullscreen();
 });
 
