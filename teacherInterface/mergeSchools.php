@@ -58,6 +58,10 @@ echo "Transfering old groups :<br/>";
 $query = "UPDATE `group` SET `schoolID` = :schoolIDKeep WHERE `schoolID` = :schoolIDRemove";
 runSchoolQuery($db, $query, $queriesParams);
 
+echo "Transfering old registrations :<br/>";
+$query = "UPDATE `algorea_registration` SET `schoolID` = :schoolIDKeep WHERE `schoolID` = :schoolIDRemove";
+runSchoolQuery($db, $query, $queriesParams);
+
 echo "Delete old school :<br/>";
 $query = "DELETE FROM school WHERE ID = :schoolIDRemove";
 $stmt = $db->prepare($query);
