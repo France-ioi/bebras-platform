@@ -71,6 +71,8 @@ var teamMateHasRegistration = {1: false, 2: false};
 var personalPageData = null;
 // Function listening for resize events
 var bodyOnResize = null;
+// Images preloaded by ImagesLoader
+var imagesPreloaded = [];
 
 function getParameterByName(name) {
    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -737,6 +739,7 @@ var questionIframe = {
         var that = ImagesLoader; \n\
         that.loadingImages[that.nbImagesLoaded].onload = null; \n\
         that.loadingImages[that.nbImagesLoaded].onerror = null; \n\
+        parent.addImageLoaded(that.loadingImages[that.nbImagesLoaded].src); \n\
         that.nbImagesLoaded++; \n\
         that.nbPreloadErrors = 0;  \n\
         parent.setNbImagesLoaded("" + that.nbImagesLoaded + "/" + that.nbImagesToLoad); \n\
@@ -1315,6 +1318,21 @@ function fillListQuestions(sortedQuestionIDs, questionsData)
    }
 }
 
+function getQuestionIcon(questionKey) {
+   // Get the icon for a question, checking preloaded images for the icon
+   var iconUrl = null;
+   var iconHint = questionKey + '/icon.png';
+   for(var i = 0; i < imagesPreloaded.length; i++) {
+      var curUrl = imagesPreloaded[i];
+      if(curUrl.substring(curUrl.length - iconHint.length) == iconHint) {
+         iconUrl = curUrl;
+         break;
+      }
+   }
+   // Return the default path if it was not found
+   return iconUrl ? iconUrl : window.contestsRoot + '/' + contestFolder + '/' + questionKey + '/icon.png';
+}
+
 function fillListQuestionsNew(sortedQuestionIDs, questionsData)
 {
    var strListQuestions = "";
@@ -1330,7 +1348,7 @@ function fillListQuestionsNew(sortedQuestionIDs, questionsData)
                '<table>' +
                   '<tr>' +
                      '<td class="icon_img_td" style="vertical-align: middle;">' +
-                        '<img src="' + window.contestsRoot + '/' + contestFolder + '/' + questionData.key + '/icon.png" />' +
+                        '<img src="' + getQuestionIcon(questionData.key) + '" />' +
                      '</td>' +
                   '</tr>' +
                '</table>' +
@@ -1618,6 +1636,7 @@ function loadContestData(contestID, contestFolder, groupPassword)
          }, "json");
       });
 
+      imagesPreloaded = [];
       questionIframe.iframe.contentWindow.ImagesLoader.preload(contestFolder);
    });
 }
@@ -1631,6 +1650,16 @@ function loadContestData(contestID, contestFolder, groupPassword)
 window.setNbImagesLoaded = function(content) {
    $("#nbImagesLoaded").html(content);
 };
+
+/**
+ * Add image URL to the list of preloaded images
+ * Called by the task
+ *
+ * @param {string} url
+ */
+window.addImageLoaded = function(url) {
+   imagesPreloaded.push(url);
+}
 
 // Team connexion
 
