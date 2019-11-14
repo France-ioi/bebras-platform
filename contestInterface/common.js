@@ -1996,8 +1996,13 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
    $('#recoverGroup').hide();
    $('#browserAlert').hide();
    $("#" + curStep + "Result").html('');
-   $.post("data.php", {SID: SID, action: "checkPassword", password: groupCode, getTeams: getTeams, language: language, startOfficial: startOfficial, commonJsVersion: commonJsVersion, timestamp: window.timestamp, commonJsTimestamp: commonJsTimestamp},
-      function(data) {
+   
+   var parameters = {
+      type: "POST",
+      url: "data.php",
+      data: {SID: SID, action: "checkPassword", password: groupCode, getTeams: getTeams, language: language, startOfficial: startOfficial, commonJsVersion: commonJsVersion, timestamp: window.timestamp, commonJsTimestamp: commonJsTimestamp},
+      dataType: 'json',
+      success: function(data) {
          if (!data.success) {
             if (data.message) {
                $("#" + curStep + "Result").html(data.message);
@@ -2045,7 +2050,18 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
          } else {
             groupWasChecked(data, curStep, groupCode, getTeams, data.isPublic);
          }
-      }, "json").done(function() { Utils.enableButton("button" + curStep); });
+      }
+   };
+   if(window.location.hostname == 'concours.castor-informatique.fr') {
+      parameters.timeout = 3000;
+      parameters.error = function() {
+         if(window.location.protocol != 'https:') {
+            window.location.protocol = 'https:';
+         }
+      }
+   }
+
+   $.ajax(parameters).done(function() { Utils.enableButton("button" + curStep); });
 };
 
 function scrollToTop(el) {
@@ -2496,8 +2512,12 @@ function initContestData(data, newContestID) {
  * Otherwise, displays the list of public groups.
 */
 function loadSession() {
-   $.post("data.php", {SID: SID, action: 'loadSession'},
-      function(data) {
+   var parameters = {
+      type: "POST",
+      url: "data.php",
+      data: {SID: SID, action: 'loadSession'},
+      dataType: 'json',
+      success: function(data) {
          SID = data.SID;
          if (data.teamID) {
             if (!confirm(data.message)) { // t("restart_previous_contest") json not loaded yet!
@@ -2510,7 +2530,17 @@ function loadSession() {
             loadContestData(contestID, contestFolder);
             return;
          }
-      }, "json");
+      }
+   };
+   if(window.location.hostname == 'concours.castor-informatique.fr') {
+      parameters.timeout = 3000;
+      parameters.error = function() {
+         if(window.location.protocol != 'https:') {
+            window.location.protocol = 'https:';
+         }
+      }
+   }
+   $.ajax(parameters);
 }
 
 function destroySession() {
