@@ -412,7 +412,7 @@ var platform = {
 
       if(!questionIframe.task) {
          // We somehow lost the task
-         console.error("Task disappeared during validate!");
+         logToConsole("Task disappeared during validate!");
          if (error) {error();}
          return;
       }
@@ -421,7 +421,7 @@ var platform = {
       questionIframe.task.getAnswer(function(answer) {
          if(questionIframe.questionKey != questionKey || !questionIframe.task) {
             // We're possibly not talking to the task we think we're talking to
-            console.error("Task changed during validate!");
+            logToConsole("Task changed during validate!");
             if (error) {error();}
             return;
          }
@@ -441,7 +441,7 @@ var platform = {
             questionIframe.task.gradeAnswer(answer, null, function(score, message) {
                if(questionIframe.questionKey != questionKey || !questionIframe.task) {
                   // We're possibly not talking to the task we think we're talking to
-                  console.error("Task changed during validate!");
+                  logToConsole("Task changed during validate!");
                   if (error) {error();}
                   return;
                }
