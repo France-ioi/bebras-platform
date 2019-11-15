@@ -410,8 +410,22 @@ var platform = {
          platform.nextQuestion(0);
       }
 
+      if(!questionIframe.task) {
+         // We somehow lost the task
+         console.error("Task disappeared during validate!");
+         if (error) {error();}
+         return;
+      }
+
       // Store the answer
       questionIframe.task.getAnswer(function(answer) {
+         if(questionIframe.questionKey != questionKey || !questionIframe.task) {
+            // We're possibly not talking to the task we think we're talking to
+            console.error("Task changed during validate!");
+            if (error) {error();}
+            return;
+         }
+
          if (mode == "cancel") {
             answer = "";
          }
@@ -425,6 +439,12 @@ var platform = {
          var questionData = questionsData[questionID];
          if (fullFeedback) {
             questionIframe.task.gradeAnswer(answer, null, function(score, message) {
+               if(questionIframe.questionKey != questionKey || !questionIframe.task) {
+                  // We're possibly not talking to the task we think we're talking to
+                  console.error("Task changed during validate!");
+                  if (error) {error();}
+                  return;
+               }
                logActivity(teamID, questionID, "submission", answer, score);
                if (score < questionData.maxScore) {
                   mode = "stay";
@@ -1018,6 +1038,7 @@ var questionIframe = {
          questionIframe.addCssContent($('#'+cssModuleId).attr('data-content'));
       });
 
+      questionIframe.task = null;
       questionIframe.loaded = true;
       questionIframe.questionKey = questionKey;
 
