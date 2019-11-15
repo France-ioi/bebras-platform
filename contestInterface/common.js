@@ -2052,7 +2052,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
          }
       }
    };
-   if(window.location.hostname == 'concours.castor-informatique.fr') {
+   if(window.redirectToHTTPSIfError) {
       parameters.timeout = 3000;
       parameters.error = function() {
          if(window.location.protocol != 'https:') {
@@ -2532,7 +2532,7 @@ function loadSession() {
          }
       }
    };
-   if(window.location.hostname == 'concours.castor-informatique.fr') {
+   if(window.redirectToHTTPSIfError) {
       parameters.timeout = 3000;
       parameters.error = function() {
          if(window.location.protocol != 'https:') {

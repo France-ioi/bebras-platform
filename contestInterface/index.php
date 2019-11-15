@@ -684,6 +684,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
   window.sAssetsStaticPath = <?= json_encode(upgrade_url($config->teacherInterface->sAssetsStaticPath.'/')) ?>;
   window.timestamp = <?= $config->timestamp ?>;
   window.browserIsMobile = <?=$browserIsMobile ? 'true' : 'false' ?>;
+  window.redirectToHTTPSIfError = <?= json_encode(!!$config->redirectToHTTPSIfError) ?>;
   try {
     i18n.init(<?= json_encode([
       'lng' => $config->defaultLanguage,

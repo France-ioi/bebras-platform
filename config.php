@@ -104,6 +104,7 @@ $config->customStringsName = null; // see README
 $config->imagesURLReplacements = array();
 $config->imagesURLReplacementsNonStatic = array();
 $config->upgradeToHTTPS = false;
+$config->redirectToHTTPSIfError = false;
 
 // team_question transfer script
 $config->transferTeamQuestion = (object) array(
