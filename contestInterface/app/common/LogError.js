@@ -82,6 +82,7 @@ var logError = function () {
 };
 
 window.onerror = function () {
+    console.error(arguments)
     logError({
         message: 'global error handler',
         details: Array.prototype.slice.call(arguments)

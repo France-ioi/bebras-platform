@@ -52,6 +52,8 @@ export default {
 		// loaded
 		iframe.setAttribute('allowFullScreen', true);
 	},
+
+	// old QuestionIframe
 	updateBorder (body, newInterface) {
 		var border = "border: 1px solid #000000;";
 		if (newInterface) {
@@ -68,7 +70,13 @@ export default {
 		}
 		$('#question-iframe').css('height', height + 'px');
 	},
-	loadQuestion (body, questionKey) {
+	loadQuestion (body, questionKey, callback) {
+		var url = '/contestInterface/contests/' + app.contestFolder + '.v2/' + questionKey + '/index.html';
+		console.log('TF loadQuestion', questionKey, url)
+		$('#question-iframe').on('load', callback);
+		$('#question-iframe').attr('src', url)
+
+		return;
 		body.find('#container > .question').remove();
 		// We cannot just clone the element, because it'll result in an strange id conflict, even if we put the result in an iframe
 		var questionContent = $('#question-' + questionKey).html();
@@ -120,12 +128,7 @@ export default {
 		$('#question-iframe').css('width', '782px');
 		$('#question-iframe').css('height', 'auto');
 	},
-	updateSolutionChoices (questionIframe, questionKey) {
-		for (var iChoice = 0; iChoice < 10; iChoice++) {
-			questionIframe.body.find('#container .' + questionKey + "_choice_" + (iChoice + 1))
-				.html(questionIframe.body.find('#container #answerButton_' + questionKey + "_" + (iChoice + 1) + " input").val());
-		}
-	},
+
 	updateContainerCss () {
 		$('#question-iframe-container').css('left', '273px');
 	}

@@ -21,60 +21,66 @@ function loadSolutions(data) {
     if (questionIframe.iframe.contentWindow.preloadSolImages) {
         questionIframe.iframe.contentWindow.preloadSolImages();
     }
-    setTimeout(function() {
-        questionIframe.iframe.contentWindow.ImagesLoader.setCallback(
-            function() {
-                UI.MainHeader.unload();
-                UI.OldContestHeader.updateDivQuestionsVisibility(true);
-                UI.TaskFrame.showQuestionIframe();
-                UI.ContestEndPage.unload();
-                UI.TaskFrame.updateContainerCss();
-                UI.LoadingPage.unload();
-                if (!app.currentQuestionKey) {
-                    return;
-                }
-                questionIframe.updateHeight(function() {
-                    if (questionIframe.loaded) {
-                        questionIframe.task.unload(
-                            function() {
-                                questionIframe.loadQuestion(
-                                    {
-                                        task: true,
-                                        solution: true,
-                                        grader: true
-                                    },
-                                    app.currentQuestionKey,
-                                    function() {}
-                                );
-                            },
-                            function() {
-                                logError(arguments);
-                                questionIframe.loadQuestion(
-                                    {
-                                        task: true,
-                                        solution: true,
-                                        grader: true
-                                    },
-                                    app.currentQuestionKey,
-                                    function() {}
-                                );
-                            }
-                        );
-                    } else {
+
+    var onLoadCallback = function() {
+        UI.MainHeader.unload();
+        UI.OldContestHeader.updateDivQuestionsVisibility(true);
+        UI.TaskFrame.showQuestionIframe();
+        UI.ContestEndPage.unload();
+        UI.TaskFrame.updateContainerCss();
+        UI.LoadingPage.unload();
+        if (!app.currentQuestionKey) {
+            return;
+        }
+        questionIframe.updateHeight(function() {
+            if (questionIframe.loaded) {
+                questionIframe.task.unload(
+                    function() {
                         questionIframe.loadQuestion(
-                            { task: true, solution: true, grader: true },
+                            {
+                                task: true,
+                                solution: true,
+                                grader: true
+                            },
+                            app.currentQuestionKey,
+                            function() {}
+                        );
+                    },
+                    function() {
+                        logError(arguments);
+                        questionIframe.loadQuestion(
+                            {
+                                task: true,
+                                solution: true,
+                                grader: true
+                            },
                             app.currentQuestionKey,
                             function() {}
                         );
                     }
-                    alert(i18n.t("check_score_detail"));
-                },
-                logError);
+                );
+            } else {
+                questionIframe.loadQuestion(
+                    { task: true, solution: true, grader: true },
+                    app.currentQuestionKey,
+                    function() {}
+                );
             }
-        );
+            alert(i18n.t("check_score_detail"));
+        },
+        logError);
+    }
 
-        questionIframe.iframe.contentWindow.ImagesLoader.preload(app.contestFolder);
-    }, 50);
+
+    if(questionIframe.iframe.contentWindow.ImagesLoader) {
+        setTimeout(function() {
+            questionIframe.iframe.contentWindow.ImagesLoader.setCallback(onLoadCallback);
+            questionIframe.iframe.contentWindow.ImagesLoader.preload(app.contestFolder);
+        }, 50);
+    } else {
+        onLoadCallback();
+    }
+
 }
 
 

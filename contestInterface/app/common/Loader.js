@@ -16,6 +16,10 @@ Loader.prototype.add = function(items) {
     this.n_total += items.length;
 };
 Loader.prototype.assemble = function() {
+    if(!window.config) {
+        console.warn('Loader: window.config missed');
+        return;
+    }
     var self = this;
     self.log("A");
     setTimeout(function() {

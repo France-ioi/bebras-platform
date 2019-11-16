@@ -11,7 +11,6 @@ export default {
 		UI.HomePage.unload();
 	},
 	selectMainTab (tabName) {
-		alert(tabName)
 		if (tabName == 'home') {
 			$("#publicContestExplanation").html(i18n.t("tab_public_contests_score_explanation"));
 			$("#contentPublicGroups").show();

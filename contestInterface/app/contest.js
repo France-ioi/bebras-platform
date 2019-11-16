@@ -43,6 +43,7 @@ function startContestTime(data) {
  */
 // local
 function setupContest(data) {
+    //console.log(data);
     app.teamPassword = data.teamPassword;
     app.questionsData = data.questionsData;
 
@@ -165,80 +166,86 @@ function loadContestData(_contestID, _contestFolder, _groupPassword) {
                 }
             );
         }
+
         // The callback will be used by the task
-        questionIframe.iframe.contentWindow.ImagesLoader.setCallback(
-            function() {
-                UI.MainHeader.unload();
-                UI.OldContestHeader.updateDivQuestionsVisibility(true);
-                if (app.fullFeedback) {
-                    UI.OldContestHeader.updateFeedbackVisibility(true);
-                }
-                UI.TaskFrame.showQuestionIframe();
-                UI.LoadingPage.unload();
 
-                fetch(
-                    "data.php",
-                    {
-                        SID: app.SID,
-                        controller: "Contest",
-                        action: "loadData",
-                        groupPassword: _groupPassword,
-                        teamID: app.teamID
-                    },
-                    function(data) {
-                        if (!data.success) {
-                            UI.MainHeader.load();
-                            UI.TrainingContestSelection.load();
-                            UI.RestartContestForm.updateReloginResult(i18n.t("invalid_password"));
-                            UI.OldContestHeader.updateDivQuestionsVisibility(false);
-                            UI.OldContestHeader.updateFeedbackVisibility(false);
-                            //UI.NavigationTabs.load();
-                            UI.HomePage.load();
-                            Utils.enableButton("buttonRelogin");
-                            return;
-                        }
-                        UI.TrainingContestSelection.unload();
-                        //UI.NavigationTabs.unload();
-                        UI.HomePage.unload();
-
-                        function oldLoader() {
-                            $.get(
-                                window.contestsRoot + "/" + _contestFolder + "/contest_" + _contestID + ".html",
-                                function(content) {
-                                    UI.GridView.updateQuestionContent(
-                                        content
-                                    );
-                                    startContestTime(data);
-                                }
-                            );
-                        }
-
-                        function newLoader() {
-                            var loader = new Loader(
-                                window.contestsRoot + "/" + _contestFolder + "/",
-                                UI.OldListView.log_fn
-                            );
-                            loader
-                                .run()
-                                .done(function(content) {
-                                    UI.GridView.updateQuestionContent(content);
-                                    startContestTime(data);
-                                })
-                                .fail(function() {
-                                    oldLoader();
-                                });
-                        }
-
-                        // XXX: select loader here
-                        newLoader();
-                    }
-                );
+        function loadData() {
+            UI.MainHeader.unload();
+            UI.OldContestHeader.updateDivQuestionsVisibility(true);
+            if (app.fullFeedback) {
+                UI.OldContestHeader.updateFeedbackVisibility(true);
             }
-        );
+            UI.TaskFrame.showQuestionIframe();
+            UI.LoadingPage.unload();
 
-        questionIframe.iframe.contentWindow.ImagesLoader.preload(
-            _contestFolder
-        );
+            fetch(
+                "data.php",
+                {
+                    SID: app.SID,
+                    controller: "Contest",
+                    action: "loadData",
+                    groupPassword: _groupPassword,
+                    teamID: app.teamID
+                },
+                function(data) {
+                    if (!data.success) {
+                        UI.MainHeader.load();
+                        UI.TrainingContestSelection.load();
+                        UI.RestartContestForm.updateReloginResult(i18n.t("invalid_password"));
+                        UI.OldContestHeader.updateDivQuestionsVisibility(false);
+                        UI.OldContestHeader.updateFeedbackVisibility(false);
+                        //UI.NavigationTabs.load();
+                        UI.HomePage.load();
+                        Utils.enableButton("buttonRelogin");
+                        return;
+                    }
+                    UI.TrainingContestSelection.unload();
+                    //UI.NavigationTabs.unload();
+                    UI.HomePage.unload();
+
+
+                    function oldLoader() {
+                        $.get(
+                            window.contestsRoot + "/" + _contestFolder + "/contest_" + _contestID + ".html",
+                            function(content) {
+                                UI.GridView.updateQuestionContent(content);
+                                startContestTime(data);
+                            }
+                        );
+                    }
+
+
+                    function newLoader() {
+                        var loader = new Loader(
+                            window.contestsRoot + "/" + _contestFolder + "/",
+                            UI.OldListView.log_fn
+                        );
+                        loader
+                            .run()
+                            .done(function(content) {
+                                UI.GridView.updateQuestionContent(content);
+                                startContestTime(data);
+                            })
+                            .fail(function() {
+                                oldLoader();
+                            });
+                    }
+
+                    // XXX: select loader here
+                    //newLoader();
+                    UI.GridView.updateQuestionContent('updateQuestionContent');
+                    startContestTime(data);
+                }
+            );
+        }
+
+        if(questionIframe.iframe && questionIframe.iframe.contentWindow.ImagesLoader) {
+            questionIframe.iframe.contentWindow.ImagesLoader.setCallback(loadData);
+            questionIframe.iframe.contentWindow.ImagesLoader.preload(_contestFolder);
+        } else {
+            loadData();
+        }
+
     });
 };
 

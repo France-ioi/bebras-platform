@@ -6,17 +6,18 @@ function ContestPreloader(params) {
 
     function browserCapatible() {
         if (!('serviceWorker' in navigator)) {
-            console.error('serviceWorker not supported');
+            console.warn('serviceWorker not supported');
             return false;
         }
         if (!('MessageChannel' in window)) {
-            console.error('MessageChannel not supported');
+            console.warn('MessageChannel not supported');
             return false;
         }
         return true;
     }
 
     if(!browserCapatible()) {
+        console.warn('contest preloader disabled');
         return false;
     }
 

@@ -161,6 +161,7 @@ function selectQuestion(questionID, clicked, noLoad) {
         if (timeManager.isContestOver()) {
             taskViews.solution = true;
         }
+
         if (!noLoad) {
             questionIframe.load(taskViews, questionKey, function() {});
         }

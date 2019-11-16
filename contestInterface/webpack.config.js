@@ -4,7 +4,6 @@ require('babel-register');
 const webpack = require('webpack');
 
 
-
 // Webpack Configuration
 module.exports = function() {
 	const isDev = process.env.NODE_ENV !== 'production';
@@ -17,7 +16,7 @@ module.exports = function() {
 		// Output
 		output: {
 			path: path.resolve(__dirname, './build'),
-			filename: 'app.js',
+			filename: 'app.js'
 		},
 		externals: {
 			"jquery": "$"
