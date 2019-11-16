@@ -287,7 +287,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
         </td>
         <td class="languageSelector selectorTitle" data-language="blockly"><button type="button" class="btn btn-default" data-i18n="language_blockly"></button></td>
         <td class="languageSelector" data-language="blockly">
-          <img src="images/blockly.png" alt="exemple d'utilisation de Blockly">
+          <img src="<?= static_asset('/images/blockly.png') ?>" alt="exemple d'utilisation de Blockly">
         </td>
         <td class="languageSelector languageDescription" data-language="blockly" data-i18n="[html]language_blockly_description">
         </td>
@@ -298,7 +298,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
         </td>
         <td class="languageSelector selectorTitle" data-language="scratch"><button type="button" class="btn btn-default" data-i18n="language_scratch"></button></td>
         <td class="languageSelector" data-language="scratch">
-          <img src="images/scratch.png" alt="exemple d'utilisation de Scratch">
+          <img src="<?= static_asset('/images/scratch.png') ?>" alt="exemple d'utilisation de Scratch">
         </td>
         <td class="languageSelector languageDescription" data-language="scratch" data-i18n="[html]language_scratch_description">
         </td>
@@ -309,7 +309,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
         </td>
         <td class="languageSelector selectorTitle" data-language="python"><button type="button" class="btn btn-default" data-i18n="language_python"></button></td>
         <td class="languageSelector" data-language="python">
-          <img src="images/python.png" alt="exemple d'utilisation de Python">
+          <img src="<?= static_asset('/images/python.png') ?>" alt="exemple d'utilisation de Python">
         </td>
         <td class="languageSelector languageDescription" data-language="python" data-i18n="[html]language_python_description">
         </td>
