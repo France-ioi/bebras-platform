@@ -335,16 +335,26 @@ function getConfig(callback) {
 /**
  * Log activity on a question (question load, attempt)
  */
-function logActivity(teamID, questionID, type, answer, score) {
+function logActivity(teamID, questionID, type, answer, score, force) {
   if(typeof window.config == 'undefined') {
      getConfig(function() {
         logActivity(teamID, questionID, type, answer, score);
         });
      return;
   }
-  if(!window.config.logActivity) { return; }
+  if(!force && !window.config.logActivity) { return; }
   $.post("activity.php", {teamID: teamID, questionID: questionID, type: type, answer: answer, score: score});
 }
+
+/**
+ * Log load events from the TaskProxyManager (temporary?)
+ */
+function taskProxyLoadListener(id, state, details) {
+   try {
+      logActivity(teamID, questionIframe.questionID || 0, 'proxyload', id + ',' + state + ' : ' + details, 0);
+   } catch(e) {}
+}
+
 
 /**
  * The platform object as defined in the Bebras API specifications
@@ -870,6 +880,7 @@ var questionIframe = {
       $('body').removeClass('autoHeight');
       $('#container', questionIframe.doc).css('padding', '5px');
 
+      TaskProxyManager.bindListener(taskProxyLoadListener);
       TaskProxyManager.getTaskProxy('question-iframe', withTask, true);
       function withTask (task) {
         questionIframe.task = task;
