@@ -149,7 +149,7 @@ function checkRequestGroup($db, &$request, &$record, $operation, &$roles) {
    }   
    // This can't be done through a standard filter yet
    if (($operation === "update") && groupContestChanged($db, $record["ID"], $record["contestID"])) {
-      $message = trasnalte("groups_cant_change_contest_of_started_group");
+      $message = translate("groups_cant_change_contest_of_started_group");
       error_log($message);
       echo json_encode(array("success" => false, "message" => $message));      
       return false;
