@@ -507,7 +507,7 @@
     "groups_group_has_not_participated": "Ce groupe n'a pas encore participé.",
     "groups_participated_on": "Participé le : %s (UTC)",
     "groups_warning_disabled_during_contest": "Attention : Pour des raisons techniques, l'affichage des scores détaillés est temporairement désactivé pour les participations effectuées pendant la période du concours, mais sera réactivé ensuite.",
-    "groups_warning_temporary_scores": "Pour le concours lui-même, les scores affichés ne seront définitifs qu'après l'annonce officielle des résultats.",
+    "groups_warning_temporary_scores": "<b>Attention :</b> les scores ne sont parfois disponibles que le soir ou lendemain de l'épreuve. Pour le concours lui-même, les scores affichés ne seront définitifs qu'après l'annonce officielle des résultats.",
     "groups_team": "Équipe",
     "groups_total": "Total",
     "groups_open": "ouvrir",
