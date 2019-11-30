@@ -335,15 +335,19 @@ function getConfig(callback) {
 /**
  * Log activity on a question (question load, attempt)
  */
-function logActivity(teamID, questionID, type, answer, score, force) {
+function logActivity(tID, qID, type, answer, score, force) {
   if(typeof window.config == 'undefined') {
      getConfig(function() {
-        logActivity(teamID, questionID, type, answer, score);
+        logActivity(tID, qID, type, answer, score);
         });
      return;
   }
   if(!force && !window.config.logActivity) { return; }
-  $.post("activity.php", {teamID: teamID, questionID: questionID, type: type, answer: answer, score: score});
+  if(tID === null) { tID = teamID; }
+  if(qID === null) {
+     qID = questionIframe.questionKey && questionsKeyToID[questionIframe.questionKey] ? questionsKeyToID[questionIframe.questionKey] : 0;
+  }
+  $.post("activity.php", {teamID: tID, questionID: qID, type: type, answer: answer, score: score});
 }
 
 /**
@@ -351,10 +355,17 @@ function logActivity(teamID, questionID, type, answer, score, force) {
  */
 function taskProxyLoadListener(id, state, details) {
    try {
-      logActivity(teamID, questionIframe.questionID || 0, 'proxyload', id + ',' + state + ' : ' + details, 0);
+      logActivity(null, null, 'proxyload', id + ',' + state + ' : ' + details, 0, true);
    } catch(e) {}
 }
 
+/**
+ * Log extra information directly from the task; this function is accessible by
+ * the task
+ */
+window.logTaskActivity = function(details) {
+   logActivity(null, null, 'extra', details, 0);
+}
 
 /**
  * The platform object as defined in the Bebras API specifications
@@ -725,6 +736,8 @@ var questionIframe = {
       this.inject('window.onbeforeunload = function() {return "' + t("error_reloading_iframe") + '";};');
 
       this.inject('window.onerror = window.parent.onerror;');
+
+      this.inject('window.logActivity = window.parent.logTaskActivity;');
 
       // Inject localized strings
       this.inject('var t = function(item) {return item;}; function setTranslate(translateFun) { t = translateFun; }');
