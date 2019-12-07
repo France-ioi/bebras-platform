@@ -301,47 +301,9 @@ function toggleMetaViewport(toggle) {
 }
 
 /**
- * Fetch configuration
- */
-function getConfig(callback) {
-  if(!callback) { callback = function(){}; }
-  if(window.config) {
-     callback();
-     return;
-  }
-
-  $.post("data.php", {action: 'getConfig', p: getParameterByName('p')},
-     function(data) {
-        window.config = data.config;
-
-        // Test HTTPS connectivity, downgrade to HTTP if HTTPS doesn't work
-        if(!window.config.httpsTestUrl || window.config.upgradeToHTTPS) {
-            callback();
-            return;
-        }
-        $.ajax({
-            url: window.config.httpsTestUrl,
-            timeout: 10000
-            })
-            .fail(function() {
-                window.config.downgradeToHTTP = true;
-            })
-            .always(function() {
-                callback();
-            });
-     }, "json");
-}
-
-/**
  * Log activity on a question (question load, attempt)
  */
 function logActivity(tID, qID, type, answer, score, force) {
-  if(typeof window.config == 'undefined') {
-     getConfig(function() {
-        logActivity(tID, qID, type, answer, score);
-        });
-     return;
-  }
   if(!force && !window.config.logActivity) { return; }
   if(tID === null) { tID = teamID; }
   if(qID === null) {
@@ -864,24 +826,22 @@ var questionIframe = {
 
       // Get configuration and image preloader
       var that = this;
-      getConfig(function() {
-         that.inject('window.config = window.parent.config;');
-         // Call image preloading
-         if(contestImagePreload[contestID]) {
-            that.inject(contestImagePreload[contestID]);
+      that.inject('window.config = window.parent.config;');
+      // Call image preloading
+      if(contestImagePreload[contestID]) {
+         that.inject(contestImagePreload[contestID]);
+         callback();
+      } else {
+         // Load image preload lists
+         $.get(window.contestsRoot + '/' + contestFolder + "/contest_" + contestID + ".js?origin=" + window.location.protocol + window.location.hostname, function(content) {
+            contestImagePreload[contestID] = content;
+            that.inject(content);
             callback();
-         } else {
-            // Load image preload lists
-            $.get(window.contestsRoot + '/' + contestFolder + "/contest_" + contestID + ".js?origin=" + window.location.protocol + window.location.hostname, function(content) {
-               contestImagePreload[contestID] = content;
-               that.inject(content);
-               callback();
-            }, 'text').fail(function() {
-               // Continue anyway
-               callback();
-            });
-         }
+         }, 'text').fail(function() {
+            // Continue anyway
+            callback();
          });
+      }
 
    },
 
@@ -3410,6 +3370,25 @@ function checkFullscreen() {
    }
 }
 
+function checkHttps() {
+   // Test HTTPS connectivity, downgrade to HTTP if HTTPS doesn't work
+   if(!window.config.httpsTestUrl) {
+      return;
+   }
+   $.ajax({
+      url: window.config.httpsTestUrl,
+      timeout: 10000
+      })
+      .success(function() {
+         if(window.config.redirectToHTTPS && window.location.protocol != 'https:') {
+            window.location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
+         }
+      })
+      .fail(function() {
+         window.config.downgradeToHTTP = true;
+      });
+}
+
 
 //
 // Loader
@@ -3618,6 +3597,7 @@ $(document).on('ready', function() {
    } else if(window.attachEvent) { // IE 8
       window.attachEvent('resize', questionIframe.onBodyResize);
    }
+   checkHttps();
    checkFullscreen();
 });
 

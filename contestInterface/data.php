@@ -719,11 +719,11 @@ function handleRecoverGroup($db) {
 }
 
 function handleGetConfig() {
+   // Deprecated, to remove after 08/12/2019
    global $config;
    $clientConfig = array(
       "imagesURLReplacements" => $config->imagesURLReplacements,
       "imagesURLReplacementsNonStatic" => $config->imagesURLReplacementsNonStatic,
-      "httpsTestUrl" => $config->contestInterface->httpsTestUrl,
       "upgradeToHTTPS" => $config->upgradeToHTTPS,
       "logActivity" => $config->contestInterface->logActivity
       );
