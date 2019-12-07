@@ -173,6 +173,7 @@ function updateDynamoDBStartTime($db, $teamID) {
 }
 
 function handleStartTimer($db) {
+   addBackendHint("ClientIP.loadOther:data");
    $teamID = $_SESSION["teamID"];
    $stmt = $db->prepare("UPDATE `team` SET `startTime` = UTC_TIMESTAMP() WHERE `ID` = :teamID AND `startTime` IS NULL");
    $stmt->execute(array("teamID" => $teamID));
@@ -605,6 +606,7 @@ function handleCheckTeamPassword($db, $password) {
 }
 
 function handleCheckRegistrationCode($db) {
+   addBackendHint("ClientIP.loadOther:data");
    $code = $_POST["code"];
    $registrationData = getRegistrationData($db, $code);
    if (!$registrationData) {
@@ -679,6 +681,7 @@ function handleGetRemainingSeconds($db) {
 }
 
 function handleRecoverGroup($db) {
+   addBackendHint("ClientIP.loadOther:data");
    if (!isset($_POST['groupCode']) || !isset($_POST['groupPass'])) {
       exitWithJson((object)array("success" => false, "message" => 'Code ou mot de passe manquant'));
    }
@@ -731,6 +734,7 @@ function handleGetConfig() {
 }
 
 if (!isset($_POST["action"])) {
+   addFailureBackendHint("ClientIP.loadOther:fail");
    exitWithJsonFailure("Aucune action fournie");
 }
 

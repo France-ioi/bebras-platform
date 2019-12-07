@@ -86,6 +86,7 @@ if ($config->teacherInterface->generationMode == 'local') {
 
 header("Content-Type: application/json");
 header("Connection: close");
+header('X-Backend-Hints: "ClientIP.loadOther:graders"');
 
 echo json_encode(array(
    'status' => 'success',

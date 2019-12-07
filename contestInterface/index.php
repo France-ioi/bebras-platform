@@ -1,6 +1,7 @@
 <?php
   include(__DIR__.'/config.php');
   header('Content-type: text/html');
+  header('X-Backend-Hints: "ClientIP.loadIndex"');
 ?><!DOCTYPE html>
 <html>
 <head>
