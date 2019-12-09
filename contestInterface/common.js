@@ -1135,6 +1135,7 @@ var TimeManager = {
    prevTime: null,
    synchronizing: false,
    syncCounter: 0,  // counter used to limit number of pending getRemainingTime requests
+   isDrifting: false, // time skipped
 
    setTotalTime: function(totalTime) {
       this.totalTime = totalTime;
@@ -1203,9 +1204,17 @@ var TimeManager = {
                console.log("remainingSeconds after sync : " + remainingSeconds + " timeStart : " + TimeManager.timeStart);
                this.prevTime = curTime;
                */
+            } else if(TimeManager.isDrifting) {
+               // Server lost the session, effectively end
+               if (remainingSeconds <= 0) {
+                  clearInterval(this.interval);
+                  clearInterval(this.minuteInterval);
+                  TimeManager.endTimeCallback();
+               }
             } else {
                TimeManager.simpleTimeAdjustment();
             }
+            TimeManager.isDrifting = false;
          },
       'json').done(function() {
          var curDate = new Date();
@@ -1230,6 +1239,7 @@ var TimeManager = {
       var timeDiff = Math.abs(curTime - TimeManager.prevTime);
       // We traveled through time, more than 60s difference compared to 1 second ago !
       if (timeDiff > 60 || timeDiff < -60) {
+         TimeManager.isDrifting = true;
          TimeManager.syncWithServer();
          return;
       }

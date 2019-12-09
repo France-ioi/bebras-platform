@@ -671,6 +671,7 @@ function getRemainingSeconds($db, $teamID, $restartIfEnded = false) {
 
 function handleGetRemainingSeconds($db) {
    if (!isset($_SESSION["nbMinutes"]) || !isset($_SESSION['teamID'])) {
+      addBackendHint("ClientIP.getRemainingTime:fail");
       exitWithJson((object)array("success" => false));
    }
    $teamID = $_SESSION['teamID'];
