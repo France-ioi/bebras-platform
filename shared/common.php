@@ -160,3 +160,12 @@ function translate($key) {
       return $key;
    }
 }
+
+
+function dd($data) {
+   if(headers_sent()) {
+      echo '<pre>';
+   }
+   print_r($data);
+   die();
+}

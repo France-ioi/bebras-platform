@@ -71,19 +71,20 @@ export default {
 		$('#question-iframe').css('height', height + 'px');
 	},
 	loadQuestion (body, questionKey, callback) {
-		var url = '/contestInterface/contests/' + app.contestFolder + '.v2/' + questionKey + '/index.html';
-		console.log('TF loadQuestion', questionKey, url)
-		$('#question-iframe').on('load', callback);
-		$('#question-iframe').attr('src', url)
-
-		return;
-		body.find('#container > .question').remove();
-		// We cannot just clone the element, because it'll result in an strange id conflict, even if we put the result in an iframe
-		var questionContent = $('#question-' + questionKey).html();
-		if (!questionContent) {
-			questionContent = i18n.t("error_loading_content");
+		if(window.contestLoaderVersion === "2") {
+			var url = '/contestInterface/contests/' + app.contestFolder + '.v2/' + questionKey + '/index.html';
+			//console.log('TF loadQuestion', questionKey, url)
+			$('#question-iframe').on('load', callback);
+			$('#question-iframe').attr('src', url)
+		} else {
+			body.find('#container > .question').remove();
+			// We cannot just clone the element, because it'll result in an strange id conflict, even if we put the result in an iframe
+			var questionContent = $('#question-' + questionKey).html();
+			if (!questionContent) {
+				questionContent = i18n.t("error_loading_content");
+			}
+			body.find('#container').append('<div id="question-' + questionKey + '" class="question">' + questionContent + '</div>');
 		}
-		body.find('#container').append('<div id="question-' + questionKey + '" class="question">' + questionContent + '</div>');
 	},
 	loadQuestionJS (questionIframe, questionKey) {
 		$('.js-module-' + questionKey).each(function () {

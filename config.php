@@ -68,6 +68,7 @@ $config->contestInterface->sessionLength = 3600;
 $config->contestInterface->browserCheck = 'bebras-platform';
 $config->contestInterface->logActivity = false;
 $config->contestInterface->groupConfirmationInterval = "10"; // in days, false to disable
+$config->contestInterface->contestLoaderVersion = '1';
 
 $config->teacherInterface = (object) array();
 $config->teacherInterface->sHotlineNumber = '';

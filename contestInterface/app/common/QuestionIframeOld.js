@@ -9,6 +9,9 @@ import platform from './Platform';
  * Task iframe
  */
 var questionIframe = {
+
+    version: '1',
+
     iframe: null,
     doc: null,
     body: null,
@@ -510,11 +513,18 @@ var questionIframe = {
 
         setTimeout(function() {
             questionIframe.run(taskViews, function() {
-                UI.TaskFrame.updateSolutionChoices(questionIframe, questionKey);
+                questionIframe.updateSolutionChoices(questionIframe, questionKey);
                 callback();
             });
         }, 100);
     },
+
+	updateSolutionChoices (questionIframe, questionKey) {
+		for (var iChoice = 0; iChoice < 10; iChoice++) {
+			this.body.find('#container .' + questionKey + "_choice_" + (iChoice + 1))
+				.html(this.body.find('#container #answerButton_' + questionKey + "_" + (iChoice + 1) + " input").val());
+		}
+	},
 
     /**
      * Load the question when ready

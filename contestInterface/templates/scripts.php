@@ -18,7 +18,6 @@
     script_tag('/bower_components/base64/base64.min.js');
     script_tag('/bower_components/pem-platform/task-pr.js');
     script_tag('/raphael-min.js');
-    script_tag('/build/app.js');
 
     $i18n_config = [
         'lng' => (isset($_SESSION['language']) ? $_SESSION['language'] : $config->defaultLanguage),
@@ -48,6 +47,7 @@
     window.sAssetsStaticPath = <?= json_encode(upgrade_url($config->teacherInterface->sAssetsStaticPath . '/')) ?>;
     window.timestamp = <?= $config->timestamp ? $config->timestamp : 'null' ?>;
     window.browserIsMobile = <?= $browserIsMobile ? 'true' : 'false' ?>;
+    window.contestLoaderVersion = <?= json_encode($config->contestInterface->contestLoaderVersion) ?>;
     try {
         i18n.init(
             <?= json_encode($i18n_config); ?>,
@@ -66,6 +66,10 @@
     }
     window.ieMode = false;
 </script>
+
+<?php
+    script_tag('/build/app.js');
+?>
 
 <!--[if IE 6]>
 <script>

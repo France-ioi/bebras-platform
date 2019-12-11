@@ -137,13 +137,4 @@ $(document).on("ready", function() {
     }
     window.addEventListener("resize", questionIframe.onBodyResize);
     UI.ContestHeader.checkFullscreen();
-
-
-    //TODO: debug code, remove
-window.checkGroup()
-/*
-setTimeout(function() {
-    window.startPracticeByID('135774099345825017')
-}, 400);
-*/
 });

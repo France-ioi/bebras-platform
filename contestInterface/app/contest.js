@@ -232,9 +232,15 @@ function loadContestData(_contestID, _contestFolder, _groupPassword) {
                     }
 
                     // XXX: select loader here
-                    //newLoader();
-                    UI.GridView.updateQuestionContent('updateQuestionContent');
-                    startContestTime(data);
+                    if(window.contestLoaderVersion === '2') {
+                        //UI.GridView.updateQuestionContent('');
+                        startContestTime(data);
+                    } else {
+                        newLoader();
+                    }
+
+                    //UI.GridView.updateQuestionContent('updateQuestionContent');
+                    //startContestTime(data);
                 }
             );
         }
