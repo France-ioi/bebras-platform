@@ -662,10 +662,8 @@ if ($action == "showScoreAnomalies") {
       FROM team_question
       JOIN team ON team_question.teamID = team.ID
       JOIN contestant ON team.ID = contestant.teamID
-      JOIN `group` ON `team`.groupID = `group`.`ID`
       JOIN `question` ON team_question.questionID = question.ID
-      JOIN `contest` ON `group`.contestID = contest.ID
-      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      WHERE team.contestID = :contestID
       AND (team_question.checkStatus = 'difference' OR team_question.checkStatus = 'error')
       GROUP BY team.ID, team_question.questionID
       ORDER BY team.ID",
@@ -690,7 +688,7 @@ if ($action == "fixScoreErrors") {
       JOIN team ON team_question.teamID = team.ID
       JOIN `group` ON `team`.groupID = `group`.`ID`
       JOIN `contest` ON `group`.contestID = contest.ID
-      SET team_question.sentScore = team_question.ffScore, checkStatus = 'fixed'
+      SET team_question.sentScore = team_question.ffScore
       WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
       AND team_question.checkStatus = 'difference'
       AND team_question.score > team_question.ffScore",
