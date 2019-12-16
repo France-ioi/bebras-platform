@@ -15,3 +15,5 @@ CREATE TABLE IF NOT EXISTS `contest_participants` (
 --
 ALTER TABLE `contest_participants`
  ADD PRIMARY KEY (`ID`), ADD KEY `contestID` (`contestID`);
+
+ALTER TABLE `contest_participants` CHANGE `ID` `ID` BIGINT(20) NOT NULL AUTO_INCREMENT;
