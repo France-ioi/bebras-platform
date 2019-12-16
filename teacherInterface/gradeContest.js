@@ -3,14 +3,14 @@ var curGradingData = null;
 var curGradingBebras = null;
 var curGradingScoreCache = {};
 
-function loopGradeContest(curContestID, curGroupID) {
+function loopGradeContest(curContestID, curGroupID, onlyMarked) {
    // Retrieve the list of questions of the contest
    $.post('questions.php', { contestID: curContestID, groupID: curGroupID }, function(data) {
       if (data.status === 'success') {
          var selectorState = curGroupID ? '#gradeGroupState' : '#gradeContestState';
          $(selectorState).show();
          $(selectorState).html(i18n.t('grading_in_progress')+'<span class="nbCurrent">0</span> / <span class="nbTotal">' + data.questionKeys.length + '</span> - ' + i18n.t("grading_current_question") + ' : <span class="current"></span> <span class="gradeprogressing"></span>');
-         grade(curContestID, curGroupID, data.questionKeys, data.questionPaths, 0);
+         grade(curContestID, curGroupID, data.questionKeys, data.questionPaths, 0, onlyMarked);
       }
       else {
          jqAlert(data.message);
@@ -19,7 +19,7 @@ function loopGradeContest(curContestID, curGroupID) {
    }, 'json');
 }
 
-function grade(curContestID, curGroupID, questionKeys, questionPaths, curIndex)
+function grade(curContestID, curGroupID, questionKeys, questionPaths, curIndex, onlyMarked)
 {
    var selectorState = curGroupID ? '#gradeGroupState' : '#gradeContestState';
    if (curIndex >= questionKeys.length) {
@@ -38,7 +38,7 @@ function grade(curContestID, curGroupID, questionKeys, questionPaths, curIndex)
    $(selectorState+' .current').text(questionKeys[curIndex]);
    
    // Retrieve the bebras/grader of the current question
-   $.post('grader.php', { contestID: curContestID, groupID: curGroupID, questionKey: questionKeys[curIndex] },function(data) {
+   $.post('grader.php', { contestID: curContestID, groupID: curGroupID, questionKey: questionKeys[curIndex], onlyMarked: onlyMarked },function(data) {
       if (data.status === 'success') {
          var url = "bebras-tasks/" + questionPaths[curIndex];
          $("#preview_question").attr("src", url);
@@ -209,6 +209,7 @@ function gradeOneAnswer(task, answers, i, scores, finalCallback) {
    curGradingData.randomSeed = scores[i].teamID;
    task.gradeAnswer(answer, null, function(score) {
       scores[i].score = score;
+      scores[i].checkStatus = 'computed';
       if (answer.length < 100 && curGradingScoreCache['cache_'+answer] === '') {
          curGradingScoreCache['cache_'+answer] = score;
       }
@@ -217,7 +218,7 @@ function gradeOneAnswer(task, answers, i, scores, finalCallback) {
       },0);
    }, function() {
       scores[i].score = -2;
-      scores[i].scoreNeedsChecking = 1;
+      scores[i].checkStatus = 'error';
       setTimeout(function() {
          gradeOneAnswer(task, answers, i+1, scores, finalCallback);
       },0);
@@ -313,9 +314,9 @@ function computeScores(curContestID, curGroupID, packetNumber)
    }, 'json');
 }
 
-function gradeContestWithRefresh(contestID) {
+function gradeContestWithRefresh(contestID, onlyMarked) {
    setTimeout(function() {
       location.reload();
    }, 5*60*1000);
-   loopGradeContest(contestID, null);
+   loopGradeContest(contestID, null, onlyMarked);
 }

@@ -18,6 +18,7 @@ if (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"]) {
 $contestID = isset($_REQUEST['contestID']) ? $_REQUEST['contestID'] : null;
 $groupID = isset($_REQUEST['groupID']) ? $_REQUEST['groupID'] : null;
 $questionKey = $_REQUEST['questionKey'];
+$onlyMarked = isset($_REQUEST['onlyMarked']) ? $_REQUEST['onlyMarked'] : false;
 $contestFolder = null;
 
 // Commented it as I don't think it can do any good...
@@ -73,6 +74,10 @@ $questionID = $row->questionID;
 
 $teamQuestionTable = getTeamQuestionTableForGrading();
 $teamQuestions = array();
+$checkStatus = "none";
+if ($onlyMarked) {
+   $checkStatus = "requested";
+}
 if (!$groupID) {
    $query = 'SELECT `'.$teamQuestionTable.'`.`teamID`, `'.$teamQuestionTable.'`.`questionID`, `'.$teamQuestionTable.'`.`answer` '.
 	   'FROM `'.$teamQuestionTable.'` '.
@@ -82,7 +87,7 @@ if (!$groupID) {
 	   'WHERE `contest_question`.`contestID` = ? AND `group`.`contestID` = ? '.
 	   'AND `'.$teamQuestionTable.'`.`questionID` = ? '.
 	   'AND `'.$teamQuestionTable.'`.`score` IS NULL '.
-      'AND `'.$teamQuestionTable.'`.`scoreNeedsChecking` = 0 LIMIT 0,1000';
+      'AND `'.$teamQuestionTable.'`.`checkStatus` = '.$checkStatus.' LIMIT 0,10000';
    $stmt = $db->prepare($query);
    $stmt->execute(array($contestID, $contestID, $questionID));
    while ($teamQuestion = $stmt->fetchObject()) {

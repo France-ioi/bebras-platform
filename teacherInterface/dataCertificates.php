@@ -63,12 +63,19 @@ if ($_POST['contestID'] != "algorea") {
       $itemsPerSchool[] = $row;
    }
 
-   $query = "SELECT count(contestant.ID) AS `totalContestants`, `contestant`.`grade`, `team`.`nbContestants` FROM `contestant` ".
-      "JOIN `team` ON (`contestant`.`teamID` = `team`.`ID`) ".
-      "JOIN `group` ON (`group`.`ID` = `team`.`groupID`) ".
-      "JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) ".
-      "WHERE `team`.`participationType` = 'Official' ".
-      "AND (`contest`.`ID` = :contestID OR `contest`.`parentContestID` = :contestID) ".
+   if ($contest['rankGrades']) {
+      if ($contest['rankNbContestants']) {
+         $groupBy = 'GROUP BY `nbContestants`, `grade` ';
+      } else {
+         $groupBy = 'GROUP BY `grade` ';
+      }
+   } elseif ($contest['rankNbContestants']) {
+      $groupBy = 'GROUP BY `nbContestants` ';
+   }
+
+   $query = "SELECT SUM(number) AS `totalContestants`, `grade`, `nbContestants` ".
+      "FROM `contest_participants` ".
+      "WHERE contestID = :contestID ".
       $groupBy;
       
    $data = array("contestID"  => $contest["ID"]);

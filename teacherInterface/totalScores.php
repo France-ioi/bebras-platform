@@ -57,14 +57,17 @@ if ($groupID == null) {
    $stmt->execute(array($nbSeconds));
 
    $query = "UPDATE `team` JOIN ".
-      "(SELECT IFNULL(SUM(`team_question`.`score`), 0) + ".($row->bonusScore)." as `teamScore`, IFNULL(SUM(team_question.scoreNeedsChecking),0) as scoreNeedsChecking, ".
+      "(SELECT IFNULL(SUM(`team_question`.`score`), 0) + ".($row->bonusScore)." as `teamScore`, ".
+      //IFNULL(SUM(team_question.scoreNeedsChecking),0) as scoreNeedsChecking, ".
       "`team`.`ID` as `teamID` ".
       "FROM `team` ".
       "LEFT JOIN `team_question` ON (`team`.`ID` = `team_question`.`teamID`) ".
       "JOIN `group` ON (`team`.`groupID` = `group`.`ID`) ".
       "WHERE `team`.`endTime` IS NOT NULL ".
       "AND `group`.`contestID` = ? ".
-      "GROUP BY `team`.`ID`) as teamScores ON team.ID = teamScores.teamID SET team.score = teamScores.teamScore where teamScores.scoreNeedsChecking = 0;";
+      "GROUP BY `team`.`ID`) as teamScores ON team.ID = teamScores.teamID
+      SET team.score = teamScores.teamScore ".
+      //where teamScores.scoreNeedsChecking = 0;";
    $stmt = $db->prepare($query);
    $stmt->execute(array($contestID));
    
