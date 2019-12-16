@@ -68,6 +68,7 @@ $config->contestInterface->sessionLength = 3600;
 $config->contestInterface->browserCheck = 'bebras-platform';
 $config->contestInterface->logActivity = false;
 $config->contestInterface->httpsTestUrl = null;
+$config->contestInterface->redirectToHTTPS = false;
 
 $config->teacherInterface = (object) array();
 $config->teacherInterface->sHotlineNumber = '';

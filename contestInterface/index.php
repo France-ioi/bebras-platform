@@ -1,6 +1,7 @@
 <?php
   include(__DIR__.'/config.php');
   header('Content-type: text/html');
+  header('X-Backend-Hints: "ClientIP.loadIndex"');
 ?><!DOCTYPE html>
 <html>
 <head>
@@ -684,7 +685,16 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
   window.sAssetsStaticPath = <?= json_encode(upgrade_url($config->teacherInterface->sAssetsStaticPath.'/')) ?>;
   window.timestamp = <?= $config->timestamp ?>;
   window.browserIsMobile = <?=$browserIsMobile ? 'true' : 'false' ?>;
-  window.redirectToHTTPSIfError = <?= json_encode(!!$config->redirectToHTTPSIfError) ?>;
+  window.config = <?= json_encode([
+      "httpsTestUrl" => $config->contestInterface->httpsTestUrl,
+      "imagesURLReplacements" => $config->imagesURLReplacements,
+      "imagesURLReplacementsNonStatic" => $config->imagesURLReplacementsNonStatic,
+      "redirectToHTTPS" => !!$config->contestInterface->redirectToHTTPS,
+      "redirectToHTTPSIfError" => !!$config->redirectToHTTPSIfError,
+      "upgradeToHTTPS" => $config->upgradeToHTTPS,
+      "logActivity" => $config->contestInterface->logActivity
+      ]) ?>;
+
   try {
     i18n.init(<?= json_encode([
       'lng' => $config->defaultLanguage,

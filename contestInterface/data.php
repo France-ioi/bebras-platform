@@ -173,6 +173,7 @@ function updateDynamoDBStartTime($db, $teamID) {
 }
 
 function handleStartTimer($db) {
+   addBackendHint("ClientIP.loadOther:data");
    $teamID = $_SESSION["teamID"];
    $stmt = $db->prepare("UPDATE `team` SET `startTime` = UTC_TIMESTAMP() WHERE `ID` = :teamID AND `startTime` IS NULL");
    $stmt->execute(array("teamID" => $teamID));
@@ -605,6 +606,7 @@ function handleCheckTeamPassword($db, $password) {
 }
 
 function handleCheckRegistrationCode($db) {
+   addBackendHint("ClientIP.loadOther:data");
    $code = $_POST["code"];
    $registrationData = getRegistrationData($db, $code);
    if (!$registrationData) {
@@ -669,6 +671,7 @@ function getRemainingSeconds($db, $teamID, $restartIfEnded = false) {
 
 function handleGetRemainingSeconds($db) {
    if (!isset($_SESSION["nbMinutes"]) || !isset($_SESSION['teamID'])) {
+      addBackendHint("ClientIP.getRemainingTime:fail");
       exitWithJson((object)array("success" => false));
    }
    $teamID = $_SESSION['teamID'];
@@ -679,6 +682,7 @@ function handleGetRemainingSeconds($db) {
 }
 
 function handleRecoverGroup($db) {
+   addBackendHint("ClientIP.loadOther:data");
    if (!isset($_POST['groupCode']) || !isset($_POST['groupPass'])) {
       exitWithJson((object)array("success" => false, "message" => 'Code ou mot de passe manquant'));
    }
@@ -719,11 +723,11 @@ function handleRecoverGroup($db) {
 }
 
 function handleGetConfig() {
+   // Deprecated, to remove after 08/12/2019
    global $config;
    $clientConfig = array(
       "imagesURLReplacements" => $config->imagesURLReplacements,
       "imagesURLReplacementsNonStatic" => $config->imagesURLReplacementsNonStatic,
-      "httpsTestUrl" => $config->contestInterface->httpsTestUrl,
       "upgradeToHTTPS" => $config->upgradeToHTTPS,
       "logActivity" => $config->contestInterface->logActivity
       );
@@ -731,6 +735,7 @@ function handleGetConfig() {
 }
 
 if (!isset($_POST["action"])) {
+   addFailureBackendHint("ClientIP.loadOther:fail");
    exitWithJsonFailure("Aucune action fournie");
 }
 
