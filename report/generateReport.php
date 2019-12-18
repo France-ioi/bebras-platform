@@ -141,16 +141,6 @@ $contestsParams = array(
       array("contestID" => "822122511136074554", "minScore" => 500, "grade" => 19, "nbContestantsPerTeam" => 2)
    ),
    "alkindi2017" => array(
-   /*
-      array("contestID" => "770867629642200501", "minScore" => 500, "grade" => 4, "nbContestantsPerTeam" => 1),
-      array("contestID" => "770867629642200501", "minScore" => 500, "grade" => 4, "nbContestantsPerTeam" => 2),
-      array("contestID" => "770867629642200501", "minScore" => 500, "grade" => 5, "nbContestantsPerTeam" => 1),
-      array("contestID" => "770867629642200501", "minScore" => 500, "grade" => 5, "nbContestantsPerTeam" => 2),
-      array("contestID" => "770867629642200501", "minScore" => 500, "grade" => 6, "nbContestantsPerTeam" => 1),
-      array("contestID" => "770867629642200501", "minScore" => 500, "grade" => 6, "nbContestantsPerTeam" => 2),
-      array("contestID" => "770867629642200501", "minScore" => 500, "grade" => 7, "nbContestantsPerTeam" => 1),
-      array("contestID" => "770867629642200501", "minScore" => 500, "grade" => 7, "nbContestantsPerTeam" => 2),
-   */
       array("contestID" => "770867629642200501", "minScore" => 500, "grade" => 8, "nbContestantsPerTeam" => 1),
       array("contestID" => "770867629642200501", "minScore" => 500, "grade" => 8, "nbContestantsPerTeam" => 2),
       array("contestID" => "770867629642200501", "minScore" => 500, "grade" => 9, "nbContestantsPerTeam" => 1),
@@ -167,16 +157,32 @@ $contestsParams = array(
       array("contestID" => "770867629642200501", "minScore" => 500, "grade" => 14, "nbContestantsPerTeam" => 2),
       array("contestID" => "770867629642200501", "minScore" => 500, "grade" => 15, "nbContestantsPerTeam" => 1),
       array("contestID" => "770867629642200501", "minScore" => 500, "grade" => 15, "nbContestantsPerTeam" => 2),
-   /*
-      array("contestID" => "770867629642200501", "minScore" => 500, "grade" => 16, "nbContestantsPerTeam" => 1),
-      array("contestID" => "770867629642200501", "minScore" => 500, "grade" => 16, "nbContestantsPerTeam" => 2),
-      array("contestID" => "770867629642200501", "minScore" => 500, "grade" => 17, "nbContestantsPerTeam" => 1),
-      array("contestID" => "770867629642200501", "minScore" => 500, "grade" => 17, "nbContestantsPerTeam" => 2),
-   */
       array("contestID" => "770867629642200501", "minScore" => 500, "grade" => 18, "nbContestantsPerTeam" => 1),
       array("contestID" => "770867629642200501", "minScore" => 500, "grade" => 18, "nbContestantsPerTeam" => 2),
       array("contestID" => "770867629642200501", "minScore" => 500, "grade" => 19, "nbContestantsPerTeam" => 1),
       array("contestID" => "770867629642200501", "minScore" => 500, "grade" => 19, "nbContestantsPerTeam" => 2)
+   ),
+   "alkindi2018" => array(
+      array("contestID" => "5332265179953972", "minScore" => 500, "grade" => 8, "nbContestantsPerTeam" => 1),
+      array("contestID" => "5332265179953972", "minScore" => 500, "grade" => 8, "nbContestantsPerTeam" => 2),
+      array("contestID" => "5332265179953972", "minScore" => 500, "grade" => 9, "nbContestantsPerTeam" => 1),
+      array("contestID" => "5332265179953972", "minScore" => 500, "grade" => 9, "nbContestantsPerTeam" => 2),
+      array("contestID" => "5332265179953972", "minScore" => 500, "grade" => 10, "nbContestantsPerTeam" => 1),
+      array("contestID" => "5332265179953972", "minScore" => 500, "grade" => 10, "nbContestantsPerTeam" => 2),
+      array("contestID" => "5332265179953972", "minScore" => 500, "grade" => 11, "nbContestantsPerTeam" => 1),
+      array("contestID" => "5332265179953972", "minScore" => 500, "grade" => 11, "nbContestantsPerTeam" => 2),
+      array("contestID" => "5332265179953972", "minScore" => 500, "grade" => 12, "nbContestantsPerTeam" => 1),
+      array("contestID" => "5332265179953972", "minScore" => 500, "grade" => 12, "nbContestantsPerTeam" => 2),
+      array("contestID" => "5332265179953972", "minScore" => 500, "grade" => 13, "nbContestantsPerTeam" => 1),
+      array("contestID" => "5332265179953972", "minScore" => 500, "grade" => 13, "nbContestantsPerTeam" => 2),
+      array("contestID" => "5332265179953972", "minScore" => 500, "grade" => 14, "nbContestantsPerTeam" => 1),
+      array("contestID" => "5332265179953972", "minScore" => 500, "grade" => 14, "nbContestantsPerTeam" => 2),
+      array("contestID" => "5332265179953972", "minScore" => 500, "grade" => 15, "nbContestantsPerTeam" => 1),
+      array("contestID" => "5332265179953972", "minScore" => 500, "grade" => 15, "nbContestantsPerTeam" => 2),
+      array("contestID" => "5332265179953972", "minScore" => 500, "grade" => 18, "nbContestantsPerTeam" => 1),
+      array("contestID" => "5332265179953972", "minScore" => 500, "grade" => 18, "nbContestantsPerTeam" => 2),
+      array("contestID" => "5332265179953972", "minScore" => 500, "grade" => 19, "nbContestantsPerTeam" => 1),
+      array("contestID" => "5332265179953972", "minScore" => 500, "grade" => 19, "nbContestantsPerTeam" => 2)
    )
 );
 
@@ -543,5 +549,5 @@ class ContestAnalysis
 //ContestAnalysis::getReport("template2013.inc.html", "resultats2013.php", 2013);
 //ContestAnalysis::getReport("template2013.inc.html", "resultats2014.php", 2014);
 //ContestAnalysis::getReport("template2013.inc.html", "../../castor-informatique.fr/resultats2015_castor.php", 2015);
-ContestAnalysis::getReport("template2013.inc.html", "resultats2018.html", "2018");
+ContestAnalysis::getReport("template2013.inc.html", "resultats2018.html", "alkindi2018");
 ?>
