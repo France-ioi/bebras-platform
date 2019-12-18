@@ -1,0 +1,1 @@
+ALTER TABLE `contestant`  ADD `cached_old_schoolID` BIGINT NULL  AFTER `cached_schoolID`;

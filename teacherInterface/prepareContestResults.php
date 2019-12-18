@@ -946,6 +946,19 @@ if ($action == "removeFailed") {
       array("contestID" => $contestID, "discardedGroupID" => $discardedGroupID));
 }
 
+echo "<h3><a href='".$startUrl."&action=hideInvalidContestants'>Hide contestants from invalid teams</a></h3>";
+if ($action == "hideInvalidContestants") {
+   execQueryAndShowNbRows("Change cached_schoolID of students from discarded group", "
+      UPDATE contestant
+      JOIN team ON team.ID = contestant.teamID
+      SET cached_old_schoolID = cached_schoolID, cached_schoolID = 0
+      WHERE team.groupID = :discardedGroupID
+      AND cached_schoolID != 0",
+      array("discardedGroupID" => $discardedGroupID));
+}
+
+
+
 echo "<h3><a href='".$startUrl."&action=teachersWithDuplicates'>Show teachers with a lot of duplicate students.</a></h3>";
 if ($action == "teachersWithDuplicates") {
    echo "Contact these teachers to understand what happened";
