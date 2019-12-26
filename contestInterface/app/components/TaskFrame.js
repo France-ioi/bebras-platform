@@ -72,7 +72,8 @@ export default {
 	},
 	loadQuestion (body, questionKey, callback) {
 		if(window.contestLoaderVersion === "2") {
-			var url = '/contestInterface/contests/' + app.contestFolder + '.v2/' + questionKey + '/index.html';
+			//contest domain
+			var url = window.contestsRoot + '/' + app.contestFolder + '.v2/' + questionKey + '/index.html';
 			//console.log('TF loadQuestion', questionKey, url)
 			$('#question-iframe').on('load', callback);
 			$('#question-iframe').attr('src', url)

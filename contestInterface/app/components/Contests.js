@@ -244,7 +244,8 @@ export default {
 
     getContestImage(contest) {
         if(contest.thumbnail) {
-            var url = 'contests/' + contest.folder + '/' + contest.thumbnail;
+            //contest domain
+            var url = window.contestsRoot + '/' + contest.folder + '/' + contest.thumbnail;
         } else {
             var url = 'images/img-placeholder.png';
         }

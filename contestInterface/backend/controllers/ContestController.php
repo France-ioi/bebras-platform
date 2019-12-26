@@ -123,10 +123,17 @@ class ContestController extends Controller
 
 
     public function getFilesList() {
-        $path = dirname(__FILE__).'/../../contests/'.$_POST['folder'];
+        //TODO: s3 hosting, get list from there
+
+        global $config;
+        $folder = $_POST['folder'];
+        if($config->contestInterface->contestLoaderVersion == '2') {
+            $folder .= '.v2';
+        }
+        $path = dirname(__FILE__).'/../../contests/'.$folder;
         exitWithJson(array(
             "success" => true,
-            "list" => $this->readDir($path, $_POST['folder'])
+            "list" => $this->readDir($path, $folder)
         ));
     }
 }

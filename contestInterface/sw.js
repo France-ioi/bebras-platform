@@ -1,7 +1,16 @@
-var version = 'v1';
-var dir = '/contests/'
+var config = {
+    version: 'v1',
+    path: '/'
+}
 
 self.addEventListener('install', function(event) {
+    event.waitUntil(
+        caches
+            .open(config.version)
+            .then((cache) => cache.addAll(['/']))
+    );
+
+
     event.waitUntil(self.skipWaiting());
 });
 
@@ -10,30 +19,31 @@ self.addEventListener('activate', function(event) {
 });
 
 
-// cache
 
-function fromCache(request) {
-    return caches.open(version).then((cache) =>
-        cache.match(request).then((matching) =>
-            matching || fetch(request)
-        ));
-}
 
-function update(request) {
-    return caches.open(version).then((cache) =>
-        fetch(request).then((response) =>
-            cache.put(request, response)
-        )
-    );
+function cacheThenNetwork(cache, event) {
+    return caches.match(event.request).then(response => {
+        function fetchAndCache () {
+           return fetch(event.request).then(response => {
+                cache.put(event.request, response.clone());
+                return response;
+            });
+        }
+        if (!response) {
+            return fetchAndCache();
+        }
+        fetchAndCache();
+        return response;
+    });
 }
 
 self.addEventListener('fetch', function(event) {
-    if(event.request.url.includes(dir)) {
-        event.respondWith(fromCache(event.request));
-        //event.waitUntil(update(event.request));
-    } else {
-        event.respondWith(fetch(event.request));
+    if(event.request.method !== 'GET') {
+        return;
     }
+    event.respondWith(
+        caches.open(config.version).then((cache) => cacheThenNetwork(cache, event))
+    );
 });
 
 
@@ -45,8 +55,9 @@ self.addEventListener('message', function(event) {
     switch(event.data.cmd) {
 
         case 'add':
+            //console.log('SW add: ', event.data.list)
             caches
-                .open(version)
+                .open(config.version)
                 .then(function(cache) {
                     return cache.addAll(event.data.list);
                 })
@@ -63,8 +74,9 @@ self.addEventListener('message', function(event) {
             break;
 
         case 'check':
+            //console.log('SW check: ', event.data.path)
             caches
-                .open(version)
+                .open(config.version)
                 .then(function(cache) {
                     return cache.match(event.data.path);
                 })

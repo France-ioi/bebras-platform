@@ -479,7 +479,7 @@ function get(ID, callback) {
 }
 
 
-function getFilesList(folder, callback) {
+function getFilesListOld(folder, callback) {
     fetch(
         "data.php",
         {
@@ -492,6 +492,21 @@ function getFilesList(folder, callback) {
             callback && callback(data.list);
         }
     );
+}
+
+function getFilesListNew(folder, callback) {
+    var url = window.contestsRoot + '/' + folder + '.v2/index.json';
+    $.getJSON(url, callback);
+}
+
+
+function getFilesList(folder, callback) {
+    if(window.contestLoaderVersion === '2') {
+        getFilesListNew(folder, callback);
+    } else {
+        // support for old local stored contests only, do we need s3 support here?
+        getFilesListOld(folder, callback);
+    }
 }
 
 

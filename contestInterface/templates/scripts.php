@@ -42,7 +42,7 @@
             return uri + separator + key + "=" + value;
         }
     }
-    window.contestsRoot = <?= json_encode(upgrade_url($config->teacherInterface->sAbsoluteStaticPath . '/contests')) ?>;
+    window.contestsRoot = <?= json_encode(upgrade_url(rtrim($config->teacherInterface->sAbsoluteStaticPath, '/') . '/contests')) ?>;
     window.sAbsoluteStaticPath = <?= json_encode(upgrade_url($config->teacherInterface->sAbsoluteStaticPath . '/')) ?>;
     window.sAssetsStaticPath = <?= json_encode(upgrade_url($config->teacherInterface->sAssetsStaticPath . '/')) ?>;
     window.timestamp = <?= $config->timestamp ? $config->timestamp : 'null' ?>;

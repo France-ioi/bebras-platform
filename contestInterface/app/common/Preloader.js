@@ -1,8 +1,7 @@
 function ContestPreloader(params) {
 
-    var dir = window.location.pathname || '/';
     var ready = false;
-    var debug = false;
+    var debug = true;
 
     function browserCapatible() {
         if (!('serviceWorker' in navigator)) {
@@ -33,27 +32,30 @@ function ContestPreloader(params) {
             console.log('navigator.serviceWorker.ready', registration)
         });
         */
+       debug && console.log('SW install')
         navigator.serviceWorker
-            .register(dir + 'sw.js', { scope: dir })
+            //.register(dir + 'sw.js', { scope: dir })
+            .register('sw.js')
             .then(function(reg) {
+                debug && console.log('SW registration successful, scope is:', reg.scope);
                 if (reg.installing) {
-                    debug && console.log('preloader installing');
+                    debug && console.log('SW preloader installing');
                 } else if (reg.waiting) {
-                    debug && console.log('preloader installed');
+                    debug && console.log('SW preloader installed');
                     ready = true;
                 } else if (reg.active) {
-                    debug && console.log('preloader active');
+                    debug && console.log('SW preloader active');
                     ready = true;
                 }
             })
             .catch(function(error) {
-                console.error('Service worker registration failed', error);
+                console.error('SW registration failed', error);
             });
     }
 
 
     function unregister(callback) {
-        console.log('preloader unregister');
+        console.log('SW preloader unregister');
         navigator.serviceWorker.getRegistrations().then(function(registrations) {
             for (let registration of registrations) {
                 //console.log(registration);
@@ -70,37 +72,47 @@ function ContestPreloader(params) {
     }
 
 
+    function send(data, callback) {
+        var chan = new MessageChannel();
+        chan.port1.onmessage = function(event) {
+            callback(event.data);
+        };
+        navigator.serviceWorker.controller.postMessage(
+            data,
+            [ chan.port2 ]
+        );
+    }
+
+
 
     return {
 
-
-        send: function(data, callback) {
-            var chan = new MessageChannel();
-            chan.port1.onmessage = function(event) {
-                callback(event.data);
-            };
-            navigator.serviceWorker.controller.postMessage(data, [ chan.port2 ]);
-        },
-
         add: function(list, callback) {
             for(var i=0; i<list.length; i++) {
-                list[i] = dir + 'contests/' + list[i];
+                list[i] = window.contestsRoot + '/' + list[i];
             }
             var data = {
                 cmd: 'add',
                 list: list
             }
-            this.send(data, function(res) {
+            send(data, function(res) {
                 callback(res.success);
             });
         },
 
         check: function(contest_folder, callback) {
+            var path = window.contestsRoot + '/' + contest_folder;
+            if(window.contestLoaderVersion === '2') {
+                path += '.v2/index.json';
+            } else {
+                path += '/index.txt';
+            }
+
             var data = {
                 cmd: 'check',
-                path: dir + 'contests/' + contest_folder + '/index.txt'
+                path: path
             }
-            this.send(data, function(res) {
+            send(data, function(res) {
                 callback(res.exists);
             });
         },

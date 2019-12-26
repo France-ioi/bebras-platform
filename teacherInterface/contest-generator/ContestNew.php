@@ -1,11 +1,10 @@
 <?php
 require_once 'libs/TaskParser.php';
+require_once 'libs/FilesIndex.php';
 
 class ContestNew
 {
 
-
-    private $modules_copied;
 
 
     public function __construct($config, $filesystem)
@@ -43,6 +42,8 @@ class ContestNew
         $options = [
             'solution' => $fullFeedback || !($status == 'RunningContest' || $status == 'FutureContest')
         ];
+
+        $index = new FilesIndex();
         foreach ($tasks as $task) {
             $task_parser = new TaskParser(
                 $this->filesystem->joinPaths($this->tasks_repo_path, $task['url']),
@@ -50,9 +51,11 @@ class ContestNew
             );
 
             $modules = $task_parser->parseModules('../');
-            $this->copyTaskModules($modules);
+            //$this->copyTaskModules($modules);
+            $index->addModules($modules);
 
-            $this->copyTaskFiles($task);
+            $files = $this->copyTaskFiles($task);
+            $index->addFiles($files, $task['key'].'/');
 
             $this->contestPutContents(
                 $this->filesystem->joinPaths($task['key'], basename($task['url'])),
@@ -61,6 +64,12 @@ class ContestNew
 
             $task_parser = null;
         }
+        $this->copyTaskModules($index->getModules());
+
+        $this->contestPutContents(
+            'index.json',
+            $index->getContents($this->contestFolder.'/')
+        );
     }
 
 
@@ -74,22 +83,22 @@ class ContestNew
             $task_path
         );
         $files = scandir($src_path);
+        $res = [];
         foreach($files as $file) {
-            if($file == '..' || $file == '.' || $file == $task_basename) continue;
+            if($file == '..' || $file == '.') continue;
+            $res[] = $file;
+            if($file == $task_basename) continue;
             $this->contestCopyFile(
                 $this->filesystem->joinPaths($src_path, $file),
                 $this->filesystem->joinPaths($task['key'], $file)
             );
         }
+        return $res;
     }
 
 
     private function copyTaskModules($files) {
         foreach($files as $file) {
-            if(isset($this->modules_copied[$file])) {
-                return;
-            }
-            $this->modules_copied[$file] = true;
             $this->contestCopyFile(
                 $this->filesystem->joinPaths($this->tasks_repo_path, $file),
                 $file
