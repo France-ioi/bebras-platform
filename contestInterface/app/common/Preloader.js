@@ -102,7 +102,7 @@ function ContestPreloader(params) {
 
         check: function(contest_folder, callback) {
             var path = window.contestsRoot + '/' + contest_folder;
-            if(window.contestLoaderVersion === '2') {
+            if(window.config.contestLoaderVersion === '2') {
                 path += '.v2/index.json';
             } else {
                 path += '/index.txt';

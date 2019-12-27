@@ -4,7 +4,7 @@ import fetch from './common/Fetch';
     * Creates a new team using contestants information
     */
 function createTeam(contestants, callback) {
-    if (window.browserIsMobile && typeof app.scratchToBlocklyContestID[contestID] != "undefined") {
+    if (window.config.browserIsMobile && typeof app.scratchToBlocklyContestID[contestID] != "undefined") {
         alert(i18n.t("browser_redirect_scratch_to_blockly"));
         app.contestID = app.scratchToBlocklyContestID[contestID];
         var contest = window.getContest(app.contestID);

@@ -2,7 +2,6 @@ import UI from "../components";
 import logActivity from "./LogActivity";
 import logError from "./LogError";
 import metaViewport from "./MetaViewport";
-import config from './Config';
 import platform from './Platform';
 
 

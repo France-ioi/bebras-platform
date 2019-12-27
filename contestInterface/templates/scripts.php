@@ -30,6 +30,16 @@
         'getAsync' => true,
         'resGetPath' => static_asset('/i18n/__lng__/__ns__.json')
     ];
+
+    $app_config = array(
+        "imagesURLReplacements" => $config->imagesURLReplacements,
+        "imagesURLReplacementsNonStatic" => $config->imagesURLReplacementsNonStatic,
+        "upgradeToHTTPS" => $config->upgradeToHTTPS,
+        "logActivity" => $config->contestInterface->logActivity,
+        "contestLoaderVersion" => $config->contestInterface->contestLoaderVersion,
+        "timestamp" => $config->timestamp ? $config->timestamp : 'null',
+        "browserIsMobile" => !!$browserIsMobile
+    );
 ?>
 
 <script>
@@ -45,9 +55,6 @@
     window.contestsRoot = <?= json_encode(upgrade_url(rtrim($config->teacherInterface->sAbsoluteStaticPath, '/') . '/contests')) ?>;
     window.sAbsoluteStaticPath = <?= json_encode(upgrade_url($config->teacherInterface->sAbsoluteStaticPath . '/')) ?>;
     window.sAssetsStaticPath = <?= json_encode(upgrade_url($config->teacherInterface->sAssetsStaticPath . '/')) ?>;
-    window.timestamp = <?= $config->timestamp ? $config->timestamp : 'null' ?>;
-    window.browserIsMobile = <?= $browserIsMobile ? 'true' : 'false' ?>;
-    window.contestLoaderVersion = <?= json_encode($config->contestInterface->contestLoaderVersion) ?>;
     try {
         i18n.init(
             <?= json_encode($i18n_config); ?>,
@@ -65,6 +72,7 @@
         }
     }
     window.ieMode = false;
+    window.config = <?= json_encode($app_config) ?>;
 </script>
 
 <?php

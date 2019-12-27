@@ -232,7 +232,7 @@ function loadContestData(_contestID, _contestFolder, _groupPassword) {
                     }
 
                     // XXX: select loader here
-                    if(window.contestLoaderVersion === '2') {
+                    if(window.config.contestLoaderVersion === '2') {
                         //UI.GridView.updateQuestionContent('');
                         startContestTime(data);
                     } else {
@@ -260,7 +260,7 @@ function loadContestData(_contestID, _contestFolder, _groupPassword) {
 function selectContest(ID) {
     UI.SubcontestSelectionInterface.selectContest(function() {
         $(this).dequeue();
-        if (window.browserIsMobile && typeof app.scratchToBlocklyContestID[ID] != "undefined") {
+        if (window.config.browserIsMobile && typeof app.scratchToBlocklyContestID[ID] != "undefined") {
             alert(i18n.t("browser_redirect_scratch_to_blockly"));
             ID = app.scratchToBlocklyContestID[ID];
             UI.SubcontestSelectionInterface.selectedLanguage = "blockly";
@@ -501,7 +501,7 @@ function getFilesListNew(folder, callback) {
 
 
 function getFilesList(folder, callback) {
-    if(window.contestLoaderVersion === '2') {
+    if(window.config.contestLoaderVersion === '2') {
         getFilesListNew(folder, callback);
     } else {
         // support for old local stored contests only, do we need s3 support here?

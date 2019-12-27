@@ -1,4 +1,5 @@
 <?php
+// Not used anymore
 
 class ConfigController extends Controller
 {

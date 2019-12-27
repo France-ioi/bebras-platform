@@ -2,7 +2,6 @@ import UI from "../components";
 import logActivity from "./LogActivity";
 import logError from "./LogError";
 import metaViewport from "./MetaViewport";
-import config from './Config';
 import platform from './Platform';
 
 /**
@@ -291,35 +290,33 @@ var questionIframe = {
 
         // Get configuration and image preloader
         var that = this;
-        config.get(function() {
-            that.inject("window.config = window.parent.config;");
-            // Call image preloading
-            if (that.contestImagePreload[app.contestID]) {
-                that.inject(that.contestImagePreload[app.contestID]);
-                callback();
-            } else {
-                // Load image preload lists
-                $.get(
-                    window.contestsRoot +
-                        "/" +
-                        app.contestFolder +
-                        "/contest_" +
-                        app.contestID +
-                        ".js?origin=" +
-                        window.location.protocol +
-                        window.location.hostname,
-                    function(content) {
-                        that.contestImagePreload[app.contestID] = content;
-                        that.inject(content);
-                        callback();
-                    },
-                    "text"
-                ).fail(function() {
-                    // Continue anyway
+        that.inject("window.config = window.parent.config;");
+        // Call image preloading
+        if (that.contestImagePreload[app.contestID]) {
+            that.inject(that.contestImagePreload[app.contestID]);
+            callback();
+        } else {
+            // Load image preload lists
+            $.get(
+                window.contestsRoot +
+                    "/" +
+                    app.contestFolder +
+                    "/contest_" +
+                    app.contestID +
+                    ".js?origin=" +
+                    window.location.protocol +
+                    window.location.hostname,
+                function(content) {
+                    that.contestImagePreload[app.contestID] = content;
+                    that.inject(content);
                     callback();
-                });
-            }
-        });
+                },
+                "text"
+            ).fail(function() {
+                // Continue anyway
+                callback();
+            });
+        }
     },
 
     /**

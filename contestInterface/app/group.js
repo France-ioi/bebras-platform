@@ -74,7 +74,7 @@ function checkGroupFromCode(curStep, groupCode, getTeams, isPublic, language, st
             language: language,
             startOfficial: startOfficial,
             commonJsVersion: app.commonJsVersion,
-            timestamp: window.timestamp,
+            timestamp: window.config.timestamp,
             commonJsTimestamp: app.commonJsTimestamp
         },
         function(data) {
