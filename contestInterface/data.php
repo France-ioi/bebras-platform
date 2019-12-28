@@ -7,24 +7,41 @@ include_once("../shared/tinyORM.php");
 include_once("common_contest.php");
 include_once("backend/Controller.php");
 
-$controller = isset($_POST['controller']) ? $_POST['controller'] : null;
-$action = isset($_POST['action']) ? $_POST['action'] : null;
+/*
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+*/
 
-$class_name = $controller . 'Controller';
-$class_file = 'backend/controllers/' . $class_name . '.php';
-if (!file_exists($class_file)) {
-    exitWithJsonFailure('Controller file not found');
+function execute($request) {
+    $controller = isset($request['controller']) ? $request['controller'] : null;
+    $action = isset($request['action']) ? $request['action'] : null;
+
+    $class_name = $controller . 'Controller';
+    $class_file = 'backend/controllers/' . $class_name . '.php';
+    if (!file_exists($class_file)) {
+        exitWithJsonFailure('Controller file not found');
+    }
+
+    require_once($class_file);
+    if (!class_exists($class_name)) {
+        exitWithJsonFailure('Controller class not found');
+    }
+
+    $controller = new $class_name;
+    if (!method_exists($controller, $action)) {
+        exitWithJsonFailure('Action not found');
+    }
+
+    call_user_func([$controller, $action], $request);
 }
 
-require_once($class_file);
-if (!class_exists($class_name)) {
-    exitWithJsonFailure('Controller class not found');
-}
 
-$controller = new $class_name;
-if (!method_exists($controller, $action)) {
-    exitWithJsonFailure('Action not found');
-}
+initSession();
 
-initSession(); // TODO: add option to controller?
-call_user_func(array($controller, $action));
+if(isset($_POST['batch_request'])) {
+    foreach($_POST['data'] as $request) {
+        execute($request);
+    }
+} else {
+    execute($_POST);
+}

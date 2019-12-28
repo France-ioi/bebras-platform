@@ -5,9 +5,9 @@ class AuthController extends Controller
 
 
 
-    public function checkRegistration()
+    public function checkRegistration($request)
     {
-        $code = $_POST["code"];
+        $code = $request["code"];
         $registrationData = $this->getRegistrationData($code);
         if (!$registrationData) {
             exitWithJson((object)array("success" => false));
@@ -18,7 +18,7 @@ class AuthController extends Controller
     }
 
 
-    public function checkPassword()
+    public function checkPassword($request)
     {
         global $config;
 
@@ -26,9 +26,9 @@ class AuthController extends Controller
         addFailureBackendHint("ClientIP.error");
 
         // Check common.js version
-        $commonJsVersion = isset($_POST['commonJsVersion']) ? intval($_POST['commonJsVersion']) : 0;
-        $commonJsTimestamp = isset($_POST['commonJsTimestamp']) ? $_POST['commonJsTimestamp'] : '[none]';
-        $timestamp = isset($_POST['timestamp']) ? $_POST['timestamp'] : '[none]';
+        $commonJsVersion = isset($request['commonJsVersion']) ? intval($request['commonJsVersion']) : 0;
+        $commonJsTimestamp = isset($request['commonJsTimestamp']) ? $request['commonJsTimestamp'] : '[none]';
+        $timestamp = isset($request['timestamp']) ? $request['timestamp'] : '[none]';
 
         if ($commonJsVersion < $config->minimumCommonJsVersion) {
             // Reject old common.js versions
@@ -47,17 +47,17 @@ class AuthController extends Controller
             exitWithJsonFailure($userMsg);
         }
 
-        if (!isset($_POST["password"])) {
+        if (!isset($request["password"])) {
             exitWithJsonFailure("Mot de passe manquant");
         }
-        $getTeams = array_key_exists('getTeams', $_POST) ? $_POST["getTeams"] : False;
-        $password = strtolower($_POST["password"]);
+        $getTeams = array_key_exists('getTeams', $request) ? $request["getTeams"] : False;
+        $password = strtolower($request["password"]);
         // Search for a group matching the entered password, and if found create
         // a team in that group (and end the request).
         $this->handleCheckGroupPassword($password, $getTeams);
 
 
-        $this->handleGroupFromRegistrationCode($password);
+        $this->handleGroupFromRegistrationCode($password, $request);
 
         // If no matching group was found, look for a team with the entered password.
         $this->handleCheckTeamPassword($password);
@@ -266,7 +266,7 @@ class AuthController extends Controller
 
 
 
-    private function handleGroupFromRegistrationCode($code)
+    private function handleGroupFromRegistrationCode($code, $request)
     {
         global $config;
         $registrationData = $this->getRegistrationData($code);
@@ -337,7 +337,7 @@ class AuthController extends Controller
         addBackendHint(sprintf("Group(%s):checkPassword", escapeHttpValue($registrationData->ID))); // TODO : check hint
         $contestID = $config->trainingContestID;
         $isOfficialContest = false;
-        if (isset($_POST["startOfficial"])) {
+        if (isset($request["startOfficial"])) {
             $contestID = "337033997884044050"; // hard-coded real contest
             $isOfficialContest = true;
         }

@@ -167,6 +167,7 @@ function loadContestData(_contestID, _contestFolder, _groupPassword) {
             );
         }
 
+
         // The callback will be used by the task
 
         function loadData() {

@@ -28,6 +28,7 @@ function load() {
     );
 }
 
+
 function destroy(callback) {
     app.SID = null; // are we sure about that?
     fetch(

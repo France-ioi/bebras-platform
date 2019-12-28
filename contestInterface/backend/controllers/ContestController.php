@@ -3,21 +3,21 @@
 class ContestController extends Controller
 {
 
-    public function loadData()
+    public function loadData($request)
     {
         global $tinyOrm, $config;
         if (!isset($_SESSION["teamID"])) {
-            if (!isset($_POST["groupPassword"])) {
+            if (!isset($request["groupPassword"])) {
                 exitWithJsonFailure("Mot de passe manquant");
             }
-            if (!isset($_POST["teamID"])) {
+            if (!isset($request["teamID"])) {
                 exitWithJsonFailure("Équipe manquante");
             }
             if (!isset($_SESSION["groupID"])) {
                 exitWithJsonFailure("Groupe non chargé");
             }
-            $password = strtolower(trim($_POST["groupPassword"]));
-            reloginTeam($this->db, $password, $_POST["teamID"]);
+            $password = strtolower(trim($request["groupPassword"]));
+            reloginTeam($this->db, $password, $request["teamID"]);
         }
         $teamID = $_SESSION["teamID"];
         $stmt = $this->db->prepare("UPDATE `team` SET `createTime` = UTC_TIMESTAMP() WHERE `ID` = :teamID AND `createTime` IS NULL");
@@ -82,10 +82,10 @@ class ContestController extends Controller
     }
 
 
-    public function get() {
+    public function get($request) {
         $q = "SELECT * FROM contest WHERE ID = ? LIMIT 1";
         $stmt = $this->db->prepare($q);
-        $stmt->execute(array($_POST['ID']));
+        $stmt->execute(array($request['ID']));
         $contest = $stmt->fetchObject();
         $_SESSION["contestID"] = $contest->ID;
         $_SESSION["nbMinutes"] = $contest->nbMinutes;
@@ -94,6 +94,7 @@ class ContestController extends Controller
             "contest" => $contest
         ));
     }
+
 
     private function readDir($path, $rel_path = '') {
         $res = array();
@@ -122,11 +123,11 @@ class ContestController extends Controller
     }
 
 
-    public function getFilesList() {
+    public function getFilesList($request) {
         //TODO: s3 hosting, get list from there
 
         global $config;
-        $folder = $_POST['folder'];
+        $folder = $request['folder'];
         if($config->contestInterface->contestLoaderVersion == '2') {
             $folder .= '.v2';
         }

@@ -4,19 +4,19 @@ class TeamController extends Controller
 {
 
 
-    public function create()
+    public function create($request)
     {
         global $tinyOrm, $config;
-        if (!isset($_POST["contestants"])) {
+        if (!isset($request["contestants"])) {
             exitWithJsonFailure("Informations sur les candidats manquantes");
         }
         if (isset($_SESSION["groupClosed"]) && $_SESSION["groupClosed"]) {
             error_log("Hack attempt ? trying to create team on closed group " . $_SESSION["groupID"]);
             exitWithJsonFailure("Groupe fermé");
         }
-        if (isset($_POST["contestID"])) {
-            if ($_SESSION["contestID"] != $_POST["contestID"]) {
-                $_SESSION["contestID"] = $_POST["contestID"];
+        if (isset($request["contestID"])) {
+            if ($_SESSION["contestID"] != $request["contestID"]) {
+                $_SESSION["contestID"] = $request["contestID"];
                 $stmt = $this->db->prepare("SELECT `folder` FROM contest WHERE ID = ?");
                 $stmt->execute(array($_SESSION["contestID"]));
                 $row = $stmt->fetchObject();
@@ -61,7 +61,7 @@ class TeamController extends Controller
             }
         }
 
-        $contestants = $_POST["contestants"];
+        $contestants = $request["contestants"];
         $stmt = $this->db->prepare("UPDATE `group` SET `startTime` = UTC_TIMESTAMP() WHERE `group`.`ID` = ? AND `startTime` IS NULL");
         $stmt->execute(array($groupID));
         $stmt = $this->db->prepare("UPDATE `group` SET `nbTeamsEffective` = `nbTeamsEffective` + 1, `nbStudentsEffective` = `nbStudentsEffective` + ? WHERE `ID` = ?");

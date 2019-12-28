@@ -36,8 +36,8 @@ class UserController extends Controller
     `
 */
 
-    public function createRegular() {
-        $user = $_POST['user'];
+    public function createRegular($request) {
+        $user = $request['user'];
         $user['code'] = $this->genAccessCode();
         $user['guest'] = 0;
         $user['confirmed'] = 1;
@@ -55,13 +55,13 @@ class UserController extends Controller
     Update user data
 */
 
-    public function update()
+    public function update($request)
     {
-        $old = $this->loadUser($_POST['user']['ID']);
+        $old = $this->loadUser($request['user']['ID']);
 
         $changed = false;
         foreach($old as $k => $v) {
-            if(isset($_POST['user'][$k]) && $_POST['user'][$k] != $old[$k]) {
+            if(isset($request['user'][$k]) && $request['user'][$k] != $old[$k]) {
                 $changed = true;
             }
         }
@@ -75,15 +75,15 @@ class UserController extends Controller
         }
 
         $new = [
-            'firstName' => $_POST['user']['firstName'],
-            'lastName' => $_POST['user']['lastName'],
-            'grade' => $_POST['user']['grade'],
-            'genre' => $_POST['user']['genre'],
-            'email' => $_POST['user']['email'],
-            'zipCode' => $_POST['user']['zipCode'],
-            'studentID' => $_POST['user']['studentID'],
-            'ID' => $_POST['user']['ID'],
-            'confirmed' => $_POST['user']['guest'] == 1 ? 1 : 0
+            'firstName' => $request['user']['firstName'],
+            'lastName' => $request['user']['lastName'],
+            'grade' => $request['user']['grade'],
+            'genre' => $request['user']['genre'],
+            'email' => $request['user']['email'],
+            'zipCode' => $request['user']['zipCode'],
+            'studentID' => $request['user']['studentID'],
+            'ID' => $request['user']['ID'],
+            'confirmed' => $request['user']['guest'] == 1 ? 1 : 0
         ];
         $this->saveUser($new);
 

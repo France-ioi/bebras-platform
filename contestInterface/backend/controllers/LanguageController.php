@@ -3,9 +3,9 @@
 class LanguageController extends Controller
 {
 
-    public function set() {
+    public function set($request) {
         global $config;
-        $lang = isset($_POST["language"]) ? $_POST["language"] : null;
+        $lang = isset($request["language"]) ? $request["language"] : null;
         if (!isset($config->contestInterface->languages[$lang])) {
             $lang = $config->defaultLanguage;
         }
