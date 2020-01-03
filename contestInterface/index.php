@@ -27,32 +27,54 @@
     "logActivity" => $config->contestInterface->logActivity
     ]) ?>;
 
+  function displayBody() {
+    // Display the page
+    var body = document.getElementsByTagName("body");
+    if(body && body[0]) {
+      body[0].style.display = "block";
+    } else {
+      setTimeout(displayBody, 100);
+    }
+  }
   function checkHttps() {
     // Test HTTPS connectivity, downgrade to HTTP if HTTPS doesn't work
-    if(!window.config.httpsTestUrl) {
-      return;
+    try {
+      if(!window.config.httpsTestUrl) {
+        displayBody();
+        return;
+      }
+      if(!window.config.redirectToHTTPS || window.location.protocol == 'https:') {
+        displayBody();
+      }
+      $.ajax({
+        url: window.config.httpsTestUrl,
+        timeout: 2000
+        })
+        .success(function() {
+          if(window.config.redirectToHTTPS && window.location.protocol != 'https:') {
+            window.location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
+          }
+        })
+        .fail(function() {
+          window.config.downgradeToHTTP = true;
+          displayBody();
+        });
+    } catch(e) {
+      displayBody();
     }
-    $.ajax({
-      url: window.config.httpsTestUrl,
-      timeout: 10000
-      })
-      .success(function() {
-        if(window.config.redirectToHTTPS && window.location.protocol != 'https:') {
-          window.location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
-        }
-      })
-      .fail(function() {
-        window.config.downgradeToHTTP = true;
-      });
   }
   checkHttps();
+
+  // Failsafe to display the body after 2 seconds even if checkHttps somehow
+  // had an error
+  setTimeout(displayBody, 2000);
 </script>
 </head>
 <?php
   flush();
   stylesheet_tag('/style.css');
 ?>
-<body>
+<body style="display: none;">
 <div id="divHeader">
   <div id="leftTitle" data-i18n="[html]left_title"></div>
   <div id="headerGroup">
