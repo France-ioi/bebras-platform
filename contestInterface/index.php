@@ -9,8 +9,50 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link rel="shortcut icon" href="<?= $config->faviconfile ?>" />
 <title data-i18n="general_page_title"></title>
-<?php stylesheet_tag('/style.css'); ?>
-</head><body>
+<?php
+  script_tag('/bower_components/jquery/jquery.min.js');
+?>
+<script type="text/javascript">
+  window.contestsRoot = <?= json_encode(upgrade_url($config->teacherInterface->sAbsoluteStaticPath.'/contests')) ?>;
+  window.sAbsoluteStaticPath = <?= json_encode(upgrade_url($config->teacherInterface->sAbsoluteStaticPath.'/')) ?>;
+  window.sAssetsStaticPath = <?= json_encode(upgrade_url($config->teacherInterface->sAssetsStaticPath.'/')) ?>;
+  window.timestamp = <?= $config->timestamp ?>;
+  window.config = <?= json_encode([
+    "httpsTestUrl" => $config->contestInterface->httpsTestUrl,
+    "imagesURLReplacements" => $config->imagesURLReplacements,
+    "imagesURLReplacementsNonStatic" => $config->imagesURLReplacementsNonStatic,
+    "redirectToHTTPS" => !!$config->contestInterface->redirectToHTTPS,
+    "redirectToHTTPSIfError" => !!$config->redirectToHTTPSIfError,
+    "upgradeToHTTPS" => $config->upgradeToHTTPS,
+    "logActivity" => $config->contestInterface->logActivity
+    ]) ?>;
+
+  function checkHttps() {
+    // Test HTTPS connectivity, downgrade to HTTP if HTTPS doesn't work
+    if(!window.config.httpsTestUrl) {
+      return;
+    }
+    $.ajax({
+      url: window.config.httpsTestUrl,
+      timeout: 10000
+      })
+      .success(function() {
+        if(window.config.redirectToHTTPS && window.location.protocol != 'https:') {
+          window.location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
+        }
+      })
+      .fail(function() {
+        window.config.downgradeToHTTP = true;
+      });
+  }
+  checkHttps();
+</script>
+</head>
+<?php
+  flush();
+  stylesheet_tag('/style.css');
+?>
+<body>
 <div id="divHeader">
   <div id="leftTitle" data-i18n="[html]left_title"></div>
   <div id="headerGroup">
@@ -646,9 +688,6 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
    <b data-i18n="error_server"></b> <p style="float:right;"><a href="#" onclick="$('#divError').hide()">[<span data-i18n="error_close"></span>]</a></p><br/>
    <span id="contentError"></span>
 </div>
-<?php
-  script_tag('/bower_components/jquery/jquery.min.js');
-?>
 <!--[if lte IE 9]>
   <?php
   // JSON3 shim for IE6-9 compatibility.
@@ -680,21 +719,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
       return uri + separator + key + "=" + value;
     }
   }
-  window.contestsRoot = <?= json_encode(upgrade_url($config->teacherInterface->sAbsoluteStaticPath.'/contests')) ?>;
-  window.sAbsoluteStaticPath = <?= json_encode(upgrade_url($config->teacherInterface->sAbsoluteStaticPath.'/')) ?>;
-  window.sAssetsStaticPath = <?= json_encode(upgrade_url($config->teacherInterface->sAssetsStaticPath.'/')) ?>;
-  window.timestamp = <?= $config->timestamp ?>;
   window.browserIsMobile = <?=$browserIsMobile ? 'true' : 'false' ?>;
-  window.config = <?= json_encode([
-      "httpsTestUrl" => $config->contestInterface->httpsTestUrl,
-      "imagesURLReplacements" => $config->imagesURLReplacements,
-      "imagesURLReplacementsNonStatic" => $config->imagesURLReplacementsNonStatic,
-      "redirectToHTTPS" => !!$config->contestInterface->redirectToHTTPS,
-      "redirectToHTTPSIfError" => !!$config->redirectToHTTPSIfError,
-      "upgradeToHTTPS" => $config->upgradeToHTTPS,
-      "logActivity" => $config->contestInterface->logActivity
-      ]) ?>;
-
   try {
     i18n.init(<?= json_encode([
       'lng' => $config->defaultLanguage,
