@@ -3380,25 +3380,6 @@ function checkFullscreen() {
    }
 }
 
-function checkHttps() {
-   // Test HTTPS connectivity, downgrade to HTTP if HTTPS doesn't work
-   if(!window.config.httpsTestUrl) {
-      return;
-   }
-   $.ajax({
-      url: window.config.httpsTestUrl,
-      timeout: 10000
-      })
-      .success(function() {
-         if(window.config.redirectToHTTPS && window.location.protocol != 'https:') {
-            window.location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
-         }
-      })
-      .fail(function() {
-         window.config.downgradeToHTTP = true;
-      });
-}
-
 
 //
 // Loader
@@ -3607,7 +3588,6 @@ $(document).on('ready', function() {
    } else if(window.attachEvent) { // IE 8
       window.attachEvent('resize', questionIframe.onBodyResize);
    }
-   checkHttps();
    checkFullscreen();
 });
 
