@@ -1593,7 +1593,11 @@ function loadContestData(contestID, contestFolder, groupPassword)
                if (data.graders) {
                   $('#divGradersContent').html(data.graders);
                } else {
-                  $('#divGradersContent').load(data.gradersUrl);
+                  var gradersUrl = data.gradersUrl;
+                  if(window.location.protocol == 'https:') {
+                     gradersUrl = gradersUrl.replace(/^http:/, "https:");
+                  }
+                  $('#divGradersContent').load(gradersUrl);
                }
             }
             if (data.status == 'success') { bonusScore = parseInt(data.bonusScore); }
