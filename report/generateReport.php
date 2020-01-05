@@ -217,6 +217,28 @@ $contestsParams = array(
       array("contestID" => "5332265179953972", "minScore" => 500, "grade" => 18, "nbContestantsPerTeam" => 2),
       array("contestID" => "5332265179953972", "minScore" => 500, "grade" => 19, "nbContestantsPerTeam" => 1),
       array("contestID" => "5332265179953972", "minScore" => 500, "grade" => 19, "nbContestantsPerTeam" => 2)
+   ),
+   "alkindi2019" => array(
+      array("contestID" => "135044579463185233", "minScore" => 500, "grade" => 8, "nbContestantsPerTeam" => 1),
+      array("contestID" => "135044579463185233", "minScore" => 500, "grade" => 8, "nbContestantsPerTeam" => 2),
+      array("contestID" => "135044579463185233", "minScore" => 500, "grade" => 9, "nbContestantsPerTeam" => 1),
+      array("contestID" => "135044579463185233", "minScore" => 500, "grade" => 9, "nbContestantsPerTeam" => 2),
+      array("contestID" => "135044579463185233", "minScore" => 500, "grade" => 10, "nbContestantsPerTeam" => 1),
+      array("contestID" => "135044579463185233", "minScore" => 500, "grade" => 10, "nbContestantsPerTeam" => 2),
+      array("contestID" => "135044579463185233", "minScore" => 500, "grade" => 11, "nbContestantsPerTeam" => 1),
+      array("contestID" => "135044579463185233", "minScore" => 500, "grade" => 11, "nbContestantsPerTeam" => 2),
+      array("contestID" => "135044579463185233", "minScore" => 500, "grade" => 12, "nbContestantsPerTeam" => 1),
+      array("contestID" => "135044579463185233", "minScore" => 500, "grade" => 12, "nbContestantsPerTeam" => 2),
+      array("contestID" => "135044579463185233", "minScore" => 500, "grade" => 13, "nbContestantsPerTeam" => 1),
+      array("contestID" => "135044579463185233", "minScore" => 500, "grade" => 13, "nbContestantsPerTeam" => 2),
+      array("contestID" => "135044579463185233", "minScore" => 500, "grade" => 14, "nbContestantsPerTeam" => 1),
+      array("contestID" => "135044579463185233", "minScore" => 500, "grade" => 14, "nbContestantsPerTeam" => 2),
+      array("contestID" => "135044579463185233", "minScore" => 500, "grade" => 15, "nbContestantsPerTeam" => 1),
+      array("contestID" => "135044579463185233", "minScore" => 500, "grade" => 15, "nbContestantsPerTeam" => 2),
+      array("contestID" => "135044579463185233", "minScore" => 500, "grade" => 18, "nbContestantsPerTeam" => 1),
+      array("contestID" => "135044579463185233", "minScore" => 500, "grade" => 18, "nbContestantsPerTeam" => 2),
+      array("contestID" => "135044579463185233", "minScore" => 500, "grade" => 19, "nbContestantsPerTeam" => 1),
+      array("contestID" => "135044579463185233", "minScore" => 500, "grade" => 19, "nbContestantsPerTeam" => 2)
    )
 );
 
