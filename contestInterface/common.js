@@ -1593,7 +1593,14 @@ function loadContestData(contestID, contestFolder, groupPassword)
                if (data.graders) {
                   $('#divGradersContent').html(data.graders);
                } else {
-                  $('#divGradersContent').load(data.gradersUrl);
+                  var gradersUrl = data.gradersUrl;
+                  if(window.config.downgradeToHTTP) {
+                     gradersUrl = gradersUrl.replace(/^https:/, "http:");
+                  }
+                  if(window.config.upgradeToHTTPS) {
+                     gradersUrl = gradersUrl.replace(/^http:/, "https:");
+                  }
+                  $('#divGradersContent').load(gradersUrl);
                }
             }
             if (data.status == 'success') { bonusScore = parseInt(data.bonusScore); }
@@ -3573,6 +3580,9 @@ function getParameterByName(name) {
 }
 
 $(document).on('ready', function() {
+   if(window.location.protocol == 'https:' && !window.config.downgradeToHTTP) {
+      window.config.upgradeToHTTPS = true;
+   }
    var teamParam = getParameterByName('team');
    if (teamParam !== '') {
       /* remove team from url to avoid restarting after a reload */
