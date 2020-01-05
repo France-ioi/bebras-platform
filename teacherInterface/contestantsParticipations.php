@@ -79,36 +79,36 @@ echo "<p>".translate("results_students_may_appear_twice")."</p>";
 
 echo "<p><b>Classement Algoréa :</b> un classement unique par niveau scolaire est calculé pour chaque participant et mis à jour après chaque tour. Dans chaque niveau scolaire, sont classés en tête les participants ayant obtenu des points dans la catégorie verte par ordre de leur score, puis ceux ayant des points dans la catégorie orange, puis la jaune, puis la blanche.</p>";
 
-$mainContestID = "822122511136074554";
-$allContestIDs = ["822122511136074554","337033997884044050", "288404405033703399", "288404405033703401"];
-
-$query = "SELECT ID, name FROM contest WHERE ID IN (".join(",", $allContestIDs).")";
+$query = "SELECT ID, name, orderResults FROM contest WHERE orderResults IS NOT NULL ORDER BY orderResults ASC";
 $stmt = $db->prepare($query);
 $stmt->execute(array("userID" => $_SESSION['userID']));
 echo "<div style='border:solid black 1px;padding:5px;width:400px'>";
 echo "<p>".translate("results_show_only_participants_of")."</p>";
 echo "<form name='filter' method='post'>";
+$mainContestID = null;
 $data = array();
-while ($row = $stmt->fetchObject()) {
-   $data[$row->ID] = $row->name;
-}
 $contestIDs = array();
-foreach ($allContestIDs as $contestID) {
-   if (isset($data[$contestID])) {
-      $checked = "";
-      if (isset($_POST["contest_".$contestID])) {
-         $checked = "checked";
-         $contestIDs[] = $contestID;
-      }
-      echo "<input type='checkbox' name='contest_".$contestID."' ".$checked.">".$data[$contestID]."</input><br/>";
+$allContestIDs = array();
+while ($row = $stmt->fetchObject()) {
+   $contestID = $row->ID;
+   if ($mainContestID === null) {
+      $mainContestID = $contestID;
    }
-}
-if (count($contestIDs) == 0) {
-   $contestIDs = $allContestIDs;
+   $data[$contestID] = $row->name;
+   $checked = "";
+   if (isset($_POST["contest_".$contestID])) {
+      $checked = "checked";
+      $contestIDs[] = $contestID;
+   }
+   $allContestIDs[] = $contestID;
+   echo "<input type='checkbox' name='contest_".$contestID."' ".$checked.">".$data[$contestID]."</input><br/>";
 }
 echo "<input type='submit' value='".translate("filter")."' />";
 echo "</form></div>";
 
+if (count($contestIDs) == 0) {
+   $contestIDs = $allContestIDs;
+}
 
 $categories = ["blanche", "jaune", "orange", "verte", "bleue"];
 
