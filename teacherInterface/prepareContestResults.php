@@ -520,11 +520,10 @@ if ($action == "sumFFScores") {
          JOIN `group` ON team.groupID = `group`.ID
          JOIN `contest` ON `group`.contestID = contest.ID
          WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
-         AND (team.score IS NULL OR team.score = 0)
          GROUP BY team_question.teamID
       ) tmp ON team.ID = tmp.teamID
       SET team.tmpLastAnswerDate = maxDate, team.tmpScore = tmp.score
-      WHERE team.score IS NULL OR team.score = 0",
+      ",
       array("contestID" => $contestID));
 }
 
@@ -644,7 +643,9 @@ foreach ($questions as $question) {
       execQueryAndShowNbRows("Mark answers where score != ffScore or ffScore IS NULL", "
          UPDATE team_question SET checkStatus = 'difference'
          WHERE questionID = :questionID
-         AND (team_question.score != team_question.ffScore OR team_question.score IS NULL OR team_question.ffScore IS NULL)         
+         AND (team_question.score != team_question.ffScore OR
+              team_question.score IS NULL OR
+              (team_question.ffScore IS NULL AND team_question.score > 0))
          AND team_question.checkStatus = 'computed'",
          array("questionID" => $questionID));
       execQueryAndShowNbRows("Mark others as done", "
@@ -657,16 +658,19 @@ foreach ($questions as $question) {
 
 echo "<h3><a href='".$startUrl."&action=showScoreAnomalies'>List score anomalies</a></h3>";
 if ($action == "showScoreAnomalies") {
-   execSelectAndShowResults("List team_question with checkStatus = difference of error)", "
-      SELECT team_question.teamID, team_question.questionID, question.name, team_question.score, team_question.ffScore, team.password, team.tmpScore, team.startTime, team.participationType, contestant.firstName, contestant.lastName
+   //, contestant.firstName, contestant.lastName
+   //  JOIN contestant ON team.ID = contestant.teamID
+   //   GROUP BY team.ID, team_question.questionID
+   //   ORDER BY team.ID",
+   //    OR team_question.checkStatus = 'error')
+   execSelectAndShowResults("List official team_question with checkStatus = difference of error)", "
+      SELECT team_question.teamID, team_question.questionID, question.name, team_question.score, team_question.ffScore, team.password, team.tmpScore, team.startTime, team.participationType
       FROM team_question
       JOIN team ON team_question.teamID = team.ID
-      JOIN contestant ON team.ID = contestant.teamID
       JOIN `question` ON team_question.questionID = question.ID
-      WHERE team.contestID = :contestID
-      AND (team_question.checkStatus = 'difference' OR team_question.checkStatus = 'error')
-      GROUP BY team.ID, team_question.questionID
-      ORDER BY team.ID",
+      WHERE team_question.checkStatus = 'difference'
+      AND team.participationType = 'Official'
+      ",
       array("contestID" => $contestID));
 }
 
@@ -1190,10 +1194,12 @@ if ($action == "makeGroupUnofficial") {
    execSelectAndShowResults("Show the teams and students in this group", "
       SELECT contest.name, `group`.name, `user`.officialEmail, `user`.alternativeEmail,
       GROUP_CONCAT(CONCAT(contestant.firstName, ' ', contestant.lastName, '(', contestant.grade, ')', contestant.algoreaCode)),
-      team.score, team.rank
+      team.score, contestant.rank
       FROM `group`
       JOIN `team`  ON `team`.groupID = `group`.ID
       JOIN `contestant` ON `contestant`.teamID = team.ID
+      JOIN contest ON team.contestID = contest.ID
+      JOIN user ON `group`.userID = user.ID
       WHERE `group`.`code` = :groupCode
       GROUP BY contestant.ID",
       array("groupCode" => $groupCode));
@@ -1208,7 +1214,7 @@ if ($action == "makeGroupUnofficial") {
       execQueryAndShowNbRows("Make team unofficial", "
          UPDATE `group`
          JOIN `team` ON `team`.`groupID` = `group`.`ID`
-         SET `team``participationType` = 'Unofficial'
+         SET `team`.`participationType` = 'Unofficial'
          WHERE `group`.`code` = :groupCode",
          array("groupCode" => $groupCode));
 
@@ -1324,6 +1330,38 @@ if ($action == "newRegistrations") {
          contestant.algoreaCode = algorea_registration.code
          WHERE contestant.registrationID IS NULL OR contestant.algoreaCode IS NULL;",
       array());
+}
+
+
+echo "<h3><a href='".$startUrl."&action=checkRegistrations'>Check for mofifications since registrations were created</a></h3>";
+if ($action == "checkRegistrations") {
+      execSelectAndShowResults("Modified records", "
+         SELECT algorea_registration.grade, contestant.grade, algorea_registration.firstName, contestant.firstName, algorea_registration.lastName, contestant.lastName
+         FROM algorea_registration JOIN contestant ON contestant.registrationID = algorea_registration.ID JOIN team ON contestant.teamID = team.ID
+         JOIN contest ON team.contestID = contest.ID
+         WHERE
+         (contest.ID = :contestID OR contest.parentContestID = :contestID)
+         AND (contestant.grade != algorea_registration.grade
+         OR contestant.firstName != algorea_registration.firstName
+         OR contestant.lastName != algorea_registration.lastName)",
+      array("contestID" => $contestID));
+}
+
+echo "<h3><a href='".$startUrl."&action=updateRegistrations'>Fix mofifications since registrations were created</a></h3>";
+if ($action == "updateRegistrations") {
+      execQueryAndShowNbRows("Fix records from algorea_registration according to modifications on contestants", "
+         UPDATE algorea_registration
+         JOIN contestant ON contestant.registrationID = algorea_registration.ID
+         JOIN team ON contestant.teamID = team.ID
+         JOIN contest ON team.contestID = contest.ID
+         SET algorea_registration.grade = contestant.grade,
+         algorea_registration.firstName = contestant.firstName,
+         algorea_registration.lastName = contestant.lastName
+         WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
+         AND (contestant.grade != algorea_registration.grade
+         OR contestant.firstName != algorea_registration.firstName
+         OR contestant.lastName != algorea_registration.lastName)",
+      array("contestID" => $contestID));
 }
 
 echo "<h3><a href='".$startUrl."&action=updateCategories'>Update students category depending on their score</a></h3>";

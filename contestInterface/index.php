@@ -545,7 +545,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
       <tr><td>Prénom :</td><td id="persoFirstName"></td></tr>
       <tr><td>Classe :</td><td id="persoGrade"></td></tr>
       <tr><td>Qualifié pour la catégorie :</td><td id="persoCategory"></td></tr>
-      <tr><td>Qualifié en demi-finale :</td><td id="persoSemifinal"></td></tr>      
+      <!--<tr><td>Qualifié en demi-finale :</td><td id="persoSemifinal"></td></tr>-->
    </table>
    </p>
    <p>   
