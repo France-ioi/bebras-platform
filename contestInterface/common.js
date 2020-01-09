@@ -892,7 +892,9 @@ var questionIframe = {
                           alert(t("contest_starts_now_full_feedback"));
                        }
                     } else {
-                       alert(t("contest_starts_now"));
+                       if (!newInterface) {
+                          alert(t("contest_starts_now"));
+		       }
                     }
                     hasDisplayedContestStats = true;
                  }
