@@ -660,6 +660,11 @@ var questionIframe = {
       // The iframe is removed then recreated. It is the only way to add a Doctype in it
       $('#question-iframe').remove();
 
+      // Safety to avoid forever hiding the iframe
+      setTimeout(function() {
+         $(".questionIframeLoading").hide();
+         }, 2000);
+
       var iframe = document.createElement('iframe');
       iframe.setAttribute('id', 'question-iframe');
       iframe.setAttribute('scrolling', 'no');
@@ -852,6 +857,7 @@ var questionIframe = {
       // Reset autoHeight-related styles
       $('body').removeClass('autoHeight');
       $('#container', questionIframe.doc).css('padding', '5px');
+      $('.questionIframeLoading').hide();
 
       TaskProxyManager.bindListener(taskProxyLoadListener);
       TaskProxyManager.getTaskProxy('question-iframe', withTask, true);
@@ -868,7 +874,6 @@ var questionIframe = {
            }
         });
         task.load(taskViews, function() {
-           $('.questionIframeLoading').hide();
            task.showViews(taskViews, function() {
               if (typeof defaultAnswers[questionIframe.questionKey] == 'undefined') {
                  task.getAnswer(function(strAnswer) {
@@ -2963,8 +2968,14 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
       $(".questionList").hide();
       $(".buttonClose").hide();
       $("#question-iframe-container").show();
-      $(".questionIframeLoading").show();
       $(".button_return_list").prop("disabled", false);
+
+      $(".questionIframeLoading").show();
+      // Safety to avoid forever hiding the iframe
+      setTimeout(function() {
+         $(".questionIframeLoading").hide();
+         }, 5000);
+
    }
 
    var nextStep = function() {
