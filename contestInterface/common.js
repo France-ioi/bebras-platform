@@ -1420,23 +1420,25 @@ function updateUnlockedLevels(sortedQuestionIDs, updatedQuestionKey, contestEnde
       return;
    }
    var epsilon = 0.001;
-   var nbTasksUnlocked = [nbUnlockedTasksInitial, 0, 0];
+   // Commented-out lines in this function correspond to an unlock per level.
+   // This has been simplified to always unlock a whole task.
+//   var nbTasksUnlocked = [nbUnlockedTasksInitial, 0, 0];
+   var nbTasksUnlocked = nbUnlockedTasksInitial <= 0 ? sortedQuestionIDs.length : nbUnlockedTasksInitial;
    var prevQuestionUnlockedLevels = {};
    var iQuestionID, questionKey;
    for (iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
       questionKey = questionsData[sortedQuestionIDs[iQuestionID]].key;
       prevQuestionUnlockedLevels[questionKey] = questionUnlockedLevels[questionKey];
-      //if (contestEnded) {
+      if(contestEnded) {
          questionUnlockedLevels[questionKey] = 4;
          nbTasksUnlocked[2]++;
          continue;
-      //}
-      /*
+      }
       questionUnlockedLevels[questionKey] = 0;
       if (scores[questionKey] != null) {
          var score = scores[questionKey].score;
          var maxScore = scores[questionKey].maxScore;
-         if (score >= (maxScore / 2) - epsilon) {
+/*         if (score >= (maxScore / 2) - epsilon) {
             nbTasksUnlocked[0]++;
             nbTasksUnlocked[1]++;
             questionUnlockedLevels[questionKey] = 2;
@@ -1445,23 +1447,27 @@ function updateUnlockedLevels(sortedQuestionIDs, updatedQuestionKey, contestEnde
             nbTasksUnlocked[1]++;
             nbTasksUnlocked[2]++;
             questionUnlockedLevels[questionKey] = 3;
-         }
+         }*/
          if (score >= maxScore - epsilon) {
-            nbTasksUnlocked[2]++;
+//            nbTasksUnlocked[2]++;
+            nbTasksUnlocked++;
          }
       }
-      */
    }
    for (iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
       var questionData = questionsData[sortedQuestionIDs[iQuestionID]];
       questionKey = questionData.key;
-      for (var iLevel = 0; iLevel < 3; iLevel++) {
+/*      for (var iLevel = 0; iLevel < 3; iLevel++) {
          if (nbTasksUnlocked[iLevel] > 0) {
             if (questionUnlockedLevels[questionKey] < iLevel + 1) {
                questionUnlockedLevels[questionKey] = iLevel + 1;
             }
             nbTasksUnlocked[iLevel]--;
          }
+      }*/
+      if(nbTasksUnlocked > 0) {
+         questionUnlockedLevels[questionKey] = 4;
+         nbTasksUnlocked--;
       }
       if (questionUnlockedLevels[questionKey] == 0) {
          $("#row_" + questionKey).hide();
