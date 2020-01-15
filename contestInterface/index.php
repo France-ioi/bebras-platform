@@ -31,6 +31,7 @@
         <?php include('templates/groupConfirmation.php'); ?>
         <?php include('templates/startContestMenu.php'); ?>
         <?php include('templates/error.php'); ?>
+        <?php include('templates/preloadPage.php'); ?>
         <?php include('templates/scripts.php'); ?>
     </body>
 </html>

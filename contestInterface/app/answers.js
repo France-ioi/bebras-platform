@@ -4,7 +4,7 @@ import fetch from './common/Fetch';
 import logError from './common/LogError';
 
 var sending = false;
-var nbSubmissions = 0; // TODO: value not used
+//var nbSubmissions = 0; // TODO: value not used
 
 function failedSendingAnswers() {
     tracker.disabled = true;
@@ -92,7 +92,7 @@ function submitAnswer(questionKey, answer, score) {
         sending: false,
         score: score
     };
-    nbSubmissions++;
+    //nbSubmissions++;
     tracker.trackData({
         dataType: "answer",
         teamID: app.teamID,

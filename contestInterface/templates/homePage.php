@@ -62,4 +62,11 @@
             </div>
         </div>
     </div>
+
+    <div class="section" id="homePagePreloadSection">
+        <div class="tabTitle" data-i18n="home_preload_title"></div>
+        <div class="divInput form-inline">
+            <button type="button" onclick="showPreloadPage()" class="btn btn-primary" data-i18n="home_preload_page_link"></button>
+        </div>
+    </div>
 </div>

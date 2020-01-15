@@ -9,7 +9,6 @@ export default {
 	init () {
 		window.cancelStartContest = this.cancelStartContest.bind(this);
 		window.reallyStartContest = this.reallyStartContest.bind(this);
-
 	},
 	load (data, eventListeners) {
 		$("#divStartContest").show();
@@ -23,6 +22,7 @@ export default {
 		UI.PersonalPage.load();
 	},
 	reallyStartContest () {
+		alert('reallyStartContest')
 		this.unload();
 		group.checkGroupFromCode("CheckGroup", UI.PersonalPage.registrationData.code, false, false, null, true);
 	}

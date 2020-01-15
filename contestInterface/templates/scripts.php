@@ -77,6 +77,7 @@
 
 <?php
     script_tag('/build/app.js');
+    //script_tag('/build/app.js?_='.rand());
 ?>
 
 <!--[if IE 6]>

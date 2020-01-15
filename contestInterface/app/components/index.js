@@ -25,6 +25,7 @@ import HomePage from './HomePage';
 import GroupConfirmation from './GroupConfirmation';
 import Contests from './Contests';
 import StartContestMenu from './StartContestMenu';
+import PreloadPage from './PreloadPage';
 
 
 var UI = {
@@ -53,7 +54,8 @@ var UI = {
     HomePage,
     GroupConfirmation,
     Contests,
-    StartContestMenu
+    StartContestMenu,
+    PreloadPage
 };
 
 

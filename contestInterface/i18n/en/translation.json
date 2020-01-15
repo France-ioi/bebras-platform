@@ -1,6 +1,8 @@
 {
     "submit": "Submit",
     "cancel": "Cancel",
+    "back": "Back",
+    "are_you_sure": "Are you sure?",
 
     "home_code_header": "Start with a code",
     "home_code_text": "Enter your participation code or group code provided by your teacher:",
@@ -12,6 +14,12 @@
     "home_continue_text1": "If you where interrupted, input your recovery code.",
     "home_continue_text2": "If you don't have it, you may input the group code or participation code you ysed to start.",
     "home_continue_submit": "Reload my participation",
+    "home_preload_title": "Offline mode",
+    "home_preload_page_link": "Preload content for offline use",
+
+    "preload_page_list_title": "Preloaded codes: ",
+    "preload_page_btn_add": "Add code",
+    "preload_page_btn_clear": "Clear preloaded data",
 
     "general_page_title": "Bebras - the platform",
     "general_instructions": "For a general impression of the Bebras Contest, go to <a href=\"http://castor-informatique.fr\">the French home page</a>.",

@@ -3,6 +3,9 @@ import Utils from './common/Utils';
 import contest from './contest';
 import fetch from './common/Fetch';
 
+import CachedRequest from './new/CachedRequest'
+var request = CachedRequest('group')
+
 
 function groupWasChecked(data, curStep, groupCode, getTeams, isPublic, contestID) {
     contest.initContestData(data, contestID);
@@ -63,21 +66,25 @@ function checkGroupFromCode(curStep, groupCode, getTeams, isPublic, language, st
     UI.GroupUsedForm.unload();
     UI.TrainingContestSelection.hideBrowserAlert();
     UI.TrainingContestSelection.updateCurStepResult(curStep, "");
-    fetch(
-        "data.php",
-        {
-            SID: app.SID,
-            controller: "Auth",
-            action: "checkPassword",
-            password: groupCode,
-            getTeams: getTeams,
-            language: language,
-            startOfficial: startOfficial,
-            commonJsVersion: app.commonJsVersion,
-            timestamp: window.config.timestamp,
-            commonJsTimestamp: app.commonJsTimestamp
-        },
+
+    var params = {
+        //SID: app.SID,
+        controller: "Auth",
+        action: "checkPassword",
+        password: groupCode,
+        getTeams: getTeams,
+        language: language,
+        startOfficial: startOfficial,
+        commonJsVersion: app.commonJsVersion,
+        timestamp: window.config.timestamp,
+        commonJsTimestamp: app.commonJsTimestamp
+    };
+
+    request.send(
+        params,
         function(data) {
+            Utils.enableButton("button" + curStep);
+
             if (!data.success) {
                 if (data.message) {
                     UI.TrainingContestSelection.updateCurStepResult(curStep, data.message);
@@ -132,9 +139,7 @@ function checkGroupFromCode(curStep, groupCode, getTeams, isPublic, language, st
                 );
             }
         }
-    ).done(function() {
-        Utils.enableButton("button" + curStep);
-    });
+    );
 };
 
 

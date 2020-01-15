@@ -3,7 +3,7 @@ import contests from '../contests';
 import contest from '../contest';
 import team from '../team';
 import group from '../group';
-import Preloader from '../common/Preloader';
+import preloader from '../common/Preloader';
 
 var types_order = [
     'algorea_white',
@@ -21,7 +21,6 @@ export default {
         window.selectContestsTab = this.selectContestsTab.bind(this);
         window.startPracticeByID = this.startPracticeByID.bind(this);
         window.startOpenContestByID = this.startOpenContestByID.bind(this);
-        this.preloader = Preloader({});
 	},
 
 
@@ -198,7 +197,7 @@ export default {
                     this.getContestCaption(contest) +
                     this.getContestImage(contest) +
                     (locked ? this.getLockedContestInfo() : this.getOpenContestInfo(contest, results)) +
-                    this.getPreloaderCode(contest)
+                    this.getPreloaderCode(contest) +
                 '</div>';
         }
         if(html != '') {
@@ -328,7 +327,7 @@ export default {
 
 
     getPreloaderCode(contest) {
-        if(!this.preloader) {
+        if(!preloader) {
             return '';
         }
         return '<div class="contest_preload" data-contest-folder="' + contest.folder + '"></div>';
@@ -336,7 +335,7 @@ export default {
 
 
     refreshPreloaderState(container) {
-        if(!this.preloader) {
+        if(!preloader) {
             return;
         }
         var self = this;
@@ -344,7 +343,7 @@ export default {
             var el = $(this).empty();
             el.html(i18n.t('contest_loading'));
             var folder = el.data('contest-folder');
-            self.preloader.check(folder, function(exists) {
+            preloader.check(folder, function(exists) {
                 if(exists) {
                     el.text(i18n.t('contest_downloaded'));
                 } else {
@@ -353,7 +352,7 @@ export default {
                         e.stopPropagation();
                         e.preventDefault();
                         contest.getFilesList(folder, function(list) {
-                            self.preloader.add(list, function(success) {
+                            preloader.add(list, function(success) {
                                 if(success) {
                                     el.text(i18n.t('contest_downloaded'));
                                 } else {
@@ -366,10 +365,6 @@ export default {
                 }
             })
         })
-    },
-
-    preloadConstest(folder) {
-
     }
 
 }

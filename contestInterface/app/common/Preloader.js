@@ -119,4 +119,6 @@ function ContestPreloader(params) {
     };
 }
 
-export default ContestPreloader;
+var preloader = ContestPreloader({});
+
+export default preloader;

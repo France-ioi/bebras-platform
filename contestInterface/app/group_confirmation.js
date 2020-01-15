@@ -1,10 +1,10 @@
 import UI from './components';
-import fetch from './common/Fetch';
+import CachedRequest from './new/CachedRequest'
 
+var request = CachedRequest('group_confirmation')
 
 function check(code, callback) {
-    fetch(
-        "data.php",
+    request.send(
         {
             SID: app.SID,
             controller: "Group",

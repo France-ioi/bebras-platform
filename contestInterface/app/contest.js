@@ -406,8 +406,7 @@ function finalCloseContest(message) {
             teamID: app.teamID,
             teamPassword: app.teamPassword
         },
-        function() {}
-    ).always(function() {
+        function() {
         window.onbeforeunload = function() {};
         if (!contestShowSolutions) {
             UI.ContestEndWaitingPage.unload();

@@ -1,7 +1,8 @@
 import UI from '../components';
 import user from '../user';
-//import group_confirmation from '../group_confirmation'
 import group from '../group';
+import preloader from '../common/Preloader';
+
 
 export default {
 
@@ -9,6 +10,8 @@ export default {
 	init () {
         window.registerUser = this.registerUser.bind(this);
         window.createGuest = this.createGuest.bind(this);
+        window.showPreloadPage = this.showPreloadPage.bind(this);
+        $('#homePagePreloadSection').toggle(!!preloader);
 	},
 
     load(data, eventListeners) {
@@ -44,5 +47,11 @@ export default {
             app.setUser(res.registrationData);
             UI.PersonalPage.show(res.registrationData);
         });
+    },
+
+    showPreloadPage() {
+        this.unload();
+        UI.PreloadPage.load();
     }
+
 };
