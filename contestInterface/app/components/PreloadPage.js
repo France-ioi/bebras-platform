@@ -70,7 +70,8 @@ export default {
                         action: "getData"
                     }
                     ContestsRequest.send(params, function(data) {
-                        self.preloadContestsFiles(data.contests)
+                        self.preloadContestsFiles(data.contests);
+                        self.preloadContests(data.results);
                         $('#preloadPageCodeBtn').attr('disabled', false);
                         storage.push(code);
                         self.refresh();
@@ -82,9 +83,6 @@ export default {
 
 
     preloadContestsFiles(contests) {
-        if(!preloader) {
-            return;
-        }
         function preloadFolder(folder) {
             preloader.check(folder, function(exists) {
                 if(exists) return;
@@ -98,6 +96,28 @@ export default {
         }
         for(var i=0; i<contests.open.length; i++) {
             preloadFolder(contests.open[i].folder);
+        }
+    },
+
+
+    preloadContests(results) {
+        for(var ID in results) {
+            if(!('password' in results[ID])) {
+                continue;
+            }
+            var params = {
+                controller: "Auth",
+                action: "checkPassword",
+                password: results[ID].password,
+                getTeams: false,
+                commonJsVersion: app.commonJsVersion,
+                timestamp: window.config.timestamp,
+                commonJsTimestamp: app.commonJsTimestamp
+            };
+            GroupRequest.send(
+                params,
+                function(data) {}
+            );
         }
     },
 
