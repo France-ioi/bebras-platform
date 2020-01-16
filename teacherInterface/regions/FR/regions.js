@@ -22,6 +22,7 @@ regions = [
    'countryFR:nantes',
    'countryFR:nice',
    'countryFR:noumea',
+   'countryFR:normandie',
    'countryFR:orleans-tours',
    'countryFR:paris',
    'countryFR:poitiers',
