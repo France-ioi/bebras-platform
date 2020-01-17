@@ -162,7 +162,6 @@ class AuthController extends Controller
         $_SESSION["minCategory"] = $row->minCategory;
         $_SESSION["maxCategory"] = $row->maxCategory;
         $_SESSION["groupClosed"] = (($nbMinutesElapsed > 60) && (!$_SESSION["isPublic"]) && (!$_SESSION["isGenerated"]));
-        $_SESSION["registrationData"] = $registrationData;
 
         updateSessionWithContestInfos($row);
 
