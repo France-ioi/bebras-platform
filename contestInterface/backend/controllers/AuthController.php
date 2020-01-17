@@ -157,11 +157,8 @@ class AuthController extends Controller
         $_SESSION["schoolID"] = $schoolID;
         $_SESSION["nbMinutes"] = intval($row->nbMinutes);
         $_SESSION["isPublic"] = intval($row->isPublic);
-        $_SESSION["isGenerated"] = intval($row->isGenerated);
         $_SESSION["language"] = $row->language;
-        $_SESSION["minCategory"] = $row->minCategory;
-        $_SESSION["maxCategory"] = $row->maxCategory;
-        $_SESSION["groupClosed"] = (($nbMinutesElapsed > 60) && (!$_SESSION["isPublic"]) && (!$_SESSION["isGenerated"]));
+        $_SESSION["groupClosed"] = (($nbMinutesElapsed > 60) && !$isPublic && !$isGenerated);
 
         updateSessionWithContestInfos($row);
 
