@@ -11,7 +11,6 @@ class ContestsController extends Controller
             'results' => $this->getResults($request)
         );
         if($request['registrationID'] && !$request['guest']) {
-        //if(isset($_SESSION['registrationData']) && !$_SESSION['registrationData']->guest) {
             $res['contests']['open'] = $this->getOpenContests();
             $res['contests']['past'] = $this->getPastContests($request);
         }
@@ -134,7 +133,7 @@ class ContestsController extends Controller
                 contest.practice = 0";
         $stmt = $this->db->prepare($q);
         $stmt->execute(array(
-            'registrationID' => $request['registrationID']//$_SESSION['registrationData']->ID
+            'registrationID' => $request['registrationID']
         ));
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -210,7 +209,7 @@ class ContestsController extends Controller
         ";
         $stmt = $this->db->prepare($q);
         $stmt->execute(array(
-            "registrationID" => $request['registrationID'] //$_SESSION['registrationData']->ID
+            "registrationID" => $request['registrationID']
         ));
         $res = array();
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

@@ -23,7 +23,6 @@ class UserController extends Controller
         );
         $user['ID'] = $this->insertUser($user);
         $registrationData = $this->getRegistrationData($user);
-        $_SESSION["registrationData"] = (object) $registrationData;
         exitWithJson([
             "success" => true,
             "registrationData" => $registrationData
@@ -43,7 +42,6 @@ class UserController extends Controller
         $user['confirmed'] = 1;
         $user['ID'] = $this->insertUser($user);
         $registrationData = $this->getRegistrationData($user);
-        $_SESSION["registrationData"] = (object) $registrationData;
         exitWithJson([
             "success" => true,
             "registrationData" => $registrationData
