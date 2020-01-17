@@ -111,7 +111,6 @@ function commonLoginTeam($db, $password) {
    }
    updateSessionWithContestInfos($row);
    $_SESSION["teamID"] = $row->teamID;
-   $_SESSION["name"] = $row->name;
    $_SESSION["nbMinutes"] = intval($row->nbMinutes);
    $_SESSION["teamPassword"] = $password;
    $_SESSION["groupID"] = $row->groupID;
@@ -120,7 +119,7 @@ function commonLoginTeam($db, $password) {
 
    return (object)array(
       "success" => true,
-      "name" => $_SESSION["name"],
+      "name" => $row->name,
       "teamID" => $_SESSION["teamID"],
       "nbMinutes" => $_SESSION["nbMinutes"],
 

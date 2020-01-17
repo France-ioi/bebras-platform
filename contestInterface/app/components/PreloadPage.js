@@ -65,9 +65,13 @@ export default {
                     code: code
                 }
                 GroupConfirmationRequest.send(params, function(data) {
+                    /*
+                    // TODO: registrationData source
                     var params = {
                         controller: "Contests",
-                        action: "getData"
+                        action: "getData",
+                        registrationID: UI.PersonalPage.registrationData['ID'],
+                        guest: UI.PersonalPage.registrationData['guest']
                     }
                     ContestsRequest.send(params, function(data) {
                         self.preloadContestsFiles(data.contests);
@@ -76,6 +80,7 @@ export default {
                         storage.push(code);
                         self.refresh();
                     })
+                    */
                 });
             }
         );

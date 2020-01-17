@@ -27,7 +27,7 @@ export default {
     load(data, eventListeners) {
         $('#divContests').show();
         this.selectContestsTab('practice');
-        contests.getData(this.onContestsData.bind(this))
+        contests.getData(UI.PersonalPage.registrationData, this.onContestsData.bind(this))
     },
 
 

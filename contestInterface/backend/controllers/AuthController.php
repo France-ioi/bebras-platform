@@ -152,7 +152,6 @@ class AuthController extends Controller
         if (isset($_SESSION['mysqlOnly'])) {
             unset($_SESSION['mysqlOnly']);
         }
-        $_SESSION["name"] = $row->name;
         $_SESSION["groupID"] = $groupID;
         $_SESSION["groupCode"] = $password;
         $_SESSION["schoolID"] = $schoolID;
@@ -242,7 +241,7 @@ class AuthController extends Controller
             "fullFeedback" => $_SESSION["fullFeedback"],
             "nbUnlockedTasksInitial" => $_SESSION["nbUnlockedTasksInitial"],
             "subsetsSize" => $_SESSION["subsetsSize"],
-            "name" => $_SESSION["name"],
+            "name" => $row->name,
             "teams" => $teams,
             'bRecovered' => $row->bRecovered,
             "nbMinutesElapsed" => $nbMinutesElapsed,

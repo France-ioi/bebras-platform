@@ -3,16 +3,17 @@
 class ContestsController extends Controller
 {
 
-    public function getData() {
+    public function getData($request) {
         $res = array(
             'contests' => array(
                 'practice' => $this->getPracticeContests(),
             ),
-            'results' => $this->getResults()
+            'results' => $this->getResults($request)
         );
-        if(isset($_SESSION['registrationData']) && !$_SESSION['registrationData']->guest) {
+        if($request['registrationID'] && !$request['guest']) {
+        //if(isset($_SESSION['registrationData']) && !$_SESSION['registrationData']->guest) {
             $res['contests']['open'] = $this->getOpenContests();
-            $res['contests']['past'] = $this->getPastContests();
+            $res['contests']['past'] = $this->getPastContests($request);
         }
         exitWithJson($res);
     }
@@ -102,7 +103,7 @@ class ContestsController extends Controller
     }
 
 
-    private function getPastContests() {
+    private function getPastContests($request) {
         $q = "
             SELECT
                 contest.ID,
@@ -133,7 +134,7 @@ class ContestsController extends Controller
                 contest.practice = 0";
         $stmt = $this->db->prepare($q);
         $stmt->execute(array(
-            'registrationID' => $_SESSION['registrationData']->ID
+            'registrationID' => $request['registrationID']//$_SESSION['registrationData']->ID
         ));
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -168,7 +169,7 @@ class ContestsController extends Controller
 
 
 
-    function getResults() {
+    function getResults($request) {
         $q = "
             SELECT
                 IFNULL(tmp.score, 0) as score,
@@ -209,7 +210,7 @@ class ContestsController extends Controller
         ";
         $stmt = $this->db->prepare($q);
         $stmt->execute(array(
-            "registrationID" => $_SESSION['registrationData']->ID
+            "registrationID" => $request['registrationID'] //$_SESSION['registrationData']->ID
         ));
         $res = array();
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
