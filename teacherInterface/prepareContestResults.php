@@ -1104,8 +1104,7 @@ if ($action == "showTeamScores") {
       JOIN `group` ON team.groupID = `group`.`ID`
       JOIN `contest` ON `group`.contestID = contest.ID
       SET score = tmpScore
-      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
-      AND team.participationType = 'Official'",
+      WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)",
       array("contestID" => $contestID));      
 }
 
@@ -1363,6 +1362,23 @@ if ($action == "updateRegistrations") {
          OR contestant.lastName != algorea_registration.lastName)",
       array("contestID" => $contestID));
 }
+
+echo "<h3><a href='".$startUrl."&action=updateRegistrationsSchoolUser'>Fix school and user of algorea_registration</a></h3>";
+if ($action == "updateRegistrationsSchoolUser") {
+      execQueryAndShowNbRows("Fix school and user of algorea_registration", "
+         UPDATE algorea_registration
+         JOIN contestant ON contestant.registrationID = algorea_registration.ID
+         JOIN team ON contestant.teamID = team.ID
+         JOIN `group` ON `group`.ID = team.groupID
+         SET algorea_registration.userID = `group`.userID
+         algorea_registration.schoolID = `group`.schoolID,
+         WHERE `group`.contestID = :contestID
+         AND (contestant.grade != algorea_registration.grade
+         OR contestant.firstName != algorea_registration.firstName
+         OR contestant.lastName != algorea_registration.lastName)",
+      array("contestID" => $contestID));
+}
+
 
 echo "<h3><a href='".$startUrl."&action=updateCategories'>Update students category depending on their score</a></h3>";
 if ($action == "updateCategories") {
