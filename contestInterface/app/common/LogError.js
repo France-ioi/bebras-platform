@@ -82,11 +82,11 @@ var logError = function () {
         },
         function (data) {
             if (!data || !data.success) {
-                logToConsole('error from logError.php');
+                logToConsole('error from LogErrorController.php');
             }
         }
     ).fail(function () {
-        logToConsole('error calling logError.php');
+        logToConsole('error calling LogErrorController.php');
     });
 };
 

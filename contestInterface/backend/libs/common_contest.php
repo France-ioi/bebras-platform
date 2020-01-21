@@ -1,7 +1,7 @@
 <?php
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 
-require_once '../shared/tinyORM.php';
+require_once __DIR__.'/../../../shared/tinyORM.php';
 
 $allCategories = array("blanche", "jaune", "orange", "verte", "bleue", "cm1cm2", "6e5e", "4e3e", "2depro", "2de", "1reTalepro", "1reTale", "all");
 

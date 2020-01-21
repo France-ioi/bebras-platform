@@ -34,8 +34,10 @@ function sendAnswers() {
     }
     try {
         fetch(
-            "answer.php",
+            "data.php",
             {
+                controller: 'Answers',
+                action: 'add',
                 SID: app.SID,
                 answers: app.answersToSend,
                 teamID: app.teamID,

@@ -3,7 +3,7 @@
 
 require_once "config.php";
 require_once "../shared/common.php";
-require_once "backend/common_contest.php";
+require_once "backend/libs/common_contest.php";
 use Aws\S3\S3Client;
 
 initSession();

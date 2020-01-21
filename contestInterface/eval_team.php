@@ -1,6 +1,8 @@
 <?php
 /* Copyright (c) 2012 Association France-ioi, MIT License http://opensource.org/licenses/MIT */
 
+// this script not used in js app
+
 require_once("../shared/common.php");
 
 header("Content-Type: application/json");

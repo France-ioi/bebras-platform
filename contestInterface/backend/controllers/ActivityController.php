@@ -1,11 +1,12 @@
 <?php
 
+//$noSessions = true;
+
 class ActivityController extends Controller
 {
 
     public function add($request)
     {
-        mb_internal_encoding("UTF-8");
         if($this->validate($request)) {
             $this->handleActivity($request);
         }

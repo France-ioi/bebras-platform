@@ -4,13 +4,15 @@
 include_once("config.php");
 include_once("../shared/common.php");
 include_once("../shared/tinyORM.php");
-include_once("backend/common_contest.php");
+include_once("backend/libs/common_contest.php");
 include_once("backend/Controller.php");
 
 /*
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 */
+mb_internal_encoding("UTF-8");
+
 
 function execute($request) {
     $controller = isset($request['controller']) ? $request['controller'] : null;
