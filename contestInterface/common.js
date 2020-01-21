@@ -492,7 +492,7 @@ var platform = {
             window.selectQuestion(nextQuestionID, false);
          }, delay);
       }
-      else {
+      else if(!newInterface) {
          setTimeout(function() {
             alert(t("last_question_message"));
          }, delay);
@@ -504,7 +504,7 @@ var platform = {
       }
       var questionData = questionsData[questionsKeyToID[questionIframe.questionKey]];
       var nextQuestionID = questionData.nextQuestionID;
-      if ((!hasAnsweredQuestion) && (nextQuestionID !== "0")) {
+      if (!newInterface && !hasAnsweredQuestion && nextQuestionID !== "0") {
          if ((mode != "stay") && (mode != "cancel")) {
             if (fullFeedback) {
                alert(t("first_question_message_full_feedback"));
