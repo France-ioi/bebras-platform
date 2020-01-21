@@ -72,11 +72,20 @@ var logError = function () {
     if (nbErrorsSent > 10) {
         return;
     }
-    fetch('logError.php', {errormsg: logStr, questionKey: app.currentQuestionKey}, function (data) {
-        if (!data || !data.success) {
-        logToConsole('error from logError.php');
+    fetch(
+        'data.php',
+        {
+            controller: 'LogError',
+            action: 'add',
+            errormsg: logStr,
+            questionKey: app.currentQuestionKey
+        },
+        function (data) {
+            if (!data || !data.success) {
+                logToConsole('error from logError.php');
+            }
         }
-    }).fail(function () {
+    ).fail(function () {
         logToConsole('error calling logError.php');
     });
 };

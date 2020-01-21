@@ -4,7 +4,7 @@
 include_once("config.php");
 include_once("../shared/common.php");
 include_once("../shared/tinyORM.php");
-include_once("common_contest.php");
+include_once("backend/common_contest.php");
 include_once("backend/Controller.php");
 
 /*

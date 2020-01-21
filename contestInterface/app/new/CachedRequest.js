@@ -18,7 +18,7 @@ var makeCachedRequest = function(name) {
             var key = JSON.stringify(params);
 
             if(storage.exist(key)) {
-                return callback(storage.get(key));
+                //return callback(storage.get(key));
             }
 
             fetch('data.php', params, function(data) {

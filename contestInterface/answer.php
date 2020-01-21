@@ -6,7 +6,7 @@ $noSessions = true;
 use Aws\DynamoDb\Exception;
 require_once("../shared/connect.php");
 require_once("../shared/tinyORM.php");
-include_once("common_contest.php");
+include_once("backend/common_contest.php");
 
 $tinyOrm = new tinyOrm();
 $testMode = $config->db->testMode;

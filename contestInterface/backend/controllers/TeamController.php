@@ -62,9 +62,24 @@ class TeamController extends Controller
         }
 
         $contestants = $request["contestants"];
-        $stmt = $this->db->prepare("UPDATE `group` SET `startTime` = UTC_TIMESTAMP() WHERE `group`.`ID` = ? AND `startTime` IS NULL");
+        $stmt = $this->db->prepare("
+            UPDATE
+                `group`
+            SET
+                `startTime` = UTC_TIMESTAMP()
+            WHERE
+                `group`.`ID` = ? AND `startTime` IS NULL
+        ");
         $stmt->execute(array($groupID));
-        $stmt = $this->db->prepare("UPDATE `group` SET `nbTeamsEffective` = `nbTeamsEffective` + 1, `nbStudentsEffective` = `nbStudentsEffective` + ? WHERE `ID` = ?");
+        $stmt = $this->db->prepare("
+            UPDATE
+                `group`
+            SET
+                `nbTeamsEffective` = `nbTeamsEffective` + 1,
+                `nbStudentsEffective` = `nbStudentsEffective` + ?
+            WHERE
+                `ID` = ?
+        ");
         $stmt->execute(array(count($contestants), $groupID));
 
         if (isset($_SESSION['mysqlOnly'])) {

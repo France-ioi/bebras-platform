@@ -93,8 +93,6 @@ function checkGroupFromCode(curStep, groupCode, getTeams, isPublic, language, st
                 }
                 return;
             }
-            UI.StartContestForm.slideUp();
-            //UI.NavigationTabs.unload();
             UI.HomePage.unload();
             UI.MainHeader.updateLoginLinkVisibility(false);
             $("#div" + curStep).hide();

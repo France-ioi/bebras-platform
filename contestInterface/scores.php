@@ -1,7 +1,7 @@
 <?php
 
 require_once("../shared/common.php");
-require_once("common_contest.php");
+require_once("backend/common_contest.php");
 
 header("Content-Type: application/json");
 header("Connection: close");
@@ -36,7 +36,7 @@ if (isset($_POST['scores'])) {
    $stmt = $db->prepare($query);
    $stmt->execute(array($teamScore, $teamID));
    updateTeamCategories($db, $teamID);
-   
+
    echo json_encode(['status' => 'success']);
 } else {
    echo json_encode(['status' => 'fail', 'error' => "missing scores"]);

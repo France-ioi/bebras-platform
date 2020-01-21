@@ -29,7 +29,13 @@ class ContestController extends Controller
             $mode = 'mysql';
         }
         try {
-            $results = $tinyOrm->select('team_question', array('questionID', 'answer', 'ffScore', 'score'), array('teamID' => $teamID), null, $mode);
+            $results = $tinyOrm->select(
+                'team_question',
+                array('questionID', 'answer', 'ffScore', 'score'),
+                array('teamID' => $teamID),
+                null,
+                $mode
+            );
         } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
             if (strval($e->getAwsErrorCode()) != 'ConditionalCheckFailedException') {
                 error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());

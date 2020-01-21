@@ -1,14 +1,16 @@
+import caps from '../new/BrowserCapabilities';
+
 function ContestPreloader(params) {
 
     var ready = false;
     var debug = true;
 
     function browserCapatible() {
-        if (!('serviceWorker' in navigator)) {
+        if (!caps.serviceWorker) {
             console.warn('serviceWorker not supported');
             return false;
         }
-        if (!('MessageChannel' in window)) {
+        if (!caps.MessageChannel) {
             console.warn('MessageChannel not supported');
             return false;
         }
@@ -32,7 +34,7 @@ function ContestPreloader(params) {
             console.log('navigator.serviceWorker.ready', registration)
         });
         */
-       debug && console.log('SW install')
+        debug && console.log('SW install')
         navigator.serviceWorker
             //.register(dir + 'sw.js', { scope: dir })
             .register('sw.js')

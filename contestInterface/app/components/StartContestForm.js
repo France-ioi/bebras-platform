@@ -26,9 +26,6 @@ export default {
 			return group.checkGroupFromCode("CheckGroup", groupCode, false, false);
 		})
 	},
-	slideUp () {
-		$("#submitParticipationCode").delay(250).slideUp(400);
-	},
 	confirmUnsupportedBrowser () {
 		$("#submitParticipationCode").removeClass('needBrowserConfirm');
 	},

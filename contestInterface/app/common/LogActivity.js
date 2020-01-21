@@ -6,7 +6,9 @@ function logActivity(teamID, questionID, type, answer, score) {
     if (!window.config.logActivity) {
         return;
     }
-    fetch("activity.php", {
+    fetch("data.php", {
+        controller: "Activity",
+        action: "add",
         teamID: teamID,
         questionID: questionID,
         type: type,

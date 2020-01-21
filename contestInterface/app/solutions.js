@@ -87,10 +87,10 @@ function loadSolutions(data) {
 
 function loadSolutionsHat() {
     fetch(
-        "solutions.php",
-        { SID: app.SID, ieMode: window.ieMode },
+        "data.php",
+        { SID: app.SID, ieMode: window.ieMode, controller: "Solutions", action: "get" },
         function(data) {
-            if (data.success) {
+            if (!data.error) {
                 if (data.solutions) {
                     UI.GridView.updateSolutionsContent(data.solutions);
                     loadSolutions(data);
