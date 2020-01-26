@@ -25,6 +25,7 @@ var contestVisibility;
 var contestShowSolutions;
 var contestOpen;
 var fullFeedback;
+var showTotalScore;
 var nextQuestionAuto;
 var nbUnlockedTasksInitial;
 var newInterface;
@@ -1624,6 +1625,9 @@ function loadContestData(contestID, contestFolder, groupPassword)
             $('.chrono').css('font-size', '1.3em');
             $('.fullFeedback').show();
          }
+         if (showTotalScore) {
+            $('.showTotalScore').show();
+         }
          showQuestionIframe();
          $("#divImagesLoading").hide();
 
@@ -2519,6 +2523,7 @@ function initContestData(data, newContestID) {
    }
    updateContestName(data.contestName);
    fullFeedback = parseInt(data.fullFeedback);
+   showTotalScore = parseInt(data.showTotalScore);
    nextQuestionAuto = parseInt(data.nextQuestionAuto);
    nbUnlockedTasksInitial = parseInt(data.nbUnlockedTasksInitial);
    newInterface = !!parseInt(data.newInterface);
@@ -3097,9 +3102,17 @@ function computeFullFeedbackScore() {
       } else  {
          strScore += t("point");
       }
-      $(".scoreTotalFullFeedback").html(strScore);
+      if (showTotalScore) {
+         $(".scoreTotalFullFeedback").html(strScore);
+      } else {
+         $(".showTotalScore").hide();
+      }
    } else {
-      $(".scoreTotalFullFeedback").html(ffTeamScore+' / '+ffMaxTeamScore);
+      if (showTotalScore) {
+         $(".scoreTotalFullFeedback").html(ffTeamScore+' / '+ffMaxTeamScore);
+      } else {
+         $(".showTotalScore").hide();
+      }
    }
 }
 

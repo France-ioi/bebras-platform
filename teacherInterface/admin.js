@@ -559,6 +559,13 @@ function initModels(isLogged) {
                stype: "select", searchoptions: searchYesNo,
                width: 100
             },
+            showTotalScore: {
+               label: t("contest_showTotalScore_label"),
+               editable: true,
+               edittype: "select", editoptions: editYesNo,
+               stype: "select", searchoptions: searchYesNo,
+               width: 100
+            },
             nextQuestionAuto: {
                label: t("contest_nextQuestionAuto_label"),
                editable: true,
@@ -1683,6 +1690,7 @@ Generator.prototype.upload = function() {
       contestID: this.contestID,
       contestFolder: this.contestFolder,
       fullFeedback: this.contest.fullFeedback,
+      showTotalScore: this.contest.showTotalScore,
       status: this.contest.status,
       tasks: JSON.stringify(this.tasks)
    };

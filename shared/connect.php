@@ -22,6 +22,9 @@ function connect_pdo($config) {
       $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
       $pdo_options[PDO::MYSQL_ATTR_INIT_COMMAND] = "SET NAMES utf8";
       $connexionString = "mysql:host=".$config->db->mysql->host.";dbname=".$config->db->mysql->database.";charset=utf8";
+      if (isset($config->db->mysql->port)) {
+         $connexionString .= ";port=".$config->db->mysql->port;
+      }
       if ($config->db->mysql->logged) {
          $db = new LoggedPDO($connexionString, $config->db->mysql->user, $config->db->mysql->password, $pdo_options);
       } else {

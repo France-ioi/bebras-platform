@@ -593,7 +593,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
       <div class="questionListHeader">
          <table class="chrono" width="95%">
             <tr class="header_time"><td class="fullFeedback" data-i18n="remaining_time"></td><td><span class='minutes'></span>:<span class='seconds'></span></td></tr>
-            <tr><td class="fullFeedback" data-i18n="current_score"></td><td><span class='scoreTotalFullFeedback'></span></td></tr>
+            <tr><td class="showTotalScore" data-i18n="current_score"></td><td><span class='scoreTotalFullFeedback'></span></td></tr>
          </table>
          <p></p>
          <div class="scoreBonus" style="display:none"><b data-i18n="questions_bonus"></b><br/></div>
@@ -623,7 +623,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
          <table class="header_table">
             <tr>
                <td class="header_logo" data-i18n="[html]top_image_new"></td>
-               <td class="header_score"><span data-i18n="current_score"></span><br/><b><span class='scoreTotalFullFeedback'></span></b></td>
+               <td class="header_score showTotalScore"><span data-i18n="current_score"></span><br/><b><span class='scoreTotalFullFeedback'></span></b></td>
                <td class="header_time" id="header_time"><span data-i18n="remaining_time_long"></span> <br/><b><span class='minutes'></span>:<span class='seconds'></span></b></td>
                <td class="header_rank" style="display:none"><span data-i18n="rank"></span> <br/><b><span class="rank" width="95%"></span></b></td>
                <td class="header_button">
@@ -641,7 +641,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
                <td class="headerAutoHeight_logo" data-i18n="[html]top_image_new"></td>
                <td class="headerAutoHeight_time"><b><span class='minutes'></span>:<span class='seconds'></span></b></td>
                <td class="headerAutoHeight_title"><span class="questionTitle" style="padding-right: 20px"></span><span id="questionStars"></span></td>
-               <td class="headerAutoHeight_score"><b><span class='scoreTotalFullFeedback'></span></b></td>
+               <td class="headerAutoHeight_score showTotalScore"><b><span class='scoreTotalFullFeedback'></span></b></td>
                <td class="headerAutoHeight_button">
                  <button class="button_return_list" type="button" data-i18n="return" onclick="backToList()" ></button>
                </td>
