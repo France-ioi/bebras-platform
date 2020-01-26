@@ -2,6 +2,7 @@ import UI from '../components';
 import user from '../user';
 import group from '../group';
 import preloader from '../common/Preloader';
+import caps from '../new/BrowserCapabilities';
 
 
 export default {
@@ -11,7 +12,7 @@ export default {
         window.registerUser = this.registerUser.bind(this);
         window.createGuest = this.createGuest.bind(this);
         window.showPreloadPage = this.showPreloadPage.bind(this);
-        $('#homePagePreloadSection').toggle(!!preloader);
+        $('#homePagePreloadSection').toggle(!!preloader && caps.localStorage);
 	},
 
     load(data, eventListeners) {
