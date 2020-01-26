@@ -38,7 +38,8 @@
         "logActivity" => $config->contestInterface->logActivity,
         "contestLoaderVersion" => $config->contestInterface->contestLoaderVersion,
         "timestamp" => $config->timestamp ? $config->timestamp : 'null',
-        "browserIsMobile" => !!$browserIsMobile
+        "browserIsMobile" => !!$browserIsMobile,
+        "requestTimeout" => $config->teacherInterface->requestTimeout
     );
 ?>
 

@@ -40,9 +40,13 @@ function execute($request) {
 
 initSession();
 
-if(isset($_POST['batch_request'])) {
-    foreach($_POST['data'] as $request) {
-        execute($request);
+if(isset($_POST['requestType'])) {
+    switch($_POST['requestType']) {
+        case 'deferred':
+            foreach($_POST['data'] as $request) {
+                execute($request);
+            }
+            break;
     }
 } else {
     execute($_POST);

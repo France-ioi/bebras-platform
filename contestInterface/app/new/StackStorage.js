@@ -42,6 +42,10 @@ export default function(name) {
             return data;
         },
 
+        size: function() {
+            return data.length;
+        },
+
         clear: function() {
             data = [];
             sync();
