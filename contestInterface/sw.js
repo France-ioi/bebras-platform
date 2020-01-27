@@ -41,6 +41,9 @@ self.addEventListener('fetch', function(event) {
     if(event.request.method !== 'GET') {
         return;
     }
+    if(event.request.cache === 'only-if-cached' && event.request.mode !== 'same-origin') {
+        return;
+    }
     event.respondWith(
         caches.open(config.version).then((cache) => cacheThenNetwork(cache, event))
     );
