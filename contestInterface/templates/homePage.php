@@ -8,7 +8,7 @@
             <div class="tabTitle" data-i18n="home_code_header"></div>
             <p class="stepName" data-i18n="home_code_text"></p>
             <div class="divInput form-inline">
-                <input value="8ki94wyg" id="groupCode" type="text" class="form-control" autocorrect="off" autocapitalize="none" />
+                <input value-test="8ki94wyg" id="groupCode" type="text" class="form-control" autocomplete="off" autocorrect="off" autocapitalize="none" />
                 <button type="button" onclick="checkGroup()" data-i18n="home_code_submit" class="btn btn-primary"></button>
                 <div>
                     <span id="CheckGroupResult" style="color:red"></span>
@@ -18,7 +18,7 @@
         <div id="recoverGroup" style="display:none;">
             <p data-i18n="[html]group_session_expired_recover"></p>
             <div class="divInput form-inline">
-                <input id="recoverGroupPass" type="password" class="form-control" autocorrect="off" autocapitalize="none" />
+                <input id="recoverGroupPass" type="password" class="form-control" autocomplete="off" autocorrect="off" autocapitalize="none" />
                 <button type="button" id="buttonRecoverGroup" onclick="recoverGroup()" data-i18n="submitPass" class="btn btn-default"></button>
                 <div>
                     <span id="recoverGroupResult" style="color:red"></span>
@@ -41,7 +41,7 @@
         <p class="stepName" data-i18n="home_continue_text1"></p>
         <p class="stepName" data-i18n="home_continue_text2"></p>
         <div class="divInput form-inline">
-            <input id="interruptedPassword" type="text" class="form-control" autocorrect="off" autocapitalize="none" />
+            <input id="interruptedPassword" type="text" class="form-control" autocomplete="off" autocorrect="off" autocapitalize="none" />
             <button type="button" id="buttonInterrupted" onclick="checkPasswordInterrupted()" data-i18n="home_continue_submit" class="btn btn-primary"></button>
             <div><span id="InterruptedResult" style="color:red"></span></div>
         </div>
@@ -54,7 +54,7 @@
             </div>
             <p data-i18n="tab_view_ask_password_to_teacher"></p>
             <div class="divInput form-inline">
-                <input id="groupPassword" type="password" class="form-control" autocorrect="off" autocapitalize="none">
+                <input id="groupPassword" type="password" class="form-control" autocomplete="off" autocorrect="off" autocapitalize="none">
                 <button type="button" id="buttonRelogin" class="btn btn-default" onclick="relogin()" data-i18n="tab_view_restart_contest"></button>
                 <div>
                     <span id="ReloginResult" style="color:red"></span>

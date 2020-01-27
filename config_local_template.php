@@ -32,6 +32,9 @@ $config->email->sInfoAddress = 'info@castor-informatique.fr';
 $config->timezone = 'Europe/Paris';
 $config->defaultLanguage = 'fr';
 $config->teacherInterface->countryCode = 'FR';
+$config->contestInterface->languages = [
+    'en' => 'English',
+    'es' => 'Español'
 
 // Teacher interface settings
 $config->teacherInterface->sCoordinatorFolder = 'http://127.0.0.1/beaver_platform/teacherInterface/';
