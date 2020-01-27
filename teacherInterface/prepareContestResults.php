@@ -1332,10 +1332,10 @@ if ($action == "newRegistrations") {
 }
 
 
-echo "<h3><a href='".$startUrl."&action=checkRegistrations'>Check for mofifications since registrations were created</a></h3>";
+echo "<h3><a href='".$startUrl."&action=checkRegistrations'>Check for modifications since registrations were created</a></h3>";
 if ($action == "checkRegistrations") {
       execSelectAndShowResults("Modified records", "
-         SELECT algorea_registration.grade, contestant.grade, algorea_registration.firstName, contestant.firstName, algorea_registration.lastName, contestant.lastName
+         SELECT algorea_registration.grade as oldGrade, contestant.grade, algorea_registration.firstName as oldFirstName, contestant.firstName, algorea_registration.lastName as oldLastName, contestant.lastName
          FROM algorea_registration JOIN contestant ON contestant.registrationID = algorea_registration.ID JOIN team ON contestant.teamID = team.ID
          JOIN contest ON team.contestID = contest.ID
          WHERE
@@ -1346,7 +1346,7 @@ if ($action == "checkRegistrations") {
       array("contestID" => $contestID));
 }
 
-echo "<h3><a href='".$startUrl."&action=updateRegistrations'>Fix mofifications since registrations were created</a></h3>";
+echo "<h3><a href='".$startUrl."&action=updateRegistrations'>Fix modifications since registrations were created</a></h3>";
 if ($action == "updateRegistrations") {
       execQueryAndShowNbRows("Fix records from algorea_registration according to modifications on contestants", "
          UPDATE algorea_registration
@@ -1373,9 +1373,8 @@ if ($action == "updateRegistrationsSchoolUser") {
          SET algorea_registration.userID = `group`.userID
          algorea_registration.schoolID = `group`.schoolID,
          WHERE `group`.contestID = :contestID
-         AND (contestant.grade != algorea_registration.grade
-         OR contestant.firstName != algorea_registration.firstName
-         OR contestant.lastName != algorea_registration.lastName)",
+         AND (algorea_registration.userID != `group`.userID OR
+		    algorea_registration.schoolID != `group`.schoolID)",
       array("contestID" => $contestID));
 }
 
