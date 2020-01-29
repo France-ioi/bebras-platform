@@ -110,7 +110,7 @@ if (count($contestIDs) == 0) {
    $contestIDs = $allContestIDs;
 }
 
-$categories = ["blanche", "jaune", "orange", "verte", "bleue"];
+$categories = ["blanche", "jaune", "orange", "verte"];
 
 
 $query = "
@@ -331,7 +331,7 @@ foreach ($schools as $schoolID => $school) {
    }
    echo "<td rowspan=2 style='width:100px'>".translate("results_ranking_national")."</td>";
    echo "<td rowspan=2 style='width:100px'>".translate("results_ranking_school")."</td>";
-   echo "<td rowspan=2 style='width:70px'>".translate("results_semi_finals")."</td>";
+   //echo "<td rowspan=2 style='width:70px'>".translate("results_semi_finals")."</td>";
    echo "</tr><tr>";
    foreach ($contestIDs as $mainContestKey) {
       if (!isset($contests[$mainContestKey])) {
@@ -339,9 +339,9 @@ foreach ($schools as $schoolID => $school) {
       }
       $categoryContests = $contests[$mainContestKey];
       foreach ($categories as $category) {
-         if (!isset($categoryContests[$category])) {
+         /*if (!isset($categoryContests[$category])) {
             continue;
-         }
+         }*/
          if (count($categoryContests) > 1) {
             echo "<td>".$category."</td>";
          }
