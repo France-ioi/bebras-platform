@@ -179,15 +179,18 @@ echo "<h2>Classement final</h2>
 
 echo "<table class='resultats' cellspacing=0><tr>";
 echo "<td rowspan=2>Nom de l'équipe</td><td rowspan=2>Élèves</td><td colspan=6 style='text-align:center;background:lightgray'>2e tour</td>";
+/*
 echo "<td rowspan=2>Code secret<br />tour 3</td>";
 echo "<td colspan=6 style='text-align:center;background:lightgray'>3e tour</td>";
 echo "<td colspan=3 style='text-align:center;'>Classement</td>";
+*/
 echo "</tr>";
 
-echo "<tr><td>Messages 1<br />(2e tour)</td><td>Messages 2<br />(2e tour)</td><td>Messages 3<br />(2e tour)</td><td>Cercle 1<br />(2e tour)</td><td>Cercle 2<br/>(2e tour)</td><td>Total<br />(2e tour)</td>";
+echo "<tr><td>Rétroingénierie<br />(2e tour)</td><td>Braille 1<br />(2e tour)</td><td>Braille 2<br />(2e tour)</td><td>Braille 3<br />(2e tour)</td><td>Boîtes<br/>(2e tour)</td><td>Total<br />(2e tour)</td>";
+/*
 echo "<td>Messages 1<br />(3e tour)</td><td>Messages 2<br />(3e tour)</td><td>Messages 3<br />(3e tour)</td><td>Cercle 1<br />(3e tour)</td><td>Cercle 2<br/>(3e tour)</td><td>Total<br />(3e tour)</td>";
 echo "<td>Classement<br/>académie</td><td>Classement<br/>grande région</td><td>Classement<br/>national</td>";
-
+*/
 echo "</tr>";
 
 $curGroupID = 0;
@@ -218,6 +221,7 @@ foreach ($groups as $group) {
    }
 
    echo "<td>".$sum."</td>";
+   /*
    if($group->password) {
       echo "<td>".$group->password."</td>";
    } else {
@@ -242,6 +246,7 @@ foreach ($groups as $group) {
    } elseif($group->password) {
       echo '<td colspan="9">Résultats en attente, ou n\'a pas participé au 3e tour</td>';
    }
+   */
    echo "</tr>";
 }
 echo "</table>";
