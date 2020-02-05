@@ -34,9 +34,14 @@ $strCodes = implode(",", $contestantCodes);
 
 $db2 = new PDO($dbConnexionString2, $dbUser2, $dbPasswd2);
 
-$items = array("584903297566084865", "114375916575884133", "1521717886447950582", "25760588819857174", "1474323515743870110");
+$items = array("1456912346504207303",
+"93643821302144180",
+"1950469197457415954",
+"789316457202939816",
+"1554293343451030761"
+);
 
-$idTeamItem = "426154796109911742"; // groupe : 337433601613235328
+$idTeamItem = "1147510128527491497"; // groupe : 337433601613235328
 
 // Query fetching scores on a contest on AlgoreaPlatform
 // To fetch scores on another contest, modify:
