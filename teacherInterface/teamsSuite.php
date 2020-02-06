@@ -156,7 +156,7 @@ while ($row = $stmt->fetchObject()) {
 
 echo "<h1>Équipes créées pour le 2e tour</h1>";
 echo "<p>Vous pouvez consulter sur cette page les équipes déjà créées par vos élèves.</p><p>Vous pourrez également y consulter les résultats au fur et à mesure de leur participation au 2e tour.</p>";
-
+/*
 echo "<h2>Équipes qualifiées</h2><p>Les équipes qui ont obtenu 100 points ou plus sont qualifiées pour le 3e tour.</p>
 <p>Le 3e tour dure 1h30 et doit se faire sous surveillance, entre le 21 mars et le 6 avril inclus.</p>
 <h2>Fonctionnement de l'épreuve du 3e tour</h2>
@@ -171,6 +171,7 @@ echo "<h2>Équipes qualifiées</h2><p>Les équipes qui ont obtenu 100 points ou 
 <p>Le score d'une équipe au 3e tour sera calculé de la même manière que lors du 2e tour. On considèrera pour chaque sujet, la tentative de meilleur score parmi celles effectuées pendant l'épreuve. Le score total sera la somme des scores des 5 sujets.</p>
 
 <p>En cas d'égalité de score, les équipes seront départagées en fonction du temps, calculé selon le principe suivant : pour chaque sujet, parmi les tentatives de meilleur score, on considèrera le temps mis pour celle qui a été résolue le plus rapidement. Il s'agit du temps entre le moment de création de cette tentative, et le moment où son score a été obtenu. Le temps total pour l'équipe sera la somme de ces temps pour les 5 sujets.</p>";
+*/
 /*
 echo "<h2>Classement final</h2>
 <p>Dans les trois dernières colonnes, vous pouvez trouver soit le classement de l'équipe au sein de son académie, sa grande région et au niveau national, soit a mention \"Qualifiée en finale\" si l'équipe est qualifiée.</p>
