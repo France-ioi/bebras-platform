@@ -1,7 +1,7 @@
 {
     "general_page_title": "مسابقة القندس الدولية",
     "general_instructions": "",
-    "browser_support_bebras-platform": "<p>The platform works with the following web browsers :</p><ul><li>Google Chrome versions 5.0 and up ;</li><li>Firefox versions 3.6 and up ;</li><li>Internet Explorer versions 8.0 and up ;</li><li>Safari versions 3.0 and up (works on iPad).</li></ul>",
+    "browser_support_bebras-platform": "<p>The platform works with the following web browsers :</p><ul><li>Google Chrome versions 5.0 and up ;</li><li>Firefox versions 3.6 and up ;</li><li>Internet Explorer versions 8.0 and up ;</li><li>Safari versions 3.0 and up (works on iPad).</li></ul>",
     "general_choice": "اختر",
     "general_start_contest": "ابدأ المسابقة في المدرسة",
     "general_public_contests": "تدرب في المنزل أو شاهد المسابقات السابقة",
@@ -41,8 +41,8 @@
     "login_input_lastname": "اسم العائلة",
     "login_input_email": "بريدك الألكتروني",
     "login_input_zipCode": "تليفون المنزل",
-    "login_input_phoneNumber": "تليفونك أو تليفون ولي امرك",‎
-    "login_input_studentId": "رقم الهوية/الإقامة",‎
+    "login_input_phoneNumber": "تليفونك أو تليفون ولي امرك",
+    "login_input_studentId": "رقم الهوية/الإقامة",
     "login_ask_gender": "هل انت",
     "login_female": "بنت",
     "login_male": "ولد",
@@ -197,7 +197,3 @@
     "category_grades_all": "All grades →",
     "category_grades_all_description": "<p>Challenges from all grades combined</p>"
 }
-
-
-
-
