@@ -126,8 +126,8 @@ function handleCreateTeam($db) {
    $_SESSION["teamPassword"] = $password;
    foreach ($contestants as $contestant) {
       if (isset($contestant["registrationCode"])) {
-         $stmt = $db->prepare("INSERT INTO `contestant` (`ID`, `lastName`, `firstName`, `genre`, `grade`, `studentId`, `teamID`, `cached_schoolID`, `saniValid`, `email`, `zipCode`, `registrationID`)
-         SELECT :contestantID, `lastName`, `firstName`, `genre`, `grade`, `studentId`, :teamID, `schoolID`, 1, `email`, `zipCode`, `ID`
+         $stmt = $db->prepare("INSERT INTO `contestant` (`ID`, `lastName`, `firstName`, `genre`, `grade`, `studentId`, `phoneNumber`, `teamID`, `cached_schoolID`, `saniValid`, `email`, `zipCode`, `registrationID`)
+         SELECT :contestantID, `lastName`, `firstName`, `genre`, `grade`, `studentId`, `phoneNumber`, :teamID, `schoolID`, 1, `email`, `zipCode`, `ID`
          FROM `algorea_registration` WHERE `algorea_registration`.`code` = :code");
          $stmt->execute(array(
             "contestantID" => getRandomID(),
@@ -144,12 +144,15 @@ function handleCreateTeam($db) {
          if (!isset($contestant["studentId"])) {
             $contestant["studentId"] = "";
          }
+         if (!isset($contestant["phoneNumber"])) {
+            $contestant["phoneNumber"] = "";
+         }
          list($contestant["firstName"], $contestant["lastName"], $saniValid, $trash) =
             DataSanitizer::formatUserNames($contestant["firstName"], $contestant["lastName"]);
          $stmt = $db->prepare("
-            INSERT INTO `contestant` (`ID`, `lastName`, `firstName`, `genre`, `grade`, `studentId`, `teamID`, `cached_schoolID`, `saniValid`, `email`, `zipCode`)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-         $stmt->execute(array(getRandomID(), $contestant["lastName"], $contestant["firstName"], $contestant["genre"], $contestant["grade"], $contestant["studentId"], $teamID, $_SESSION["schoolID"], $saniValid, $contestant["email"], $contestant["zipCode"]));
+            INSERT INTO `contestant` (`ID`, `lastName`, `firstName`, `genre`, `grade`, `studentId`, `phoneNumber`, `teamID`, `cached_schoolID`, `saniValid`, `email`, `zipCode`)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+         $stmt->execute(array(getRandomID(), $contestant["lastName"], $contestant["firstName"], $contestant["genre"], $contestant["grade"], $contestant["studentId"], $contestant["phoneNumber"], $teamID, $_SESSION["schoolID"], $saniValid, $contestant["email"], $contestant["zipCode"]));
       }
    }
    addBackendHint(sprintf("ClientIP.createTeam:%s", $_SESSION['isPublic'] ? 'public' : 'private'));
@@ -361,7 +364,7 @@ function handleCheckPassword($db) {
 }
 
 function getRegistrationData($db, $code) {
-   $query = "SELECT `algorea_registration`.`ID`, `code`, `category` as `qualifiedCategory`, `validatedCategory`, `firstName`, `lastName`, `genre`, `grade`, `studentID`, `email`, `zipCode`, ".
+   $query = "SELECT `algorea_registration`.`ID`, `code`, `category` as `qualifiedCategory`, `validatedCategory`, `firstName`, `lastName`, `genre`, `grade`, `studentID`, `phoneNumber`, `email`, `zipCode`, ".
       "IFNULL(`algorea_registration`.`schoolID`, 0) as `schoolID`, IFNULL(`algorea_registration`.  `userID`, 0) as `userID`, IFNULL(`school_user`.`allowContestAtHome`, 1) as `allowContestAtHome`,
       `round` ".
       "FROM `algorea_registration` ".
@@ -461,7 +464,7 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "",
    global $allCategories, $config;
    
    // Find a group whose code matches the given password.
-   $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, UTC_TIMESTAMP()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`askParticipationCode`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`showTotalScore`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`visibility`, `contest`.`askEmail`, `contest`.`askZip`, `contest`.`askGenre`, `contest`.`askGrade`, `contest`.`askStudentId`, `contest`.`name` as `contestName`, `contest`.`allowPauses`, `group`.`isGenerated`, `group`.`language`, `group`.`minCategory`, `group`.`maxCategory` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
+   $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, UTC_TIMESTAMP()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`askParticipationCode`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`showTotalScore`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`visibility`, `contest`.`askEmail`, `contest`.`askZip`, `contest`.`askGenre`, `contest`.`askGrade`, `contest`.`askStudentId`, `contest`.`askPhoneNumber`, `contest`.`name` as `contestName`, `contest`.`allowPauses`, `group`.`isGenerated`, `group`.`language`, `group`.`minCategory`, `group`.`maxCategory` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
    $stmt = $db->prepare($query);
    $stmt->execute(array($password));
    $row = $stmt->fetchObject();
@@ -585,6 +588,7 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "",
       "askGenre" => !!intval($row->askGenre),
       "askGrade" => !!intval($row->askGrade),
       "askStudentId" => !!intval($row->askStudentId),
+      "askPhoneNumber" => !!intval($row->askPhoneNumber),
       "extraMessage" => $extraMessage,
       "isPublic" => $isPublic,
       "isGenerated" => $isGenerated,

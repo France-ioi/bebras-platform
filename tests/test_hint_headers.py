@@ -194,7 +194,7 @@ class Transaction(object):
                 "ClientIP.checkPassword:pass",
                 "Group({}):checkPassword".format(self.group_id)
             ])
-        # {"groupID": "8506", "askGrade": true, "askStudentId": false,
+        # {"groupID": "8506", "askGrade": true, "askStudentId": false, "askPhoneNumber": false,
         #  "success": true, "askEmail": false, "bRecovered": "0",
         #  "contestFolder": "2016_algorea_1_toaioxxapt", "teams": "",
         #  "fullFeedback": "1", "allowTeamsOfTwo": "0", "newInterface": "1",

@@ -34,6 +34,7 @@
     "login_input_email": "Unesite svoju <b>e-mail adresu</b> :",
     "login_input_zipCode": "Unesite svoj <b>poštanski kod</b> :",
     "login_input_studentId": "Unesite svoj <b>učenički broj</b> :",
+    "login_input_phoneNumber": "Unesite svoj <b>phone number</b> :",
     "login_ask_gender": "Da li ste :",
     "login_female": "djevojčica",
     "login_male": "dječak",

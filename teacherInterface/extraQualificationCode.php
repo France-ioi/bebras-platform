@@ -55,8 +55,8 @@ if (isset($_POST["schoolID"])) {
             $category = $config->defaultTeacherCategory;
          }
          $code = generateRandomCode();
-         $query = "INSERT INTO algorea_registration (`firstName`, `lastName`, `genre`, `email`, `studentID`, `zipCode`, `code`, `grade`, `schoolID`, `userID`, `category`) ".
-            "VALUES (:firstName, :lastName, 0, '', '', '', :code, :grade, :schoolID, :userID, '".$category."') ";
+         $query = "INSERT INTO algorea_registration (`firstName`, `lastName`, `genre`, `email`, `studentID`, `phoneNumber`, `zipCode`, `code`, `grade`, `schoolID`, `userID`, `category`) ".
+            "VALUES (:firstName, :lastName, 0, '', '', '', '', :code, :grade, :schoolID, :userID, '".$category."') ";
          $stmt = $db->prepare($query);
          $stmt->execute(['userID' => $_SESSION['userID'],
             'schoolID' => $_POST["schoolID"],

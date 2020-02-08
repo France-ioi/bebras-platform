@@ -453,7 +453,12 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
             </p>
             <p id="login-input-studentId-1">
               <span data-i18n="[html]login_input_studentId"></span>
-              <input id="studentId1" type="text" autocomplete="off" class="form-control" /></p>
+              <input id="studentId1" type="text" autocomplete="off" class="form-control" />
+            </p>
+            <p id="login-input-phoneNumber-1">
+              <span data-i18n="[html]login_input_phoneNumber"></span>
+              <input id="phoneNumber1" type="text" autocomplete="off" class="form-control" />
+            </p>
           </div>
         </div>
       </div>
@@ -508,7 +513,12 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
               </select></p>
             <p id="login-input-studentId-2">
               <span data-i18n="[html]login_input_studentId"></span>
-              <input id="studentId2" type="text" autocomplete="off" class="form-control" /></p>
+              <input id="studentId2" type="text" autocomplete="off" class="form-control" />
+            </p>
+            <p id="login-input-phoneNumber-2">
+              <span data-i18n="[html]login_input_phoneNumber"></span>
+              <input id="phoneNumber2" type="text" autocomplete="off" class="form-control" />
+            </p>
           </div>
         </div>
       </div>

@@ -1798,6 +1798,7 @@ var hideLoginFields = function(postData) {
       askEmail: 'email',
       askGrade: 'grade',
       askStudentId: 'studentId',
+      askPhoneNumber: 'askPhoneNumber',
       askZip: 'zipCode',
       askGenre: 'genre'
    };
@@ -2368,7 +2369,8 @@ window.validateLoginForm = function() {
             "grade" : $("#grade" + iContestant).val(),
             "email" : $.trim($("#email" + iContestant).val()),
             "zipCode" : $.trim($("#zipCode" + iContestant).val()),
-            "studentId" : $.trim($("#studentId" + iContestant).val())
+            "studentId" : $.trim($("#studentId" + iContestant).val()),
+            "phoneNumber" : $.trim($("#phoneNumber" + iContestant).val())
          };
          contestants[iContestant] = contestant;
          if (!contestant.lastName && !fieldsHidden.lastName) {
@@ -2388,6 +2390,9 @@ window.validateLoginForm = function() {
             return;
          } else if (!contestant.studentId && !fieldsHidden.studentId) {
             $("#LoginResult").html(strTeamMate + t("studentId_missing"));
+            return;
+         } else if (!contestant.phoneNumber && !fieldsHidden.phoneNumber) {
+            $("#LoginResult").html(strTeamMate + t("phoneNumber_missing"));
             return;
          } else if (!contestant.grade && !fieldsHidden.grade) {
             $("#LoginResult").html(strTeamMate + t("grade_missing"));

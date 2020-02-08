@@ -604,6 +604,13 @@ function initModels(isLogged) {
                stype: "select", searchoptions: searchYesNo,
                width: 100
             },
+            askPhoneNumber: {
+               label: t("contest_askPhoneNumber_label"),
+               editable: true,
+               edittype: "select", editoptions: editYesNo,
+               stype: "select", searchoptions: searchYesNo,
+               width: 100
+            },
             askGenre: {
                label: t("contest_askGenre_label"),
                editable: true,

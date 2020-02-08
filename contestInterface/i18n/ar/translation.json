@@ -41,7 +41,8 @@
     "login_input_lastname": "اسم العائلة",
     "login_input_email": "بريدك الألكتروني",
     "login_input_zipCode": "تليفون المنزل",
-    "login_input_studentId": "تليفونك أو تليفون ولي امرك",
+    "login_input_phoneNumber": "تليفونك أو تليفون ولي امرك",‎
+    "login_input_studentId": "رقم الهوية/الإقامة",‎
     "login_ask_gender": "هل انت",
     "login_female": "بنت",
     "login_male": "ولد",
@@ -84,7 +85,8 @@
     "email_missing": "البريد الإلكتروني غير موجود",
     "zipCode_missing": "رقم تليفون المنزل غير موجود",
     "grade_missing": "التقييم غير موجود",
-    "studentId_missing": "تليفون ولي الأمر أو الطالب غير موجود",
+    "studentId_missing": "رقم الهوية أو الإقامة غير موجود",
+    "phoneNumber_missing": "تليفون ولي الأمر أو الطالب غير موجود",
     "select_team": "اختر فريق",
     "level_1_name": "المستوى الأول (5 ابتدائي/ 6 ابتدائي) 45 دقيقة",
     "level_2_name": "المستوى الثاني (اولى اعدادي/ثانية اعدادي) 45 دقيقة",

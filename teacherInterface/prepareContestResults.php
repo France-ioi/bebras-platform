@@ -1308,8 +1308,8 @@ if ($action == "mergeStudents") {
 echo "<h3><a href='".$startUrl."&action=newRegistrations'>Create registrations for students that don't have one yet</a></h3>";
 if ($action == "newRegistrations") {
       execQueryAndShowNbRows("Create registrations for official contestants that don't have one yet", "
-         INSERT IGNORE INTO algorea_registration (ID, firstName, lastName, genre, email, zipCode, grade, studentID, userID, code, contestantID, schoolID)
-         SELECT contestant.ID, contestant.firstName, contestant.lastName, contestant.genre, '', '', contestant.grade, '', `group`.`userID`,
+         INSERT IGNORE INTO algorea_registration (ID, firstName, lastName, genre, email, zipCode, grade, studentID, `phoneNumber`, userID, code, contestantID, schoolID)
+         SELECT contestant.ID, contestant.firstName, contestant.lastName, contestant.genre, '', '', contestant.grade, '', '', `group`.`userID`,
          CONCAT(CONCAT('a', FLOOR(RAND()*10000000)), CONCAT('', FLOOR(RAND()*10000000))),
          contestant.ID, `group`.schoolID
          FROM contestant
