@@ -1798,7 +1798,7 @@ var hideLoginFields = function(postData) {
       askEmail: 'email',
       askGrade: 'grade',
       askStudentId: 'studentId',
-      askPhoneNumber: 'askPhoneNumber',
+      askPhoneNumber: 'phoneNumber',
       askZip: 'zipCode',
       askGenre: 'genre'
    };
