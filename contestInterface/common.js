@@ -2320,14 +2320,18 @@ window.offerContests = function() {
          if (child.contestID == preSelectedContest) {
           trClasses = trClasses + ' selected';
          }
+         var extraStyle = "";
+         if ((contestImage == "") && (child.description == "")) {
+            extraStyle = "style='border:none'";
+         }
          selectHtml += '<tr data-contestid="' + child.contestID + '" class="' + trClasses + '">' +
-            '<td class="selectorCell">' +
+            '<td class="selectorCell"' + extraStyle + '>' +
               '<div class="selector_arrowForward" ><span> </span></div>' +
             '</td>' +
-            '<td class="selectorTitle"><button type="button" class="btn btn-default">' + child.name + ' →</button></td>' +
-            '<td class="contestDescription">' +
+            '<td class="selectorTitle"' + extraStyle + '><button type="button" class="btn btn-default">' + child.name + ' →</button></td>' +
+            '<td class="contestDescription"'  + extraStyle + '>' +
               child.description +
-            '</td><td class="contestImage">' +
+            '</td><td class="contestImage"' + extraStyle + '>' +
             contestImage +
             '</td></tr>';
          nbContests++;
