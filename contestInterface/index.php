@@ -18,6 +18,7 @@
   window.sAssetsStaticPath = <?= json_encode(upgrade_url($config->teacherInterface->sAssetsStaticPath.'/')) ?>;
   window.timestamp = <?= $config->timestamp ?>;
   window.config = <?= json_encode([
+    "defaultLanguage" => $config->defaultLanguage,
     "httpsTestUrl" => $config->contestInterface->httpsTestUrl,
     "imagesURLReplacements" => $config->imagesURLReplacements,
     "imagesURLReplacementsNonStatic" => $config->imagesURLReplacementsNonStatic,
@@ -73,6 +74,9 @@
 <?php
   flush();
   stylesheet_tag('/style.css');
+  if ($config->defaultLanguage == "ar") {
+     stylesheet_tag('/style_rtl.css');
+  }
 ?>
 <body style="display: none;">
 <div id="divHeader">

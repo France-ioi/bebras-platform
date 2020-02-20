@@ -2335,11 +2335,16 @@ window.offerContests = function() {
          if ((contestImage == "") && (child.description == "")) {
             extraStyle = "style='border:none'";
          }
+         var arrow = "→";
+         if (defaultLanguage == "ar") {
+            arrow = "←";
+         }
+         
          selectHtml += '<tr data-contestid="' + child.contestID + '" class="' + trClasses + '">' +
             '<td class="selectorCell"' + extraStyle + '>' +
               '<div class="selector_arrowForward" ><span> </span></div>' +
             '</td>' +
-            '<td class="selectorTitle"' + extraStyle + '><button type="button" class="btn btn-default">' + child.name + ' →</button></td>' +
+            '<td class="selectorTitle"' + extraStyle + '><button type="button" class="btn btn-default">' + child.name + ' ' + arrow + '</button></td>' +
             '<td class="contestDescription"'  + extraStyle + '>' +
               child.description +
             '</td><td class="contestImage"' + extraStyle + '>' +

@@ -1,0 +1,64 @@
+body {
+   direction: rtl;
+}
+
+#divHeader, #headerGroup {
+ text-align:right;
+}
+
+#leftTitle {
+  float: right;
+}
+
+#mainContent {
+  direction: rtl;
+  margin-right: 20px;
+}
+
+#mainNav {
+   float:right;
+}
+
+#mainNav li::after {
+  left: -17px;
+  right: auto;
+  border-right: 17px solid #000;
+  border-right-color: #736451;
+  border-left: none;
+}
+
+#mainNav li.selected::after {
+  border-right-color: #2482bf;
+}
+
+.tabContent {
+  float: right;
+  margin-right: 100px;
+}
+
+.selector_arrowForward span::after {
+  left: 16px;
+  border-width: 16px 0 16px 16px;
+  border-style: solid;
+  border-color: transparent #000;
+  margin-top: -16px;
+  background: transparent;
+}
+.selector_arrowForward span::before {
+  left: 0;
+  width: 16px;
+  height: 12px;
+  top: 10px;
+  background: #000;
+}
+
+@media /* Portrait mobiles and low res display */
+screen and (max-width: 480.9px) {
+  #mainNav li::after {
+    border-right-color: #fff;
+  }
+}
+
+.dialog {
+   float: right;
+}
