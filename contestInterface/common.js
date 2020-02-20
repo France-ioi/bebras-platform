@@ -2113,15 +2113,24 @@ function scrollToTop(el) {
 
 // Display contest selection breacrumb
 function setContestBreadcrumb(val) {
+   contestBreadcrumb = "";
    if (preSelectedCategory != "") {
       contestBreadcrumb = '<span class="breadcrumb-item"><span class="breadcrumb-link" onclick="goToCategory()">Catégorie ' + selectedCategory + '</span></span>';
    }
    if (preSelectedLanguage != "") {
-      contestBreadcrumb += '<span class="breadcrumb-item"><span class="breadcrumb-separator">/</span><span class="breadcrumb-link" onclick="goToLanguage()">Langage ' + selectedLanguage + '</span></span>';
+      var separator = "";
+      if (contestBreadcrumb != "") {
+         separator = '<span class="breadcrumb-separator">/</span>';
+      }
+      contestBreadcrumb += '<span class="breadcrumb-item">' + separator + '<span class="breadcrumb-link" onclick="goToLanguage()">Langage ' + selectedLanguage + '</span></span>';
    }
    if (preSelectedContest != "") {
       var contest = window.getContest(preSelectedContest);
-      contestBreadcrumb += '<span class="breadcrumb-item"><span class="breadcrumb-separator">/</span><span class="breadcrumb-link" onclick="goToSequence()">' + contest.name + '</span></span>';
+      var separator = "";
+      if (contestBreadcrumb != "") {
+         separator = '<span class="breadcrumb-separator">/</span>';
+      }
+      contestBreadcrumb += '<span class="breadcrumb-item">' + separator + '<span class="breadcrumb-link" onclick="goToSequence()">' + contest.name + '</span></span>';
    }
    $('#selection-breadcrumb').html(contestBreadcrumb);
 }
