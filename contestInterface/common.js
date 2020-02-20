@@ -1896,10 +1896,12 @@ window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, 
             }
             if (data.allowTeamsOfTwo == 1) {
                $("#divCheckNbContestants").show();
+               $("#teammateNumber1").show();
                $("#divLogin").hide();
             } else {
                window.setNbContestants(1);
                $("#divCheckNbContestants").hide();
+               $("#teammateNumber1").hide();
                $("#divLogin").show();
             }
          }

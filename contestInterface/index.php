@@ -402,7 +402,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
 
     <div id="divLogin" style="display:none" class="dialog">
       <div class="login_box panel">
-        <div class="panel-head"><b data-i18n="login_teammate"></b><b> 1</b></div>
+        <div class="panel-head"><b data-i18n="login_teammate"></b><b id='teammateNumber1'> 1</b></div>
         <div class="panel-body">
           <div id="askRegistrationCode1">
             <span data-i18n="login_has_registrationCode"></span>
