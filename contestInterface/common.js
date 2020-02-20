@@ -2336,7 +2336,7 @@ window.offerContests = function() {
             extraStyle = "style='border:none'";
          }
          var arrow = "→";
-         if (defaultLanguage == "ar") {
+         if (typeof(config.defaultLanguage) != "undefined" && config.defaultLanguage == "ar") {
             arrow = "←";
          }
          
