@@ -9,6 +9,9 @@ body {
 #leftTitle {
   float: right;
 }
+#rightTitle {
+  float: left;
+}
 
 #mainContent {
   direction: rtl;

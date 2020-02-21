@@ -81,6 +81,7 @@
 <body style="display: none;">
 <div id="divHeader">
   <div id="leftTitle" data-i18n="[html]left_title"></div>
+  <div id="rightTitle" data-i18n="[html]right_title"></div>
   <div id="headerGroup">
     <h1 id="headerH1" data-i18n="general_title"></h1>
     <h2 id="headerH2" data-i18n="general_subtitle"></h2>

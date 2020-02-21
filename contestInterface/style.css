@@ -84,6 +84,10 @@ a {
   float: left;
   margin: 10px 3em 0 32px;
 }
+#rightTitle {
+  float: right;
+  margin: 10px 3em 0 32px;
+}
 #headerGroup {
   font-family:"Century Gothic", "Trebuchet MS", "Arial Narrow", Arial, sans-serif;
   text-transform:uppercase;
@@ -1061,6 +1065,13 @@ screen and (max-width: 480.9px) {
   #leftTitle img {
     max-width: 60px;
   }
+  #rightTitle {
+    margin: 10px 10px 0 10px;
+    text-align: center;
+  }
+  #rightTitle img {
+    max-width: 60px;
+  }
   #headerH1 {
     font-size: 26px;
     margin: 10px 0 10px;
@@ -1113,10 +1124,10 @@ screen and (max-width: 1024px) and (orientation: landscape) {
   #divHeader {
     padding-bottom: 0;
   }
-  #leftTitle {
+  #leftTitle, #rightTitle {
     margin: 10px;
   }
-  #leftTitle img {
+  #leftTitle, #rightTitle img {
     max-width: 100px;
   }
   #headerH1 {
