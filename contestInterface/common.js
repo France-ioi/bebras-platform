@@ -430,6 +430,9 @@ var platform = {
                   return;
                }
                logActivity(teamID, questionID, "submission", answer, score);
+               // Refresh the height of the task as some tasks change due to
+               // feedback
+               setTimeout(questionIframe.updateHeight, 1000);
                if (score < questionData.maxScore) {
                   mode = "stay";
                }
