@@ -4,6 +4,7 @@
 
 var loggedUser;
 var contests;
+var contestCategories;
 var questions;
 var questionsKeysToIds;
 var schools;
@@ -1268,9 +1269,41 @@ function getItemNames(items, withUnselect) {
    return itemNames;
 }
 
+function loadContestCategories(contests) {
+   var categoryToID = {};
+   contestCategories = [];
+   var categoryID = 0;
+   for (var contestID in contests) {
+      var contest = contests[contestID];
+      if (contestHidden(contest)) {
+         continue;
+      }
+      var category = contest.category;
+      if (category == "") {
+         category = "-----"; // TODO: translate
+         contest.category = category;
+      }
+      if (categoryToID[category] == undefined) {
+         categoryToID[category] = categoryID;
+         contestCategories[categoryID] = category;
+         categoryID++;
+      }
+   }
+   contestCategories.sort();
+   for (var categoryID = 0; categoryID < contestCategories.length; categoryID++) {
+      var category = contestCategories[categoryID];
+      categoryToID[category] = categoryID;
+   }
+   for (var contestID in contests) {
+      var contest = contests[contestID];
+      contest["categoryID"] = categoryToID[contest.category];
+   }
+}
+
 function loadContests() {
    return loadData("contest", function(items) {
       contests = items;
+      loadContestCategories(contests);
       if (!window.config.allowCertificates) {
          $('#buttonPrintCertificates_group').hide();
          $('#buttonPrintCertificates_team').hide();
@@ -1308,8 +1341,7 @@ function loadContests() {
       } else {
          $('#school_print_certificates_contests').html(contestList);
       }
-   }
-   );
+   });
 }
 
 function loadQuestions() {
@@ -1454,6 +1486,9 @@ function groupFormShowContestDetails(contestID) {
 }
 
 function groupFormHandleContestChange() {
+   $("#group_contestCategoryID").change(function() {
+      updateContestOptions();
+   });
    $("#group_contestID").change(function() {
       var contestID = $("#group_contestID").val();
       groupFormShowContestDetails(contestID);
@@ -1470,6 +1505,7 @@ function newGroup() {
       return;
    }
    newForm("group", t("create_group"), t("create_group_comment"));
+   updateContestOptions();
    groupFormHandleContestChange();
 }
 
@@ -1818,6 +1854,41 @@ function getContestFromID(ID) {
    return null;
 }
 
+function contestHidden(contest, group) {
+   return ((contest.visibility == 'Hidden') ||
+           ((contest.parentContestID != "0") && (contest.parentContestID != null) && ((group == null) || (group.contestID != contest.ID))));
+}
+
+function updateContestOptions(group) {
+   var categoryID = parseInt($("#group_contestCategoryID").val());
+   var listContests = [];
+   for (var iContest in contests) {
+      var contest = contests[iContest];
+      if (contestHidden(contest, group)) {
+         continue;
+      }
+      if (contest.categoryID != categoryID) {
+         continue;
+      }
+      listContests.push(contest);
+   }
+   listContests.sort(function(c1, c2) {
+      if (c1.name < c2.name) {
+         return -1;
+      }
+      if (c1.name > c2.name) {
+         return 1;
+      }
+      return 0;
+   });
+   var options = "";
+   for (iContest in listContests) {
+      var contest = listContests[iContest];
+      options += "<option value='" + contest.ID + "'>" + contest.name + "</option>";
+   }
+   $("#group_contestID").html(options);
+}
+
 function newForm(modelName, title, message, item) {
    var js = "";
    var html = "<h2>" + title + "</h2>" + message +
@@ -1846,6 +1917,13 @@ function newForm(modelName, title, message, item) {
       } else if (field.edittype === "password") {
          html += "<input type='password'  style='width:350px' id='" + fieldId + "' "+requiredString+"/>";
       } else if (field.edittype === "select") {
+         if (fieldName == "contestID") {
+            html += "Type de contenu : <select id='group_contestCategoryID'>";
+            for (var categoryID = 0; categoryID < contestCategories.length; categoryID++) {
+               html += "<option value='" + categoryID + "'>"  + contestCategories[categoryID] + "</option>";
+            }
+            html += "</select><br/><br/>";
+         }
          html += "<select id='" + fieldId + "'>";
          html += "<option value='0'>" + t("select") + "</option>";
          var optionValue, optionName;
@@ -1857,16 +1935,8 @@ function newForm(modelName, title, message, item) {
             var optionsList = field.editoptions.value.split(";");
             for (var iOption = 0; iOption < optionsList.length; iOption++)  {
                var optionParts = optionsList[iOption].split(":");
-               if (fieldName == "contestID") {                  
-                  var contest = getContestFromID(optionParts[0]);
-                  if (contest) {
-                     if (contest.visibility == 'Hidden') {
-                        continue;
-                     }
-                     if ((contest.parentContestID != "0") && (contest.parentContestID != null) && ((item == null) || (item.contestID != contest.ID))) {
-                        continue;
-                     }
-                  }
+               if (fieldName == "contestID") { 
+                  continue;
                }
                optionValue = optionParts[0];
                optionName = optionParts[1];
@@ -1935,7 +2005,7 @@ function editGroupDetails(group) {
    groupFormShowContestDetails(group.contestID);
    $("#group_minCategory").val(group.minCategory);
    $("#group_maxCategory").val(group.maxCategory);
-   $("#group_language").val(group.language   );
+   $("#group_language").val(group.language);
 }
 
 function editGroup() {
@@ -2050,10 +2120,15 @@ function getDateFromSQL(dateSQL) {
 
 function editForm(modelName, title, item) {
    newForm(modelName, title, "", item);
+   updateContestOptions(item);
    $("#" + modelName + "_ID").val(item.ID);
    var fields = models[modelName].fields;
    for (var fieldName in fields) {
       var field = fields[fieldName];
+      if (modelName === "group" && fieldName === "contestID") {
+         var contestID = item[fieldName];
+         $("#group_contestCategoryID").val(contests[contestID].categoryID);
+      }
       if (field.edittype !== "datetime") {
          $("#" + modelName + "_" + fieldName).val(item[fieldName]);
       } else {

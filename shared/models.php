@@ -696,6 +696,7 @@ $viewsModels = array(
          "language" => array(),
          "description" => array(),
          "imageURL" => array(),
+         "category" => array(),
       ),
       "filters" => array(
          "statusNotHidden" => array(
