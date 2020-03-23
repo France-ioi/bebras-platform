@@ -40,7 +40,7 @@
     "login_input_firstname": "اسمك الأول",
     "login_input_lastname": "اسم العائلة",
     "login_input_email": "بريدك الألكتروني",
-    "login_input_zipCode": "تليفون المنزل",
+    "login_input_zipCode": "الرمز البريدي",
     "login_input_phoneNumber": "رقم هاتف الطالب أو ولي الأمر",
     "login_input_studentId": "رقم الهوية أو الإقامة",
     "login_ask_gender": "الجنس",
