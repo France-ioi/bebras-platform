@@ -1251,13 +1251,7 @@ function getItemNames(items, withUnselect) {
       toSort.push({ID : itemID, name: items[itemID].name});
    }
    toSort.sort(function(itemA, itemB) {
-      if (itemA.name < itemB.name) {
-         return -1;
-      }
-      if (itemA.name === itemB.name) {
-         return 0;
-      }
-      return 1;
+      return itemA.name.localeCompare(itemB.name);
    });
    for (var iItem = 0;iItem < toSort.length; iItem++) {
       var item = toSort[iItem];
@@ -1289,7 +1283,9 @@ function loadContestCategories(contests) {
          categoryID++;
       }
    }
-   contestCategories.sort();
+   contestCategories.sort(function(contestA, contestB) {
+      return contestA.localeCompare(contestB);
+   });
    for (var categoryID = 0; categoryID < contestCategories.length; categoryID++) {
       var category = contestCategories[categoryID];
       categoryToID[category] = categoryID;
@@ -1873,13 +1869,7 @@ function updateContestOptions(group) {
       listContests.push(contest);
    }
    listContests.sort(function(c1, c2) {
-      if (c1.name < c2.name) {
-         return -1;
-      }
-      if (c1.name > c2.name) {
-         return 1;
-      }
-      return 0;
+      return c1.name.localeCompare(c2.name);
    });
    var options = "";
    for (iContest in listContests) {
