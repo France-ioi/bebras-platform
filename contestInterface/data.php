@@ -513,7 +513,7 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "",
    $_SESSION["language"] = $row->language;
    $_SESSION["minCategory"] = $row->minCategory;
    $_SESSION["maxCategory"] = $row->maxCategory;
-   $_SESSION["groupClosed"] = (($nbMinutesElapsed > 60) && (!$_SESSION["isPublic"]) && (!$_SESSION["isGenerated"]));
+   $_SESSION["groupClosed"] = (($nbMinutesElapsed > intval($row->groupsExpirationMinutes) + 30) && (intval($row->groupsExpirationMinutes) != 0) && (!$_SESSION["isPublic"]) && (!$_SESSION["isGenerated"]));
    $_SESSION["registrationData"] = $registrationData;
 
    updateSessionWithContestInfos($row);
