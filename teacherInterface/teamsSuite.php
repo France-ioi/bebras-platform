@@ -159,7 +159,7 @@ echo "<p>Vous pouvez consulter sur cette page les équipes déjà créées par v
 
 echo "<h2>Équipes qualifiées</h2>";
 $isFrance = false;
-if ($_SERVER['HTTP_HOST'] == "coordinateur.castor-informatique.fr")  {
+if ($_SERVER['HTTP_HOST'] == "coordinateur.concours-alkindi.fr")  {
    $isFrance = true;
    echo "<p>Les équipes qui ont obtenu 200 points ou plus sont qualifiées pour le 3e tour.</p>";
 } else {
