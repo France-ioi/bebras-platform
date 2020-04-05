@@ -158,13 +158,13 @@ echo "<h1>Équipes créées pour le 2e tour</h1>";
 echo "<p>Vous pouvez consulter sur cette page les équipes déjà créées par vos élèves.</p><p>Vous pourrez également y consulter les résultats au fur et à mesure de leur participation au 2e tour.</p>";
 
 echo "<h2>Équipes qualifiées</h2>";
-$isFrance = false;
-if ($_SERVER['HTTP_HOST'] == "coordinateur.concours-alkindi.fr")  {
+$isFrance = true;
+//if ($_SERVER['HTTP_HOST'] == "coordinateur.concours-alkindi.fr")  {
    $isFrance = true;
    echo "<p>Les équipes qui ont obtenu 200 points ou plus sont qualifiées pour le 3e tour.</p>";
-} else {
-   echo "<p><strong>Le seuil de qualification au 3ème tour sera annoncé très prochaînement.</strong></p>";
-}
+//} else {
+//   echo "<p><strong>Le seuil de qualification au 3ème tour sera annoncé très prochaînement.</strong></p>";
+//}
 echo "
 <!--
 <p>Le 3e tour dure 1h30 et doit se faire sous surveillance, entre le 21 mars et le 6 avril inclus.</p>
