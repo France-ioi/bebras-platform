@@ -205,8 +205,9 @@ echo "<tr><td>Rétroingénierie<br />(2e tour)</td><td>Braille 1<br />(2e tour)<
 echo "<td>Rétroingénierie<br />(3e tour)</td><td>Braille 1<br />(3e tour)</td><td>Braille 2<br />(3e tour)</td><td>Braille 3<br />(3e tour)</td><td>Boîtes<br/>(3e tour)</td><td>Total<br />(3e tour)</td>";
 /*
 echo "<td>Messages 1<br />(3e tour)</td><td>Messages 2<br />(3e tour)</td><td>Messages 3<br />(3e tour)</td><td>Cercle 1<br />(3e tour)</td><td>Cercle 2<br/>(3e tour)</td><td>Total<br />(3e tour)</td>";
-echo "<td>Classement<br/>académie</td><td>Classement<br/>grande région</td><td>Classement<br/>national</td>";
 */
+echo "<td>Classement<br/>académie</td><td>Classement<br/>grande région</td><td>Classement<br/>national</td>";
+
 echo "</tr>";
 
 $curGroupID = 0;
@@ -254,7 +255,9 @@ foreach ($groups as $group) {
       echo "<td>".$group->score5." (".$group->time5.")</td>";
       echo "<td>".$group->thirdScore." (".$group->thirdTime.")</td>";
       if ($group->qualifiedFinal == 1) {
-         echo "<td colspan=3><b>Qualifiée en finale</b></td>";
+         // enlever cette ligne et mettre la suivante quand on affiche les qualifications
+         echo "<td></td><td></td><td></td>";
+//         echo "<td colspan=3><b>Qualifiée en finale</b></td>";
       } else if ($group->isOfficial != 1) {
          echo "<td colspan=3><i>(hors classement)</i></td>";
       } else {
