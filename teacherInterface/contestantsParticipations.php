@@ -323,15 +323,19 @@ foreach ($schools as $schoolID => $school) {
          continue;
       }
       $categoryContests = $contests[$mainContestKey];
-      echo "<td colspan='".count($categoryContests)."'";
-      if (count($categoryContests) == 1) {
-         echo " rowspan=2 ";
+      $colSpan = count($categoryContests);
+      $rowSpan = 1;
+      if (isset($categoryContests[""]) AND count($categoryContests) == 1) {
+         $rowSpan = 2;
+      } else if (isset($categoryContests[""])) {
+         $colSpan -= 1;
       }
+      echo "<td colspan='".$colSpan."'"." rowSpan='".$rowSpan."' ";
       echo ">".$mainContestsNames[$mainContestKey]."</td>";
    }
    echo "<td rowspan=2 style='width:100px'>".translate("results_ranking_national")."</td>";
    echo "<td rowspan=2 style='width:100px'>".translate("results_ranking_school")."</td>";
-   //echo "<td rowspan=2 style='width:70px'>".translate("results_semi_finals")."</td>";
+   echo "<td rowspan=2 style='width:70px'>".translate("results_semi_finals")."</td>";
    echo "</tr><tr>";
    foreach ($contestIDs as $mainContestKey) {
       if (!isset($contests[$mainContestKey])) {
@@ -339,10 +343,10 @@ foreach ($schools as $schoolID => $school) {
       }
       $categoryContests = $contests[$mainContestKey];
       foreach ($categories as $category) {
-         /*if (!isset($categoryContests[$category])) {
+         if (!isset($categoryContests[$category])) {
             continue;
-         }*/
-         if (count($categoryContests) > 1) {
+         }
+         if (!(isset($categoryContests[""]) AND count($categoryContests) == 1)) {
             echo "<td>".$category."</td>";
          }
       }
