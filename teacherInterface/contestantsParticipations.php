@@ -137,8 +137,8 @@ $query = "
       algorea_registration.round,
       algorea_registration.algoreaRank,
       algorea_registration.algoreaSchoolRank,
-      algorea_registration.scoreDemi2018,
-      algorea_registration.rankDemi2018,
+      algorea_registration.scoreDemi2020,
+      algorea_registration.rankDemi2020,
       algorea_registration.qualifiedFinal,
       `group`.contestID,
       contest.parentContestID,
@@ -182,8 +182,8 @@ $query = "
       algorea_registration.round,
       algorea_registration.algoreaRank,
       algorea_registration.algoreaSchoolRank,
-      algorea_registration.scoreDemi2018,
-      algorea_registration.rankDemi2018,
+      algorea_registration.scoreDemi2020,
+      algorea_registration.rankDemi2020,
       algorea_registration.qualifiedFinal,
       `group`.contestID,
       contest.parentContestID,
@@ -252,8 +252,8 @@ while ($row = $stmt->fetchObject()) {
              "grade" => $row->regGrade,
              "code" => $row->code,
              "round" => $row->round,
-             "scoreDemi2018" => $row->scoreDemi2018,
-             "rankDemi2018" => $row->rankDemi2018,
+             "scoreDemi2020" => $row->scoreDemi2020,
+             "rankDemi2020" => $row->rankDemi2020,
              "qualifiedFinal" => $row->qualifiedFinal,
              "qualifiedCategory" => $row->category,
              "validatedCategory" => $row->validatedCategory,
@@ -269,8 +269,8 @@ while ($row = $stmt->fetchObject()) {
              "grade" => $row->grade,
              "code" => "-",
              "round" => $row->round,
-             "scoreDemi2018" => $row->scoreDemi2018,
-             "rankDemi2018" => $row->rankDemi2018,
+             "scoreDemi2020" => $row->scoreDemi2020,
+             "rankDemi2020" => $row->rankDemi2020,
              "qualifiedFinal" => $row->qualifiedFinal,
              "qualifiedCategory" => "-",
              "validatedCategory" => "-",
@@ -404,27 +404,27 @@ foreach ($schools as $schoolID => $school) {
       } echo "</td>";
       echo "<td>";
       if ($contestant["infos"]["round"] == "1") {
-         echo "qualifié";
-         /*
-         $score = $contestant["infos"]["scoreDemi2019"];
+         $score = $contestant["infos"]["scoreDemi2020"];
          if (($score != null) && ($score > 0)) {
             echo $score;
             echo "<br/>";
             $qualifiedFinal = $contestant["infos"]["qualifiedFinal"];
             echo "<span class='rank'>";
             if ($qualifiedFinal == "0") {
-               echo $contestant["infos"]["rankDemi2019"]."e des ".translate("grade_short_".$contestant["infos"]["grade"])."<br/>".
-               translate("results_not_qualified_to_finals");
+               echo /*$contestant["infos"]["rankDemi2020"]."e des ".translate("grade_short_".$contestant["infos"]["grade"])."<br/>".*/
+               translate("results_not_qualified_to_finals").
+               "<br/>Classement en attente.";
             } else if ($qualifiedFinal == "1") {
                echo translate("results_qualified_to_finals");
-            } else {
+            } else if ($qualifiedFinal == "2") {
                echo translate("results_qualified_to_online_finals");
+            } else {
+               echo "Hors classement";
             }
             echo "</span>";
          } else {
             echo "-";
          }
-         */
       } else {
          echo "-";
       }
