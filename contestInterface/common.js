@@ -1870,7 +1870,7 @@ window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, 
       teamPassword = groupCode;
       loadContestData(contestID, contestFolder);
    } else {
-      if ((data.nbMinutesElapsed > data.groupsExpirationMinutes) && (data.groupsExpirationMinutes != 0) && (!data.isPublic) && (!data.isGenerated) && (!getTeams)) {
+      if ((data.nbMinutesElapsed > data.groupsExpirationMinutes) && (data.groupsExpirationMinutes != 0) && (!data.isPublic) && /*(!data.isGenerated) &&*/ (!getTeams)) {
          if (parseInt(data.bRecovered)) {
             alert(t("group_session_expired"));
             //window.location = t("contest_url");
