@@ -1347,7 +1347,7 @@ function fillListQuestions(sortedQuestionIDs, questionsData)
 function getQuestionIcon(questionKey) {
    // Get the icon for a question, checking preloaded images for the icon
    var iconUrl = null;
-   var iconHint = questionKey + '/icon.png';
+   var iconHint = '/' + questionKey + '/icon.png';
    for(var i = 0; i < imagesPreloaded.length; i++) {
       var curUrl = imagesPreloaded[i];
       if(curUrl.substring(curUrl.length - iconHint.length) == iconHint) {
