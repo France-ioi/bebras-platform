@@ -503,6 +503,10 @@ var platform = {
       }
    },
    continueValidate: function(mode) {
+      if (mode == 'top') {
+         window.backToList();
+         return;
+      }
       if (!nextQuestionAuto) {
          return;
       }
