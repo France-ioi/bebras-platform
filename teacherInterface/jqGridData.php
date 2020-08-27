@@ -48,6 +48,10 @@ function sendValidationEmail($emailType, $sEmail, $sSalt) {
 }
 
 function sendValidationEmails($record) {
+   if(!$record["officialEmail"]) {
+      // Only validate official email addresses
+      return ['success' => true];
+   }
    $code = md5($record["salt"]."5263610");
    $params = array('code' => $code, 'email' => $record["officialEmail"], 'salt' => $record["salt"]);
    return sendValidationEmail("acEmail", $record["officialEmail"], $record["salt"]);
