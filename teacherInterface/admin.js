@@ -82,6 +82,16 @@ function localDateToUtc(cellValue, options, rowOject) {
    return res;
 }
 
+function checkTaskPath(path) {
+   if(!path) { return; }
+   if(path.indexOf('\\') != -1) {
+      console.log("Warning : task path contains a \\. That might cause issues in loading the task. (Path : `" + path + "`)");
+   }
+   if(!path.match(/index.*\.html/)) {
+      console.log("Warning : task path doesn't seem to contain any index(_lang).html. That might cause issues in loading the task. (Path : `" + path + "`)");
+   }
+}
+
 function isAdmin() {
    return ((loggedUser !== undefined) && (loggedUser.isAdmin === "1"));
 }
@@ -886,7 +896,9 @@ function loadListContests() {
 function loadListQuestions() {
    loadGrid("question", "key", 20, [20, 50, 200], function(id) {
       selectedQuestionID = id;
-      var url = "bebras-tasks/" + questions[id].path;
+      var path = questions[id].path;
+      checkTaskPath(path);
+      var url = "bebras-tasks/" + path;
       $("#preview_question").attr("src", url);
    }, true);
 }
@@ -1706,6 +1718,7 @@ Generator.prototype.doTask = function () {
    var taskUrl = self.questionsUrl[currentTaskIndex];
    var taskKey = self.questionsKey[currentTaskIndex];
    generating = true;
+   checkTaskPath(taskUrl);
    $('#preview_question').attr("src", "bebras-tasks/" + taskUrl);
    $('#preview_question').on('load', onQuestionLoaded);
    function onQuestionLoaded () {
