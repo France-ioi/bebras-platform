@@ -317,7 +317,7 @@
     "mail_from_name": "Iscrizione Castor-Informatique",
     "recover_email_sent_1": "Riceverai un'e-mail all'indirizzo ",
     "recover_email_sent_2": ". Clicca sul link che contiene per impostare una nuova password",
-    "recover_mail_body": "Salve,\r\n\r\nPer impostare una nuova password, apri il seguente link nel tuo browser  : \r\n\r\n__link__\r\n\r\nNon esitare a contattarci se trovi difficoltà.\r\n\r\Cordialmente,\r\n--\r\nIl team di Castor Informatique",
+    "recover_mail_body": "Salve,\r\n\r\nPer impostare una nuova password, apri il seguente link nel tuo browser : \r\n\r\n__link__\r\n\r\nNon esitare a contattarci se trovi difficoltà.\r\n\r\nCordialmente,\r\n--\r\nIl team di Castor Informatique",
     "recover_mail_title": "Ripristino password coordinatore",
     "password_changed": "La tua password è stata modificata",
     "email_subject_no_official_email": "Account coordinatore senza indirizzo e-mail ufficiale",
