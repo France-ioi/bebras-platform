@@ -82,12 +82,14 @@ function updateSessionWithContestInfos($row) {
    $_SESSION["subsetsSize"] = intval($row->subsetsSize);
    $_SESSION["nextQuestionAuto"] = intval($row->nextQuestionAuto);
    $_SESSION["allowPauses"] = intval($row->allowPauses);
+   $_SESSION["headerImageURL"] = $row->headerImageURL;
+   $_SESSION["headerHTML"] = $row->headerHTML;
 }
 
 function commonLoginTeam($db, $password) {
    global $tinyOrm, $config;
    $password = trim($password);
-   $stmt = $db->prepare("SELECT `team`.`ID` as `teamID`, `group`.`ID` as `groupID`, IFNULL(`team`.`contestID`, `group`.`contestID`) as `contestID`, `group`.`isPublic`, `group`.`name`, `team`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`groupsExpirationMinutes`, `contest`.`askParticipationCode`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`showTotalScore`, `contest`.`nextQuestionAuto`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, IFNULL(subContest.folder, `contest`.`folder`) as `folder`, `contest`.`name` as `contestName`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`allowPauses`, `contest`.`visibility`, `group`.`schoolID`, `team`.`endTime` FROM `team` JOIN `group` ON (`team`.`groupID` = `group`.`ID`) JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) LEFT JOIN `contest` subContest ON subContest.ID = team.contestID WHERE `team`.`password` = ?");
+   $stmt = $db->prepare("SELECT `team`.`ID` as `teamID`, `group`.`ID` as `groupID`, IFNULL(`team`.`contestID`, `group`.`contestID`) as `contestID`, `group`.`isPublic`, `group`.`name`, `team`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`groupsExpirationMinutes`, `contest`.`askParticipationCode`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`showTotalScore`, `contest`.`nextQuestionAuto`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, IFNULL(subContest.folder, `contest`.`folder`) as `folder`, `contest`.`name` as `contestName`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`allowPauses`, `contest`.`visibility`, `contest`.`headerImageURL`, `contest`.`headerHTML`, group`.`schoolID`, `team`.`endTime` FROM `team` JOIN `group` ON (`team`.`groupID` = `group`.`ID`) JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) LEFT JOIN `contest` subContest ON subContest.ID = team.contestID WHERE `team`.`password` = ?");
    $stmt->execute(array($password));
    $row = $stmt->fetchObject();
    if (!$row) {
@@ -143,6 +145,8 @@ function commonLoginTeam($db, $password) {
       "showTotalScore" => $_SESSION["showTotalScore"],
       "nbUnlockedTasksInitial" => $_SESSION["nbUnlockedTasksInitial"],
       "subsetsSize" => $_SESSION["subsetsSize"],
+      "headerImageURL" => $_SESSION["headerImageURL"],
+      "headerHTML" => $_SESSION["headerHTML"],
       );
 }
 

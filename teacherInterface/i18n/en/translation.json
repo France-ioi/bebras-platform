@@ -356,6 +356,8 @@
     "contest_closedToOfficialGroups_label": "Closed to official groups",
     "contest_begin_date_label" : "Begin",
     "contest_end_date_label" : "End",
+    "contest_headerImageURL_label": "Custom header image",
+    "contest_headerHTML_label": "Custom header HTML",
     "cancel": "Cancel",
     "school_select": "Organize a contest in this school",
     "colleagues": "<h3>Colleagues</h3><p>Here are the other teachers who share a school with you. You can give them access to your groups by clicking twice on the corresponding row and changing the value in the &quot;Access given&quot; column. They can do the same on their side and give you access to their groups.</p>",
