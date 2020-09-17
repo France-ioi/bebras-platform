@@ -17,7 +17,7 @@ function validateEmail($type, $email, $salt) {
    if ($row = $stmt->fetchObject()) {
       $validate = "";
       $message = translate('validate_email_ok');
-      if (($type === "officialEmail") && ($config->teacherInterface->forceOfficialEmailDomain)) {
+      if (($type === "officialEmail") && ($config->teacherInterface->forceOfficialEmailDomain || $config->teacherInterface->autoValidateOfficialEmail)) {
          $validate = ", `validated` = 1 ";
       } else {
          $message = translate('validate_email_unofficial');         

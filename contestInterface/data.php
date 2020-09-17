@@ -313,6 +313,8 @@ function handleLoadSession() {
       "contestOpen" => $_SESSION["contestOpen"],
       "contestShowSolutions" => $_SESSION["contestShowSolutions"],
       "contestVisibility" => $_SESSION["contestVisibility"],
+      "headerImageURL" => $_SESSION["headerImageURL"],
+      "headerHTML" => $_SESSION["headerHTML"],
       "SID" => $sid));
 }
 
@@ -467,7 +469,7 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "",
    global $allCategories, $config;
    
    // Find a group whose code matches the given password.
-   $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, UTC_TIMESTAMP()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`groupsExpirationMinutes`,  `contest`.`askParticipationCode`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`groupsExpirationMinutes`, `contest`.`showTotalScore`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`visibility`, `contest`.`askEmail`, `contest`.`askZip`, `contest`.`askGenre`, `contest`.`askGrade`, `contest`.`askStudentId`, `contest`.`askPhoneNumber`, `contest`.`name` as `contestName`, `contest`.`allowPauses`, `group`.`isGenerated`, `group`.`language`, `group`.`minCategory`, `group`.`maxCategory` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
+   $query = "SELECT `group`.`ID`, `group`.`name`, `group`.`bRecovered`, `group`.`contestID`, `group`.`isPublic`, `group`.`schoolID`, `group`.`startTime`, TIMESTAMPDIFF(MINUTE, `group`.`startTime`, UTC_TIMESTAMP()) as `nbMinutesElapsed`,  `contest`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`groupsExpirationMinutes`,  `contest`.`askParticipationCode`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`groupsExpirationMinutes`, `contest`.`showTotalScore`, `contest`.`nextQuestionAuto`, `contest`.`folder`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`visibility`, `contest`.`askEmail`, `contest`.`askZip`, `contest`.`askGenre`, `contest`.`askGrade`, `contest`.`askStudentId`, `contest`.`askPhoneNumber`, `contest`.`name` as `contestName`, `contest`.`allowPauses`, `contest`.`headerImageURL`, `contest`.`headerHTML`, `group`.`isGenerated`, `group`.`language`, `group`.`minCategory`, `group`.`maxCategory` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `code` = ?";
    $stmt = $db->prepare($query);
    $stmt->execute(array($password));
    $row = $stmt->fetchObject();
@@ -520,7 +522,7 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "",
 
    updateSessionWithContestInfos($row);
    
-   $query = "SELECT contest.ID as contestID, contest.folder, contest.name, contest.language, contest.categoryColor, contest.customIntro, contest.imageURL, contest.description, contest.allowTeamsOfTwo, contest.groupsExpirationMinutes, contest.askParticipationCode ".
+   $query = "SELECT contest.ID as contestID, contest.folder, contest.name, contest.language, contest.categoryColor, contest.customIntro, contest.imageURL, contest.description, contest.allowTeamsOfTwo, contest.groupsExpirationMinutes, contest.askParticipationCode, `contest`.`headerImageURL`, `contest`.`headerHTML` ".
       "FROM contest WHERE parentContestID = :contestID";
    $stmt = $db->prepare($query);
    $stmt->execute(array("contestID" => $row->contestID));
@@ -599,6 +601,8 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "",
       "minCategory" => $_SESSION["minCategory"],
       "maxCategory" => $_SESSION["maxCategory"],
       "language" => $_SESSION["language"],
+      "headerImageURL" => $_SESSION["headerImageURL"],
+      "headerHTML" => $_SESSION["headerHTML"],
       "childrenContests" => $childrenContests,
       "registrationData" => $registrationData,
       "isOfficialContest" => $isOfficialContest,

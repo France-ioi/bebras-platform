@@ -256,8 +256,20 @@ window.onerror = function () {
 
 window.logError = logError;
 
-var updateContestName = function(contestName) {
-  $('#headerH1').html(contestName);
+var updateContestHeader = function(contestData) {
+  $('#headerH1').html(contestData.contestName);
+  if(contestData.headerImageURL) {
+     $('#leftTitle img').attr('src', contestData.headerImageURL);
+  }
+  if(contestData.headerHTML) {
+     if(contestData.headerHTML.substr(0, 1) == '<') {
+        $('#headerH2').replaceWith(contestData.headerHTML);
+     } else {
+        $('#headerH2').text(contestData.headerHTML);
+     }
+  } else {
+     $('#headerH2').text(contestData.name);
+  }
   //$('title').html(contestName); doesn't work on old IEs
 };
 
@@ -1866,7 +1878,6 @@ window.validateRegistrationCode = function(teamMate) {
 
 window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, contestID) {
    initContestData(data, contestID);
-   $("#headerH2").html(data.name);
    $("#login_link_to_home").hide();
    if (data.teamID !== undefined) { // The password of the team was provided directly
       $("#div" + curStep).hide();
@@ -2017,7 +2028,7 @@ window.reallyStartContest = function() {
 }
 
 window.startPreparation = function() {
-   updateContestName(personalPageData.contestName);
+   updateContestHeader(personalPageData);
    groupMinCategory = personalPageData.minCategory;
    groupMaxCategory = personalPageData.maxCategory;
    groupLanguage = personalPageData.language;
@@ -2078,7 +2089,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
             window.showPersonalPage(data);
             return;
          }
-         updateContestName(data.contestName);
+         updateContestHeader(data);
 
          groupMinCategory = data.minCategory;
          groupMaxCategory = data.maxCategory;
@@ -2554,7 +2565,7 @@ function initContestData(data, newContestID) {
       contestFolder = data.contestFolder;
       customIntro = $("<textarea/>").html(data.customIntro).text();
    }
-   updateContestName(data.contestName);
+   updateContestHeader(data);
    fullFeedback = parseInt(data.fullFeedback);
    showTotalScore = parseInt(data.showTotalScore);
    nextQuestionAuto = parseInt(data.nextQuestionAuto);

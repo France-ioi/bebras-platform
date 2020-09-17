@@ -629,6 +629,8 @@ function initModels(isLogged) {
                stype: "select", searchoptions: searchYesNo,
                width: 100
             },
+            headerImageURL: {label: t("contest_headerImageURL_label"), editable: true, edittype: "text"},
+            headerHTML: {label: t("contest_headerHTML_label"), editable: true, edittype: "text"}
          }
       },
       question: {

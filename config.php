@@ -82,6 +82,7 @@ $config->teacherInterface->generationMode = 'local';
 $config->teacherInterface->sAbsoluteStaticPathOldIE = 'http://coordinateur.castor-informatique.fr/';
 $config->teacherInterface->sContestGenerationPath = '/../contestInterface/contests/'; // *MUST* be relative!
 $config->teacherInterface->forceOfficialEmailDomain = false;
+$config->teacherInterface->autoValidateOfficialEmail = false;
 $config->teacherInterface->useAlgoreaCodes = false; // change if your award is an acess code for another contest
 // Point teacherInterface->baseUrl to an URL serving the teacherInterface directory.
 $config->teacherInterface->baseUrl = 'http://coordinateur.castor-informatique.fr';
