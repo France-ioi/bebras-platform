@@ -92,7 +92,7 @@
     "server_response": "Réponse du serveur :",
     "option_no_filter": "Pas de filtre",
     "contestID_label": "Épreuve",
-    "contestID_comment": "Vous pouvez créer des groupes pour entraîner vos élèves sur les épreuves passées.<!--<br/><b>Attention :</b> seules les épreuves dont le nom commence par 'Entraînement' peuvent être utilisées en entraînement.-->",
+    "contestID_comment": "Vous pouvez créer des groupes pour entraîner vos élèves sur les épreuves passées.",
     "grade_-1": "Professeur",
     "grade_-4": "Autre",
     "grade_3": "CE2",
