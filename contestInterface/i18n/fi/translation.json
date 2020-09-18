@@ -208,5 +208,8 @@
     "category_grades_11_12": "Luokat 11 ja 12 →",
     "category_grades_11_12_description": "<p>Toinen aste, toinen vuosi tai enemmän</p>",
     "category_grades_all": "Kaikki luokat →",
-    "category_grades_all_description": "<p>Tehtävät kaikilta vuosiluokilta yhdessä</p>"
+    "category_grades_all_description": "<p>Tehtävät kaikilta vuosiluokilta yhdessä</p>",
+    "breadcrumb_language": "Language",
+    "breadcrumb_category": "Category",
+    "breadcrumb_sequence": "Content"
 }

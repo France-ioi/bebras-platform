@@ -197,5 +197,8 @@
     "category_grades_11_12": "Grades 11 and 12 →",
     "category_grades_11_12_description": "<p>For students near the end of high school</p>",
     "category_grades_all": "All grades →",
-    "category_grades_all_description": "<p>Challenges from all grades combined</p>"
+    "category_grades_all_description": "<p>Challenges from all grades combined</p>",
+    "breadcrumb_language": "Language",
+    "breadcrumb_category": "Category",
+    "breadcrumb_sequence": "Content"
 }

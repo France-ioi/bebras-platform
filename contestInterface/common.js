@@ -2141,7 +2141,7 @@ function setContestBreadcrumb(val) {
       if (contestBreadcrumb != "") {
          separator = '<span class="breadcrumb-separator">/</span>';
       }
-      contestBreadcrumb += '<span class="breadcrumb-item">' + separator + '<span class="breadcrumb-link" onclick="goToLanguage()">Langage ' + selectedLanguage + '</span></span>';
+      contestBreadcrumb += '<span class="breadcrumb-item">' + separator + '<span class="breadcrumb-link" onclick="goToLanguage()">t("breadcrumb_language") ' + selectedLanguage + '</span></span>';
    }
    if (preSelectedContest != "") {
       var contest = window.getContest(preSelectedContest);
@@ -2180,7 +2180,7 @@ window.goToSequence = function() {
 
 
 function offerContestSelectionPanels() {
-   setContestBreadcrumb("Catégorie");
+   setContestBreadcrumb(t("breadcrumb_category"));
    offerCategories(personalPageData);
    $('#divAccessContest').show();
 }
@@ -2328,7 +2328,7 @@ window.offerLanguages = function() {
    } else {
       selectLanguage(lastLanguage);
    }
-   setContestBreadcrumb("Langage");
+   setContestBreadcrumb(t("breadcrumb_language"));
    scrollToTop('#tab-school .tabTitle');
 }
 
@@ -2380,7 +2380,7 @@ window.offerContests = function() {
    else {
       selectContest(lastContestID);
    }
-   setContestBreadcrumb("Séquence");
+   setContestBreadcrumb(t("breadcrumb_sequence"));
 }
 
 /*

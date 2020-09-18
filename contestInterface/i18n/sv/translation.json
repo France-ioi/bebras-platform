@@ -198,5 +198,8 @@
     "category_grades_11_12": "Årskurs Gy2 och Gy3 →",
     "category_grades_11_12_description": "<p>För elever i slutet av gymnasiet</p>",
     "category_grades_all": "Alla årskurser →",
-    "category_grades_all_description": "<p>Uppgifter från alla årskurser blandat</p>"
+    "category_grades_all_description": "<p>Uppgifter från alla årskurser blandat</p>",
+    "breadcrumb_language": "Language",
+    "breadcrumb_category": "Category",
+    "breadcrumb_sequence": "Content"
 }

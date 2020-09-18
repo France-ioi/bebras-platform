@@ -170,11 +170,11 @@
     "language_blockly": "Blockly →",
     "language_scratch": "Scratch →",
     "language_python": "Python →",
-    "language_python_description": "<p>Si está realmente familiarizado con este idioma.</p><p>Advertencia: solo funciona bien con los navegadores Google Chrome o Mozilla Firefox actualizados.</p>",
+    "language_python_description": "<p>Si estás realmente familiarizado con este idioma.</p><p>Advertencia: solo funciona bien con los navegadores Google Chrome o Mozilla Firefox actualizados.</p>",
     "language_scratch_description": "<p>Si estás acostumbrado a Scratch.</p><p>Advertencia: solo funciona bien con los navegadores Google Chrome o Mozilla Firefox actualizados</p>",
-    "language_blockly_description": "<p><strong>Esto es lo que recomendamos para este contenido.</strong></p>",
+    "language_blockly_description": "<p><strong>Este es el lenguage que recomendamos para este contenido.</strong></p>",
     "select_language": "Elige tu lenguage de programación:",
-    "select_language_advice": "Si no está segura, le recomendamos Blockly.",
+    "select_language_advice": "Si no estás seguro, te recomendamos Blocky",
     "select_category": "Select your category:",
     "select_category_explanation": "<p>You may participate in the contest several times in a different category each time, during the same round.</p><p>Do not select the orange category unless you already have a good experience with programming, including with manipulating variables.</p>",
     "select_category_warning": "<b>Warning :</b> if you are a beginner, and didn't practice much with nested loops and conditions, start with the white category even if you are qualified for a higher category.",
@@ -203,5 +203,8 @@
     "category_grades_11_12": "Grades 11 and 12 →",
     "category_grades_11_12_description": "<p>For students near the end of high school</p>",
     "category_grades_all": "All grades →",
-    "category_grades_all_description": "<p>Challenges from all grades combined</p>"
+    "category_grades_all_description": "<p>Challenges from all grades combined</p>",
+    "breadcrumb_language": "Language",
+    "breadcrumb_category": "Category",
+    "breadcrumb_sequence": "Content"
 }
