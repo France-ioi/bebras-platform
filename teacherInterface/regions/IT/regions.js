@@ -1,0 +1,22 @@
+regions = [
+   "countryIT:lombardia",
+   "countryIT:lazio",
+   "countryIT:campania",
+   "countryIT:sicilia",
+   "countryIT:veneto",
+   "countryIT:emilia_romagna",
+   "countryIT:piemonte",
+   "countryIT:puglia",
+   "countryIT:toscana",
+   "countryIT:calabria",
+   "countryIT:sardegna",
+   "countryIT:liguria",
+   "countryIT:marche",
+   "countryIT:abruzzo",
+   "countryIT:friuli_venezia_giulia",
+   "countryIT:trentino_alto_adige",
+   "countryIT:umbria",
+   "countryIT:basilicata",
+   "countryIT:molise",
+   "countryIT:valle_d_aosta"
+];

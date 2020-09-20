@@ -1,0 +1,22 @@
+regions = [
+   'countryES:foreign',
+   'countryES:andalucia',
+   'countryES:aragon',
+   'countryES:principado_de_asturias',
+   'countryES:islas_baleares',
+   'countryES:canarias',
+   'countryES:cantabria',
+   'countryES:castilla_la_mancha',
+   'countryES:castilla_y_leon',
+   'countryES:cataluna',
+   'countryES:comunidad_valenciana',
+   'countryES:extremadura',
+   'countryES:galicia',
+   'countryES:la_rioja',
+   'countryES:comunidad_de_madrid',
+   'countryES:region_de_murcia',
+   'countryES:comunidad_foral_de_navarra',
+   'countryES:pais_vasco',
+   'countryES:ceuta',
+   'countryES:melilla'
+];
