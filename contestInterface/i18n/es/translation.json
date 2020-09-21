@@ -1,6 +1,6 @@
 {
     "general_page_title": "Bebras - la platforma",
-    "general_instructions": "Para una impresión general de la actividad Bebras, diríjete a <a href=\"http://castor-informatique.fr\">la página principal Francesa</a>.",
+    "general_instructions": "",
     "browser_support_bebras-platform": "<p>La plataforma funciona con los siguientes navegadores :</p><ul><li>Google Chrome versions 5.0 o más ;</li><li>Firefox versions 3.6 o más ;</li><li>Internet Explorer versions 8.0 y arriba ;</li><li>Safari versions 3.0 o más (funciona en iPads).</li></ul>",
     "general_choice": "Escoge una opción:",
     "general_start_contest": "Iniciar una actividad en la escuela",
