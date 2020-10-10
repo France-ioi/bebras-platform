@@ -46,7 +46,7 @@
     "schools_country": "Pays :",
     "multiple_schools_message": "Vous avez demandé à être le coordinateur de plusieurs établissements. Vous pouvez donc définir ici la liste de ces établissements.</p><p><i>Pour modifier un établissement déjà créé, cliquez deux fois sur la ligne correspondante, modifiez les informations souhaitées, puis appuyez sur Entrée</i>.",
     "schools_add": "Ajouter un établissement",
-    "schools_delete": "Supprimer l'établissement sélectionné",
+    "schools_delete": "J'ai quitté cet établissement",
     "schools_recompute_coords": "Recalculer toutes les coordonnées (1,5 s / établissement)",
     "groups_intro": "<p>    Pour vous éviter d'avoir à enregistrer vous-même chacun des élèves de votre établissement, vous allez devoir créer un « groupe » pour chaque ensemble d'élèves qui participeront à la même épreuve en même temps. Lisez bien la notice dans l'onglet explications avant d'en créer.    </p><p>    <b>Attention :</b> les lignes sur fond rouge sont des groupes qui ont déjà été utilisés au moins une fois. Rappelez-vous qu'un groupe ne peut être utilisé que pendant 30 min après sa première utilisation.    </p>",
     "groups_create": "Créer un nouveau groupe",
