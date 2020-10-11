@@ -2133,6 +2133,7 @@ function editForm(modelName, title, item) {
       if (modelName === "group" && fieldName === "contestID") {
          var contestID = item[fieldName];
          $("#group_contestCategoryID").val(contests[contestID].categoryID);
+         updateContestOptions(item);
       }
       if (field.edittype !== "datetime") {
          $("#" + modelName + "_" + fieldName).val(item[fieldName]);
