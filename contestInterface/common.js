@@ -74,6 +74,8 @@ var personalPageData = null;
 var bodyOnResize = null;
 // Images preloaded by ImagesLoader
 var imagesPreloaded = [];
+// Actually make the logActivity requests
+var doLogActivity = false;
 
 function getParameterByName(name) {
    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -317,7 +319,7 @@ function toggleMetaViewport(toggle) {
  * Log activity on a question (question load, attempt)
  */
 function logActivity(tID, qID, type, answer, score, force) {
-  if(!force && !window.config.logActivity) { return; }
+  if(!force && !doLogActivity && !window.config.logActivity) { return; }
   if(tID === null) { tID = teamID; }
   if(qID === null) {
      qID = questionIframe.questionKey && questionsKeyToID[questionIframe.questionKey] ? questionsKeyToID[questionIframe.questionKey] : 0;
@@ -2028,6 +2030,7 @@ window.reallyStartContest = function() {
 }
 
 window.startPreparation = function() {
+   doLogActivity = personalPageData.logActivity;
    updateContestHeader(personalPageData);
    groupMinCategory = personalPageData.minCategory;
    groupMaxCategory = personalPageData.maxCategory;
@@ -2089,6 +2092,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
             window.showPersonalPage(data);
             return;
          }
+         doLogActivity = data.logActivity;
          updateContestHeader(data);
 
          groupMinCategory = data.minCategory;
@@ -2565,6 +2569,7 @@ function initContestData(data, newContestID) {
       contestFolder = data.contestFolder;
       customIntro = $("<textarea/>").html(data.customIntro).text();
    }
+   doLogActivity = data.logActivity;
    updateContestHeader(data);
    fullFeedback = parseInt(data.fullFeedback);
    showTotalScore = parseInt(data.showTotalScore);

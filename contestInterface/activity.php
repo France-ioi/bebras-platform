@@ -21,9 +21,6 @@ mb_internal_encoding("UTF-8");
 function handleActivity($db) {
    global $config;
    addBackendHint("ClientIP.activity:pass");
-   if(!$config->contestInterface->logActivity) {
-      exitWithJson(["success" => true, "ignored" => true]);
-   }
 
    $stmt = $db->prepare("INSERT INTO `activity` (teamID, questionID, type, answer, score, date) VALUES(:teamID, :questionID, :type, :answer, :score, NOW());");
    $stmt->execute([

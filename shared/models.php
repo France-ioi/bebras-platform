@@ -92,6 +92,7 @@ $tablesModels = array (
          "imageURL" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "headerImageURL" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "headerHTML" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "logActivity" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
       )
    ),
    "contest_question" => array(
@@ -701,6 +702,7 @@ $viewsModels = array(
          "category" => array(),
          "headerImageURL" => array(),
          "headerHTML" => array(),
+         "logActivity" => array(),
       ),
       "filters" => array(
          "statusNotHidden" => array(
