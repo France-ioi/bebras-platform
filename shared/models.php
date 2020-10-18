@@ -92,7 +92,7 @@ $tablesModels = array (
          "imageURL" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "headerImageURL" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "headerHTML" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
-         "logActivity" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "logActivity" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
       )
    ),
    "contest_question" => array(
