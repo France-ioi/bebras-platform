@@ -84,7 +84,7 @@ function updateSessionWithContestInfos($row) {
    $_SESSION["allowPauses"] = intval($row->allowPauses);
    $_SESSION["headerImageURL"] = $row->headerImageURL;
    $_SESSION["headerHTML"] = $row->headerHTML;
-   $_SESSION["logActivity"] = $row->logActivity;
+   $_SESSION["logActivity"] = intval($row->logActivity);
 }
 
 function commonLoginTeam($db, $password) {
