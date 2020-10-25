@@ -92,6 +92,7 @@ $tablesModels = array (
          "imageURL" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "headerImageURL" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "headerHTML" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "logActivity" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
       )
    ),
    "contest_question" => array(
@@ -680,6 +681,9 @@ $viewsModels = array(
          "askStudentId" => array(),
          "askPhoneNumber" => array(),
          "askGenre" => array(),
+         "headerImageURL" => array(),
+         "headerHTML" => array(),
+         "logActivity" => array(),
          "minAward1Rank" => array(),
          "minAward2Rank" => array(),
          "rankGrades" => array(),
@@ -699,8 +703,6 @@ $viewsModels = array(
          "description" => array(),
          "imageURL" => array(),
          "category" => array(),
-         "headerImageURL" => array(),
-         "headerHTML" => array(),
       ),
       "filters" => array(
          "statusNotHidden" => array(
