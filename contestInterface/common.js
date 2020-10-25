@@ -2141,7 +2141,7 @@ function setContestBreadcrumb(val) {
       if (contestBreadcrumb != "") {
          separator = '<span class="breadcrumb-separator">/</span>';
       }
-      contestBreadcrumb += '<span class="breadcrumb-item">' + separator + '<span class="breadcrumb-link" onclick="goToLanguage()">t("breadcrumb_language") ' + selectedLanguage + '</span></span>';
+      contestBreadcrumb += '<span class="breadcrumb-item">' + separator + '<span class="breadcrumb-link" onclick="goToLanguage()">' + t("breadcrumb_language") + ' ' + selectedLanguage + '</span></span>';
    }
    if (preSelectedContest != "") {
       var contest = window.getContest(preSelectedContest);
