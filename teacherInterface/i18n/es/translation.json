@@ -187,7 +187,7 @@
     "school_zipcode_long_label": "Código postal",
     "school_nbStudents_label": "Cantidad<br/>(estudiantes)",
     "school_nbStudents_label_long": "Cantidad (estudiantes)",
-    "school_nbStudents_comment": "Número total de estudiantes del escuela",
+    "school_nbStudents_comment": "Número total de estudiantes de la escuela",
     "user_saniValid_label": "Apellidos/Nombres<br/>correctos",
     "user_gender_label": "Título",
     "user_gender_female": "Sra.",
