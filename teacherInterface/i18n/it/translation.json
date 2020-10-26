@@ -563,7 +563,7 @@
     "notice_student_select_number": "Specificano allora se faranno l'attività: <b>da soli</b> o <b>a due</b>.",
     "notice_steps": "<li>Inseriscono poi: <b>cognome, nome</b>.</li><li>il sistema attribuisce loro un <b>codice personale che devono annotare su un foglio.</b><br/>Questo codice è molto importante, dato che può servire in caso di guasto al computer o altre interruzioni.</li><li>Quando sono pronti, gli studenti possono <b>cliccare sul tasto \"inizia\"</b>.</li><li>Si accende il cronometro: <b>l'attività dura %s minuti consecutivi</b>.</li><li>Se hanno finito prima dei %smin, cliccano su “Ho finito”. Altrimenti l'attività termina automaticamente.</li>",
     "notice_solving_issues": "<b>Risoluzione dei problemi: caso di uno studente disconnesso prima di aver terminato.</b><ol><li>Ritorna sul sito:  <a href='%s'>%s</a></li><li>Clicca su \"Continua l'attività\".</li><li>Inserisce il suo codice personale che ha annotato allo step 6.</li><li>Se lo studente non ha annotato o ha annotato male il suo codice personale:<ul><li>Inserisce il codice del suo gruppo: <span class='groupCode'>%s</span></li><li>Seleziona la sua squadra nella lista</li><li>Inserisci, senza mostrarlo allo studente, il tuo codice segreto di sicurezza: <span class='groupCode'>%s</span></li></ul></li></ol>",
-    "notice_contact_hotline": "<b>Hotline</b> nella settimana delle attività, dalle ore 8 alle ore 19: %s ; %s.",
+    "notice_contact_hotline": "<b>Contatto</b>: %s %s.",
     "notice_backup_url": "<b>Se il sito non funziona</b>, prova <a href='%s'>%s</a>",
     "certificates_generation": "Generazione degli attestati",
     "download_in_progress": "Download dei dati in corso.",
