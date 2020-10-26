@@ -240,6 +240,8 @@
     "question_generation_failed": "Task generation failed",
     "mandatory_field": "mandatory field",
     "select": "Izaberi",
+    "content_type": "Type of content",
+    "at_time": "at",
     "region": "Region",
     "edit_group": "Edit a group",
     "invalid_officialEmail": "Your primary email is invalid. Do not leave the @ac-... in the left text box. (TODO : Not possible in the UK)",

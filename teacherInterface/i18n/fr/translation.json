@@ -278,6 +278,8 @@
     "question_generation_failed": "Erreur lors de la génération de l'exercice",
     "mandatory_field": "champ obligatoire",
     "select": "Sélectionner",
+    "at_time": "at",
+    "content_type": "Type de contenu",
     "region": "Académie",
     "edit_group": "Modifier un groupe",
     "invalid_officialEmail": "Votre adresse académique est invalide. Ne saisissez pas le @ac-… dans la zone de gauche.",

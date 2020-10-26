@@ -1930,7 +1930,7 @@ function newForm(modelName, title, message, item) {
          html += "<input type='password'  style='width:350px' id='" + fieldId + "' "+requiredString+"/>";
       } else if (field.edittype === "select") {
          if (fieldName == "contestID") {
-            html += "Type de contenu : <select id='group_contestCategoryID'>";
+            html += t("content_type") + " <select id='group_contestCategoryID'>";
             for (var categoryID = 0; categoryID < contestCategories.length; categoryID++) {
                html += "<option value='" + categoryID + "'>"  + contestCategories[categoryID] + "</option>";
             }
@@ -1976,7 +1976,7 @@ function newForm(modelName, title, message, item) {
          html += "<br/><input type='checkbox' id='" + fieldId + "_none'>" + t("user_no_official_email");
       } else if (field.edittype === "datetime") {
          html += "<input id='" + fieldId + "_date' type='text' "+requiredString+"/> ";
-         html += " à ";
+         html += " " + t("at_time") + " ";
          html += getSelectHours(fieldId) + ":" + getSelectMinutes(fieldId);
          html += "<br/>" + t("expectedStartTime_timeZone") + "<b>" + jstz.determine().name() + "</b>";
          js += "$('#" + fieldId + "_date').datepicker({ dateFormat: 'dd/mm/yy' });";

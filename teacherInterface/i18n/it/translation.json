@@ -278,6 +278,8 @@
     "question_generation_failed": "Errore durante il caricamento dell'esercizio",
     "mandatory_field": "campo obbligatorio",
     "select": "Seleziona",
+    "content_type": "Tipo de contenido",
+    "at_time": "at",
     "region": "Distretto",
     "edit_group": "Modifica gruppo",
     "invalid_officialEmail": "Il tuo indirizzo e-mail ufficiale è valido. Non inserire il @ac-… nella zona a sinistra.",

@@ -264,6 +264,8 @@
     "question_generation_failed": "Tehtävän luonti epäonnistui",
     "mandatory_field": "pakollinen kenttä",
     "select": "Valitse",
+    "content_type": "Type of content",
+    "at_time": "at",
     "region": "Alue",
     "edit_group": "Muokkaa ryhmää",
     "invalid_officialEmail": "Ensisijainen sähköpostiosoitteesi on virheellinen.",

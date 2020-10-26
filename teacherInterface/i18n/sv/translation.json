@@ -60,7 +60,7 @@
     "teams_delete_selected": "Ta bort det valda laget",
     "contestants_intro": "            <p>Den här fliken är användbar efter tävlingen. Det kan användas för att åtgärda eventuella misstag i namn eller kön för eleverna. </ p> <p> <i> För att ändra data i rutnätet nedan (efternamn, förnamn eller kön hos en elev) markerar du raden och klickar sedan på den cell du vill ändra. <b> Tryck på Enter för att spara din ändring </ b>  </ i> </p>",
     "contestants_delete_selected": "Ta bort den valda eleven",
-    "certificates_intro": "<p>Här kan du generera och skriva ut deltagarbevis för var och en av <b> som deltog i tävlingen </b>. Här är ett <a href =&quot;images/diplomeExemple.pdf&quot; target =&quot;_blank&quot;>exempel på ett diplom </a> </p> <p> Den här funktionen är inte tillgänglig för inofficiella deltagare. </p> <p> Innan du ber om generering av diplom, kolla: </p> <ul> <li> att du angav ditt namn korrekt i &quot;Lärare&quot;-fliken </li> <li> att du angav rätt skolnamn i &quot;Skola&quot;-fliken, som den ska visas på diplomet, </li> <li> att namnen på eleverna är korrekta i &quot;Elever&quot;-fliken. </li> </ul> <p> När du har kontrollerat allt detta behöver du bara be om generering av diplom nedan. För att minska antalet filer som ska hämtas kan alla diplomen hämtas som en enda pdf-fil. Du kan också välja att få en PDF för varje grupp. </p> <p> Tveka inte att kontakta oss om du har frågor. </p>",
+    "certificates_intro": "<p>Här kan du generera och skriva ut deltagarbevis för var och en av <b> som deltog i tävlingen</b>. Här är ett <a href ='images/diplomeExemple.pdf' target='_blank'>exempel på ett diplom </a>. </p> <p> Den här funktionen är inte tillgänglig för inofficiella deltagare. </p> <p> Innan du ber om generering av diplom, kolla: </p> <ul> <li> att du angav ditt namn korrekt i &quot;Lärare&quot;-fliken </li> <li> att du angav rätt skolnamn i &quot;Skola&quot;-fliken, som den ska visas på diplomet, </li> <li> att namnen på eleverna är korrekta i &quot;Elever&quot;-fliken. </li> </ul> <p> När du har kontrollerat allt detta behöver du bara be om generering av diplom nedan. För att minska antalet filer som ska hämtas kan alla diplomen hämtas som en enda pdf-fil. Du kan också välja att få en PDF för varje grupp. </p> <p> Tveka inte att kontakta oss om du har frågor. </p>",
     "questions_create": "Skapa en uppgift",
     "questions_delete_selected": "Ta bort den valda uppgiften",
     "contests_create": "Skapa en ny tävling",
@@ -264,6 +264,8 @@
     "question_generation_failed": "Generering av uppgift misslyckades",
     "mandatory_field": "obligatoriskt fält",
     "select": "Välj",
+    "content_type": "Type of content",
+    "at_time": "at",
     "region": "Region",
     "edit_group": "Ändra en grupp",
     "invalid_officialEmail": "Din primära e-postadress är felaktig.",
@@ -572,5 +574,6 @@
     "certificates_option_display": "Print settings for scores and ranks",
     "certificates_min_score_displayed": "Print the score if it's at least %s points.",
     "certificates_max_school_rank_percentile_displayed": "Print the school rank for the top %s%% only.",
-    "certificates_max_rank_percentile_displayed": "Print the national rank for the top %s%% only."
+    "certificates_max_rank_percentile_displayed": "Print the national rank for the top %s%% only.",
+    "group_print_certificates_impossible": "Intyg kan endast skrivas ut för officiella tävlingar som nyligen avslutats."    
 }
