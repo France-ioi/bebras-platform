@@ -433,7 +433,7 @@ function initModels(isLogged) {
       user_edit: {
          tableName: "user",
          fields: {
-            gender: {label: t("user_gender_label"), editable: true, edittype: "select", width: 20, editoptions:{ value:{"F": "Mme.", "M": "M."}}, required:true},
+            gender: {label: t("user_gender_label"), editable: true, edittype: "select", width: 20, editoptions:{ value:{"F": t("user_gender_female"), "M": t("user_gender_male")}}, required:true},
             lastName: {label: t("user_lastName_label"), editable: true, edittype: "text", width: 90, required: true},
             firstName: {label: t("user_firstName_label"), editable: true, edittype: "text", width: 90, required: true},
             officialEmail: {label: t("user_officialEmail_label"), editable: true, edittype: officialEmailEditType, width: 90, required: true},
