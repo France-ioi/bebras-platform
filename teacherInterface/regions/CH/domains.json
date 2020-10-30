@@ -1,11 +1,12 @@
 {
    "domains": [
       "edu.ge.ch",
+      "edu.vs.ch",
+      "edu-vd.ch",
+      "rpn.ch",
       "vd.educanet2.ch",
       "fr.educanet2.ch",
       "vs.educanet2.ch",
-      "rpn.ch",
-      "ju.educanet2.ch",
-      "edu.vs.ch"
+      "ju.educanet2.ch"
    ]
 }

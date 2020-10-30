@@ -1,3 +1,13 @@
 {
     "foreign": "Hors Cameroun"
+    "adamaoua": "Adamaoua",
+    "centre": "Centre",
+    "est": "Est",
+    "extreme-nord": "Extrême-Nord",
+    "littoral": "Littoral",
+    "nord": "Nord",
+    "nord-ouest": "Nord-Ouest",
+    "sud": "Sud",
+    "sud-ouest": "Sud-Ouest",
+    "ouest": "Ouest"
 }
