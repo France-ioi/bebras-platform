@@ -39,6 +39,12 @@ if (isset($_REQUEST["contestantNames"])) {
    font-weight: bold;
 }
 </style>
+<script>
+   function printCodes() {
+      var groupID = "<?php echo $groupID; ?>";
+      window.open('awardsPrint.php?groupID=' + groupID + '&assigned=1', 'width=700,height=600,menubar=yes,status=yes,toolbar=yes,scrollbars=yes,resizable=yes');
+   }
+</script>
 <?php
 //.vertical-text {	transform: rotate(-45deg); 	transform-origin: left bottom 0; overflow:}</style>";
 
@@ -142,7 +148,7 @@ while ($row = $stmt->fetchObject()) {
 }
 if ($hasRows) {
    echo "</table>";
-   
+   echo "<p><button type='button' onclick='printCodes()'>Imprimer tous les codes</button></p>";
    echo "<p><button type='submit'>Supprimer les codes sélectionnés</button></p>";
    echo "<p>Seuls les codes qui n'ont pas encore été utilisés peuvent être supprimés.</p>";
 } else {
