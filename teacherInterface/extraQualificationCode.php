@@ -3,6 +3,7 @@
 include('./config.php');
 require_once("../shared/common.php");
 require_once("commonAdmin.php");
+require_once("genQualificationCode.php");
 
 if (!isset($_SESSION['userID'])) {
    die(json_encode(array('success' => false, 'error' => translate("session_expired"))));
@@ -27,49 +28,18 @@ if (!isset($_SESSION['userID'])) {
 <body>
 <?php
 
-function showError($message) {
-   echo "<script>alert('".$message."')</script><div style='background-color:#F88;font-weight:bold;padding:10px'>".$message."</div>";
-}
-
 if (isset($_POST["schoolID"])) {
    if ($_POST["lastName"] == "" || $_POST["firstName"] == "") {
       showError("<b>".translate("codes_fields_missing")."</b>");
    } else {
-      $query = "SELECT `code` FROM algorea_registration WHERE schoolID = :schoolID AND userID = :userID AND firstName = :firstName AND lastName = :lastName AND grade = :grade";
-      $stmt = $db->prepare($query);
-      $stmt->execute(['userID' => $_SESSION['userID'],
-         'schoolID' => $_POST["schoolID"],
-         'firstName' => $_POST["firstName"],
-         'lastName' => $_POST["lastName"],
-         'grade' => $_POST["grade"]
-         ]);
-      if ($row = $stmt->fetchObject()) {
-         showError(sprintf(translate("codes_participant_exists"), $_POST["firstName"], $_POST["lastName"], $row->code));
-      }
-      else {
-         $category = "";
-         if (isset($config->defaultCategory)) {
-            $category = $config->defaultCategory;
-         }
-         if (($_POST["grade"] == -1) && isset($config->defaultTeacherCategory)) {
-            $category = $config->defaultTeacherCategory;
-         }
-         $code = generateRandomCode();
-         $query = "INSERT INTO algorea_registration (`firstName`, `lastName`, `genre`, `email`, `studentID`, `phoneNumber`, `zipCode`, `code`, `grade`, `schoolID`, `userID`, `category`) ".
-            "VALUES (:firstName, :lastName, 0, '', '', '', '', :code, :grade, :schoolID, :userID, '".$category."') ";
-         $stmt = $db->prepare($query);
-         $stmt->execute(['userID' => $_SESSION['userID'],
-            'schoolID' => $_POST["schoolID"],
-            'firstName' => $_POST["firstName"],
-            'lastName' => $_POST["lastName"],
-            'grade' => $_POST["grade"],
-            'code' => $code         
-            ]);
+      $code = generateCode($_POST["schoolID"], $_SESSION['userID'], null, $_POST["lastName"], $_POST["firstName"],$_POST["grade"]);
+
+      if ($code != null) {
          showError(sprintf(translate("codes_generated"), $code, $_POST["firstName"], $_POST["lastName"]));
       }
    }
 }
-
+   
 echo "<h1>".translate("codes_extra_title")."</h1>".
      "<p>".translate("codes_list_existing")."</p>".
      "<table id='participationCodes' cellspacing=0><tr>".
@@ -130,29 +100,5 @@ echo "</select>".
    script_tag('/bower_components/i18next/i18next.min.js');
 
 echo "</html>";
-
-function generateRandomCode() {
-   global $db;
-   srand(time() + rand());
-   $charsAllowed = "0123456789";
-   $base = 'g';
-   $query = "SELECT ID as nb FROM algorea_registration WHERE code = :code;";
-   $stmt = $db->prepare($query);
-   while(true) {
-      $code = $base;
-      for ($pos = 0; $pos < 14; $pos++) {
-         $iChar = rand(0, strlen($charsAllowed) - 1);
-         $code .= substr($charsAllowed, $iChar, 1);
-      }
-      $stmt->execute(array('code' => $code));
-      $row = $stmt->fetchObject();
-      if (!$row) {
-         return $code;
-      }
-      error_log("Error, code ".$code." is already used");
-   }
-}
-
-
 
 ?>

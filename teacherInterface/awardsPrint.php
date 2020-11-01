@@ -2,6 +2,7 @@
 
 require_once("../shared/common.php");
 require_once("commonAdmin.php");
+require_once("genQualificationCode.php");
 
 if (!isset($_SESSION['userID'])) {
    echo "Votre session a expiré, veuillez vous reconnecter.";
@@ -14,28 +15,54 @@ if ($config->customStringsName) {
   $strings = array_merge($strings, $customStrings);
 }
 
-$model = getViewModel('contestant');
-$request = array(
-   "modelName" => 'contestant',
-   "model" => $model,
-   "filters" => array()
-);
-foreach($model["fields"] as $fieldName => $field) {
-   $request["fields"][] = $fieldName;
+if (isset($_REQUEST["assigned"])) {
+   if (!isset($_REQUEST["groupID"])) {
+      echo "code de groupe manquant";
+      exit;
+   }
+   $groupID = $_REQUEST["groupID"];
+   $userID = $_SESSION["userID"];
+   getGroupInfo($groupID, $userID);
+   
+   $query = "SELECT algorea_registration.schoolID, `group`.contestID, `group`.ID as groupField, ".
+   "algorea_registration.firstName, algorea_registration.lastName, `group`.name as groupName, algorea_registration.code AS qualificationCode, '' as category, school.name as schoolName ".
+   "FROM algorea_registration ".
+   "JOIN `group` ON `group`.ID = algorea_registration.groupID ".
+   "JOIN `school` ON `school`.ID = `group`.schoolID";
+   
+   $stmt = $db->prepare($query);
+   $stmt->execute(['groupID' => $groupID]);
+
+   $awarded = array();
+   while ($row = $stmt->fetchObject()) {
+      $awarded[] = $row;
+   };
+   
+} else {
+   $model = getViewModel('contestant');
+   $request = array(
+      "modelName" => 'contestant',
+      "model" => $model,
+      "filters" => array()
+   );
+   foreach($model["fields"] as $fieldName => $field) {
+      $request["fields"][] = $fieldName;
+   }
+   $request["filters"] = array('awarded' => true, 'printable' => true);
+   if (!$_SESSION["isAdmin"]) {
+      $request["filters"]["userID"] = $_SESSION["userID"];
+   }
+   if (isset($_GET["groupID"])) {
+      $request["filters"]["groupID"] = $_GET["groupID"];
+   }
+   if (isset($_GET["schoolID"])) {
+      $request["filters"]["schoolID"] = $_GET["schoolID"];
+   }
+   $request['orders'] = $model['orders'];
+   $result = selectRows($db, $request);
+   $awarded = $result['items'];
 }
-$request["filters"] = array('awarded' => true, 'printable' => true);
-if (!$_SESSION["isAdmin"]) {
-   $request["filters"]["userID"] = $_SESSION["userID"];
-}
-if (isset($_GET["groupID"])) {
-   $request["filters"]["groupID"] = $_GET["groupID"];
-}
-if (isset($_GET["schoolID"])) {
-   $request["filters"]["schoolID"] = $_GET["schoolID"];
-}
-$request['orders'] = $model['orders'];
-$result = selectRows($db, $request);
-$awarded = $result['items'];
+
 if (!count($awarded)) {
    echo 'Rien à imprimer !';
    exit();

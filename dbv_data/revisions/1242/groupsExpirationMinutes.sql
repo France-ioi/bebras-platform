@@ -1,0 +1,1 @@
+ALTER TABLE `contest` ADD `groupsExpirationMinutes` INT NOT NULL DEFAULT '30' AFTER `nbMinutes`;

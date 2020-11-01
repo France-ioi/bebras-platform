@@ -1612,6 +1612,14 @@ function displayScoresGroup() {
    }
 }
 
+function openEditGroupContestants() {
+   if (selectedGroupID === "0" || selectedGroupID === undefined) {
+      jqAlert(t("select_group"));
+   } else {
+      window.open("editGroupContestants.php?groupID=" + selectedGroupID,'_new');
+   }
+}
+
 function gradeGroup() {
    if (!checkGroupSelectedAndConfirm()) {
       return;

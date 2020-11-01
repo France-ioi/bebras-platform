@@ -1,0 +1,1 @@
+ALTER TABLE `algorea_registration` ADD `groupID` BIGINT NULL DEFAULT NULL AFTER `userID`, ADD INDEX `groupID` (`groupID`);
