@@ -14,7 +14,7 @@ if (!isset($_REQUEST["groupID"])) {
    exit;
 }
 
-$groupID = $_GET["groupID"];
+$groupID = $_REQUEST["groupID"];
 $userID = $_SESSION["userID"];
 
 

@@ -2025,8 +2025,8 @@ window.cancelStartContest = function() {
 }
 
 window.reallyStartContest = function() {
-   $("#divStartContest").hide();
-   checkGroupFromCode("CheckGroup", personalPageData.registrationData.code, false, false, null, true);
+   //$("#divStartContest").hide();
+   checkGroupFromCode("StartContest", personalPageData.registrationData.code, false, false, null, true);
 }
 
 window.startPreparation = function() {

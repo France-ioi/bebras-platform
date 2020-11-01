@@ -22,6 +22,7 @@ if (isset($_REQUEST["assigned"])) {
    }
    $groupID = $_REQUEST["groupID"];
    $userID = $_SESSION["userID"];
+
    getGroupInfo($groupID, $userID);
    
    $query = "SELECT algorea_registration.schoolID, `group`.contestID, `group`.ID as groupField, ".

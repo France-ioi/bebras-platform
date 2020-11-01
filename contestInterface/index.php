@@ -543,6 +543,8 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
          <td><button type="button" onclick="cancelStartContest()" class="btn btn-primary" data-i18n="contest_start_no"></button></td>
       </tr>
    </table>
+   <br/>
+   <div><span id="StartContestResult" style="color:red"></span></div>
 </div>
 
 <div id="divAllContestsDone" style="display:none">
