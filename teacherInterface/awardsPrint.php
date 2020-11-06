@@ -29,7 +29,8 @@ if (isset($_REQUEST["assigned"])) {
    "algorea_registration.firstName, algorea_registration.lastName, `group`.name as groupName, algorea_registration.code AS qualificationCode, '' as category, school.name as schoolName ".
    "FROM algorea_registration ".
    "JOIN `group` ON `group`.ID = algorea_registration.groupID ".
-   "JOIN `school` ON `school`.ID = `group`.schoolID";
+   "JOIN `school` ON `school`.ID = `group`.schoolID".
+   "WHERE `algorea_registration`.`groupID` = :groupID";
    
    $stmt = $db->prepare($query);
    $stmt->execute(['groupID' => $groupID]);

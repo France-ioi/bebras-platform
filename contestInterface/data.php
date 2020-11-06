@@ -492,15 +492,16 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "",
       return;
    }
    if (($row->open != "Open") && ($row->schoolID != 9999999999)) { // temporary hack to allow test groups
-      $messages = array("fr" => "Le concours de ce groupe n'est pas ouvert.",
-         "en" => "The contest associated with this group is not open",
-         "ar" => "المسابقة لم تبدأ بعد"
+      $messages = array("fr" => "Le concours de ce groupe n'est pas ouvert : ",
+         "en" => "The contest associated with this group is not open: ",
+         "ar" => "المسابقة لم تبدأ بعد "
       );
       if (isset($messages[$config->defaultLanguage])) {
          $message = $messages[$config->defaultLanguage];
       } else {
          $message = $messages["en"];
       }
+      $message .= $row->contestName;
       exitWithJson((object)array("success" => false, "message" => $message));
    }
    $groupID = $row->ID;
