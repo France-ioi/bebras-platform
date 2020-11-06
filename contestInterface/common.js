@@ -1901,7 +1901,7 @@ window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, 
       }
       $("#div" + curStep).hide();
       hideLoginFields(data);
-      if (curStep === "CheckGroup") {
+      if ((curStep === "CheckGroup") || (curStep === "StartContest")) {
          if (isPublic) {
             window.setNbContestants(1);
             createTeam([{ lastName: "Anonymous", firstName: "Anonymous", genre: 2, email: null, zipCode: null}]);
