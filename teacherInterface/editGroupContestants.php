@@ -54,6 +54,11 @@ echo "<h1>Codes de participants associés à un groupe</h1>";
 
 $rowGroup = getGroupInfo($groupID, $userID);
 
+if (!$rowGroup->allowFromHome) {
+   echo translate("groups_from_home_disabled");
+   exit;
+}
+
 echo "<h3>Groupe : ".$rowGroup->groupName."</h3>";
 echo "<h3>Activité : ".$rowGroup->contestName."</h3>";
 
@@ -97,6 +102,7 @@ if ($strContestantNames != "") {
 $contestantNames = array_slice($contestantNames, $nbGenerated);
 $strContestantNames = implode(PHP_EOL, $contestantNames);
 
+echo "<p>Pour permettre aux établissements qui n'ont pas un accès suffisant aux salles informatiques du fait du protocole sanitaire, cette page permet d'organiser exceptionnellement  une participation à la maison des élèves.</p>";
 
 echo "<p>Pour permettre une participation à la maison de ce groupe, vous pouvez générer ci-dessous des codes de participants individuels pour les élèves de ce groupe. Vous pourrez ensuite les imprimer, et les distribuer individuellement aux élèves. Chaque élève pourra utiliser son code de participant pour effectuer le concours.</p><p>Il est important que chaque élève fasse attention à ne pas perdre ce code, et à ne le transmettre à personne, faute de quoi il risquerait de ne pas pouvoir participer.</p>";
 

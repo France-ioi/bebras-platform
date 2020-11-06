@@ -637,6 +637,13 @@ function initModels(isLogged) {
                edittype: "select", editoptions: editYesNo,
                stype: "select", searchoptions: searchYesNo,
                width: 100
+            },
+            allowFromHome: {
+               label: t("contest_allowFromHome_label"),
+               editable: true,
+               edittype: "select", editoptions: editYesNo,
+               stype: "select", searchoptions: searchYesNo,
+               width: 100
             }
          }
       },

@@ -167,7 +167,7 @@
     "no": "Non",
     "login_registrationCode_description": "(Une lettre puis une douzaine de chiffres)",
     "login_validate_code": "Valider ce code",
-    "contest_start_intro": "<h2>Démarrer le concours Algoréa</h2><p>Êtes-vous certain de vouloir commencer le concours officiel maintenant ?</p><p>Ne le commencez pas chez vous si votre enseignant a prévu de le faire en classe !</p>",
+    "contest_start_intro": "<h2>Démarrer le concours</h2><p>Êtes-vous certain de vouloir commencer le concours officiel maintenant ?</p><p>Ne le commencez pas chez vous si votre enseignant a prévu de le faire en classe !</p>",
     "contest_start_yes": "Oui, je commence maintenant",
     "contest_start_no": "Non, je me suis trompé.",
     "contest_already_done": "Activité déjà effectuée",

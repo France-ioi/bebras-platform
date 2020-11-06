@@ -64,7 +64,7 @@ function generateRandomCode() {
 
 function getGroupInfo($groupID, $userID) {
    global $db;
-   $query = "SELECT `group`.name as groupName, `contest`.name as contestName, `group`.userID, `group`.grade, `group`.schoolID ".
+   $query = "SELECT `group`.name as groupName, `contest`.name as contestName, `group`.userID, `group`.grade, `group`.schoolID, contest.allowFromHome ".
    "FROM `group` ".
    "JOIN contest ON `group`.contestID = contest.ID ".
    "WHERE `group`.ID = :groupID";

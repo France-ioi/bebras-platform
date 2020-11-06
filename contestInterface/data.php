@@ -372,7 +372,7 @@ function handleCheckPassword($db) {
 function getRegistrationData($db, $code) {
    $query = "SELECT `algorea_registration`.`ID`, `code`, `category` as `qualifiedCategory`, `validatedCategory`, `firstName`, `lastName`, `genre`, `grade`, `studentID`, `phoneNumber`, `email`, `zipCode`, ".
       "IFNULL(`algorea_registration`.`schoolID`, 0) as `schoolID`, IFNULL(`algorea_registration`.  `userID`, 0) as `userID`, IFNULL(`school_user`.`allowContestAtHome`, 1) as `allowContestAtHome`,
-      `round` ".
+      `round`, `algorea_registration`.`groupID` ".
       "FROM `algorea_registration` ".
       "LEFT JOIN `school_user` ON (`school_user`.`schoolID` = `algorea_registration`.`schoolID` AND `school_user`.`userID` = `algorea_registration`.`userID`) ".
       "WHERE `code` = :code";
@@ -453,15 +453,28 @@ function handleGroupFromRegistrationCode($db, $code) {
    if (isset($_SERVER['HTTP_HOST']) && ($_SERVER['HTTP_HOST'] == "chticode.algorea.org")) {
       $contestID = "100001";
    }
-   $query = "SELECT `code` FROM `group` WHERE `contestID` = :contestID AND `schoolID` = :schoolID AND `userID` = :userID AND `grade` = :grade AND isGenerated = 1";
-   $stmt = $db->prepare($query);
-   $stmt->execute(array("contestID" => $contestID, "schoolID" => $registrationData->schoolID, "userID" => $registrationData->userID, "grade" => $registrationData->grade));
-   $rowGroup = $stmt->fetchObject();
-   if (!$rowGroup) {
-      $groupData = createGroupForContestAndRegistrationCode($db, $code, $contestID);
-      $groupCode = $groupData["code"];
+   if ($registrationData->groupID != null) {
+      $query = "SELECT `code` FROM `group` WHERE `ID` = :groupID";
+      $stmt = $db->prepare($query);
+      $stmt->execute(array("groupID" => $registrationData->groupID));
+      $rowGroup = $stmt->fetchObject();
+      if ($rowGroup != null) {
+         $groupCode = $rowGroup->code;
+      } else {
+         $message = "Le groupe associé à ce code n'existe plus !";
+         exitWithJson((object)array("success" => false, "message" => $message));         
+      }
    } else {
-      $groupCode = $rowGroup->code;
+      $query = "SELECT `code` FROM `group` WHERE `contestID` = :contestID AND `schoolID` = :schoolID AND `userID` = :userID AND `grade` = :grade AND isGenerated = 1";
+      $stmt = $db->prepare($query);
+      $stmt->execute(array("contestID" => $contestID, "schoolID" => $registrationData->schoolID, "userID" => $registrationData->userID, "grade" => $registrationData->grade));
+      $rowGroup = $stmt->fetchObject();
+      if (!$rowGroup) {
+         $groupData = createGroupForContestAndRegistrationCode($db, $code, $contestID);
+         $groupCode = $groupData["code"];
+      } else {
+         $groupCode = $rowGroup->code;
+      }
    }
    handleCheckGroupPassword($db, $groupCode, false, "", $registrationData, $isOfficialContest);
 }
