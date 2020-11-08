@@ -1,0 +1,1 @@
+ALTER TABLE `team` ADD `userAgent` VARCHAR(300) NOT NULL AFTER `contestID`;
