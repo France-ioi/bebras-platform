@@ -26,19 +26,20 @@ if (get_magic_quotes_gpc()) {
 mb_internal_encoding("UTF-8");
 
 function handleAnswers($db, $tinyOrm) {
-   global $testMode;
+   global $config, $testMode;
    $teamID = $_POST["teamID"];
    $teamPassword = $_POST["teamPassword"];
-   $mode = null;
-   if (isset($_SESSION['mysqlOnly']) && $_SESSION['mysqlOnly']) {
-      $mode = 'mysql';
-   }
+   $mode = $config->db->use;
    try {
       $rows = $tinyOrm->select('team', array('password', 'startTime', 'nbMinutes'), array('ID' => $teamID), null, $mode);
    } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
       error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
       error_log('DynamoDB error trying to get record: teamID: '.$teamID);
       exitWithJsonFailure($e->getMessage(), array('error' => 'DynamoDB'));
+   }
+   if ($testMode == false && $mode == "dynamoDB" && !count($rows)) {
+      $mode = "mysql";
+      $rows = $tinyOrm->select('team', array('password', 'startTime', 'nbMinutes'), array('ID' => $teamID), null, $mode);
    }
    if ($testMode == false && (!count($rows) || $teamPassword != $rows[0]['password'])) {
       error_log('teamID '.$teamID.' sent answer with password '.$teamPassword.(count($rows) ? ' instead of '.$rows[0]['password'] : ' (no such team)'));
