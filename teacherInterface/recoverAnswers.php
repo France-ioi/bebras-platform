@@ -7,7 +7,11 @@ $data = $_REQUEST["data"];
 $pwd = $data["pwd"];
 $ans = $data["ans"];
 
-$stmt = $db->prepare("SELECT `team`.`ID` FROM `team` WHERE `password` = ?");
+$stmt = $db->prepare("SELECT `team`.`ID`, `group`.`name` as `groupName`, `contest`.`name` as contestName ".
+   "FROM `team` ".
+   "JOIN `group` ON team.groupID = `group`.ID ".
+   "JOIN `contest` ON `group`.contestID = `contest`.ID ".
+   "WHERE `team`.`password` = ?");
 $stmt->execute(array($pwd));
 if ($row = $stmt->fetchObject()) {
    $stmtInsert = $db->prepare("INSERT IGNORE INTO `team_question_recover` (`teamID`, `questionID`, `answer`) VALUES (?, ?, ?)");
@@ -19,7 +23,7 @@ if ($row = $stmt->fetchObject()) {
       $stmtUpdate->execute(array($answer[1], $teamID, $answer[0]));
       $stmtReset->execute(array($teamID));
    }
-   echo json_encode(array("success" => true, "message" => "Team ".$teamID.", ".count($ans)." réponses enregistrées"));
+   echo json_encode(array("success" => true, "message" => "Team ".$teamID.", ".count($ans)." réponses enregistrées", "groupName" => $row->groupName, "contestName" => $row->contestName));
 } else {
    echo json_encode(array("success" => false));
 }
