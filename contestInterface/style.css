@@ -11,6 +11,7 @@ body {
   margin: 0px;
   font-family: arial;
   font-size: 16px;
+  overscroll-behavior: contain;
 }
 
 .fullFeedback {

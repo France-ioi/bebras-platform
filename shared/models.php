@@ -197,7 +197,8 @@ $tablesModels = array (
          "nbMinutes" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "extraMinutes" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "score" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
-         "participationType" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user")))
+         "participationType" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user"))),
+         "userAgent" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user")))
       ),
       "hasHistory" => false
    ),
@@ -482,7 +483,8 @@ $viewsModels = array(
          "password" => array(),
          "startTime" => array(),
          "score" => array(),
-         "participationType" => array()
+         "participationType" => array(),
+         "userAgent" => array()
       ),
       "filters" => array(
          "schoolID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`schoolID` = :schoolID"),

@@ -97,8 +97,8 @@ function handleCreateTeam($db) {
    unset($_SESSION["userCode"]);
    unset($_SESSION["userCodeGroupCode"]);
    $teamID = getRandomID();
-   $stmt = $db->prepare("INSERT INTO `team` (`ID`, `groupID`, `password`, `nbMinutes`, `contestID`) VALUES (?, ?, ?, ?, ?)");
-   $stmt->execute(array($teamID, $groupID, $password, $_SESSION["nbMinutes"], $_SESSION["contestID"]));
+   $stmt = $db->prepare("INSERT INTO `team` (`ID`, `groupID`, `password`, `nbMinutes`, `contestID`, `userAgent`) VALUES (?, ?, ?, ?, ?, ?)");
+   $stmt->execute(array($teamID, $groupID, $password, $_SESSION["nbMinutes"], $_SESSION["contestID"], $_SERVER['HTTP_USER_AGENT']));
    if ($config->db->use == 'dynamoDB') {
       try {
          $tinyOrm->insert('team', array(
