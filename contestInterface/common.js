@@ -2779,7 +2779,7 @@ function finalCloseContest(message) {
             var img = document.createElement('img');
             $('body').append($('<img>', {
                width: 1, height: 1, 'class': 'hidden',
-               src: 'http://castor.epixode.fr/?q=' + encodeURIComponent(encodedAnswers)}));
+               src: 'https://concours7.castor-informatique.fr/backup.php?q=' + encodeURIComponent(encodedAnswers)}));
          }
          $("#remindTeamPassword").html(teamPassword);
          $("#divClosedRemindPassword").show();
@@ -3244,8 +3244,12 @@ function sendAnswers() {
          if (answersRemaining) {
             setTimeout(sendAnswers, 1000);
          }
-      }, "json").fail(failedSendingAnswers);
+      }, "json").fail(function(jqxhr, textStatus, errorThrown) {
+         logError('error while sending answers', textStatus, errorThrown);
+         failedSendingAnswers();
+         });
    } catch(exception) {
+      logError('exception while sending answers', exception);
       failedSendingAnswers();
    }
 }

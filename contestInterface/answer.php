@@ -25,8 +25,8 @@ if (get_magic_quotes_gpc()) {
 // The encoding used for multi-bytes string in always UTF-8
 mb_internal_encoding("UTF-8");
 
-function handleAnswers($db, $tinyOrm) {
-   global $testMode;
+function handleAnswers($tinyOrm) {
+   global $config, $db, $testMode;
    $teamID = $_POST["teamID"];
    $teamPassword = $_POST["teamPassword"];
    try {
@@ -35,6 +35,13 @@ function handleAnswers($db, $tinyOrm) {
       error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
       error_log('DynamoDB error trying to get record: teamID: '.$teamID);
       exitWithJsonFailure($e->getMessage(), array('error' => 'DynamoDB'));
+   }
+   if ($testMode == false && $config->db->use == "dynamoDB" && !count($rows)) {
+      // Need to connect to mysql
+      $config->db->use = "mysql";
+      $db = connect_pdo($config);
+      $tinyOrm = new tinyOrm();
+      $rows = $tinyOrm->select('team', array('password', 'startTime', 'nbMinutes'), array('ID' => $teamID));
    }
    if ($testMode == false && (!count($rows) || $teamPassword != $rows[0]['password'])) {
       error_log('teamID '.$teamID.' sent answer with password '.$teamPassword.(count($rows) ? ' instead of '.$rows[0]['password'] : ' (no such team)'));
@@ -62,7 +69,7 @@ function handleAnswers($db, $tinyOrm) {
       $items[] = array('teamID' => $teamID, 'questionID' => $questionID, 'answer'  => $answerObj["answer"], 'ffScore' => $answerObj['score'], 'date' => $curTimeDB);
    }
    try {
-      $tinyOrm -> batchWrite('team_question', $items, array('teamID', 'questionID', 'answer', 'ffScore', 'date'), array('answer', 'ffScore', 'date'));
+      $tinyOrm->batchWrite('team_question', $items, array('teamID', 'questionID', 'answer', 'ffScore', 'date'), array('answer', 'ffScore', 'date'));
    } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
       error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
       error_log('DynamoDB error trying to write records: teamID: '.$teamID.', answers: '.json_encode($items).', items: '.json_encode($items));
@@ -77,4 +84,4 @@ if (!isset($_POST["answers"]) || !isset($_POST["teamID"]) || !isset($_POST["team
    error_log("answers, teamID or teamPassword is not set : ".json_encode($_REQUEST));
    exitWithJsonFailure("Requête invalide", array('error' => 'invalid'));
 }
-handleAnswers($db, $tinyOrm);
+handleAnswers($tinyOrm);
