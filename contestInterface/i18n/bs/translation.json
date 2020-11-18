@@ -138,5 +138,6 @@
     "top_image_new": "<img class=\"header_logo_img\" src=\"images/castor_small.png\" />",
     "breadcrumb_language": "Language",
     "breadcrumb_category": "Category",
-    "breadcrumb_sequence": "Content"
+    "breadcrumb_sequence": "Content",
+    "teammate": "Teammate"
 }

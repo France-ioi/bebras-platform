@@ -211,5 +211,6 @@
     "category_grades_all_description": "<p>Tehtävät kaikilta vuosiluokilta yhdessä</p>",
     "breadcrumb_language": "Language",
     "breadcrumb_category": "Category",
-    "breadcrumb_sequence": "Content"
+    "breadcrumb_sequence": "Content",
+    "teammate": "Teammate"
 }

@@ -2394,7 +2394,7 @@ window.offerContests = function() {
 window.validateLoginForm = function() {
    $("#LoginResult").html("");
    for (var iContestant = 1; iContestant <= nbContestants; iContestant++) {
-      var strTeamMate = "Équipier " + iContestant + " : ";
+      var strTeamMate = t("teammate") + " " + iContestant + " : ";
       if (teamMateHasRegistration[iContestant]) {
          if ((contestants[iContestant] == undefined) || (contestants[iContestant].registrationCode == undefined)) {
             $("#LoginResult").html(strTeamMate + "entrez et validez le code");

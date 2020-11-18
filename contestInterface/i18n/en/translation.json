@@ -212,5 +212,6 @@
     "category_grades_all_description": "<p>Challenges from all grades combined</p>",
     "breadcrumb_language": "Language",
     "breadcrumb_category": "Category",
-    "breadcrumb_sequence": "Content"
+    "breadcrumb_sequence": "Content",
+    "teammate": "Teammate"
 }
