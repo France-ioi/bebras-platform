@@ -2758,28 +2758,18 @@ function doCloseContest(message) {
 */
 function finalCloseContest(message) {
    TimeManager.stopNow();
-   $.post("data.php", {SID: SID, action: "closeContest", teamID: teamID, teamPassword: teamPassword},
+   $.post("data.php", {SID: SID, action: "closeContest", teamID: teamID, teamPassword: teamPassword, teamScore: ffTeamScore},
       function() {}, "json"
    ).always(function() {
       window.onbeforeunload = function(){};
       if (!contestShowSolutions) {
          $("#divClosedPleaseWait").hide();
          $("#divClosedMessage").html(message);
-         var listAnswers = [];
-         for(var questionID in answersToSend) {
-            var answerObj = answersToSend[questionID];
-            listAnswers.push([questionID, answerObj.answer]);
-         }
-         if (listAnswers.length !== 0) {
-            var encodedAnswers = base64_encode(JSON.stringify({pwd: teamPassword, ans: listAnswers}));
+         var encodedAnswers = getEncodedAnswers();
+         if (encodedAnswers) {
             $("#encodedAnswers").html(encodedAnswers);
             $("#divClosedEncodedAnswers").show();
-            // Attempt to send the answers payload to a backup server by adding
-            // an image to the DOM.
-            var img = document.createElement('img');
-            $('body').append($('<img>', {
-               width: 1, height: 1, 'class': 'hidden',
-               src: 'https://concours7.castor-informatique.fr/backup.php?q=' + encodeURIComponent(encodedAnswers)}));
+            backupSendAnswers();
          }
          $("#remindTeamPassword").html(teamPassword);
          $("#divClosedRemindPassword").show();
@@ -3173,6 +3163,7 @@ function failedSendingAnswers() {
    for(var questionID in answersToSend) {
       answersToSend[questionID].sending = false;
    }
+   backupSendAnswers();
    setTimeout(sendAnswers, delaySendingAttempts);
 }
 
@@ -3225,6 +3216,7 @@ function sendAnswers() {
       function(data) {
          sending = false;
          if (!data.success) {
+            logError('error from answer.php while sending answers', data.message, 'score ' + ffTeamScore);
             if (confirm(t("response_transmission_error_1") + " " + data.message + t("response_transmission_error_2"))) {
                failedSendingAnswers();
             }
@@ -3245,12 +3237,48 @@ function sendAnswers() {
             setTimeout(sendAnswers, 1000);
          }
       }, "json").fail(function(jqxhr, textStatus, errorThrown) {
-         logError('error while sending answers', textStatus, errorThrown);
+         logError('error while sending answers', textStatus, errorThrown, 'score ' + ffTeamScore);
          failedSendingAnswers();
          });
    } catch(exception) {
-      logError('exception while sending answers', exception);
+      logError('exception while sending answers', exception, 'score ' + ffTeamScore);
       failedSendingAnswers();
+   }
+}
+
+/*
+ * Returns base64-encoded answers remaining to send
+ */
+
+function getEncodedAnswers() {
+   var listAnswers = [];
+   for(var questionID in answersToSend) {
+      var answerObj = answersToSend[questionID];
+      listAnswers.push([questionID, answerObj.answer]);
+   }
+   if (listAnswers.length !== 0) {
+      return base64_encode(JSON.stringify({pwd: teamPassword, ans: listAnswers}));
+   } else {
+      return null;
+   }
+}
+
+/*
+ * Attempt to send the answers payload to a backup server by adding
+ * an image to the DOM.
+ */
+function backupSendAnswers() {
+   var encodedAnswers = getEncodedAnswers();
+   var img = $('#backup-send-answers');
+   if(!img.length) {
+      $('body').append($('<img>', {
+         id: 'backup-send-answers',
+         width: 1, height: 1, 'class': 'hidden'}));
+      var img = $('#backup-send-answers');
+   }
+   var newSrc = 'https://backup.castor-informatique.fr/?q=' + encodeURIComponent(encodedAnswers);
+   if(img.attr('src') != newSrc) {
+      $('#backup-send-answers').attr('src', newSrc);
    }
 }
 
