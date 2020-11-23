@@ -3157,6 +3157,7 @@ function computeFullFeedbackScore() {
 
 // Sending answers
 
+var sendAnswersTryAlternate = false;
 function failedSendingAnswers() {
    Tracker.disabled = true;
    sending = false;
@@ -3164,7 +3165,9 @@ function failedSendingAnswers() {
       answersToSend[questionID].sending = false;
    }
    backupSendAnswers();
-   setTimeout(sendAnswers, delaySendingAttempts);
+   sendAnswersTryAlternate = !sendAnswersTryAlternate;
+   var delay = sendAnswersTryAlternate ? 1000 : delaySendingAttempts;
+   setTimeout(sendAnswers, delay);
 }
 
 function initErrorHandler() {
@@ -3211,12 +3214,16 @@ function sendAnswers() {
       sending = false;
       return;
    }
+
+   var endpoint = sendAnswersTryAlternate ? "https://concours4.castor-informatique.fr/answer.php" : "answer.php";
+
+   var startTime = Date.now();
    try {
-      $.post("answer.php", {SID: SID, "answers": answersToSend, teamID: teamID, teamPassword: teamPassword},
+      $.post(endpoint, {SID: SID, "answers": answersToSend, teamID: teamID, teamPassword: teamPassword},
       function(data) {
          sending = false;
          if (!data.success) {
-            logError('error from answer.php while sending answers', data.message, 'score ' + ffTeamScore);
+            logError('error from answer.php while sending answers', data.message, 'score ' + ffTeamScore, 'time ' + (Date.now() - startTime) + 'ms');
             if (confirm(t("response_transmission_error_1") + " " + data.message + t("response_transmission_error_2"))) {
                failedSendingAnswers();
             }
@@ -3237,11 +3244,11 @@ function sendAnswers() {
             setTimeout(sendAnswers, 1000);
          }
       }, "json").fail(function(jqxhr, textStatus, errorThrown) {
-         logError('error while sending answers', textStatus, errorThrown, 'score ' + ffTeamScore);
+         logError('error while sending answers', textStatus, errorThrown, 'score ' + ffTeamScore, 'time ' + (Date.now() - startTime) + 'ms');
          failedSendingAnswers();
          });
    } catch(exception) {
-      logError('exception while sending answers', exception, 'score ' + ffTeamScore);
+      logError('exception while sending answers', exception, 'score ' + ffTeamScore, 'time ' + (Date.now() - startTime) + 'ms');
       failedSendingAnswers();
    }
 }
