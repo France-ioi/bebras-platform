@@ -2211,10 +2211,10 @@ function checkUser(user, isCreate) {
       return false;
    }
    if (!isCreate) {
-      if ((loggedUser.officialEmailValidated == "1") && (user.officialEmail != loggedUser.officialEmail)) {
+/*      if ((loggedUser.officialEmailValidated == "1") && (user.officialEmail != loggedUser.officialEmail)) {
          $("#edit_form_error").html(t("officialEmail_readonly"));
          return false;
-      }
+      }*/
    } else {
       if (!$('#users_okMail').prop('checked')) {
          $("#edit_form_error").html(t("okMail_required"));
