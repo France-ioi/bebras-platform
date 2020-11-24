@@ -3,6 +3,7 @@
 
 require_once("../shared/common.php");
 require_once("commonAdmin.php");
+require_once("domains.php");
 
 function saveLoginDate($db, $userID) {
    $query = "UPDATE `user` SET `lastLoginDate` = UTC_TIMESTAMP() WHERE `ID` = ?";
@@ -29,7 +30,18 @@ function logout() {
 }
 
 function jsonUser($db, $row) {
-   return json_encode(array("success" => true,
+   // Check whether official email domain is obsolete
+   $obsolete = false;
+   if($row->officialEmail) {
+      $obsoleteDomains = getObsoleteDomains();
+      $emailDomain = explode('@', $row->officialEmail)[1];
+      if(in_array($emailDomain, $obsoleteDomains['obsolete'])) {
+         $obsolete = isset($obsoleteDomains['replacements'][$emailDomain]) ? $obsoleteDomains['replacements'][$emailDomain] : true;
+      }
+   }
+
+   return json_encode(array(
+      "success" => true,
       "user" => array(
          "ID" => $row->ID,
          "isAdmin" => $row->isAdmin,
@@ -43,6 +55,7 @@ function jsonUser($db, $row) {
          "alternativeEmailValidated" => $row->alternativeEmailValidated,
          "awardPrintingDate" => $row->awardPrintingDate,
          ),
+      "officialEmailObsolete" => $obsolete,
       "alternativeEmailValidated" => $row->alternativeEmailValidated,
       "schoolUsers" => loadSchoolUsers($db)
    ));

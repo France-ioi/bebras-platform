@@ -37,5 +37,9 @@
       "ac-polynesie.pf",
       "ac-wf.wf",
       "educagri.fr"
-   ]
+   ],
+   "obsoleteDomains": [
+   ],
+   "obsoleteDomainsReplacements": {
+   }
 }
