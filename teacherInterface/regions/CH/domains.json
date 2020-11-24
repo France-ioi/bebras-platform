@@ -10,5 +10,17 @@
       "fr.educanet2.ch",
       "vs.educanet2.ch",
       "ju.educanet2.ch"
-   ]
+   ],
+   "obsoleteDomains": [
+      "vs.educanet2.ch",
+      "vd.educanet2.ch",
+      "fr.educanet2.ch",
+      "ju.educanet2.ch"
+   ],
+   "obsoleteDomainsReplacements": {
+      "vs.educanet2.ch": "edu.vs.ch",
+      "vd.educanet2.ch": "edu-vd.ch",
+      "fr.educanet2.ch": "edufr.ch",
+      "ju.educanet2.ch": "edu.jura.ch"
+   }
 }
