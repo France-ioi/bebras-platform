@@ -3216,14 +3216,24 @@ function sendAnswers() {
    }
 
    var endpoint = sendAnswersTryAlternate ? "https://concours4.castor-informatique.fr/answer.php" : "answer.php";
-
+   var params = {SID: SID, "answers": answersToSend, teamID: teamID, teamPassword: teamPassword};
    var startTime = Date.now();
+   function answersError(msg, details) {
+      logError(
+         msg,
+         details,
+         'score ' + ffTeamScore,
+         'time ' + (Date.now() - startTime) + 'ms',
+         JSON.stringify(params)
+         );
+   }
+
    try {
-      $.post(endpoint, {SID: SID, "answers": answersToSend, teamID: teamID, teamPassword: teamPassword},
+      $.post(endpoint, params,
       function(data) {
          sending = false;
          if (!data.success) {
-            logError('error from answer.php while sending answers', data.message, 'score ' + ffTeamScore, 'time ' + (Date.now() - startTime) + 'ms');
+            answersError('error from answer.php while sending answers', data.message);
             if (confirm(t("response_transmission_error_1") + " " + data.message + t("response_transmission_error_2"))) {
                failedSendingAnswers();
             }
@@ -3244,11 +3254,11 @@ function sendAnswers() {
             setTimeout(sendAnswers, 1000);
          }
       }, "json").fail(function(jqxhr, textStatus, errorThrown) {
-         logError('error while sending answers', textStatus, errorThrown, 'score ' + ffTeamScore, 'time ' + (Date.now() - startTime) + 'ms');
+         answersError('error while sending answers', textStatus + ' / ' + errorThrown);
          failedSendingAnswers();
          });
    } catch(exception) {
-      logError('exception while sending answers', exception, 'score ' + ffTeamScore, 'time ' + (Date.now() - startTime) + 'ms');
+      answersError('exception while sending answers', exception);
       failedSendingAnswers();
    }
 }
