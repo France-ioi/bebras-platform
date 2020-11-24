@@ -262,8 +262,9 @@ function handleCloseContest($db) {
       exitWithJsonFailure("Pas de session en cours");
    }
    $teamID = $_SESSION["teamID"];
-   $stmtUpdate = $db->prepare("UPDATE `team` SET `endTime` = UTC_TIMESTAMP() WHERE `ID` = ? AND `endTime` is NULL");
-   $stmtUpdate->execute(array($teamID));
+   $score = isset($_POST['teamScore']) ? $_POST['teamScore'] : null;
+   $stmtUpdate = $db->prepare("UPDATE `team` SET `endTime` = UTC_TIMESTAMP(), `tmpScore` = ? WHERE `ID` = ? AND `endTime` is NULL");
+   $stmtUpdate->execute(array($score, $teamID));
    $_SESSION["closed"] = true;
    $stmt = $db->prepare("SELECT `endTime` FROM `team` WHERE `ID` = ?");
    $stmt->execute(array($teamID));

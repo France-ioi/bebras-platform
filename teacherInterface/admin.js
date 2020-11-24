@@ -2496,16 +2496,31 @@ function endEditUser(userID, user) {
    }
 }
 
+function warningObsolete(data) {
+   if(!data.officialEmailObsolete) return '';
+   var msg = t('official_email_obsolete_1');
+   msg += data.user.officialEmail;
+   msg += t('official_email_obsolete_2');
+   if(data.obsolete !== true) {
+      msg += "<br/>";
+      msg += t('official_email_obsolete_replacement');
+      msg += data.officialEmailObsolete;
+      msg += '.';
+   }
+   msg += "<br/>";
+   return msg;
+}
+
 function warningUsers(users) {
    if (!users || !users.length) {
-      return;
+      return '';
    }
    var msg = t("several_users_for_school");
       for (var iUser = 0; iUser < users.length; iUser++) {
          msg += "<li>" + users[iUser].firstName + " " + users[iUser].lastName + "<br/>";
       }
    msg += "<br/>" + t("users_groups_readonly") + "<br/>";
-   jqAlert(msg);
+   return msg;
 }
 
 function login() {
@@ -2524,7 +2539,10 @@ function login() {
             return;
          }
          logUser(data.user);
-         warningUsers(data.schoolUsers);
+         var warnings = '';
+         warnings += warningObsolete(data);
+         warnings += warningUsers(data.schoolUsers);
+         if(warnings) { jqAlert(warnings); }
       }, "json"
    ).always(function() {
       enableButton("buttonLogin");
