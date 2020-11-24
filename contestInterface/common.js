@@ -3219,11 +3219,15 @@ function sendAnswers() {
    var params = {SID: SID, "answers": answersToSend, teamID: teamID, teamPassword: teamPassword};
    var startTime = Date.now();
    function answersError(msg, details) {
+      var errorId = Math.floor(Math.random()*1000000000000);
       logError(
          msg,
          details,
          'score ' + ffTeamScore,
          'time ' + (Date.now() - startTime) + 'ms',
+         'paramsid ' + errorId);
+      logError(
+         'sendAnswer error params, id ' + errorId,
          JSON.stringify(params)
          );
    }
