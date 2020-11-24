@@ -51,8 +51,7 @@ function handleAnswers($tinyOrm) {
    $answers = $_POST["answers"];
    $curTime = new DateTime(null, new DateTimeZone("UTC"));
    $startTime = new DateTime($row['startTime'], new DateTimeZone("UTC"));
-   $nbMinutes = intval($row['nbMinutes']);
-   /*
+   /*$nbMinutes = intval($row['nbMinutes']);
    // We leave 2 extra minutes to handle network lag. The interface already prevents trying to answer after the end.
    if ((($curTime->getTimestamp() - $startTime->getTimestamp()) > ((intval($nbMinutes) + 2) * 60)) && !$testMode && ($nbMinutes > 0)) {
       error_log("submission by team ".$teamID.
