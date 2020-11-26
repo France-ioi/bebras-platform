@@ -65,3 +65,7 @@ screen and (max-width: 480.9px) {
 .dialog {
    float: right;
 }
+
+.questionIframeHeader {
+   text-align: right;
+}
