@@ -56,6 +56,7 @@
     "questions_finish_early": "Terminé temprano",
     "closed_please_wait": "<b>Advertencia:</b> la actividad ha terminado, pero tus últimas respuestas no han sido transmitidas. Por favor espera alrededor de 20 segundos.",
     "closed_connexion_error": "<p><b>Advertencia</b>, debido a un error en la conexión, algunas de tus respuestas no pudieron ser transmitidas. Para que tus respuestas sean tomadas en cuenta, favor guarda el texto de abajo en un archivo y envíanoslo a nosotros a oni@jovenestalento.edu.sv tan pronto como puedas.</p><p><b>No envíes una captura de pantalla o una foto</b>. Copia el texto directamente en tu correo o en el archivo de texto que nos enviarás.</p>",
+    "closed_download_encoded": "Descarga este texto",
     "closed_remind_password": "¿Has anotado el código que te permitirá conocer tu calificación y si has pasado a la siguiente etapa?",
     "closed_your_password": "Tu código:",
     "closed_announcement": "<p>Para continuar aprendiendo Ciencias de la Computación en casa o en la escuela, dirígete a <a href='http://www.france-ioi.org'>france-ioi.org</a>.       </p>       <p>Ahí podrás aprender programación y algoritmos, a través de muchos ejercicios para todos los niveles.</p>",

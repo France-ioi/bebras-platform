@@ -60,6 +60,7 @@
     "questions_finish_early": "Lopetan ennen ajan päättymistä",
     "closed_please_wait": "<b>Varoitus:</b> Kilpailu on päättynyt, mutta kaikkia vastauksiasi ei ole vielä tallennettu. Ole hyvä ja odota noin 20 sekuntia.",
     "closed_connexion_error": "<b>Varoitus</b>, verkko-ongelmien takia osaa vastauksistasi ei saatu tallennettua. Jotta vastauksesi saadaan huomioitua, tallenna allaoleva teksti tekstitiedostoon, ja lähetä se mahdollisimman nopeasti kilpailun järjestäjille osoitteeseen: majava@uta.fi.",
+    "closed_download_encoded": "Tallenna tämä teksti",
     "closed_remind_password": "Kirjoitithan muistiin henkilökohtaisen kilpailukoodisi jonka avulla pääset tarkastelemaan vastauksiasi kilpailun jälkeen?",
     "closed_your_password": "Koodisi on:",
     "closed_announcement": "<p>Jos haluat tutustua koulussa tai kotona ohjelmointiin, voit tutustua esimerkiksi Datatähti-kilpailuun ja siihen valmentautumiseen: <a href='https://cses.fi/dt/'>https://cses.fi/dt/</a>.</p>",

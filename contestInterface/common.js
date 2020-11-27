@@ -2769,6 +2769,14 @@ function finalCloseContest(message) {
          if (encodedAnswers) {
             $("#encodedAnswers").html(encodedAnswers);
             $("#divClosedEncodedAnswers").show();
+
+            // Make download button
+            var blobText = $('#divClosedConnectionError').text() + "\r\n\r\n" + encodedAnswers;
+            var blob = new Blob([blobText], {type: 'text/plain'});
+            var blobHref = window.URL.createObjectURL(blob);
+            $('#divClosedEncodedDownload').attr('href', blobHref);
+            $('#divClosedEncodedDownload').attr('download', window.location.hostname + '_' + teamPassword + '.txt');
+
             backupSendAnswers();
          }
          $("#remindTeamPassword").html(teamPassword);

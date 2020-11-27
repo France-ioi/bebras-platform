@@ -48,6 +48,7 @@
     "questions_finish_early": "Završio sam ranije",
     "closed_please_wait": "<b>Upozorenje:</b> takmičenje je završeno ali vaši posljednji odgovori nisu zabilježeni nna serveru. Molimo sačekajte dvadesetak sekundi.",
     "closed_connexion_error": "<b>Warning</b>, because of a connection issue, some of your answers could not be transmitted. In order for your answers to be taken into account, please save the text below into a text file, and send it to us by email to info@beaver-comp.org.uk as soon as you can:",
+    "closed_download_encoded": "Preuzmite ovaj tekst",
     "closed_remind_password": "Da li ste zapisali svoj lični kod koji će vam omogućite pristup rezultatima nakon takmičenja?",
     "closed_your_password": "Vaš lični kod je :",
     "closed_announcement": "      <p>   Nastavite učiti o računarskim naukama              </p>",

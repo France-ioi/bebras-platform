@@ -56,6 +56,7 @@
     "questions_finish_early": "Jag är klar",
     "closed_please_wait": "<b>Varning:</b> tävlingen är över, men ditt senaste svar har inte sparats. Vänligen vänta ungefär 20 sekunder.",
     "closed_connexion_error": "<b>Varning</b>, på grund av problem med uppkopplingen så har några av dina svar inte sparats. För att dina svar ska räknas, vänligen spara texten nedan i en fil och skicka som epost till staff@bebras.se så fort du kan:",
+    "closed_download_encoded": "Ladda ner den här texten",
     "closed_remind_password": "Skrev du ner tävlingskoden som ger dig tillgång till dina resultat efteråt?",
     "closed_your_password": "Din kod är:",
     "closed_announcement": "      <p>          För att lära dig mer om datavetenskap hemma eller i skolan se <a href='https://www.progolymp.se/'>www.progolymp.se/</a>.       </p>       <p>          Du kan lära dig programmering och algoritmer tack vare uppgifter på flera olika svårighetsgrader.       </p>",
