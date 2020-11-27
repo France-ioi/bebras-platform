@@ -3232,10 +3232,20 @@ function sendAnswers() {
          );
    }
 
+   // After 30 seconds, consider we failed sending answers
+   // We don't use jquery's timeout as that would hinder slower connections
+   var sendAnswersTimeout = setTimeout(
+      function() {
+         sending = false;
+         answersError('timeout while sending answers', 'started at ' + startTime);
+         failedSendingAnswers();
+      }, 30000);
+
    try {
       $.post(endpoint, params,
       function(data) {
          sending = false;
+         clearTimeout(sendAnswersTimeout);
          if (!data.success) {
             answersError('error from answer.php while sending answers', data.message);
             if (confirm(t("response_transmission_error_1") + " " + data.message + t("response_transmission_error_2"))) {
@@ -3258,10 +3268,12 @@ function sendAnswers() {
             setTimeout(sendAnswers, 1000);
          }
       }, "json").fail(function(jqxhr, textStatus, errorThrown) {
+         clearTimeout(sendAnswersTimeout);
          answersError('error while sending answers', textStatus + ' / ' + errorThrown);
          failedSendingAnswers();
          });
    } catch(exception) {
+      clearTimeout(sendAnswersTimeout);
       answersError('exception while sending answers', exception);
       failedSendingAnswers();
    }
