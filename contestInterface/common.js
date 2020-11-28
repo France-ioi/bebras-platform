@@ -241,7 +241,12 @@ var logError = function() {
   if (nbErrorsSent > 10) {
     return;
   }
-  $.post('logError.php', {errormsg: logStr, questionKey: currentQuestionKey}, function(data) {
+  var params = {
+     errormsg: logStr,
+     questionKey: currentQuestionKey,
+     teamID: teamID || null
+     };
+  $.post('logError.php', params, function(data) {
     if (!data || !data.success) {
       logToConsole('error from logError.php');
     }
