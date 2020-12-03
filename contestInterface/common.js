@@ -241,7 +241,12 @@ var logError = function() {
   if (nbErrorsSent > 10) {
     return;
   }
-  $.post('logError.php', {errormsg: logStr, questionKey: currentQuestionKey}, function(data) {
+  var params = {
+     errormsg: logStr,
+     questionKey: currentQuestionKey,
+     teamID: teamID || null
+     };
+  $.post('logError.php', params, function(data) {
     if (!data || !data.success) {
       logToConsole('error from logError.php');
     }
@@ -2769,6 +2774,14 @@ function finalCloseContest(message) {
          if (encodedAnswers) {
             $("#encodedAnswers").html(encodedAnswers);
             $("#divClosedEncodedAnswers").show();
+
+            // Make download button
+            var blobText = $('#divClosedConnectionError').text() + "\r\n\r\n" + encodedAnswers;
+            var blob = new Blob([blobText], {type: 'text/plain'});
+            var blobHref = window.URL.createObjectURL(blob);
+            $('#divClosedEncodedDownload').attr('href', blobHref);
+            $('#divClosedEncodedDownload').attr('download', window.location.hostname + '_' + teamPassword + '.txt');
+
             backupSendAnswers();
          }
          $("#remindTeamPassword").html(teamPassword);
@@ -3216,14 +3229,38 @@ function sendAnswers() {
    }
 
    var endpoint = sendAnswersTryAlternate ? "https://concours4.castor-informatique.fr/answer.php" : "answer.php";
-
+   var params = {SID: SID, "answers": answersToSend, teamID: teamID, teamPassword: teamPassword};
    var startTime = Date.now();
+   function answersError(msg, details) {
+      var errorId = Math.floor(Math.random()*1000000000000);
+      logError(
+         msg,
+         details,
+         'score ' + ffTeamScore,
+         'time ' + (Date.now() - startTime) + 'ms',
+         'paramsid ' + errorId);
+      logError(
+         'sendAnswer error params, id ' + errorId,
+         JSON.stringify(params)
+         );
+   }
+
+   // After 30 seconds, consider we failed sending answers
+   // We don't use jquery's timeout as that would hinder slower connections
+   var sendAnswersTimeout = setTimeout(
+      function() {
+         sending = false;
+         answersError('timeout while sending answers', 'started at ' + startTime);
+         failedSendingAnswers();
+      }, 30000);
+
    try {
-      $.post(endpoint, {SID: SID, "answers": answersToSend, teamID: teamID, teamPassword: teamPassword},
+      $.post(endpoint, params,
       function(data) {
          sending = false;
+         clearTimeout(sendAnswersTimeout);
          if (!data.success) {
-            logError('error from answer.php while sending answers', data.message, 'score ' + ffTeamScore, 'time ' + (Date.now() - startTime) + 'ms');
+            answersError('error from answer.php while sending answers', data.message);
             if (confirm(t("response_transmission_error_1") + " " + data.message + t("response_transmission_error_2"))) {
                failedSendingAnswers();
             }
@@ -3244,11 +3281,13 @@ function sendAnswers() {
             setTimeout(sendAnswers, 1000);
          }
       }, "json").fail(function(jqxhr, textStatus, errorThrown) {
-         logError('error while sending answers', textStatus, errorThrown, 'score ' + ffTeamScore, 'time ' + (Date.now() - startTime) + 'ms');
+         clearTimeout(sendAnswersTimeout);
+         answersError('error while sending answers', textStatus + ' / ' + errorThrown);
          failedSendingAnswers();
          });
    } catch(exception) {
-      logError('exception while sending answers', exception, 'score ' + ffTeamScore, 'time ' + (Date.now() - startTime) + 'ms');
+      clearTimeout(sendAnswersTimeout);
+      answersError('exception while sending answers', exception);
       failedSendingAnswers();
    }
 }

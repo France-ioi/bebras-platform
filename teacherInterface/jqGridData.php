@@ -264,13 +264,13 @@ function checkRequestUser($db, &$request, &$record, $operation, &$roles) {
    }
 
    // Filters
-   if ((!$_SESSION["isAdmin"]) && ($operation === "update")) {
+/*   if ((!$_SESSION["isAdmin"]) && ($operation === "update")) {
       // Could/should we use a filter for this ?
       if (($record["officialEmail"] !== $user->officialEmail) && $user->officialEmailValidated) {
          error_log("a validated official email can't be changed");
          return false;
       }
-   }   
+   }*/
    return true;
 }
 

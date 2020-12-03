@@ -13,7 +13,7 @@ initSession();
 
 $parser = Parser::create();
 
-$teamID = isset($_SESSION["teamID"]) ? $_SESSION["teamID"] : null;
+$teamID = isset($_SESSION["teamID"]) && $_SESSION["teamID"] ? $_SESSION["teamID"] : (isset($_POST["teamID"]) && $_POST["teamID"] ? $_POST["teamID"] : null);
 $questionKey = isset($_POST["questionKey"]) ? $_POST["questionKey"] : null;
 
 $errormsg = $_POST['errormsg'];

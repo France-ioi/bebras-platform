@@ -21,7 +21,7 @@ function getObsoleteDomains() {
    	  $domains = json_decode(file_get_contents($filename), true);
       $obsoleteDomains = isset($domains['obsoleteDomains']) ? $domains['obsoleteDomains'] : [];
       $obsoleteDomainsReplacements = isset($domains['obsoleteDomainsReplacements']) ? $domains['obsoleteDomainsReplacements'] : [];
-   	  return ['obsolete' => $domains['obsoleteDomains'], 'replacements' => $domains['obsoleteDomainsReplacements']];
+   	  return ['obsolete' => $obsoleteDomains, 'replacements' => $obsoleteDomainsReplacements];
    }
    else {
       return ['obsolete' => [], 'replacements' => []];

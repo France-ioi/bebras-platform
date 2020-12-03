@@ -297,7 +297,7 @@
     "start_time_invalid": "Heure de départ invalide",
     "official_email_invalid": "Courriel académique invalide",
     "official_email_obsolete_1": "Votre courriel académique ",
-    "official_email_obsolete_2": " utilise un nom de domaine qui sera bientôt obsolète. Veuillez changer de courriel académique.",
+    "official_email_obsolete_2": " utilise un nom de domaine qui sera bientôt obsolète. Veuillez changer de courriel académique dans l'onglet coordinateur.",
     "official_email_obsolete_replacement": "Nous vous conseillons d'utiliser le nom de domaine de replacement : ",
     "field_missing_1": "Le champ ",
     "field_missing_2": " doit être rempli.",

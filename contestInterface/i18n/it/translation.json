@@ -61,6 +61,7 @@
     "questions_finish_early": "Chiudi l'attività",
     "closed_please_wait": "<b>Attenzione :</b> la prova è terminata, ma le tue ultime risposte non sono state ancora trasmesse. Ti preghiamo di attendere una ventina di secondi.",
     "closed_connexion_error": "<p><b>Attenzione</b>, in seguito a un problema di connessione, alcune delle tue risposte non possono essere inviate. Per far sì che le tue risposte siano prese in considerazione, salva il testo qui sotto e invialo via e-mail a info@castor-informatique.fr appena puoi.</p><p><b>Non fare uno screen né una foto</b>. Incolla il testo direttamente nella tua e-mail, o in un file di testo che ci invierai qui sotto, e invialo a noi via e-mail all'indirizzo :</p>",
+    "closed_download_encoded": "Scarica questo testo",
     "closed_remind_password": "Hai scritto il codice che ti permetterà di determinare la tua posizione in classifica e la tua qualifica per la fase successiva poco dopo la fine del periodo della attività?",
     "closed_your_password": "Il tuo codice è :",
     "closed_announcement": "<p>Potrai così scoprire se sei stato selezionato per il primo turno della attività di programmazione <a href='http://algorea.org'>Algoréa</a>. In palio, un computer portatile.</p><p>Per continuare la tua scoperta dell'informatica a casa o in classe, vai su <a href='http://www.france-ioi.org'>france-ioi.org</a>.</p><p>Qui potrai imparare a programmare e a fare progressi nell'algoritmica grazie a numerosi esercizi per tutti i livelli.</p>",

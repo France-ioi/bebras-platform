@@ -707,9 +707,10 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
       </p>
    </div>
    <div id="divClosedEncodedAnswers" style="display:none">
-      <p data-i18n="[html]closed_connexion_error">
+      <p id="divClosedConnectionError" data-i18n="[html]closed_connexion_error">
       </p>
       <textarea cols=60 rows=20 id="encodedAnswers"></textarea>
+      <br><a class="btn btn-primary" id="divClosedEncodedDownload" data-i18n="closed_download_encoded"></a>
    </div>
    <div id="divClosedRemindPassword" style="display:none">
       <p>
