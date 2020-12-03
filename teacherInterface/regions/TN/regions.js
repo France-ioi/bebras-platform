@@ -1,3 +1,25 @@
 regions = [
-   'countryTN:foreign'
+   'countryTN:foreign',
+   'countryTN:ariana',
+   'countryTN:beja',
+   'countryTN:benarous',
+   'countryTN:bizerte',
+   'countryTN:gabes',
+   'countryTN:gafsa',
+   'countryTN:jendouba',
+   'countryTN:kairouan',
+   'countryTN:kasserine',
+   'countryTN:kebili',
+   'countryTN:lekef',
+   'countryTN:mahdia',
+   'countryTN:lamanouba',
+   'countryTN:medenine',
+   'countryTN:monastir',
+   'countryTN:nabeul',
+   'countryTN:sfax',
+   'countryTN:sidibouzid',
+   'countryTN:siliana',
+   'countryTN:sousse',
+   'countryTN:tataouine',
+   'countryTN:tozeur'
 ];
