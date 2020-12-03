@@ -61,12 +61,8 @@
     "questions_loading": "Contest loading...",
     "questions_finish_early": "I finished early",
     "closed_please_wait": "<b>Warning:</b> the contest is over, but your last answers have not been transmitted. Please wait about twenty seconds.",
-<<<<<<< HEAD
     "closed_connexion_error": "<b>Warning</b>, because of a connection issue, some of your answers could not be transmitted. In order for your answers to be taken into account, please save the text below into a text file, and send it to us by email to info@castor-informatique.fr as soon as you can:",
-=======
-    "closed_connexion_error": "<b>Warning</b>, because of a connection issue, some of your answers could not be transmitted. In order for your answers to be taken into account, please save the text below into a text file, and send it to us by email to info@beaver-comp.org.uk as soon as you can:",
     "closed_download_encoded": "Download this text",
->>>>>>> e14af2ebe8edf18d9a33a4002e51e48a5b26a409
     "closed_remind_password": "Did you write down the code that will allow you to access your results after the end of the contest?",
     "closed_your_password": "Your code is:",
     "closed_announcement": "      <p>          To continue learning computer science at home or at school, go to   <a href='http://www.france-ioi.org'>france-ioi.org</a>.       </p>       <p>          You will be able to learn programming and algorithmics, thanks to many exercises for all levels.       </p>",
