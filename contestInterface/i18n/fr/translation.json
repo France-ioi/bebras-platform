@@ -147,7 +147,7 @@
     "grade_select": "Sélectionnez votre classe",
     "grade_question": "En quelle classe êtes-vous ?",
     "question_locked": "Question à débloquer",
-    "question_list_intro": "<li>Chaque question comporte trois versions, permettant de gagner 2, 3 ou 4 étoiles.<li>Résoudre la version 4 étoiles d'une question suffit pour obtenir les 4 étoiles à gagner sur ce sujet.<li>Vous pouvez revenir ici à tout moment en cliquant sur le bouton en haut à droite.",
+    "question_list_intro": "<li>Chaque question comporte trois versions, permettant de gagner 2, 3 ou 4 étoiles.<li>Résoudre la version 4 étoiles d'une question suffit pour obtenir les 4 étoiles à gagner sur ce sujet.<li>Vous pouvez revenir ici à tout moment en cliquant sur le bouton \"retour à la liste des questions\" tout en haut.",
     "left_title": "<img src=\"images/castor_medium.png\"/>",
     "right_title": "",
     "top_image": "<img src=\"images/castor_small.png\" style=\"width:65px\" />",
