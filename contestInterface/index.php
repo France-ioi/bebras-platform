@@ -762,6 +762,19 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
       return uri + separator + key + "=" + value;
     }
   }
+
+  function updateImagesHTTP() {
+    // Downgrade images to HTTP if needed
+    if(!window.config.downgradeToHTTP) { return; }
+    $('img').each(function(idx, elem) {
+      elem = $(elem);
+      var url = elem.attr('src');
+      if(url.substring(0, 8) == 'https://') {
+        elem.attr('src', 'http://' + url.substring(8));
+      }
+    });
+  }
+
   window.browserIsMobile = <?=$browserIsMobile ? 'true' : 'false' ?>;
   try {
     i18n.init(<?= json_encode([
@@ -778,6 +791,8 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
       window.i18nLoaded = true;
       $("title").i18n();
       $("body").i18n();
+
+      setTimeout(updateImagesHTTP, 100);
     });
   } catch(e) {
     // assuming s3 was blocked, so add ?p=1 to url, see contestInterface/config.php
