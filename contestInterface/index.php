@@ -22,11 +22,14 @@
     "httpsTestUrl" => $config->contestInterface->httpsTestUrl,
     "imagesURLReplacements" => $config->imagesURLReplacements,
     "imagesURLReplacementsNonStatic" => $config->imagesURLReplacementsNonStatic,
+    "downgradeToHTTP" => !!$config->contestInterface->downgradeToHTTP,
     "redirectToHTTPS" => !!$config->contestInterface->redirectToHTTPS,
     "redirectToHTTPSIfError" => !!$config->redirectToHTTPSIfError,
     "upgradeToHTTPS" => $config->upgradeToHTTPS,
     "logActivity" => $config->contestInterface->logActivity
     ]) ?>;
+
+  window.config.downgradeToHTTP = window.config.downgradeToHTTP && (window.location.protocol != 'https:');
 
   function displayBody() {
     // Display the page
