@@ -573,7 +573,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
       <tr>
          <td><button type="button" id="buttonStartPreparation" onclick="startPreparation()" class="btn btn-primary">Démarrer une préparation</button></td>
          <td style="width:50px">
-         <td><button type="button" id="buttonStartContest" onclick="startContest()" class="btn btn-primary" >Démarrer le concours</button></td>
+         <td><button type="button" id="buttonStartContest" onclick="startContest()" class="btn btn-primary" >Démarrer le concours</button> <i id="msgStartContest" style="display: none;">Vous avez déjà participé à ce concours officiel.</i></td>
       </tr>
    </table>
    </p>

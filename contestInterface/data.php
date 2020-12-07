@@ -411,7 +411,21 @@ function handleGroupFromRegistrationCode($db, $code) {
    $registrationData->qualifiedCategory = $newCategories["qualifiedCategory"];
    $registrationData->validatedCategory = $newCategories["validatedCategory"];
    
-   
+   addBackendHint("ClientIP.checkPassword:pass");
+   addBackendHint(sprintf("Group(%s):checkPassword", escapeHttpValue($registrationData->ID))); // TODO : check hint
+   $contestID = "485926402649945250"; // hard-coded training contest
+   if (isset($config->trainingContestID)) {
+      $contestID = $config->trainingContestID;
+   }
+   $isOfficialContest = false;
+   if (isset($_POST["startOfficial"])) {
+      $contestID = "220445039788370340"; // hard-coded real contest
+      if (isset($config->currentContestID)) {
+         $contestID = $config->currentContestID;
+      }
+      $isOfficialContest = true;
+   }
+
    $query = "SELECT IFNULL(tmp.score, 0) as score, tmp.sumScores, tmp.password, tmp.startTime, tmp.contestName, tmp.contestID, tmp.parentContestID, tmp.contestCategory, ".
        "tmp.nbMinutes, tmp.remainingSeconds, tmp.teamID, ".
        "GROUP_CONCAT(CONCAT(CONCAT(contestant.firstName, ' '), contestant.lastName)) as contestants, tmp.rank, tmp.schoolRank, count(*) as nbContestants ".
@@ -431,31 +445,20 @@ function handleGroupFromRegistrationCode($db, $code) {
        "ORDER BY tmp.startTime ASC";
    $stmt = $db->prepare($query);
    $stmt->execute(array("registrationID" => $registrationData->ID));
+
    $participations = array();
+   $hasParticipatedIn = [];
    while ($row = $stmt->fetchObject()) {
       $participations[] = $row;
+      $hasParticipatedIn[$row->contestID] = true;
    }
    $registrationData->participations = $participations;
-       
-   addBackendHint("ClientIP.checkPassword:pass");
-   addBackendHint(sprintf("Group(%s):checkPassword", escapeHttpValue($registrationData->ID))); // TODO : check hint
-   $contestID = "485926402649945250"; // hard-coded training contest
-   if (isset($config->trainingContestID)) {
-      $contestID = $config->trainingContestID;
-   }
-   $isOfficialContest = false;
-   if (isset($_POST["startOfficial"])) {
-      $contestID = "220445039788370340"; // hard-coded real contest
-      if (isset($config->currentContestID)) {
-         $contestID = $config->currentContestID;
-      }
-      $isOfficialContest = true;
-   }
+
    if (isset($_SERVER['HTTP_HOST']) && ($_SERVER['HTTP_HOST'] == "chticode.algorea.org")) {
       $contestID = "100001";
    }
    if ($registrationData->groupID != null) {
-      $query = "SELECT `code` FROM `group` WHERE `ID` = :groupID";
+      $query = "SELECT `code`, `contestID` FROM `group` WHERE `ID` = :groupID";
       $stmt = $db->prepare($query);
       $stmt->execute(array("groupID" => $registrationData->groupID));
       $rowGroup = $stmt->fetchObject();
@@ -465,7 +468,14 @@ function handleGroupFromRegistrationCode($db, $code) {
          $message = "Le groupe associé à ce code n'existe plus !";
          exitWithJson((object)array("success" => false, "message" => $message));         
       }
+
+      if($isOfficialContest && $hasParticipatedIn[$rowGroup->contestID]) {
+         exitWithJson((object)array("success" => false, "message" => "Vous avez déjà participé à ce concours officiel."));
+      }
    } else {
+      if($isOfficialContest && $hasParticipatedIn[$contestID]) {
+         exitWithJson((object)array("success" => false, "message" => "Vous avez déjà participé à ce concours officiel."));
+      }
       $query = "SELECT `code` FROM `group` WHERE `contestID` = :contestID AND `schoolID` = :schoolID AND `userID` = :userID AND `grade` = :grade AND isGenerated = 1";
       $stmt = $db->prepare($query);
       $stmt->execute(array("contestID" => $contestID, "schoolID" => $registrationData->schoolID, "userID" => $registrationData->userID, "grade" => $registrationData->grade));

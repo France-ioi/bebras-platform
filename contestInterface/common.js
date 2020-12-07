@@ -1988,6 +1988,7 @@ window.showPersonalPage = function(data) {
       $("#contestAtHomePrevented").show();
    }
    var htmlParticipations = "";
+   var canParticipateOfficial = true;
    for (var iParticipation = 0; iParticipation < data.registrationData.participations.length; iParticipation++) {
       var participation = data.registrationData.participations[iParticipation];
       var status;
@@ -2018,7 +2019,14 @@ window.showPersonalPage = function(data) {
          "<td>" + rank + "</td>" +
          "<td>" + schoolRank + "</td>" +
          "<td><a href='" + location.pathname + "?team=" + participation.password + "' target='_blank'>ouvrir</a></td></tr>";
+
+      if(data.contestID && participation.contestID == data.contestID) {
+         canParticipateOfficial = false;
+      }
    }
+   $('#buttonStartPreparation').toggle(!!data.childrenContests.length);
+   $('#buttonStartContest').prop('disabled', !canParticipateOfficial);
+   $('#msgStartContest').toggle(!canParticipateOfficial);
    $("#pastParticipations").append(htmlParticipations);
 }
 
