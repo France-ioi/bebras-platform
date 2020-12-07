@@ -109,6 +109,8 @@ echo "<p>Pour permettre une participation à la maison de ce groupe, vous pouvez
 
 echo "<p><b>Pour créer des codes</b>, dans la zone de texte ci-dessous, entrez une ligne pour chaque élève pour lequel vous souhaitez créer un code de participant.</p><p>Chaque ligne doit contenir le nom de famille d'un élève, une virgule puis son prénom.</p><p>Par exemple :</p><p><pre>Dupont,Julie\nLe Grand,Aïcha</pre></p>";
 
+echo "<p><b>Attention :</b> n'ajouter dans ce groupe que des élèves en classe de ".translate("grade_".$rowGroup->grade).". Pour une autre classe, créez un groupe dédié.</p>";
+
 echo "<form name='createParticipationCodes' action='editGroupContestants.php' method='post'>";
 echo "<input type='hidden' name='groupID' value='".$groupID."' />";
 echo "<textarea name='contestantNames' style='min-width:350px;min-height:200px';>".$strContestantNames."</textarea>";
