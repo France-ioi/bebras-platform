@@ -89,12 +89,16 @@ if (!$groupID) {
 	   'JOIN `contest_question` ON (`contest_question`.`questionID` = `'.$teamQuestionTable.'`.`questionID`) '.
 	   'JOIN `team` ON (`team`.`ID`= `'.$teamQuestionTable.'`.`teamID`) '.
 	   'JOIN `group` ON (`team`.`groupID` = `group`.`ID`) '.
-	   'WHERE `contest_question`.`contestID` = ? AND `group`.`contestID` = ? '.
-	   'AND `'.$teamQuestionTable.'`.`questionID` = ? '.
+	   'WHERE `contest_question`.`contestID` = :contestID1 AND `group`.`contestID` = :contestID2 '.
+	   'AND `'.$teamQuestionTable.'`.`questionID` = :questionID '.
 	   'AND `'.$teamQuestionTable.'`.`score` IS NULL '.
-      'AND `'.$teamQuestionTable.'`.`checkStatus` = \''.$checkStatus.'\' LIMIT 0,?';
+      'AND `'.$teamQuestionTable.'`.`checkStatus` = \''.$checkStatus.'\' LIMIT :limit';
    $stmt = $db->prepare($query);
-   $stmt->execute(array($contestID, $contestID, $questionID, $limit));
+   $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT); 
+   $stmt->bindValue(':contestID1', $contestID); 
+   $stmt->bindValue(':contestID2', $contestID); 
+   $stmt->bindValue(':questionID', $questionID); 
+   $stmt->execute();
    while ($teamQuestion = $stmt->fetchObject()) {
       $teamQuestions[] = array(
           'questionID' => $teamQuestion->questionID,
