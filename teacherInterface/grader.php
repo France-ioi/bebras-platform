@@ -15,6 +15,11 @@ if (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"]) {
    }
 }
 
+$limit = 1000;
+if (isset($_POST['limit'])) {
+   $limit = $_POST['limit'];
+}
+
 $contestID = isset($_REQUEST['contestID']) ? $_REQUEST['contestID'] : null;
 $groupID = isset($_REQUEST['groupID']) ? $_REQUEST['groupID'] : null;
 $questionKey = $_REQUEST['questionKey'];
@@ -87,9 +92,9 @@ if (!$groupID) {
 	   'WHERE `contest_question`.`contestID` = ? AND `group`.`contestID` = ? '.
 	   'AND `'.$teamQuestionTable.'`.`questionID` = ? '.
 	   'AND `'.$teamQuestionTable.'`.`score` IS NULL '.
-      'AND `'.$teamQuestionTable.'`.`checkStatus` = \''.$checkStatus.'\' LIMIT 0,10000';
+      'AND `'.$teamQuestionTable.'`.`checkStatus` = \''.$checkStatus.'\' LIMIT 0,?';
    $stmt = $db->prepare($query);
-   $stmt->execute(array($contestID, $contestID, $questionID));
+   $stmt->execute(array($contestID, $contestID, $questionID, $limit));
    while ($teamQuestion = $stmt->fetchObject()) {
       $teamQuestions[] = array(
           'questionID' => $teamQuestion->questionID,
