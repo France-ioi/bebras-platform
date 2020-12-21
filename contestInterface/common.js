@@ -412,6 +412,9 @@ var platform = {
       if (mode == "nextImmediate") {
          platform.nextQuestion(0);
       }
+      if (mode == 'top') {
+         window.backToList();
+      }
 
       if(!questionIframe.task) {
          // We somehow lost the task
