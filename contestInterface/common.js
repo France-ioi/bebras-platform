@@ -1058,6 +1058,9 @@ var questionIframe = {
          var cssModuleId = 'css-module-'+$(this).attr('data-content');
          questionIframe.addCssContent($('#'+cssModuleId).attr('data-content'));
       });
+      $('.css-content-'+questionKey).each(function() {
+         questionIframe.addCssContent($(this).attr('data-content'));
+      });
 
       questionIframe.task = null;
       questionIframe.loaded = true;
@@ -1689,6 +1692,19 @@ function loadContestData(contestID, contestFolder, groupPassword)
                var loader = new Loader(window.contestsRoot + '/' + contestFolder + '/', log_fn);
                loader.run().done(function(content) {
                   $('#divQuestionsContent').html(content);
+                  $('#divQuestionsContent > .question').each(function(i, questionDiv) {
+                     questionDiv = $(questionDiv);
+                     if(questionDiv.attr('id').substr(0, 9) != 'question-') { return; }
+                     var questionName = questionDiv.attr('id').substr(9);
+                     questionDiv.find('style').each(function(i, styleElem) {
+                        styleElem = $(styleElem);
+                        var cssDiv = $('<div></div>');
+                        cssDiv.addClass('css-content-' + questionName);
+                        cssDiv.attr('data-content', styleElem.html());
+                        $('#divQuestionsContent').append(cssDiv);
+                        styleElem.remove();
+                        });
+                     });
                   startContestTime(data);
                }).fail(function() {
                   oldLoader();
