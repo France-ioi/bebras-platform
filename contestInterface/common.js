@@ -3503,6 +3503,9 @@ function hideQuestionIframe()
    $('#question-iframe-container').css('height', '0');
    $('#question-iframe').css('width', '0');
    $('#question-iframe').css('height', '0');
+   if(!newInterface) {
+      $('#question-iframe').css('min-width', '');
+   }
 }
 
 function showQuestionIframe()
@@ -3511,6 +3514,9 @@ function showQuestionIframe()
    $('#question-iframe-container').css('height', 'auto');
    $('#question-iframe').css('width', '782px');
    $('#question-iframe').css('height', 'auto');
+   if(!newInterface) {
+      $('#question-iframe').css('min-width', '782px');
+   }
 }
 
 var fullscreenActive = false;
