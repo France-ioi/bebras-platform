@@ -966,7 +966,7 @@ var questionIframe = {
          // Because the layout can vary, we simply take the height of the html
          // and compare to the desired height, hence finding how much the
          // iframe's height needs to change
-         platform.updateDisplay({height: fullHeight});
+         questionIframe.setHeight(fullHeight, true);
          if(callback) { callback(); }
       } else {
          questionIframe.task.getHeight(function(height) {
@@ -1107,7 +1107,8 @@ var questionIframe = {
       }
    },
 
-   setHeight: function(height) {
+   setHeight: function(height, force) {
+      if(questionIframe.autoHeight && !force) { return; }
       if(height < 700 && !questionIframe.autoHeight) {
          height = 700;
       }
