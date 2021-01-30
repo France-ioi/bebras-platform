@@ -886,7 +886,6 @@ var questionIframe = {
    run: function(taskViews, callback) {
       // Reset autoHeight-related styles
       $('body').removeClass('autoHeight');
-      $('#container', questionIframe.doc).css('padding', '5px');
       $('.questionIframeLoading').hide();
 
       TaskProxyManager.bindListener(taskProxyLoadListener);
@@ -898,9 +897,13 @@ var questionIframe = {
            questionIframe.autoHeight = !!metaData.autoHeight;
            if(questionIframe.autoHeight) {
               $('body').addClass('autoHeight');
-              $('#container', questionIframe.doc).css('padding', '');
+              if($('#container').css('padding') == '5px') {
+                 $('#container', questionIframe.doc).css('padding', '');
+              }
               toggleMetaViewport(true);
               questionIframe.updateHeight();
+           } else {
+              $('#container', questionIframe.doc).css('padding', '5px');
            }
         });
         task.load(taskViews, function() {
