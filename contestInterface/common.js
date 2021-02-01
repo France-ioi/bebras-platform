@@ -855,7 +855,7 @@ var questionIframe = {
       if (newInterface) {
          border = "";
       }
-      this.body.append('<div id="jsContent"></div><div id="container" style="' + border + 'padding: 5px;"><div class="question" style="font-size: 20px; font-weight: bold;">' + t("content_is_loading") + '</div></div>');
+      this.body.append('<div id="jsContent"></div><div id="container" style="' + border + '"><div class="question" style="font-size: 20px; font-weight: bold;">' + t("content_is_loading") + '</div></div>');
 
       this.initialized = true;
 
