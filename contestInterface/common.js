@@ -897,9 +897,6 @@ var questionIframe = {
            questionIframe.autoHeight = !!metaData.autoHeight;
            if(questionIframe.autoHeight) {
               $('body').addClass('autoHeight');
-              if($('#container').css('padding') == '5px') {
-                 $('#container', questionIframe.doc).css('padding', '');
-              }
               toggleMetaViewport(true);
               questionIframe.updateHeight();
            } else {
