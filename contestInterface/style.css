@@ -502,6 +502,10 @@ body.autoHeight .headerAutoHeight {
   width: 160px;
   padding-bottom: 10px;
 }
+.oldInterface .header_time td:last-child,
+.newInterface .header_time b {
+  color: gray;
+}
 .header_space {
 }
 @media (max-width: 767px) {
