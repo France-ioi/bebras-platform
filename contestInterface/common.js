@@ -1348,7 +1348,7 @@ function fillListQuestions(sortedQuestionIDs, questionsData)
    for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
       var questionID = sortedQuestionIDs[iQuestionID];
       var questionData = questionsData[questionID];
-      var encodedName = questionData.name.replace("'", "&rsquo;").split("[")[0];
+      var encodedName = questionData.name.replace("'", "&rsquo;").replace(/\[.*\]/g,'');
 
       var strScore = "";
       if (fullFeedback) {
