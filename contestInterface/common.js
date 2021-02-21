@@ -24,6 +24,7 @@ var contestFolder;
 var contestVisibility;
 var contestShowSolutions;
 var contestOpen;
+var contestName;
 var fullFeedback;
 var showTotalScore;
 var nextQuestionAuto;
@@ -264,7 +265,8 @@ window.onerror = function () {
 window.logError = logError;
 
 var updateContestHeader = function(contestData) {
-  $('#headerH1').html(contestData.contestName);
+  contestName = contestData.contestName;
+  $('#headerH1').html(contestName);
   if(contestData.headerImageURL) {
      $('#leftTitle img').attr('src', contestData.headerImageURL);
   }
@@ -2911,9 +2913,12 @@ function showScores(data) {
 // Grade the i'est question, then call the (i+1)'est or send the score
 function gradeQuestion(i) {
    if (i >= questionsToGrade.length) {
+      $('#question-iframe-container').removeClass('gradingQuestions');
       sendScores();
       return;
    }
+
+   $('#question-iframe-container').addClass('gradingQuestions');
 
    var curQuestion = questionsToGrade[i];
 
@@ -3031,6 +3036,8 @@ window.backToList = function(initial) {
    $(".buttonClose").show();
    $("#question-iframe-container").hide();
    $(".button_return_list").prop("disabled",true);
+   $('.questionTitle').text(contestName);
+   $('#questionStars').html('');
 };
 
 window.selectQuestion = function(questionID, clicked, noLoad) {
@@ -3092,7 +3099,7 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
       $(".questionTitle").html(questionName);
       if (newInterface) {
          drawStars('questionStars', 4, 24, getQuestionScoreRate(questionData), "normal", getNbLockedStars(questionData)); // stars under icon on main page
-         drawStars('questionIframeStars', 4, 24, getQuestionScoreRate(questionData), "normal", getNbLockedStars(questionData)); // stars under icon on main page
+         //drawStars('questionIframeStars', 4, 24, getQuestionScoreRate(questionData), "normal", getNbLockedStars(questionData)); // stars under icon on main page
       }
       currentQuestionKey = questionKey;
 

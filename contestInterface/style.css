@@ -414,8 +414,12 @@ body.autoHeight .headerElements {
 #question-iframe-container {
   position: relative;
 }
+#question-iframe-container.gradingQuestions {
+  display: none;
+}
 
 .questionIframeHeader {
+  display: none;
   width: 770px;
   margin: auto;
   text-align: left;
@@ -437,14 +441,8 @@ body.autoHeight .questionIframeHeader {
   font-size: 24px;
 }
 
-body.autoHeight .header {
+.header {
   display: none;
-}
-.headerAutoHeight {
-  display: none;
-}
-body.autoHeight .headerAutoHeight {
-  display: block;
 }
 
 .header, .layout_table_wrapper {
@@ -502,7 +500,7 @@ body.autoHeight .headerAutoHeight {
   width: 160px;
   padding-bottom: 10px;
 }
-.oldInterface .header_time td:last-child,
+.newInterface .headerAutoHeight_time,
 .newInterface .header_time b {
   color: gray;
 }
@@ -542,17 +540,25 @@ body.autoHeight .headerAutoHeight {
 .headerAutoHeight_time {
   width: 80px;
 }
+.headerAutoHeight_title {
+  max-width: 440px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .headerAutoHeight_score {
   width: 120px;
 }
 .headerAutoHeight_button {
   width: 60px;
   text-align: right;
+  margin-left: 8px;
 }
 .headerAutoHeight_button > button {
   font-size: 16px;
   font-weight: bold;
   white-space: nowrap;
+  margin-left: 8px;
 }
 @media (max-width: 767px) {
   .headerAutoHeight_table td {

@@ -692,9 +692,6 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
 
 <div id="question-iframe-container" style="display:none" autocomplete="off">
    <div class="questionIframeLoading" data-i18n="questions_loading"></div>
-   <div class="newInterface questionIframeHeader">
-      <span class="questionTitle" style="padding-right: 20px"></span><span id="questionIframeStars"></span>
-   </div>
    <iframe src="about:blank" id="question-iframe" scrolling="no" allowfullscreen></iframe>
 </div>
 <div id="divFooter" style="display:none;text-align:center" autocomplete="off">
