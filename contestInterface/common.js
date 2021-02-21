@@ -2914,6 +2914,7 @@ function showScores(data) {
 function gradeQuestion(i) {
    if (i >= questionsToGrade.length) {
       $('#question-iframe-container').removeClass('gradingQuestions');
+      hideQuestionIframe();
       sendScores();
       return;
    }
