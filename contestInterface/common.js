@@ -1519,7 +1519,7 @@ function updateUnlockedLevels(sortedQuestionIDs, updatedQuestionKey, contestEnde
          drawStars('score_' + questionData.key, 4, 20, scoreRate, "normal", nbLocked);  // stars under icon on main page
          if (questionKey == updatedQuestionKey) {
             drawStars('questionStars', 4, 24, scoreRate, "normal", nbLocked); // stars in question title
-            drawStars('questionIframeStars', 4, 24, scoreRate, "normal", nbLocked); // stars in question title
+            //drawStars('questionIframeStars', 4, 24, scoreRate, "normal", nbLocked); // stars in question title
          }
       }
    }
