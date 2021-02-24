@@ -540,11 +540,18 @@ body.autoHeight .questionIframeHeader {
 .headerAutoHeight_time {
   width: 80px;
 }
-.headerAutoHeight_title {
-  max-width: 440px;
+.headerAutoHeight_title div {
+  display: inline-block;
+}
+.headerAutoHeight_title .questionTitle {
+  max-width: 340px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-right: 16px;
+}
+.headerAutoHeight_title .questionTitle.contestTitle {
+  max-width: 440px;
 }
 .headerAutoHeight_score {
   width: 120px;

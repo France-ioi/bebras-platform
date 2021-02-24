@@ -3038,6 +3038,7 @@ window.backToList = function(initial) {
    $("#question-iframe-container").hide();
    $(".button_return_list").prop("disabled",true);
    $('.questionTitle').text(contestName);
+   $('.questionTitle').addClass('contestTitle');
    $('#questionStars').html('');
 };
 
@@ -3098,6 +3099,7 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
             "<td><span class='scoreGood'>+" + maxScore + "</span></td></tr></table>");
       }
       $(".questionTitle").html(questionName);
+      $(".questionTitle").removeClass('contestTitle');
       if (newInterface) {
          drawStars('questionStars', 4, 24, getQuestionScoreRate(questionData), "normal", getNbLockedStars(questionData)); // stars under icon on main page
          //drawStars('questionIframeStars', 4, 24, getQuestionScoreRate(questionData), "normal", getNbLockedStars(questionData)); // stars under icon on main page
@@ -3419,7 +3421,9 @@ function loadSolutions(data) {
          $("#divQuestions").show();
          showQuestionIframe();
          $("#divClosed").hide();
-         $('#question-iframe-container').css('left', '273px');
+         if(!newInterface) {
+            $('#question-iframe-container').css('left', '273px');
+         }
          $("#divImagesLoading").hide();
          if (!currentQuestionKey) {
             return;
