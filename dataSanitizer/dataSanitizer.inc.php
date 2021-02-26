@@ -13,6 +13,8 @@ class DataSanitizer
       $msgs = "";
       foreach (array("firstName", "lastName") as $field)
       {
+         // Sanitize against XSS
+         $$field = DataSanitizer::filterField($$field);
          // Let's try to sanitize it
          try {
             $$field = DataSanitizer::formatName($$field);
@@ -32,6 +34,8 @@ class DataSanitizer
       $msgs = "";
       foreach (array("name", "city", "country") as $field)
       {
+         // Sanitize against XSS
+         $$field = DataSanitizer::filterField($$field);
          // Let's try to sanitize it
          try {
             $$field = DataSanitizer::formatNameComplex($$field);
@@ -199,6 +203,12 @@ class DataSanitizer
       throw new Exception("Invalid school category for '$name'");
    }
 
+   // Sanitize field against XSS
+   static function filterField($string)
+   {
+      $string = str_replace(['<', '>'], '', $string);
+      return $string;
+   }
 
    ////////// LowerCase / UpperCase functions //////////
 
