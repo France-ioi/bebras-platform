@@ -359,7 +359,11 @@ function handleCheckPassword($db) {
       exitWithJsonFailure("Mot de passe manquant");
    }
    $getTeams = array_key_exists('getTeams', $_POST) ? $_POST["getTeams"] : False;
-   $password = strtolower($_POST["password"]);
+   $password = strtolower(trim($_POST["password"]));
+   $filteredPassword = preg_replace('/[^A-Za-z0-9]/', '', $password);
+   if($filteredPassword != $password) {
+      exitWithJsonFailure("Caractères invalides dans le mot de passe");
+   }
    // Search for a group matching the entered password, and if found create
    // a team in that group (and end the request).
    handleCheckGroupPassword($db, $password, $getTeams);
