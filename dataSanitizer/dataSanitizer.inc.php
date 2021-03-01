@@ -203,9 +203,10 @@ class DataSanitizer
       throw new Exception("Invalid school category for '$name'");
    }
 
-   // Sanitize field against XSS
+   // Sanitize field, no error should be thrown there
    static function filterField($string)
    {
+      $string = DataSanitizer::rmMultipleSpaces($string);
       $string = str_replace(['<', '>'], '', $string);
       return $string;
    }

@@ -4,8 +4,12 @@ function showError($message) {
    echo "<script>alert('".$message."')</script><div style='background-color:#F88;font-weight:bold;padding:10px'>".$message."</div>";
 }
    
-function generateCode($schoolID, $userID, $groupID, $lastName, $firstName,$grade) {
-   global $db,$config;
+function generateCode($schoolID, $userID, $groupID, $lastName, $firstName, $grade) {
+   global $db, $config;
+
+   // Sanitize names
+   list($firstName, $lastName, $saniValid, $trash) = DataSanitizer::formatUserNames($firstName, $lastName);
+
    $query = "SELECT `code` FROM algorea_registration WHERE schoolID = :schoolID AND userID = :userID AND firstName = :firstName AND lastName = :lastName AND grade = :grade";
    $stmt = $db->prepare($query);
    $stmt->execute(['userID' => $userID,
