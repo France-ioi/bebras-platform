@@ -221,6 +221,19 @@ form {
 <body>
 <h1>Équipes pour le 3e tour du Concours Alkindi</h1>
 
+<p>
+   Vos élèves peuvent créer leur propre équipe en se connectant sur la plateforme du 3e tour avec leur code de participant, puis en créant ou rejoignant une équipe. les explications sont fournies dans l'introduction de votre interface coordinateur.
+</p>
+<p>
+   Vous pouvez aussi choisir, sur cette page, de préparer vous-mêmes les équipes. Les élèves rejoindront alors automatiquement l'équipe ainsi créée, sauf si celle-ci est déjà pleine.
+</p>
+<p>
+   Pour cela, créez une équipe en choisissant son nom et un premier membre, puis ajoutez des membres à l'équipe, parmi ceux listés sur cette page.
+</p>
+<p>
+   Si des élèves souhaitent participer au 3e tour sans avoir participé aux précédents, vous pouvez créer des <a href="extraQualificationCode.php">codes de participants</a> supplémentaires.
+</p>
+
 <?php
 // Display info
 if(count($userIds) < count($contestants)) {
@@ -343,7 +356,6 @@ if(count($unteamed) == 0) {
    echo "</ul>";
 }
 ?>
-<p>Si des élèves souhaitent participer au 3e tour sans avoir participé aux précédents, vous pouvez créer des <a href="extraQualificationCode.php">codes de participants</a> supplémentaires.</p>
 
 </body>
 </html>
