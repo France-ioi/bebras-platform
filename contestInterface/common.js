@@ -2628,6 +2628,7 @@ function initContestData(data, newContestID) {
       $(".newInterface").show();
       window.backToList(true);
    } else {
+      $(".questionIframeLoading").hide();
       $("#question-iframe-container").addClass("oldInterfaceIframeContainer").show();
       $("#question-iframe-container").css("position", "absolute");
       $(".newInterface").html("").hide();
