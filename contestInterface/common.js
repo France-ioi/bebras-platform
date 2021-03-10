@@ -976,7 +976,10 @@ var questionIframe = {
                // IE8
                height += 500;
             }
-            height = Math.max(fullHeight, height + 25);
+            height += 25;
+            if(newInterface) {
+               height = Math.max(fullHeight, height);
+            }
             platform.updateDisplay({height: height});
             if(callback) { callback(); }
          }, logError);
