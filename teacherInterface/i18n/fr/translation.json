@@ -369,6 +369,7 @@
     "contest_question_noAnswerScore_label": "Score rien",
     "contest_headerImageURL_label": "Image d'en-tête",
     "contest_headerHTML_label": "HTML d'en-tête",
+    "contest_certificateTitle_label": "Titre sur le certificat",
     "contest_logActivity_label": "Log des activités",
     "contest_allowFromHome_label": "Participation à la maison",
     "groups_from_home_disabled": "La génération de codes individuels de participation à la maison n'est pas disponible en ce moment pour cette activité.",

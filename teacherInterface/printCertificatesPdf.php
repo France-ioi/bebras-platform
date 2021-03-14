@@ -96,7 +96,7 @@ if (isset($config->certificates->defaultFont)) {
 }
 
 ?>
-var contestName = '<?=$config->certificates->title?>';
+var defaultCertificateTitle = '<?=$config->certificates->title?>';
 var qualificationText = '<?=$config->certificates->qualificationText?>';
 var contestUrl = '<?=$config->certificates->url?>';
 var mainColor = '<?=$config->certificates->mainColor?>';

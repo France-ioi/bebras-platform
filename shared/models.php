@@ -92,6 +92,7 @@ $tablesModels = array (
          "imageURL" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "headerImageURL" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "headerHTML" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "certificateTitle" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "logActivity" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "allowFromHome" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
       )
@@ -686,6 +687,7 @@ $viewsModels = array(
          "askGenre" => array(),
          "headerImageURL" => array(),
          "headerHTML" => array(),
+         "certificateTitle" => array(),
          "logActivity" => array(),
          "allowFromHome" => array(),
          "minAward1Rank" => array(),
