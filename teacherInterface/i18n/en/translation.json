@@ -360,6 +360,7 @@
     "contest_end_date_label" : "End",
     "contest_headerImageURL_label": "Custom header image",
     "contest_headerHTML_label": "Custom header HTML",
+    "contest_certificateTitle_label": "Certificate title",
     "contest_logActivity_label": "Log activity",
     "contest_allowFromHome_label": "Participation from home",
     "groups_from_home_disabled": "Generating individual participation codes is not available at the moment for this activity.",

@@ -459,10 +459,12 @@ The styles depend on the contest.
 
    var scoreAndRank = getDisplayedScoreAndRank(diploma);
 
+   var contestTitle = contest.certificateTitle || window.defaultCertificateTitle;
+
    var contentStack = [
       {image: 'background', absolutePosition: {x:40, y:45}, width:750},
       {stack: [contestLogo], absolutePosition: {x:20, y:40}},//this is an image
-      {text: contestName, style: ['contestName', 'accentColor'], margin: [0, 30, 0, 20]},
+      {text: contestTitle, style: ['contestName', 'accentColor'], margin: [0, 30, 0, 20]},
       {text: contestSubtitle, style: ['contestSubtitle', 'mainColor']},
       {text: [diploma.firstName, ' ', diploma.lastName], style: ['accentColor', 'contestantName'], margin: [0, 40, 0, 0]},
       {text: scoreAndRank, style: 'diplomaScore', margin: [0, 20, 0, 0]},

@@ -631,6 +631,7 @@ function initModels(isLogged) {
             },
             headerImageURL: {label: t("contest_headerImageURL_label"), editable: true, edittype: "text"},
             headerHTML: {label: t("contest_headerHTML_label"), editable: true, edittype: "text"},
+            certificateTitle: {label: t("contest_certificateTitle_label"), editable: true, edittype: "text"},
             logActivity: {
                label: t("contest_logActivity_label"),
                editable: true,
