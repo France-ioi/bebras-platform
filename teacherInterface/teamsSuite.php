@@ -70,16 +70,25 @@ $strUserIds = implode(",", $userIds);
 // Get all teams associated with those users
 $teams = [];
 $stmt = $db2->prepare("
-SELECT users.ID AS userId, groups.ID AS groupId, groups.sName, groups.iTeamParticipating
+SELECT users.ID AS userId, groups.ID AS groupId, groups.sName, groups.iTeamParticipating, alkindi_teams.sPassword, alkindi_teams.idNewGroup, alkindi_teams.country
 FROM pixal.groups
 JOIN pixal.groups_groups ON groups_groups.idGroupParent = groups.ID
 JOIN pixal.users ON groups_groups.idGroupChild = users.idGroupSelf
+LEFT JOIN pixal.alkindi_teams ON alkindi_teams.idGroup = groups.ID
 WHERE users.ID IN (".$strUserIds.")
 AND groups.idTeamItem = :idTeamItem");
 $stmt->execute(['idTeamItem' => $idTeamItem]);
 while($row = $stmt->fetch()) {
    if(!isset($teams[$row['groupId']])) {
-      $teams[$row['groupId']] = ['name' => $row['sName'], 'real' => true, 'participating' => $row['iTeamParticipating'] == '1', 'members' => []];
+      $teams[$row['groupId']] = [
+         'name' => $row['sName'],
+         'real' => true,
+         'participating' => $row['iTeamParticipating'] == '1',
+         'password' => $row['sPassword'],
+         'idNewGroup' => $row['idNewGroup'],
+         'country' => $row['country'],
+         'members' => []
+         ];
    }
    $code = $codes[$row['userId']];
    $teams[$row['groupId']]['members'][] = $code;
@@ -95,7 +104,7 @@ WHERE code IN (".$strCodes.")");
 $stmt->execute();
 while($row = $stmt->fetch()) {
    if(!isset($teams[$row['team_id']])) {
-      $teams[$row['team_id']] = ['name' => $row['name'], 'real' => false, 'participating' => false, 'members' => []];
+      $teams[$row['team_id']] = ['name' => $row['name'], 'real' => false, 'participating' => false, 'password' => null, 'idNewGroup' => null, 'country' => null, 'members' => []];
    }
    $teams[$row['team_id']]['members'][] = $row['code'];
    array_splice($unteamed, array_search($row['code'], $unteamed), 1);
@@ -221,6 +230,8 @@ form {
 <body>
 <h1>Équipes pour le 3e tour du Concours Alkindi</h1>
 
+<h2>Notice</h2>
+
 <p>
    Vos élèves peuvent créer leur propre équipe en se connectant sur la plateforme du 3e tour avec leur code de participant, puis en créant ou rejoignant une équipe. les explications sont fournies dans l'introduction de votre interface coordinateur.
 </p>
@@ -233,6 +244,9 @@ form {
 <p>
    Si des élèves souhaitent participer au 3e tour sans avoir participé aux précédents, vous pouvez créer des <a href="extraQualificationCode.php">codes de participants</a> supplémentaires.
 </p>
+<p>
+   <b>Participation à l'épreuve</b> : Si une équipe se qualifie pour l'épreuve, vous trouverez dans le tableau ci-dessous un mot de passe. Cette épreuve doit se faire sous votre supervision, et dure 1h30. Lorsque vos élèves sont prêts à participer à l'épreuve en temps limité, fournissez-leur ce mot de passe, à l'aide duquel ils pourront ouvrir l'accès en l'utilisant depuis la page d'accueil du concours.
+</p>
 
 <?php
 // Display info
@@ -244,16 +258,23 @@ if(count($userIds) < count($contestants)) {
 ?>
 
 <h2>Équipes enregistrées</h2>
+
 <table class="resultats" cellspacing=0>
 <tr>
    <td rowspan="2">Nom de l'équipe</td>
    <td rowspan="2">Membres</td>
-   <td colspan="4">Scores (épreuve de qualification)</td>
+   <td colspan="4">Scores (phase de qualification)</td>
+   <td rowspan="2">Mot de passe<br>pour l'épreuve</td>
+   <td colspan="4">Scores (épreuve)</td>
 </tr>
 <tr>
-   <td>Mots connus</td>
-   <td>Image brouillée</td>
-   <td>Substitutions composées</td>
+   <td>Mots<br>connus</td>
+   <td>Image<br>brouillée</td>
+   <td>Substitutions<br>composées</td>
+   <td><b>Total</b></td>
+   <td>Mots<br>connus</td>
+   <td>Image<br>brouillée</td>
+   <td>Substitutions<br>composées</td>
    <td><b>Total</b></td>
 </tr>
 <?php
@@ -263,14 +284,17 @@ foreach($teams as $groupId => $data) {
     echo "<td>";
     $membersReg = [];
     $membersPrereg = [];
+
     foreach($data['members'] as $idx => $code) {
         $memberStr = formatContestant($code);
-        $memberStr .= ' <form method="post" action="teamsSuite.php">';
-        $memberStr .= '<input type="hidden" name="action" value="remove"><input type="hidden" name="groupId" value="' . $groupId . '"><input type="hidden" name="code" value="' . $code . '">';
-        if(count($data['members']) > 1) {
-            $memberStr .= '<input type="submit" value="Retirer de l\'équipe"></form>';
-        } else {
-            $memberStr .= '<input type="submit" value="Supprimer l\'équipe"></form>';
+        if(!$data['idNewGroup']) {
+            $memberStr .= ' <form method="post" action="teamsSuite.php">';
+            $memberStr .= '<input type="hidden" name="action" value="remove"><input type="hidden" name="groupId" value="' . $groupId . '"><input type="hidden" name="code" value="' . $code . '">';
+            if(count($data['members']) > 1) {
+                $memberStr .= '<input type="submit" value="Retirer de l\'équipe"></form>';
+            } else {
+                $memberStr .= '<input type="submit" value="Supprimer l\'équipe"></form>';
+            }
         }
         if(isset($userIds[$code])) {
            $membersReg[] = $memberStr;
@@ -292,7 +316,7 @@ foreach($teams as $groupId => $data) {
        echo implode($membersPrereg, '<br>');
     }
 
-    if(count($data['members']) < 4 && count($unteamed) > 0) {
+    if(count($data['members']) < 4 && count($unteamed) > 0 && !$data['idNewGroup']) {
         echo '<hr><form method="post" action="teamsSuite.php">';
         echo '<input type="hidden" name="action" value="add"><input type="hidden" name="groupId" value="' . $groupId . '">';
         echo '<select name="code">';
@@ -309,8 +333,21 @@ foreach($teams as $groupId => $data) {
        echo "<td>" . formatScore($teamScores[2]) . ' | ' . formatScore($teamScores[3]) . ' | ' . formatScore($teamScores[4]) . "</td>";
        echo "<td>" . formatScore($teamScores[5]) . ' | ' . formatScore($teamScores[6]) . "</td>";
        echo "<td><b>" . (isset($scoreTotals[$groupId]) ? $scoreTotals[$groupId] : '-') . "</b> / 700</td>";
+       if($data['password']) {
+          echo "<td><pre>" . $data['password'] . "</pre></td>";
+          if($data['idNewGroup']) {
+             echo "<td colspan=\"4\"><i>Scores à venir</i></td>";
+          } else {
+             echo "<td colspan=\"4\"><i>N'a pas encore utilisé le mot de passe pour l'épreuve d'1h30 sous surveillance</i></td>";
+          }
+       } elseif($data['country'] == 'fr' || $data['country'] == 'ch') {
+          $reqScore = $data['country'] == 'ch' ? 200 : 300;
+          echo "<td colspan=\"5\"><i>N'est pas encore qualifiée pour l'épreuve (n'a pas atteint $reqScore points)</i></td>";
+       } else {
+          echo "<td colspan=\"5\"><i>Phase de qualification en cours</i></td>";
+       }
     } else {
-       echo "<td colspan=\"4\"><i>N'a pas commencé l'épreuve</i></td>";
+       echo "<td colspan=\"9\"><i>N'a pas commencé la phase de qualification</i></td>";
     }
     echo "</tr>";
 }
