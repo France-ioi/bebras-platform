@@ -124,7 +124,10 @@ function queryPlatform($request) {
    curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
    $res = curl_exec($ch);
-   return;
+   try {
+      $res = json_decode($res, true);
+   } catch(Exception $e) {}
+   return $res;
 }
 
 function processRequest($post) {
@@ -151,15 +154,30 @@ function processRequest($post) {
       }
    } elseif($post['action'] == 'add') {
       // Check teacher has rights over that team
-      if(!isset($teams[$post['groupId']])) { return; }
+      $groupId = $post['groupId'];
+      if(!isset($teams[$groupId])) { return; }
 
       if($userId) {
-         queryPlatform([
-            'action' => 'joinTeam',
-            'idItem' => $idTeamItem,
-            'user_id' => $userId,
-            'team_id' => $post['groupId']
-            ]);
+         if($teams[$groupId]['real']) {
+            queryPlatform([
+               'action' => 'joinTeam',
+               'idItem' => $idTeamItem,
+               'user_id' => $userId,
+               'team_id' => $groupId
+               ]);
+         } else {
+            // Create the actual team
+            $res = queryPlatform([
+               'action' => 'createTeam',
+               'idItem' => $idTeamItem,
+               'user_id' => $userId,
+               'name' => $teams[$groupId]['name']
+               ]);
+            if($res['result']) {
+               $stmt = $db2->prepare("UPDATE pixal.teams_requests SET team_id = :new_id WHERE team_id = :old_id;");
+               $stmt->execute(['old_id' => $groupId, 'new_id' => $res['team']['ID']]);
+            }
+         }
       } else {
          $stmt = $db2->prepare("INSERT INTO pixal.teams_requests (code, team_id) VALUES(:code, :team_id);");
          $stmt->execute(['code' => $code, 'team_id' => $post['groupId']]);
