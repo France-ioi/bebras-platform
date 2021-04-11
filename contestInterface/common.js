@@ -3812,7 +3812,7 @@ var SrlModule = {};
 
 SrlModule.initMode = function(mode) {
    if(mode == 'log' || mode == 'full') {
-      SrlModule.init(SrlModule.startParticipation());
+      SrlModule.init(SrlModule.startParticipation);
    }
 }
 
