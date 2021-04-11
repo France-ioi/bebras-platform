@@ -3824,9 +3824,11 @@ SrlModule.init = function(callback) {
    }
    $('#srlModuleIframe').attr('src', window.srlModuleUrl);
 
-   SrlModule.initChannel(callback);
-
    SrlModule.initialized = true;
+
+   setTimeout(function() {
+      SrlModule.initChannel(callback);
+      }, 1000);
 }
 
 SrlModule.unload = function() {
