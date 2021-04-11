@@ -1563,6 +1563,8 @@ function startContestTime(data) {
  * the team's password given to the students, and the images preloaded
 */
 function setupContest(data) {
+   SrlModule.startParticipation();
+
    teamPassword = data.teamPassword;
    questionsData = data.questionsData;
 
@@ -3812,7 +3814,7 @@ var SrlModule = {};
 
 SrlModule.initMode = function(mode) {
    if(mode == 'log' || mode == 'full') {
-      SrlModule.init(SrlModule.startParticipation);
+      SrlModule.init();
    }
 }
 
