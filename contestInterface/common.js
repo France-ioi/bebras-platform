@@ -3823,25 +3823,14 @@ SrlModule.init = function(callback) {
       return;
    }
    $('#srlModuleIframe').attr('src', window.srlModuleUrl);
+   SrlModule.initJsChannel();
 
    SrlModule.initialized = true;
 
-   setTimeout(function() {
-      SrlModule.initChannel(callback);
-      }, 1000);
+   if(callback) { callback(); }
 }
 
-SrlModule.unload = function() {
-   if(!SrlModule.initialized) { return; }
-
-   $('#srlModuleIframe').attr('src', '');
-   if(SrlModule.chan) { SrlModule.chan.destroy(); }
-   SrlModule.chan = null;
-   SrlModule.URIparticipation = null;
-   SrlModule.initialized = false;
-}
-
-SrlModule.initChannel = function(callback) {
+SrlModule.initJsChannel = function() {
    if(!window.Channel) {
       if(SrlModule.jschannelLoaded) {
          console.error('Error loading jschannel');
@@ -3850,21 +3839,36 @@ SrlModule.initChannel = function(callback) {
 
       var script = document.createElement('script');
       script.setAttribute('src', window.jschannelUrl);
-      script.addEventListener('load', SrlModule.initChannel);
       document.head.appendChild(script);
       SrlModule.jschannelLoaded = true;
 
-      setTimeout(function() { SrlModule.initChannel(callback); }, 1000);
       return;
    }
+}
 
-   SrlModule.chan = Channel.build({
-      window: document.getElementById('srlModuleIframe').contentWindow,
-      origin: "*",
-      scope: "module-srl"
-      });
+SrlModule.unload = function() {
+   if(!SrlModule.initialized) { return; }
 
-   if(callback) { callback(); }
+   $('#srlModuleIframe').attr('src', '');
+   if(SrlModule.chan) { SrlModule.chan.destroy(); }
+   SrlModule.chan = null;
+   SrlModule.URIparticipation = '';
+   SrlModule.URIsujet = '';
+   SrlModule.initialized = false;
+}
+
+SrlModule.initChannel = function(callback) {
+   if(!SrlModule.initialized) { return false; }
+
+   if(!SrlModule.chan) {
+      SrlModule.chan = Channel.build({
+         window: document.getElementById('srlModuleIframe').contentWindow,
+         origin: "*",
+         scope: "module-srl"
+         });
+   }
+
+   return true;
 }
 
 SrlModule.show = function() {
@@ -3924,7 +3928,7 @@ SrlModule.taskLog = function(data, success) {
 }
 
 SrlModule.onActionRegistering = function(data, success) {
-   if(!SrlModule.chan) { return; }
+   if(!SrlModule.initChannel()) { return; }
 
    if(!success) { success = function() {}; }
    SrlModule.chan.call({
@@ -3935,7 +3939,7 @@ SrlModule.onActionRegistering = function(data, success) {
 }
 
 SrlModule.onBeforeActivityBegins = function(display) {
-   if(!SrlModule.chan) { return; }
+   if(!SrlModule.initChannel()) { return; }
 
    if(display) {
       SrlModule.show();
@@ -3961,7 +3965,7 @@ SrlModule.onBeforeActivityBegins = function(display) {
 }
 
 SrlModule.onAfterActivityBegins = function(firstCall, timerOver) {
-   if(!SrlModule.chan) { return; }
+   if(!SrlModule.initChannel()) { return; }
 
    if(timerOver) {
       SrlModule.show();
