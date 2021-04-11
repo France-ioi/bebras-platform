@@ -70,6 +70,7 @@ $config->contestInterface->logActivity = false;
 $config->contestInterface->httpsTestUrl = null;
 $config->contestInterface->downgradeToHTTP = false;
 $config->contestInterface->redirectToHTTPS = false;
+$config->contestInterface->srlModuleUrl = null;
 
 $config->teacherInterface = (object) array();
 $config->teacherInterface->sHotlineNumber = '';

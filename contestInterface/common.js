@@ -346,6 +346,7 @@ function taskProxyLoadListener(id, state, details) {
 /**
  * Log extra information directly from the task; this function is accessible by
  * the task
+ * Note : Deprecated, use platform.log
  */
 window.logTaskActivity = function(details) {
    logActivity(null, null, 'extra', details, 0);
@@ -440,6 +441,7 @@ var platform = {
          var questionID = questionsKeyToID[questionKey];
 
          if(mode == "log") {
+            // Deprecated
             logActivity(teamID, questionID, "attempt", answer);
             return;
          }
@@ -560,6 +562,14 @@ var platform = {
          default:
             // problem!
             break;
+      }
+   },
+   log: function(data, success) {
+      if(!data || !data.length) { return; }
+      if(data[0] == 'activity') {
+         logActivity(null, null, 'extra', data[1], 0);
+      } else if(data[0] == 'srl') {
+         SrlModule.taskLog(data[1], success);
       }
    }
 };
@@ -736,6 +746,7 @@ var questionIframe = {
 
       this.inject('window.onerror = window.parent.onerror;');
 
+      // Deprecated
       this.inject('window.logActivity = window.parent.logTaskActivity;');
 
       // Inject localized strings
@@ -1091,6 +1102,7 @@ var questionIframe = {
          showQuestionIframe();
          that.loadQuestion(taskViews, questionKey, callback);
       };
+      SrlModule.setTask(questionKey);
       if (this.loaded) {
          if (questionIframe.task && questionIframe.task.iframe_loaded) {
             questionIframe.task.unload(function() {
@@ -2077,6 +2089,7 @@ window.startPreparation = function() {
    groupMinCategory = personalPageData.minCategory;
    groupMaxCategory = personalPageData.maxCategory;
    groupLanguage = personalPageData.language;
+   SrlModule.initMode(personalPageData.srlModule);
    if (personalPageData.childrenContests.length > 0) {
       $("#divPersonalPage").hide();
       offerContestSelectionPanels();
@@ -2136,6 +2149,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
          }
          doLogActivity = data.logActivity;
          updateContestHeader(data);
+         SrlModule.initMode(data.srlModule);
 
          groupMinCategory = data.minCategory;
          groupMaxCategory = data.maxCategory;
@@ -2622,6 +2636,7 @@ function initContestData(data, newContestID) {
    contestOpen = !!parseInt(data.contestOpen);
    contestVisibility = data.contestVisibility;
    contestShowSolutions = !!parseInt(data.contestShowSolutions);
+   SrlModule.initMode(data.srlModule);
    if (newInterface) {
       $("#question-iframe-container").addClass("newInterfaceIframeContainer").show();
       $(".oldInterface").html("").hide();
@@ -2801,6 +2816,7 @@ function doCloseContest(message) {
 */
 function finalCloseContest(message) {
    TimeManager.stopNow();
+   SrlModule.unload();
    $.post("data.php", {SID: SID, action: "closeContest", teamID: teamID, teamPassword: teamPassword, teamScore: ffTeamScore},
       function() {}, "json"
    ).always(function() {
@@ -3788,6 +3804,194 @@ function getParameterByName(name) {
         results = regex.exec(location.search);
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
+
+
+
+/***** SRL support *****/
+var SrlModule = {};
+
+SrlModule.initMode = function(mode) {
+   if(mode == 'log' || mode == 'full') {
+      SrlModule.init(SrlModule.startParticipation());
+   }
+}
+
+SrlModule.init = function(callback) {
+   if(SrlModule.initialized) { return; }
+   if(!window.srlModuleUrl) {
+      console.error('Tried to initialize SRL module without srlModuleUrl!');
+      return;
+   }
+   $('#srlModuleIframe').attr('src', window.srlModuleUrl);
+
+   SrlModule.initChannel(callback);
+
+   SrlModule.initialized = true;
+}
+
+SrlModule.unload = function() {
+   if(!SrlModule.initialized) { return; }
+
+   $('#srlModuleIframe').attr('src', '');
+   if(SrlModule.chan) { SrlModule.chan.destroy(); }
+   SrlModule.chan = null;
+   SrlModule.URIparticipation = null;
+   SrlModule.initialized = false;
+}
+
+SrlModule.initChannel = function(callback) {
+   if(!window.Channel) {
+      if(SrlModule.jschannelLoaded) {
+         console.error('Error loading jschannel');
+         return;
+      }
+
+      var script = document.createElement('script');
+      script.setAttribute('src', window.jschannelUrl);
+      script.addEventListener('load', SrlModule.initChannel);
+      document.head.appendChild(script);
+      SrlModule.jschannelLoaded = true;
+
+      setTimeout(function() { SrlModule.initChannel(callback); }, 1000);
+      return;
+   }
+
+   SrlModule.chan = Channel.build({
+      window: document.getElementById('srlModuleIframe').contentWindow,
+      origin: "*",
+      scope: "module-srl"
+      });
+
+   if(callback) { callback(); }
+}
+
+SrlModule.show = function() {
+   $('#srlModule').show();
+}
+
+SrlModule.hide = function() {
+   $('#srlModule').hide();
+}
+
+SrlModule.hashCode = function(val) {
+    var hash = 0;
+    if(!val || !val.toString) { return hash; }
+    val = val.toString();
+    if (val.length == 0) {
+        return hash;
+    }
+    for (var i = 0; i < val.length; i++) {
+        var char = val.charCodeAt(i);
+        hash = ((hash<<5)-hash)+char;
+        hash = hash & hash;
+    }
+    return hash;
+}
+
+SrlModule.startParticipation = function() {
+   var teamIDHash = 'hash:' + SrlModule.hashCode(teamID);
+
+   SrlModule.URIparticipation = window.location.hostname + '/' + contestID + '/' + teamIDHash;
+   var URIactivite = window.location.hostname + '/' + contestID;
+   var URIparticipant = window.location.hostname + '/' + teamIDHash;
+
+   var data = {
+      "URI_participant": URIparticipant,
+      "URI_activite": URIactivite,
+      "timestamp": SrlModule.getTimestamp(),
+      "URI": SrlModule.URIparticipation
+      };
+   SrlModule.onActionRegistering(data);
+}
+
+SrlModule.getTimestamp = function() {
+   var str = (new Date()).toISOString();
+   return str.slice(0, 10) + ' ' + str.slice(11, 19);
+}
+
+SrlModule.setTask = function(questionKey) {
+   SrlModule.URIsujet = window.location.hostname + '/' + questionKey;
+}
+
+SrlModule.taskLog = function(data, success) {
+   data['URI_participation'] = SrlModule.URIparticipation;
+   data['URI_sujet'] = SrlModule.URIsujet;
+   data['version'] = 0;
+   data['timestamp'] = SrlModule.getTimestamp();
+   SrlModule.onActionRegistering(data, success);
+}
+
+SrlModule.onActionRegistering = function(data, success) {
+   if(!SrlModule.chan) { return; }
+
+   if(!success) { success = function() {}; }
+   SrlModule.chan.call({
+      method: "onActionRegistering",
+      params: data,
+      success: success
+   });
+}
+
+SrlModule.onBeforeActivityBegins = function(display) {
+   if(!SrlModule.chan) { return; }
+
+   if(display) {
+      SrlModule.show();
+   }
+
+   function onvalidated(data) {
+      data['URI_participation'] = SrlModule.URIparticipation;
+      SrlModule.onActionRegistering(data);
+      SrlModule.hide();
+      SrlModule.onAfterActivityBegins(true);
+   }
+
+   var params = {
+      display: !!display,
+      onrecall: SrlModule.onBeforeActivityBegins,
+      onvalidated: onvalidated,
+      print: console.log
+      };
+   SrlModule.chan.call({
+      method: "onBeforeActivityBegins",
+      params: params
+      });
+}
+
+SrlModule.onAfterActivityBegins = function(firstCall, timerOver) {
+   if(!SrlModule.chan) { return; }
+
+   if(timerOver) {
+      SrlModule.show();
+   }
+
+   function onrecall(timerEnds) {
+      SrlModule.onAfterActivityBegins(false, timerEnds);
+   }
+
+   function onvalidated(data) {
+      data['timestamp'] = SrlModule.getTimestamp();
+      data['URI_participation'] = SrlModule.URIparticipation;
+      SrlModule.onActionRegistering(data);
+      SrlModule.hide();
+      SrlModule.onAfterActivityBegins(true, false);
+   }
+
+   var params = {
+      firstCall: !!firstCall,
+      onrecall: onrecall,
+      onvalidated: onvalidated,
+      print: console.log
+      };
+
+   SrlModule.chan.call({
+      method: "onAfterActivityBegins",
+      params: params
+      });
+}
+
+window.SrlModule = SrlModule;
+
 
 $(document).on('ready', function() {
    var teamParam = getParameterByName('team');
