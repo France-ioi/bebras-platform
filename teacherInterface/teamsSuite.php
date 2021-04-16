@@ -70,7 +70,15 @@ $strUserIds = implode(",", $userIds);
 // Get all teams associated with those users
 $teams = [];
 $stmt = $db2->prepare("
-SELECT users.ID AS userId, groups.ID AS groupId, groups.sName, groups.iTeamParticipating, alkindi_teams.sPassword, alkindi_teams.idNewGroup, alkindi_teams.country
+SELECT users.ID AS userId, groups.ID AS groupId, groups.sName, groups.iTeamParticipating, alkindi_teams.sPassword, alkindi_teams.idNewGroup, alkindi_teams.country,
+alkindi_teams.thirdScore, alkindi_teams.thirdTime,
+alkindi_teams.score1, alkindi_teams.time1,
+alkindi_teams.score2, alkindi_teams.time2,
+alkindi_teams.score3, alkindi_teams.time3,
+alkindi_teams.score4, alkindi_teams.time4,
+alkindi_teams.score5, alkindi_teams.time5,
+alkindi_teams.score6, alkindi_teams.time6,
+alkindi_teams.score7, alkindi_teams.time7
 FROM pixal.groups
 JOIN pixal.groups_groups ON groups_groups.idGroupParent = groups.ID
 JOIN pixal.users ON groups_groups.idGroupChild = users.idGroupSelf
@@ -87,8 +95,16 @@ while($row = $stmt->fetch()) {
          'password' => $row['sPassword'],
          'idNewGroup' => $row['idNewGroup'],
          'country' => $row['country'],
+         'thirdScore' => $row['thirdScore'],
+         'thirdTime' => $row['thirdTime'],
+         'scores' => [],
+         'times' => [],
          'members' => []
          ];
+   }
+   for($i = 1; $i <= 7; $i++) {
+      $teams[$row['groupId']]['scores'][$i] = $row["score$i"];
+      $teams[$row['groupId']]['times'][$i] = $row["time$i"];
    }
    $code = $codes[$row['userId']];
    $teams[$row['groupId']]['members'][] = $code;
@@ -104,7 +120,7 @@ WHERE code IN (".$strCodes.")");
 $stmt->execute();
 while($row = $stmt->fetch()) {
    if(!isset($teams[$row['team_id']])) {
-      $teams[$row['team_id']] = ['name' => $row['name'], 'real' => false, 'participating' => false, 'password' => null, 'idNewGroup' => null, 'country' => null, 'members' => []];
+      $teams[$row['team_id']] = ['name' => $row['name'], 'real' => false, 'participating' => false, 'password' => null, 'idNewGroup' => null, 'country' => null, 'thirdScore' => null, 'members' => []];
    }
    $teams[$row['team_id']]['members'][] = $row['code'];
    array_splice($unteamed, array_search($row['code'], $unteamed), 1);
@@ -354,7 +370,14 @@ foreach($teams as $groupId => $data) {
        if($data['password']) {
           echo "<td><pre>" . $data['password'] . "</pre></td>";
           if($data['idNewGroup']) {
-             echo "<td colspan=\"4\"><i>Scores à venir</i></td>";
+             if($data['thirdScore'] !== null) {
+                echo "<td>" . $data['scores'][1] . ' | ' . $data['scores'][2] . "</td>";
+                echo "<td>" . $data['scores'][3] . ' | ' . $data['scores'][4] . ' | ' . $data['scores'][5] . "</td>";
+                echo "<td>" . $data['scores'][6] . ' | ' . $data['scores'][7] . "</td>";
+                echo "<td><b>" . $data['thirdScore'] . "</b> / 700</td>";
+             } else {
+                echo "<td colspan=\"4\"><i>Scores à venir</i></td>";
+             }
           } else {
              echo "<td colspan=\"4\"><i>N'a pas encore utilisé le mot de passe pour l'épreuve d'1h30 sous surveillance</i></td>";
           }
