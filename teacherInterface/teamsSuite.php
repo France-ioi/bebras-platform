@@ -382,7 +382,7 @@ foreach($teams as $groupId => $data) {
                 echo "<td>" . $data['scores'][3] . ' | ' . $data['scores'][4] . ' | ' . $data['scores'][5] . "</td>";
                 echo "<td>" . $data['scores'][6] . ' | ' . $data['scores'][7] . "</td>";
                 echo "<td><b>" . $data['thirdScore'] . "</b> / 700</td>";
-                if($data['rank'] != 0) {
+                if($data['rank'] != 0 && $data['country'] == 'fr') {
                     if($data['qualifiedFinal'] != '1') {
                         echo "<td>";
                         echo "Équipe non qualifiée pour la finale<br>";
