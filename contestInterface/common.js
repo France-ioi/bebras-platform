@@ -2821,7 +2821,6 @@ function doCloseContest(message) {
 */
 function finalCloseContest(message) {
    TimeManager.stopNow();
-   SrlModule.unload();
    $.post("data.php", {SID: SID, action: "closeContest", teamID: teamID, teamPassword: teamPassword, teamScore: ffTeamScore},
       function() {}, "json"
    ).always(function() {
@@ -3855,6 +3854,7 @@ SrlModule.initJsChannel = function() {
 SrlModule.unload = function() {
    if(!SrlModule.initialized) { return; }
 
+   SrlModule.hide();
    $('#srlModuleIframe').attr('src', '');
    if(SrlModule.chan) { SrlModule.chan.destroy(); }
    SrlModule.chan = null;
@@ -4035,7 +4035,7 @@ SrlModule.onActivityEnds = function(display) {
       data['URI_participation'] = SrlModule.URIparticipation;
       data['reference'] = 'srl_final_prompt';
       SrlModule.onActionRegistering(data);
-      SrlModule.hide();
+      SrlModule.unload();
    }
 
    var params = {
