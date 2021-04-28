@@ -1199,7 +1199,7 @@ screen and (max-width: 1024px) and (orientation: landscape) {
   margin-left: auto;
   margin-right: auto;
   margin-top: 50px;
-  margin-top: calc(50vh - 250px);
-  width: 500px;
-  height: 500px;
+  margin-top: calc(50vh - 375px);
+  width: 750px;
+  height: 750px;
 }

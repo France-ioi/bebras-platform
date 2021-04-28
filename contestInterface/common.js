@@ -3982,7 +3982,8 @@ SrlModule.onBeforeActivityBegins = function(display) {
       };
    SrlModule.chan.call({
       method: "onBeforeActivityBegins",
-      params: params
+      params: params,
+      success: function() {}
       });
 }
 
@@ -4015,7 +4016,8 @@ SrlModule.onAfterActivityBegins = function(firstCall, timerOver) {
 
    SrlModule.chan.call({
       method: "onAfterActivityBegins",
-      params: params
+      params: params,
+      success: function() {}
       });
 }
 
@@ -4047,7 +4049,8 @@ SrlModule.onActivityEnds = function(display) {
 
    SrlModule.chan.call({
       method: "onAfterActivityBegins",
-      params: params
+      params: params,
+      success: function() {}
       });
 }
 
