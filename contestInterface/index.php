@@ -734,7 +734,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
 
 <div id="srlModule" style="display: none;">
    <div>
-       <iframe src="about:blank" id="srlModuleIframe" scrolling="no" height="500" width="500"></iframe>
+       <iframe src="about:blank" id="srlModuleIframe" scrolling="no" height="750" width="750"></iframe>
    </div>
 </div>
 <!--[if lte IE 9]>
