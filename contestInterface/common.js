@@ -1739,6 +1739,8 @@ function loadContestData(contestID, contestFolder, groupPassword)
 
       imagesPreloaded = [];
       questionIframe.iframe.contentWindow.ImagesLoader.preload(contestFolder);
+
+      SrlModule.triggerActivity('begins');
    });
 }
 
@@ -3817,10 +3819,6 @@ SrlModule.initMode = function(mode) {
    if(mode == 'log' || mode == 'full') {
       SrlModule.mode = mode;
       SrlModule.init();
-   }
-   if(mode == 'full') {
-      // TODO :: better trigger for begins?
-      setTimeout(function() { SrlModule.triggerActivity('begins'); }, 5000);
    }
 }
 
