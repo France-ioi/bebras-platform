@@ -3897,13 +3897,14 @@ SrlModule.hashCode = function(val) {
 }
 
 SrlModule.startParticipation = function() {
-   var teamIDHash = 'hash:' + SrlModule.hashCode(teamID);
+   var teamIDHash = 'hash:' + SrlModule.hashCode(teamID) + SrlModule.hashCode('@' + teamID) + SrlModule.hashCode('!' + teamID);
 
    SrlModule.URIparticipation = window.location.hostname + '/' + contestID + '/' + teamIDHash;
    var URIactivite = window.location.hostname + '/' + contestID;
    var URIparticipant = window.location.hostname + '/' + teamIDHash;
 
    var data = {
+      "reference": "participer",
       "URI_participant": URIparticipant,
       "URI_activite": URIactivite,
       "timestamp": SrlModule.getTimestamp(),
@@ -3949,6 +3950,7 @@ SrlModule.onBeforeActivityBegins = function(display) {
 
    function onvalidated(data) {
       data['URI_participation'] = SrlModule.URIparticipation;
+      data['reference'] = 'srl_initial_prompt';
       SrlModule.onActionRegistering(data);
       SrlModule.hide();
       SrlModule.onAfterActivityBegins(true);
@@ -3980,6 +3982,7 @@ SrlModule.onAfterActivityBegins = function(firstCall, timerOver) {
    function onvalidated(data) {
       data['timestamp'] = SrlModule.getTimestamp();
       data['URI_participation'] = SrlModule.URIparticipation;
+      data['reference'] = 'srl_prompt';
       SrlModule.onActionRegistering(data);
       SrlModule.hide();
       SrlModule.onAfterActivityBegins(true, false);
@@ -3987,6 +3990,38 @@ SrlModule.onAfterActivityBegins = function(firstCall, timerOver) {
 
    var params = {
       firstCall: !!firstCall,
+      onrecall: onrecall,
+      onvalidated: onvalidated,
+      print: console.log
+      };
+
+   SrlModule.chan.call({
+      method: "onAfterActivityBegins",
+      params: params
+      });
+}
+
+SrlModule.onActivityEnds = function(display) {
+   if(!SrlModule.initChannel()) { return; }
+
+   if(display) {
+      SrlModule.show();
+   }
+
+   function onrecall() {
+      SrlModule.onActivityEnds();
+   }
+
+   function onvalidated(data) {
+      data['timestamp'] = SrlModule.getTimestamp();
+      data['URI_participation'] = SrlModule.URIparticipation;
+      data['reference'] = 'srl_final_prompt';
+      SrlModule.onActionRegistering(data);
+      SrlModule.hide();
+   }
+
+   var params = {
+      display: display,
       onrecall: onrecall,
       onvalidated: onvalidated,
       print: console.log
