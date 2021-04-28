@@ -2788,6 +2788,7 @@ function closeContest(message) {
    } else {
       doCloseContest(message);
    }
+   SrlModule.triggerActivity('ends');
 }
 
 function doCloseContest(message) {
@@ -3814,7 +3815,12 @@ var SrlModule = {};
 
 SrlModule.initMode = function(mode) {
    if(mode == 'log' || mode == 'full') {
+      SrlModule.mode = mode;
       SrlModule.init();
+   }
+   if(mode == 'full') {
+      // TODO :: better trigger for begins?
+      setTimeout(function() { SrlModule.triggerActivity('begins'); }, 5000);
    }
 }
 
@@ -3856,6 +3862,7 @@ SrlModule.unload = function() {
    SrlModule.chan = null;
    SrlModule.URIparticipation = '';
    SrlModule.URIsujet = '';
+   SrlModule.mode = null;
    SrlModule.initialized = false;
 }
 
@@ -3928,6 +3935,17 @@ SrlModule.taskLog = function(data, success) {
    data['version'] = 0;
    data['timestamp'] = SrlModule.getTimestamp();
    SrlModule.onActionRegistering(data, success);
+}
+
+SrlModule.triggerActivity = function(type) {
+   if(!SrlModule.initChannel() || SrlModule.mode != 'full') { return; }
+   if(type == 'begins') {
+      SrlModule.onBeforeActivityBegins(true);
+   } else if(type == 'after') {
+      SrlModule.onAfterActivityBegins(true, false);
+   } else if(type == 'final') {
+      SrlModule.onActivityEnds(true);
+   }
 }
 
 SrlModule.onActionRegistering = function(data, success) {
