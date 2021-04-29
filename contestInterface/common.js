@@ -3969,7 +3969,9 @@ SrlModule.onBeforeActivityBegins = function(display) {
       data['reference'] = 'srl_initial_prompt';
       SrlModule.onActionRegistering(data);
       SrlModule.hide();
-      SrlModule.onAfterActivityBegins(true);
+      setTimeout(function() {
+         SrlModule.onAfterActivityBegins(true);
+         }, 20 * 60 * 1000);
    }
 
    var params = {
@@ -4002,7 +4004,6 @@ SrlModule.onAfterActivityBegins = function(firstCall, timerOver) {
       data['reference'] = 'srl_prompt';
       SrlModule.onActionRegistering(data);
       SrlModule.hide();
-      SrlModule.onAfterActivityBegins(true, false);
    }
 
    var params = {
