@@ -639,6 +639,23 @@ function initModels(isLogged) {
                stype: "select", searchoptions: searchYesNo,
                width: 100
             },
+            srlModule: {
+               label: t("contest_srlModule_label"),
+               editable: true,
+               edittype: "select",
+               stype: "select",
+               editoptions:{ value:{
+                  "none": t("option_srlModule_none"),
+                  "log": t("option_srlModule_log"),
+                  "full": t("option_srlModule_full")
+               }},
+               searchoptions:{ value:"_NOF_:" + t("option_no_filter") +
+                     ";none:" + t("option_srlModule_none") +
+                     ";log:" + t("option_srlModule_log") +
+                     ";full:" + t("option_srlModule_full")
+                     },
+               width: 100
+            },
             allowFromHome: {
                label: t("contest_allowFromHome_label"),
                editable: true,

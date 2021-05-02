@@ -31,6 +31,9 @@
 
   window.config.downgradeToHTTP = window.config.downgradeToHTTP && (window.location.protocol != 'https:');
 
+  window.srlModuleUrl = <?=$config->contestInterface->srlModuleUrl ? "'" . $config->contestInterface->srlModuleUrl . "'" : 'null' ?>;
+  window.jschannelUrl = '<?=static_asset('/jschannel.js') ?>';
+
   function displayBody() {
     // Display the page
     var body = document.getElementsByTagName("body");
@@ -727,6 +730,12 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
 <div id="divError" autocomplete="off">
    <b data-i18n="error_server"></b> <p style="float:right;"><a href="#" onclick="$('#divError').hide()">[<span data-i18n="error_close"></span>]</a></p><br/>
    <span id="contentError"></span>
+</div>
+
+<div id="srlModule" style="display: none;">
+   <div>
+       <iframe src="about:blank" id="srlModuleIframe" scrolling="yes" height="750" width="750"></iframe>
+   </div>
 </div>
 <!--[if lte IE 9]>
   <?php

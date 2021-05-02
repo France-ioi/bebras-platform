@@ -1185,3 +1185,21 @@ screen and (max-width: 1024px) and (orientation: landscape) {
     content: normal;
   }
 }
+
+#srlModule {
+  position: fixed;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+#srlModule > div {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50px;
+  margin-top: calc(50vh - 375px);
+  width: 750px;
+  height: 750px;
+}

@@ -70,7 +70,17 @@ $strUserIds = implode(",", $userIds);
 // Get all teams associated with those users
 $teams = [];
 $stmt = $db2->prepare("
-SELECT users.ID AS userId, groups.ID AS groupId, groups.sName, groups.iTeamParticipating, alkindi_teams.sPassword, alkindi_teams.idNewGroup, alkindi_teams.country
+SELECT users.ID AS userId, groups.ID AS groupId, groups.sName, groups.iTeamParticipating,
+alkindi_teams.sPassword, alkindi_teams.idNewGroup, alkindi_teams.country,
+alkindi_teams.thirdScore, alkindi_teams.thirdTime,
+alkindi_teams.score1, alkindi_teams.time1,
+alkindi_teams.score2, alkindi_teams.time2,
+alkindi_teams.score3, alkindi_teams.time3,
+alkindi_teams.score4, alkindi_teams.time4,
+alkindi_teams.score5, alkindi_teams.time5,
+alkindi_teams.score6, alkindi_teams.time6,
+alkindi_teams.score7, alkindi_teams.time7,
+alkindi_teams.rank, alkindi_teams.rankBigRegion, alkindi_teams.rankRegion, alkindi_teams.qualifiedFinal
 FROM pixal.groups
 JOIN pixal.groups_groups ON groups_groups.idGroupParent = groups.ID
 JOIN pixal.users ON groups_groups.idGroupChild = users.idGroupSelf
@@ -87,8 +97,20 @@ while($row = $stmt->fetch()) {
          'password' => $row['sPassword'],
          'idNewGroup' => $row['idNewGroup'],
          'country' => $row['country'],
+         'thirdScore' => $row['thirdScore'],
+         'thirdTime' => $row['thirdTime'],
+         'rank' => $row['rank'],
+         'rankBigRegion' => $row['rankBigRegion'],
+         'rankRegion' => $row['rankRegion'],
+         'qualifiedFinal' => $row['qualifiedFinal'],
+         'scores' => [],
+         'times' => [],
          'members' => []
          ];
+   }
+   for($i = 1; $i <= 7; $i++) {
+      $teams[$row['groupId']]['scores'][$i] = $row["score$i"];
+      $teams[$row['groupId']]['times'][$i] = $row["time$i"];
    }
    $code = $codes[$row['userId']];
    $teams[$row['groupId']]['members'][] = $code;
@@ -104,7 +126,7 @@ WHERE code IN (".$strCodes.")");
 $stmt->execute();
 while($row = $stmt->fetch()) {
    if(!isset($teams[$row['team_id']])) {
-      $teams[$row['team_id']] = ['name' => $row['name'], 'real' => false, 'participating' => false, 'password' => null, 'idNewGroup' => null, 'country' => null, 'members' => []];
+      $teams[$row['team_id']] = ['name' => $row['name'], 'real' => false, 'participating' => false, 'password' => null, 'idNewGroup' => null, 'country' => null, 'thirdScore' => null, 'members' => []];
    }
    $teams[$row['team_id']]['members'][] = $row['code'];
    array_splice($unteamed, array_search($row['code'], $unteamed), 1);
@@ -124,7 +146,10 @@ function queryPlatform($request) {
    curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
    $res = curl_exec($ch);
-   return;
+   try {
+      $res = json_decode($res, true);
+   } catch(Exception $e) {}
+   return $res;
 }
 
 function processRequest($post) {
@@ -151,15 +176,30 @@ function processRequest($post) {
       }
    } elseif($post['action'] == 'add') {
       // Check teacher has rights over that team
-      if(!isset($teams[$post['groupId']])) { return; }
+      $groupId = $post['groupId'];
+      if(!isset($teams[$groupId])) { return; }
 
       if($userId) {
-         queryPlatform([
-            'action' => 'joinTeam',
-            'idItem' => $idTeamItem,
-            'user_id' => $userId,
-            'team_id' => $post['groupId']
-            ]);
+         if($teams[$groupId]['real']) {
+            queryPlatform([
+               'action' => 'joinTeam',
+               'idItem' => $idTeamItem,
+               'user_id' => $userId,
+               'team_id' => $groupId
+               ]);
+         } else {
+            // Create the actual team
+            $res = queryPlatform([
+               'action' => 'createTeam',
+               'idItem' => $idTeamItem,
+               'user_id' => $userId,
+               'name' => $teams[$groupId]['name']
+               ]);
+            if($res['result']) {
+               $stmt = $db2->prepare("UPDATE pixal.teams_requests SET team_id = :new_id WHERE team_id = :old_id;");
+               $stmt->execute(['old_id' => $groupId, 'new_id' => $res['team']['ID']]);
+            }
+         }
       } else {
          $stmt = $db2->prepare("INSERT INTO pixal.teams_requests (code, team_id) VALUES(:code, :team_id);");
          $stmt->execute(['code' => $code, 'team_id' => $post['groupId']]);
@@ -266,6 +306,7 @@ if(count($userIds) < count($contestants)) {
    <td colspan="4">Scores (phase de qualification)</td>
    <td rowspan="2">Mot de passe<br>pour l'épreuve</td>
    <td colspan="4">Scores (épreuve)</td>
+   <td rowspan="2">Classement (épreuve)</td>
 </tr>
 <tr>
    <td>Mots<br>connus</td>
@@ -336,18 +377,38 @@ foreach($teams as $groupId => $data) {
        if($data['password']) {
           echo "<td><pre>" . $data['password'] . "</pre></td>";
           if($data['idNewGroup']) {
-             echo "<td colspan=\"4\"><i>Scores à venir</i></td>";
+             if($data['thirdScore'] !== null) {
+                echo "<td>" . $data['scores'][1] . ' | ' . $data['scores'][2] . "</td>";
+                echo "<td>" . $data['scores'][3] . ' | ' . $data['scores'][4] . ' | ' . $data['scores'][5] . "</td>";
+                echo "<td>" . $data['scores'][6] . ' | ' . $data['scores'][7] . "</td>";
+                echo "<td><b>" . $data['thirdScore'] . "</b> / 700</td>";
+                if($data['rank'] != 0) {
+                    if($data['qualifiedFinal'] != '1') {
+                        echo "<td>";
+                        echo "Équipe non qualifiée pour la finale<br>";
+                        echo "Rang national : " . $data['rank'] . '<br>';
+                        echo "Rang académie : " . $data['rankRegion'];
+                        echo "</td>";
+                    } else {
+                        echo "<td><i>Résultat en attente de validation, coordinateur contacté.</i></td>";
+                    }
+                } else {
+                    echo "<td><i>Classements à venir</i></td>";
+                }
+             } else {
+                echo "<td colspan=\"5\"><i>Scores à venir</i></td>";
+             }
           } else {
-             echo "<td colspan=\"4\"><i>N'a pas encore utilisé le mot de passe pour l'épreuve d'1h30 sous surveillance</i></td>";
+             echo "<td colspan=\"5\"><i>N'a pas encore utilisé le mot de passe pour l'épreuve d'1h30 sous surveillance</i></td>";
           }
        } elseif($data['country'] == 'fr' || $data['country'] == 'ch') {
           $reqScore = $data['country'] == 'ch' ? 200 : 300;
-          echo "<td colspan=\"5\"><i>N'est pas encore qualifiée pour l'épreuve (n'a pas atteint $reqScore points)</i></td>";
+          echo "<td colspan=\"6\"><i>N'est pas encore qualifiée pour l'épreuve (n'a pas atteint $reqScore points)</i></td>";
        } else {
-          echo "<td colspan=\"5\"><i>Phase de qualification en cours</i></td>";
+          echo "<td colspan=\"6\"><i>Phase de qualification en cours</i></td>";
        }
     } else {
-       echo "<td colspan=\"9\"><i>N'a pas commencé la phase de qualification</i></td>";
+       echo "<td colspan=\"10\"><i>N'a pas commencé la phase de qualification</i></td>";
     }
     echo "</tr>";
 }
