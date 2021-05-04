@@ -387,10 +387,24 @@ function getDisplayedScoreAndRank(diploma) {
    var maxSchoolRankPercentileDisplayed = parseInt($("#maxSchoolRankPercentileDisplayed").val()) / 100;
    var scoreAndRank = [
    ];
-   if (diploma.score >= minScoreDisplayed) {
-      scoreAndRank.push(i18n.t("certificates_points_obtained", { points: diploma.score }));
+
+   // Belongs to a team with multiple contestants
+   var inTeam = parseInt(diploma.nbContestants) > 1;
+   if(inTeam) {
+      scoreAndRank.push(i18n.t("certificates_in_team"));
+   }
+   function getI18nTeam(key) {
+      if(!inTeam) { return key; }
+      var keyTeam = key + '_team';
+      return i18n.exists(keyTeam) ? keyTeam : key;
    }
 
+   // Score
+   if (diploma.score >= minScoreDisplayed) {
+      scoreAndRank.push(i18n.t(getI18nTeam("certificates_points_obtained"), { points: diploma.score }));
+   }
+
+   // Qualitifcation to category
    if ((diploma.category != undefined) && (diploma.category != "blanche")) {
 /*      if (diploma.round == "1") {
          scoreAndRank.push("la qualification en catégorie " + diploma.category + " et en demi-finale");
@@ -399,27 +413,35 @@ function getDisplayedScoreAndRank(diploma) {
          scoreAndRank.push(i18n.t("certificates_qualification_to_category", {category: diploma.category}));
 /*      }*/
    }
-   if (diploma.rank <= diploma.contestParticipants * maxRankPercentileDisplayed) {
-      scoreAndRank.push(i18n.t("certificates_global_rank", {rank: toOrdinal(diploma.rank), total: diploma.contestParticipants}));
+
+   // Teacher setting : display global rank for top X%
+   if (diploma.rank) {
+      if(!diploma.contestParticipants) {
+         scoreAndRank.push(i18n.t(getI18nTeam("certificates_global_rank_nototal"), {rank: toOrdinal(diploma.rank)}));
+      } else if(diploma.rank <= diploma.contestParticipants * maxRankPercentileDisplayed) {
+         scoreAndRank.push(i18n.t(getI18nTeam("certificates_global_rank"), {rank: toOrdinal(diploma.rank), total: diploma.contestParticipants}));
+      }
    }
-   if (diploma.schoolRank <= diploma.schoolParticipants * maxSchoolRankPercentileDisplayed) {
-      scoreAndRank.push(i18n.t("certificates_school_rank", {rank: toOrdinal(diploma.schoolRank), total: diploma.schoolParticipants}));
+   // Teacher setting : display school rank for top X%
+   if (diploma.schoolRank && diploma.schoolRank <= diploma.schoolParticipants * maxSchoolRankPercentileDisplayed) {
+      scoreAndRank.push(i18n.t(getI18nTeam("certificates_school_rank"), {rank: toOrdinal(diploma.schoolRank), total: diploma.schoolParticipants}));
    }
    if (diploma.rankDemi2018 != null) {
-      scoreAndRank.push(i18n.t("certificates_semifinals_rank", {rank: toOrdinal(diploma.rankDemi2018)}));
+      scoreAndRank.push(i18n.t(getI18nTeam("certificates_semifinals_rank"), {rank: toOrdinal(diploma.rankDemi2018)}));
    }
+   // Qualification
    if (diploma.qualified) {
       scoreAndRank.push(qualificationText);
    }
    var str = "";
    for (var iPart = 0; iPart < scoreAndRank.length; iPart++) {
-      if ((iPart == scoreAndRank.length - 1) && (iPart > 0)) {
+      if ((iPart == scoreAndRank.length - 1) && (iPart > (inTeam ? 1 : 0))) {
          str += i18n.t("certificates_and") + " ";
       }
       str += scoreAndRank[iPart];
       if (iPart == scoreAndRank.length - 1) {
          str += ".";
-      } else if (iPart < scoreAndRank.length - 2) {
+      } else if (iPart < scoreAndRank.length - 2 && (iPart != 1 || !inTeam)) {
          str += ",";
       }
       str += "\n";
@@ -434,17 +456,22 @@ function addDiploma(content, diploma, contest, school, user) {
    }
    var yearBackground = {image: allImages.yearBackground, width:150};
 
-   var grade = i18n.t('grade_' + diploma.grade);
-   var levelNbContestants = "";
-   if (contest.rankNbContestants == '1') {
-      levelNbContestants = " - " + i18n.t('nbContestants_' + diploma.nbContestants);
+   if(diploma.grade) {
+      var grade = i18n.t('grade_' + diploma.grade);
+      var levelNbContestants = "";
+      if (contest.rankNbContestants == '1') {
+         levelNbContestants = " - " + i18n.t('nbContestants_' + diploma.nbContestants);
+      }
+
+      var contestSubtitle = i18n.t('certificates_category') + grade + levelNbContestants;
+   } else {
+      var contestSubtitle = '';
    }
 
    // New strings
    var certifiedOn = i18n.t("certificates_certified_on");
    var certifiedBy = i18n.t("certificates_certified_by");
 
-   var contestSubtitle = i18n.t('certificates_category') + grade + levelNbContestants;
    var coordName =  getCoordName(user);
    var today = dateFormat(new Date());
 
