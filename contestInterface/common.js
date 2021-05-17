@@ -3971,7 +3971,7 @@ SrlModule.onBeforeActivityBegins = function(display) {
       SrlModule.hide();
       setTimeout(function() {
          SrlModule.onAfterActivityBegins(true);
-         }, 20 * 60 * 1000);
+         }, 30 * 60 * 1000);
    }
 
    var params = {
