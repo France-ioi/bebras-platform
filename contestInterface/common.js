@@ -3861,6 +3861,7 @@ SrlModule.unload = function() {
    SrlModule.URIparticipation = '';
    SrlModule.URIsujet = '';
    SrlModule.mode = null;
+   SrlModule.activityEnded = false;
    SrlModule.initialized = false;
 }
 
@@ -3988,10 +3989,10 @@ SrlModule.onBeforeActivityBegins = function(display) {
       });
 }
 
-SrlModule.onAfterActivityBegins = function(firstCall, timerOver) {
+SrlModule.onAfterActivityBegins = function(display) {
    if(!SrlModule.initChannel()) { return; }
 
-   if(timerOver) {
+   if(display) {
       SrlModule.show();
    }
 
@@ -4005,10 +4006,13 @@ SrlModule.onAfterActivityBegins = function(firstCall, timerOver) {
       data['reference'] = 'srl_prompt';
       SrlModule.onActionRegistering(data);
       SrlModule.hide();
+      setTimeout(function() {
+         SrlModule.onActivityEnds();
+         }, 30 * 60 * 1000);
    }
 
    var params = {
-      firstCall: !!firstCall,
+      firstCall: !!display,
       onrecall: onrecall,
       onvalidated: onvalidated,
       print: console.log
@@ -4023,6 +4027,7 @@ SrlModule.onAfterActivityBegins = function(firstCall, timerOver) {
 
 SrlModule.onActivityEnds = function(display) {
    if(!SrlModule.initChannel()) { return; }
+   if(SrlModule.activityEnded) { return; }
 
    if(display) {
       SrlModule.show();
@@ -4052,6 +4057,8 @@ SrlModule.onActivityEnds = function(display) {
       params: params,
       success: function() {}
       });
+
+   SrlModule.activityEnded = true;
 }
 
 window.SrlModule = SrlModule;
