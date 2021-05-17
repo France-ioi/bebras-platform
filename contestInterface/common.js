@@ -3965,6 +3965,7 @@ SrlModule.onBeforeActivityBegins = function(display) {
    }
 
    function onvalidated(data) {
+      data['timestamp'] = SrlModule.getTimestamp();
       data['URI_participation'] = SrlModule.URIparticipation;
       data['reference'] = 'srl_initial_prompt';
       SrlModule.onActionRegistering(data);
