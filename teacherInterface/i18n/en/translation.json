@@ -563,6 +563,7 @@
     "certificates_nothing_to_print": "No certificate to print",
     "certificates_generate_pdf": "Generate pdf",
     "certificates_generate_pdf_x": "Generate pdf __number__ / __total__",
+    "certificates_in_team": "and their team",
     "certificates_points_obtained": "obtained __points__ points",
     "certificates_qualification_to_category": "the qualification in category __category__",
     "certificates_global_rank": "obtained rank __rank__ out of __total__",
