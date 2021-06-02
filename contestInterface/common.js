@@ -3812,7 +3812,23 @@ function getParameterByName(name) {
 
 
 /***** SRL support *****/
-var SrlModule = {};
+var SrlModule = {
+   initialized: false,
+
+   // Percentage of teams to show prompts for
+   randomPercentage: 10,
+
+   // Interval between beginning and middle prompts
+   intervalMiddle: 30 * 60,
+
+   // Interval between middle and end prompts
+   intervalEnd: 30 * 60,
+
+   // Debug mode
+   // (ignore random percentage and activate SRL module's debug mode)
+   debug: false
+   };
+
 
 SrlModule.initMode = function(mode) {
    if(mode == 'log' || mode == 'full') {
@@ -3827,7 +3843,13 @@ SrlModule.init = function(callback) {
       console.error('Tried to initialize SRL module without srlModuleUrl!');
       return;
    }
-   $('#srlModuleIframe').attr('src', window.srlModuleUrl);
+
+   var url = window.srlModuleUrl;
+   if(SrlModule.debug) {
+      url += '?debug=1';
+   }
+
+   $('#srlModuleIframe').attr('src', url);
    SrlModule.initJsChannel();
 
    SrlModule.initialized = true;
@@ -3861,6 +3883,7 @@ SrlModule.unload = function() {
    SrlModule.URIparticipation = '';
    SrlModule.URIsujet = '';
    SrlModule.mode = null;
+   SrlModule.noPrompts = false;
    SrlModule.activityEnded = false;
    SrlModule.initialized = false;
 }
@@ -3937,14 +3960,30 @@ SrlModule.taskLog = function(data, success) {
 }
 
 SrlModule.triggerActivity = function(type) {
-   if(!SrlModule.initChannel() || SrlModule.mode != 'full') { return; }
+   if(SrlModule.mode == 'log' || !SrlModule.initChannel()) { return; }
    if(type == 'begins') {
-      SrlModule.onBeforeActivityBegins(true);
+      SrlModule.triggerBegin();
    } else if(type == 'after') {
       SrlModule.onAfterActivityBegins(true, false);
    } else if(type == 'final') {
-      SrlModule.onActivityEnds(true);
+      if(SrlModule.activityEnded) {
+         SrlModule.onModuleUnload();
+      } else {
+         SrlModule.onActivityEnds(true, true);
+      }
    }
+}
+
+SrlModule.triggerBegin = function() {
+   if(SrlModule.mode == 'random' && !SrlModule.debug) {
+      // Randomly select randomPercentage% teams
+      if(parseInt(teamID.substr(-3)) % 100 > SrlModule.randomPercentage) {
+         // Not selected
+         SrlModule.noPrompts = true;
+         return;
+      }
+   }
+   SrlModule.onBeforeActivityBegins(true);
 }
 
 SrlModule.onActionRegistering = function(data, success) {
@@ -3973,13 +4012,19 @@ SrlModule.onBeforeActivityBegins = function(display) {
       SrlModule.hide();
       setTimeout(function() {
          SrlModule.onAfterActivityBegins(true);
-         }, 30 * 60 * 1000);
+         }, SrlModule.intervalMiddle * 1000);
+   }
+
+   function oncanceled(data) {
+      SrlModule.noPrompts = true;
+      SrlModule.hide();
    }
 
    var params = {
       display: !!display,
       onrecall: SrlModule.onBeforeActivityBegins,
       onvalidated: onvalidated,
+      oncanceled: oncanceled,
       print: console.log
       };
    SrlModule.chan.call({
@@ -3991,13 +4036,10 @@ SrlModule.onBeforeActivityBegins = function(display) {
 
 SrlModule.onAfterActivityBegins = function(display) {
    if(!SrlModule.initChannel()) { return; }
+   if(SrlModule.noPrompts) { return; }
 
    if(display) {
       SrlModule.show();
-   }
-
-   function onrecall(timerEnds) {
-      SrlModule.onAfterActivityBegins(false, timerEnds);
    }
 
    function onvalidated(data) {
@@ -4007,13 +4049,12 @@ SrlModule.onAfterActivityBegins = function(display) {
       SrlModule.onActionRegistering(data);
       SrlModule.hide();
       setTimeout(function() {
-         SrlModule.onActivityEnds();
-         }, 30 * 60 * 1000);
+         SrlModule.onActivityEnds(true);
+         }, SrlModule.intervalEnd * 1000);
    }
 
    var params = {
       firstCall: !!display,
-      onrecall: onrecall,
       onvalidated: onvalidated,
       print: console.log
       };
@@ -4025,16 +4066,19 @@ SrlModule.onAfterActivityBegins = function(display) {
       });
 }
 
-SrlModule.onActivityEnds = function(display) {
+SrlModule.onActivityEnds = function(display, ending) {
    if(!SrlModule.initChannel()) { return; }
    if(SrlModule.activityEnded) { return; }
 
-   if(display) {
-      SrlModule.show();
+   if(SrlModule.noPrompts) {
+      if(ending) {
+         SrlModule.onModuleUnload();
+      }
+      return;
    }
 
-   function onrecall() {
-      SrlModule.onActivityEnds();
+   if(display) {
+      SrlModule.show();
    }
 
    function onvalidated(data) {
@@ -4042,12 +4086,14 @@ SrlModule.onActivityEnds = function(display) {
       data['URI_participation'] = SrlModule.URIparticipation;
       data['reference'] = 'srl_final_prompt';
       SrlModule.onActionRegistering(data);
-      SrlModule.unload();
+      SrlModule.hide();
+      if(ending) {
+         SrlModule.onModuleUnload();
+      }
    }
 
    var params = {
       display: display,
-      onrecall: onrecall,
       onvalidated: onvalidated,
       print: console.log
       };
@@ -4059,6 +4105,20 @@ SrlModule.onActivityEnds = function(display) {
       });
 
    SrlModule.activityEnded = true;
+}
+
+SrlModule.onModuleUnload = function() {
+   if(!SrlModule.initChannel()) { return; }
+
+   function startUnload() {
+      // Give 5 more seconds to finish anything
+      setTimeout(SrlModule.unload, 5000);
+   }
+
+   SrlModule.chan.call({
+      method: "onModuleUnload",
+      success: startUnload
+      });
 }
 
 window.SrlModule = SrlModule;
