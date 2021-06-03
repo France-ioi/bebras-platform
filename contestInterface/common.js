@@ -1103,6 +1103,7 @@ var questionIframe = {
          that.loadQuestion(taskViews, questionKey, callback);
       };
       SrlModule.setTask(questionKey);
+      SrlModule.triggerNavigation('Exercice');
       if (this.loaded) {
          if (questionIframe.task && questionIframe.task.iframe_loaded) {
             questionIframe.task.unload(function() {
@@ -3064,6 +3065,8 @@ window.backToList = function(initial) {
    $('.questionTitle').text(contestName);
    $('.questionTitle').addClass('contestTitle');
    $('#questionStars').html('');
+
+   SrlModule.triggerNavigation('Accueil');
 };
 
 window.selectQuestion = function(questionID, clicked, noLoad) {
@@ -3883,6 +3886,7 @@ SrlModule.unload = function() {
    SrlModule.URIparticipation = '';
    SrlModule.URIsujet = '';
    SrlModule.mode = null;
+   SrlModule.navigatedToTask = false;
    SrlModule.noPrompts = false;
    SrlModule.activityEnded = false;
    SrlModule.initialized = false;
@@ -3954,7 +3958,7 @@ SrlModule.setTask = function(questionKey) {
 SrlModule.taskLog = function(data, success) {
    data['URI_participation'] = SrlModule.URIparticipation;
    data['URI_sujet'] = SrlModule.URIsujet;
-   data['version'] = 0;
+   data['version'] = data['version'] || 0;
    data['timestamp'] = SrlModule.getTimestamp();
    SrlModule.onActionRegistering(data, success);
 }
@@ -3984,6 +3988,20 @@ SrlModule.triggerBegin = function() {
       }
    }
    SrlModule.onBeforeActivityBegins(true);
+}
+
+SrlModule.triggerNavigation = function(type) {
+   if(type == 'Accueil') {
+      if(!SrlModule.navigatedToTask) { return; }
+      SrlModule.URIsujet = 'none';
+   }
+   SrlModule.navigatedToTask = true;
+   var data = {
+      reference: 'navigation',
+      module: type
+      };
+   var success = function() {};
+   SrlModule.taskLog(data, success);
 }
 
 SrlModule.onActionRegistering = function(data, success) {
@@ -4053,9 +4071,15 @@ SrlModule.onAfterActivityBegins = function(display) {
          }, SrlModule.intervalEnd * 1000);
    }
 
+   function oncanceled(data) {
+      SrlModule.noPrompts = true;
+      SrlModule.hide();
+   }
+
    var params = {
       firstCall: !!display,
       onvalidated: onvalidated,
+      oncanceled: oncanceled,
       print: console.log
       };
 
@@ -4092,14 +4116,20 @@ SrlModule.onActivityEnds = function(display, ending) {
       }
    }
 
+   function oncanceled(data) {
+      SrlModule.noPrompts = true;
+      SrlModule.hide();
+   }
+
    var params = {
       display: display,
       onvalidated: onvalidated,
+      oncanceled: oncanceled,
       print: console.log
       };
 
    SrlModule.chan.call({
-      method: "onAfterActivityBegins",
+      method: "onActivityEnds",
       params: params,
       success: function() {}
       });
