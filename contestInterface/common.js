@@ -3834,7 +3834,7 @@ var SrlModule = {
 
 
 SrlModule.initMode = function(mode) {
-   if(mode == 'log' || mode == 'full') {
+   if(mode == 'log' || mode == 'random' || mode == 'full') {
       SrlModule.mode = mode;
       SrlModule.init();
    }
