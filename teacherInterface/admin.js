@@ -647,11 +647,13 @@ function initModels(isLogged) {
                editoptions:{ value:{
                   "none": t("option_srlModule_none"),
                   "log": t("option_srlModule_log"),
+                  "random": t("option_srlModule_random"),
                   "full": t("option_srlModule_full")
                }},
                searchoptions:{ value:"_NOF_:" + t("option_no_filter") +
                      ";none:" + t("option_srlModule_none") +
                      ";log:" + t("option_srlModule_log") +
+                     ";random:" + t("option_srlModule_random") +
                      ";full:" + t("option_srlModule_full")
                      },
                width: 100

@@ -3981,7 +3981,8 @@ SrlModule.triggerActivity = function(type) {
 SrlModule.triggerBegin = function() {
    if(SrlModule.mode == 'random' && !SrlModule.debug) {
       // Randomly select randomPercentage% teams
-      if(parseInt(teamID.substr(-3)) % 100 > SrlModule.randomPercentage) {
+      var randomUnselect = parseInt(teamID.substr(-3)) % 100 > SrlModule.randomPercentage;
+      if(nbContestants === 2 || randomUnselect) {
          // Not selected
          SrlModule.noPrompts = true;
          return;
