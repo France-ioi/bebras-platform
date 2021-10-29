@@ -103,6 +103,7 @@ $config->contestPresentationURL = '';
 $config->contestOfficialURL = '';
 $config->contestBackupURL = '';
 $config->customStringsName = null; // see README
+$config->readOnly = false;
 
 // Preloaded image URLs manipulations
 $config->imagesURLReplacements = array();

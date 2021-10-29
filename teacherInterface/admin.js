@@ -745,7 +745,7 @@ function jqGridModel(modelName) {
          name: fieldName,
          index: fieldName,
          width: field.width,
-         editable: field.editable,
+         editable: !config.readOnly && field.editable,
          edittype: field.edittype,
          editoptions: field.editoptions,
          formatter: field.formatter,
@@ -2700,6 +2700,9 @@ function init() {
    if (window.config.useAlgoreaCodes) {
       $('#linkExportAlgoreaCodes').show();
       $('#buttonGenerateAlgoreaCodes').show();
+   }
+   if (window.config.readOnly) {
+      $('body').addClass('read-only-interface');
    }
    $('input[type=button]', this).attr('disabled', false);
 }
