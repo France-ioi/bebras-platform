@@ -2126,7 +2126,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
       success: function(data) {
          if (!data.success) {
             if (data.message) {
-               $("#" + curStep + "Result").html(data.message);
+               $("#" + curStep + "Result").html(t(data.message));
             } else {
                $("#" + curStep + "Result").html(t("invalid_code"));
             }
