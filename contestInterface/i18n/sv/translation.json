@@ -146,6 +146,8 @@
     "top_image": "<img src=\"images/castor_small.png\" style=\"width:65px\" />",
     "top_image_new": "<img class=\"header_logo_img\" src=\"images/castor_small.png\" />",
     "return_to_list": "Tillbaka till listan med frågor",
+    "return": "Till framsidan",
+    "fullscreen": "Helskärmsläge",
     "point": "poäng",
     "points": "poäng",
     "team_nb_members": "Personlig information",
