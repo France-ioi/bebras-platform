@@ -81,6 +81,9 @@ input[type=email] {
   box-shadow: none;
   opacity: .65;
 }
+body.read-only-interface .btn-edition {
+  display: none !important;
+}
 button[disabled], html input[disabled] {
   cursor: default;
 }

@@ -92,7 +92,7 @@
                <tr><td><b data-i18n="users_official_email"></b></td><td id="user-officialEmail"></td></tr>
                <tr><td><b data-i18n="users_alternative_email"></b></td><td id="user-alternativeEmail"></td></tr>
             </table>
-            <button type="button" onclick="editUser()" data-i18n="edit_user" class="btn btn-default"></button>
+            <button type="button" onclick="editUser()" data-i18n="edit_user" class="btn btn-default btn-edition"></button>
             <div>
                <button type="button" id="buttonRefreshUsers" style="display:none" data-i18n="refresh_list" onclick="refreshGrid('user')" class="btn btn-default"></button>
                <button type="button" id="linkExportUsers" style="display:none" onclick="exportCSV('user')" data-i18n="export_to_csv" class="btn btn-default"></button>
@@ -114,8 +114,8 @@
                      <table id="grid_school"><tbody><tr><td/></tr></tbody></table>
                      <div id="pager_school"></div>
                   </div>
-                  <button type="button" onclick="searchSchool()" onclick_old="newSchool()" data-i18n="schools_add" class="btn btn-default"></button>
-                  <button type="button" id="buttonDeleteSelected_school" data-i18n="schools_delete" class="btn btn-default"></button>
+                  <button type="button" onclick="searchSchool()" onclick_old="newSchool()" data-i18n="schools_add" class="btn btn-default btn-edition"></button>
+                  <button type="button" id="buttonDeleteSelected_school" data-i18n="schools_delete" class="btn btn-default btn-edition"></button>
                </div>
                <button type="button" id="buttonComputeCoords_school" style="display:none" data-i18n="schools_recompute_coords" class="btn btn-default"></button>
                <div id="computeCoordsLog"></div>
@@ -142,10 +142,10 @@
                <table id="grid_group"><tbody><tr><td/></tr></tbody></table>
                <div id="pager_group"></div>
             </div>
-            <button type="button" data-i18n="groups_create" onclick="newGroup()" class="btn btn-default"></button>
-            <button type="button" id="buttonEditSelected_group" data-i18n="groups_edit_selected" onclick="editGroup()" class="btn btn-default"></button>
-            <button type="button" id="buttonDeleteSelected_group" data-i18n="groups_delete_selected" class="btn btn-default"></button>
-            <button type="button" id="buttonGradeSelected_group" data-i18n="groups_grade_selected" onclick="gradeGroup()" class="btn btn-default"></button>
+            <button type="button" data-i18n="groups_create" onclick="newGroup()" class="btn btn-default btn-edition"></button>
+            <button type="button" id="buttonEditSelected_group" data-i18n="groups_edit_selected" onclick="editGroup()" class="btn btn-default btn-edition"></button>
+            <button type="button" id="buttonDeleteSelected_group" data-i18n="groups_delete_selected" class="btn btn-default btn-edition"></button>
+            <button type="button" id="buttonGradeSelected_group" data-i18n="groups_grade_selected" onclick="gradeGroup()" class="btn btn-default btn-edition"></button>
             <button type="button" id="buttonDisplaySelected_group" onclick="displayScoresGroup()" class="btn btn-default" value="test" data-i18n="groups_view_details"></button>
             <div id="groups_edit_contestants">
                <br/>
@@ -307,7 +307,8 @@
       'allowCertificates' => $config->certificates->allow,
       'useAlgoreaCodes' => $config->teacherInterface->useAlgoreaCodes,
       'grades' => $config->grades,
-      'noGender' => (isset($config->teacherInterface->noGender) && $config->teacherInterface->noGender)
+      'noGender' => (isset($config->teacherInterface->noGender) && $config->teacherInterface->noGender),
+      'readOnly' => $config->readOnly
    ]) ?>;
    init();
 </script>

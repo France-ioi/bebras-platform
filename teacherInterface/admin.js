@@ -647,11 +647,13 @@ function initModels(isLogged) {
                editoptions:{ value:{
                   "none": t("option_srlModule_none"),
                   "log": t("option_srlModule_log"),
+                  "random": t("option_srlModule_random"),
                   "full": t("option_srlModule_full")
                }},
                searchoptions:{ value:"_NOF_:" + t("option_no_filter") +
                      ";none:" + t("option_srlModule_none") +
                      ";log:" + t("option_srlModule_log") +
+                     ";random:" + t("option_srlModule_random") +
                      ";full:" + t("option_srlModule_full")
                      },
                width: 100
@@ -743,7 +745,7 @@ function jqGridModel(modelName) {
          name: fieldName,
          index: fieldName,
          width: field.width,
-         editable: field.editable,
+         editable: !config.readOnly && field.editable,
          edittype: field.edittype,
          editoptions: field.editoptions,
          formatter: field.formatter,
@@ -2698,6 +2700,9 @@ function init() {
    if (window.config.useAlgoreaCodes) {
       $('#linkExportAlgoreaCodes').show();
       $('#buttonGenerateAlgoreaCodes').show();
+   }
+   if (window.config.readOnly) {
+      $('body').addClass('read-only-interface');
    }
    $('input[type=button]', this).attr('disabled', false);
 }

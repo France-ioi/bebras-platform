@@ -66,7 +66,7 @@ if ($groupID == null) {
       "WHERE `team`.`endTime` IS NOT NULL ".
       "AND `group`.`contestID` = ? ".
       "GROUP BY `team`.`ID`) as teamScores ON team.ID = teamScores.teamID
-      SET team.score = teamScores.teamScore ".
+      SET team.score = teamScores.teamScore ";
       //where teamScores.scoreNeedsChecking = 0;";
    $stmt = $db->prepare($query);
    $stmt->execute(array($contestID));

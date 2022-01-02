@@ -81,7 +81,7 @@
     "content_is_loading": "Le contenu est en train d'être téléchargé, merci de patienter le temps nécessaire.",
     "error_loading_content": "Il s'est produit une anomalie lors du téléchargement du contenu. Veuillez tenter de recharger la page avec Ctrl+R ou Ctrl+F5. Si cela ne fonctionne pas, essayez éventuellement avec un autre navigateur. En cas d'échec répété, merci de contacter la hotline, pour que nous puissions rechercher la cause de ce problème.",
     "first_question_message_full_feedback": "Vous avez répondu à votre première question, et la suivante va s'afficher automatiquement. Dans la liste à gauche, vous pouvez voir si la question a été résolue (symbole vert) et le nombre de points obtenus, vous pouvez aussi revenir sur une question en cliquant sur son nom.",
-    "invalid_password": "Mot de passe incorrect",
+    "invalid_password": "Mot de passe invalide",
     "invalid_code": "Code invalide",
     "group_session_expired": "La session de ce groupe a commencé depuis plus de 30 minutes. Il n'est plus possible de commencer l'activité au sein de ce groupe.",
     "contest_url": "index.html",

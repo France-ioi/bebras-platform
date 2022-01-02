@@ -173,6 +173,8 @@ function getContestantOwner($db, $contestantID) {
 }
 
 function hasWriteAccess($db, $targetUserID, $sourceUserID) {
+   global $config;
+   if($config->readOnly) { return false; }
    $query = "SELECT `accessType` FROM `user_user` WHERE `userID` = :sourceUserID AND `targetUserID` = :targetUserID";
    $stmt = $db->prepare($query);
    $stmt->execute(array("targetUserID" => $targetUserID, "sourceUserID" => $sourceUserID));
@@ -344,6 +346,8 @@ function fillRequestWithRecords(&$request, $record) {
 }
 
 function updateRecord($db, $modelName, $record, $roles) {
+   global $config;
+   if($config->readOnly) { return false; }
    $request = createRequest($modelName);
    $request["records"][] = array("ID" => $record["ID"], "values" => array());
    if (!checkRequest($db, $request, $record, "update", $roles)) {
@@ -357,6 +361,7 @@ function updateRecord($db, $modelName, $record, $roles) {
 
 function insertRecord($db, $modelName, $record, $roles) {
    global $config;
+   if($config->readOnly) { return false; }
    $request = createRequest($modelName);
    $request["records"][] = array("values" => array());
    if (!checkRequest($db, $request, $record, "insert", $roles)) {
@@ -381,6 +386,8 @@ function insertRecord($db, $modelName, $record, $roles) {
 }
 
 function deleteRecord($db, $modelName, $record, $roles) {
+   global $config;
+   if($config->readOnly) { return false; }
    if (!in_array("admin", $roles)) {
       if ($modelName === "school") {
          /* Check that there are no groups attached. We don't care anymore, and keep the groups.
