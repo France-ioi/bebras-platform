@@ -48,7 +48,7 @@
     "schools_add": "Ajouter un établissement",
     "schools_delete": "J'ai quitté cet établissement",
     "schools_recompute_coords": "Recalculer toutes les coordonnées (1,5 s / établissement)",
-    "groups_intro": "<p>    Pour vous éviter d'avoir à enregistrer vous-même chacun des élèves de votre établissement, vous allez devoir créer un « groupe » pour chaque ensemble d'élèves qui participeront à la même épreuve en même temps. Lisez bien la notice dans l'onglet explications avant d'en créer.    </p><p>    <b>Attention :</b> les lignes sur fond rouge sont des groupes qui ont déjà été utilisés au moins une fois. Rappelez-vous qu'un groupe ne peut être utilisé que pendant 30 min après sa première utilisation.    </p>",
+    "groups_intro": "<p>    Pour vous éviter d'avoir à enregistrer vous-même chacun des élèves de votre établissement, vous allez devoir créer un « groupe » pour chaque ensemble d'élèves qui participeront à la même épreuve en même temps. Lisez bien la notice dans l'onglet explications avant d'en créer.    </p><p>    <b>Attention :</b> les lignes sur fond rouge sont des groupes qui ont déjà été utilisés au moins une fois. Rappelez-vous qu'un code de groupe ne peut être utilisé que pendant 30 min après sa première utilisation.</p>",
     "groups_create": "Créer un nouveau groupe",
     "groups_edit_selected": "Modifier le groupe sélectionné",
     "groups_delete_selected": "Supprimer le groupe sélectionné",
