@@ -114,12 +114,12 @@ function handleCreateTeam($db) {
    }
 
    $contestants = $_POST["contestants"];
-   $stmt = $db->prepare("UPDATE `group` SET `startTime` = UTC_TIMESTAMP() WHERE `group`.`ID` = ? AND `startTime` IS NULL");
-   $stmt->execute(array($groupID));
-   $stmt = $db->prepare("UPDATE `group` gc JOIN `group` gp ON gc.parentGroupID = gp.ID AND gc.ID = ? SET gp.`startTime` = UTC_TIMESTAMP() WHERE gp.`startTime` IS NULL");
-   $stmt->execute(array($groupID));
-   $stmt = $db->prepare("UPDATE `group` SET `nbTeamsEffective` = `nbTeamsEffective` + 1, `nbStudentsEffective` = `nbStudentsEffective` + ? WHERE `ID` = ?");
+   $stmt = $db->prepare("UPDATE `group` SET `startTime` = IFNULL(`startTime`,UTC_TIMESTAMP()), `nbTeamsEffective` = `nbTeamsEffective` + 1, `nbStudentsEffective` = `nbStudentsEffective` + ? WHERE `group`.`ID` = ?");
    $stmt->execute(array(count($contestants), $groupID));
+
+
+   $stmt = $db->prepare("UPDATE `group` gc JOIN `group` gp ON gc.parentGroupID = gp.ID AND gc.ID = ? SET gp.`startTime` = IFNULL(gp.`startTime`,UTC_TIMESTAMP()), gp.`nbTeamsEffective` = gp.`nbTeamsEffective` + 1, gp.`nbStudentsEffective` = gp.`nbStudentsEffective` + ?");
+   $stmt->execute(array($groupID,count($contestants)));
 
    if (isset($_SESSION['mysqlOnly'])) {
       unset($_SESSION['mysqlOnly']);
