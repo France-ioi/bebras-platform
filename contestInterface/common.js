@@ -934,15 +934,11 @@ var questionIframe = {
         setTimeout(function() {
            var nextStep = function() {
               setTimeout(function() {
-                 if (!hasDisplayedContestStats) {
-                    if (fullFeedback) {
-                       if (!newInterface) {
-                          alert(t("contest_starts_now_full_feedback"));
-                       }
+                 if(!newInterface && !hasDisplayedContestStats
+                       && config.oldInterfaceScoreModifiersDisplay) {
+                    if(fullFeedback) {
                     } else {
-                       if (!newInterface) {
-                          alert(t("contest_starts_now"));
-		       }
+                       alert(t("contest_starts_now"));
                     }
                     hasDisplayedContestStats = true;
                  }
@@ -2774,7 +2770,7 @@ window.tryCloseContest = function() {
  * to send them automatically as long as the page is stays opened.
 */
 function closeContest(message) {
-   hasDisplayedContestStats = true;
+   hasDisplayedContestStats = false;
    Utils.disableButton("buttonClose");
    Utils.disableButton("buttonCloseNew");
    $('body').removeClass('autoHeight');
@@ -3119,11 +3115,13 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
       $("#question-" + questionKey).show();
       $("#link_" + currentQuestionKey).attr("class", "questionLink");
       $("#link_" + questionKey).attr("class", "questionLinkSelected");
-      if (! fullFeedback) {
+      if (!newInterface && !fullFeedback && config.oldInterfaceScoreModifiersDisplay) {
          $("#questionPoints").html( "<table class='questionScores' cellspacing=0><tr><td>" + t("no_answer") + "</td><td>" + t("bad_answer") + "</td><td>" + t("good_answer") + "</td></tr>" +
             "<tr><td><span class='scoreNothing'>" + noAnswerScore + "</span></td>" +
             "<td><span class='scoreBad'>" + minScore + "</span></td>" +
             "<td><span class='scoreGood'>+" + maxScore + "</span></td></tr></table>");
+      } else {
+         $("#questionPoints").html('');
       }
       $(".questionTitle").html(questionName);
       $(".questionTitle").removeClass('contestTitle');
