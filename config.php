@@ -112,6 +112,9 @@ $config->imagesURLReplacementsNonStatic = array();
 $config->upgradeToHTTPS = false;
 $config->redirectToHTTPSIfError = false;
 
+// Exclude extensions from preloading
+$config->preloadExcludeExtensions = [];
+
 // team_question transfer script
 $config->transferTeamQuestion = (object) array(
     // Number of teams to load from SQL on each update chunk
