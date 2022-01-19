@@ -85,7 +85,7 @@ foreach ($groups as $group) {
    }
    echo "</tr>";
    foreach ($group["teams"] as $teamID => $team) {
-      echo "<tr><td><a href='http://concours.castor-informatique.fr?team=".$team["password"]."' target='_blank'>[".translate("groups_open")."]</a> ".$team["contestants"]."</td>";
+      echo "<tr><td><a href='".$config->contestInterface->baseUrl."?team=".$team["password"]."' target='_blank'>[".translate("groups_open")."]</a> ".$team["contestants"]."</td>";
       $score = 0;
       foreach ($team["questions"] as $questionName => $ffScore) {
          if ($ffScore == null) {
