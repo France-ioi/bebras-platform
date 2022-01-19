@@ -3120,11 +3120,19 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
             "<tr><td><span class='scoreNothing'>" + noAnswerScore + "</span></td>" +
             "<td><span class='scoreBad'>" + minScore + "</span></td>" +
             "<td><span class='scoreGood'>+" + maxScore + "</span></td></tr></table>");
+         $('.questionPointsTd').show();
       } else {
          $("#questionPoints").html('');
+         $('.questionPointsTd').hide();
       }
-      $(".questionTitle").html(questionName);
-      $(".questionTitle").removeClass('contestTitle');
+      if(!newInterface && !questionName) {
+         // Display contestName when no questionName
+         $(".questionTitle").html(contestName);
+         $(".questionTitle").addClass('contestTitle');
+      } else {
+         $(".questionTitle").html(questionName);
+         $(".questionTitle").removeClass('contestTitle');
+      }
       if (newInterface) {
          drawStars('questionStars', 4, 24, getQuestionScoreRate(questionData), "normal", getNbLockedStars(questionData)); // stars under icon on main page
          //drawStars('questionIframeStars', 4, 24, getQuestionScoreRate(questionData), "normal", getNbLockedStars(questionData)); // stars under icon on main page
