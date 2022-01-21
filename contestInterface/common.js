@@ -77,6 +77,8 @@ var bodyOnResize = null;
 var imagesPreloaded = [];
 // Actually make the logActivity requests
 var doLogActivity = false;
+// TODO :: Remove after 2022-09
+var oldRandomSeedTempFix = false;
 
 function getParameterByName(name) {
    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -377,16 +379,22 @@ var platform = {
       // not used here
    },
    getTaskParams: function(key, defaultValue, success, error) {
-      var questionData = questionsData[questionsKeyToID[questionIframe.questionKey]];
+      var questionID = questionsKeyToID[questionIframe.questionKey];
+      var questionData = questionsData[questionID];
       var unlockedLevels = 1;
       if (questionUnlockedLevels[questionIframe.questionKey] != null) {
          unlockedLevels = questionUnlockedLevels[questionIframe.questionKey];
+      }
+      var randomSeed = teamID;
+      if(!oldRandomSeedTempFix) {
+         // TODO :: Remove after 2022-09
+         randomSeed = (parseInt(teamID) + parseInt(questionID)) % Number.MAX_SAFE_INTEGER;
       }
       var res = {
          'minScore': questionData.minScore,
          'maxScore': questionData.maxScore,
          'noScore': questionData.noAnswerScore,
-         'randomSeed': teamID,
+         'randomSeed': randomSeed,
          'options': questionData.options,
          'pointsAsStars': newInterface,
          'unlockedLevels': unlockedLevels
@@ -2151,6 +2159,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
          doLogActivity = data.logActivity;
          updateContestHeader(data);
          SrlModule.initMode(data.srlModule);
+         oldRandomSeedTempFix = !!data.oldRandomSeedTempFix;
 
          groupMinCategory = data.minCategory;
          groupMaxCategory = data.maxCategory;
@@ -2638,6 +2647,7 @@ function initContestData(data, newContestID) {
    contestVisibility = data.contestVisibility;
    contestShowSolutions = !!parseInt(data.contestShowSolutions);
    SrlModule.initMode(data.srlModule);
+   oldRandomSeedTempFix = !!data.oldRandomSeedTempFix;
    if (newInterface) {
       $("#question-iframe-container").addClass("newInterfaceIframeContainer").show();
       $(".oldInterface").html("").hide();

@@ -318,6 +318,7 @@ function handleLoadSession() {
       "headerHTML" => $_SESSION["headerHTML"],
       "logActivity" => $_SESSION["logActivity"],
       "srlModule" => $_SESSION["srlModule"],
+      "oldRandomSeedTempFix" => $_SESSION["oldRandomSeedTempFix"],
       "SID" => $sid));
 }
 
@@ -640,6 +641,7 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "",
       "headerHTML" => $_SESSION["headerHTML"],
       "logActivity" => $_SESSION["logActivity"],
       "srlModule" => $_SESSION["srlModule"],
+      "oldRandomSeedTempFix" => $_SESSION["oldRandomSeedTempFix"],
       "childrenContests" => $childrenContests,
       "registrationData" => $registrationData,
       "isOfficialContest" => $isOfficialContest,
