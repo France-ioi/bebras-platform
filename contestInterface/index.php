@@ -636,7 +636,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
                <table style="width:100%"><tr>
                   <td style="width:10%" data-i18n="[html]top_image"></td>
                   <td><div class="questionTitle"></div></td>
-                  <td style="width:25%"><div id="questionPoints"></div></td>
+                  <td style="width:25%" class="questionPointsTd"><div id="questionPoints"></div></td>
                </tr></table>
             </div>
          </td></tr>
