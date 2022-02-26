@@ -292,7 +292,7 @@ form {
 // Display info
 if(count($userIds) < count($contestants)) {
 ?>
-<p>Attention : Une astérique à côté du code d'un participant indique que cet élève ne s'est jamais connecté à la plateforme du 3e tour. Les participants ne font pas partie définitivement d'une équipe tant qu'ils ne se sont pas connectés.</p>
+<p>Attention : Une astérisque à côté du code d'un participant indique que cet élève ne s'est jamais connecté à la plateforme du 3e tour. Les participants ne font pas partie définitivement d'une équipe tant qu'ils ne se sont pas connectés.</p>
 <?php
 }
 ?>
