@@ -3,15 +3,15 @@
 require_once("../shared/common.php");
 require_once("commonAdmin.php");
 
-$idTeamItem = "260120724311792746";
+$idTeamItem = "1516175780610161014";
 $idItems = [
-"532647690497199341",
+/*"532647690497199341",
 "134681515031039304",
 "1219260860211948277",
 "36816274423673297",
 "794469105323096133",
 "72197693631116221",
-"942219830652070444"
+"942219830652070444"*/
 ];
 
 if (!isset($_SESSION["userID"])) {
@@ -303,12 +303,13 @@ if(count($userIds) < count($contestants)) {
 <tr>
    <td rowspan="2">Nom de l'équipe</td>
    <td rowspan="2">Membres</td>
-   <td colspan="4">Scores (phase de qualification)</td>
+<!--   <td colspan="4">Scores (phase de qualification)</td>
    <td rowspan="2">Mot de passe<br>pour l'épreuve</td>
    <td colspan="4">Scores (épreuve)</td>
-   <td rowspan="2">Classement (épreuve)</td>
+   <td rowspan="2">Classement (épreuve)</td>-->
 </tr>
 <tr>
+<!--
    <td>Mots<br>connus</td>
    <td>Image<br>brouillée</td>
    <td>Substitutions<br>composées</td>
@@ -317,6 +318,7 @@ if(count($userIds) < count($contestants)) {
    <td>Image<br>brouillée</td>
    <td>Substitutions<br>composées</td>
    <td><b>Total</b></td>
+-->
 </tr>
 <?php
 foreach($teams as $groupId => $data) {
@@ -408,7 +410,7 @@ foreach($teams as $groupId => $data) {
           echo "<td colspan=\"6\"><i>Phase de qualification en cours</i></td>";
        }
     } else {
-       echo "<td colspan=\"10\"><i>N'a pas commencé la phase de qualification</i></td>";
+       //echo "<td colspan=\"10\"><i>N'a pas commencé la phase de qualification</i></td>";
     }
     echo "</tr>";
 }
