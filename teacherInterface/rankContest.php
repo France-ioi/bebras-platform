@@ -44,22 +44,29 @@ function getContestInfos($db, $contestID) {
    return $contestInfos;
 }
 
-function computeRanks($db, $contestInfos, $category) {  
+function computeRanks($db, $contestInfos, $category) {
    $query = "
       UPDATE `contestant` as `c1`, 
       (
          SELECT 
-            `contestant2`.`ID`,
-            @curRank := IF(@prevVal=`contestant2`.`score`, @curRank, @studentNumber) AS rank,
+            `contestant2`.`ID`,";
+   if($contestInfos['rankTimes']) {
+      $query .= "@curRank := IF(@prevScore=`contestant2`.`score` AND @prevDuration=contestant2.duration, @curRank, @studentNumber) AS rank,";
+   } else {
+      $query .= "@curRank := IF(@prevScore=`contestant2`.`score`, @curRank, @studentNumber) AS rank,";
+   }
+   $query .= "
             @studentNumber := @studentNumber + 1 as studentNumber,
-            @prevVal:=score
+            @prevScore:=score,
+            @prevDuration:=duration
          FROM 
          (
             SELECT 
                `contestant`.`ID`, 
                `contestant`.`firstName`,
                `contestant`.`lastName`,
-               `team`.`score`
+               `team`.`score`,
+               TIMEDIFF(`team`.`endTime`, `team`.`startTime`) AS duration
             FROM `contestant` 
             JOIN `team` ON (`contestant`.`teamID` = `team`.`ID`) 
             JOIN `group` ON (`team`.`groupID` = `group`.`ID`)
@@ -79,12 +86,14 @@ function computeRanks($db, $contestInfos, $category) {
    $query .= "
             (`contest`.`ID` = :contestID OR `contest`.`parentContestID` = :contestID)
             ORDER BY
-            `team`.`score` DESC
+            `team`.`score` DESC,
+            duration DESC
          ) `contestant2`, 
          (
             SELECT 
                @curRank :=0, 
-               @prevVal:=null, 
+               @prevScore:=null,
+               @prevDuration:=null,
                @studentNumber:=1
          ) r
       ) AS `c2` 
@@ -127,10 +136,16 @@ function computeRanksSchool($db, $contestInfos, $category) {
     UPDATE `contestant` as `c1`,
     (
        SELECT 
-           `contestant2`.`ID`,
-            @curRank := IF(@prevSchool=`contestant2`.`schoolID`, IF(@prevScore=`contestant2`.`score`, @curRank, @studentNumber + 1), 1) AS schoolRank, 
+           `contestant2`.`ID`,";
+   if($contestInfos['rankTimes']) {
+      $query .= "@curRank := IF(@prevSchool=`contestant2`.`schoolID`, IF(@prevScore=`contestant2`.`score` AND @prevDuration=contestant2.duration, @curRank, @studentNumber), 1) AS schoolRank,";
+   } else {
+      $query .= "@curRank := IF(@prevSchool=`contestant2`.`schoolID`, IF(@prevScore=`contestant2`.`score`, @curRank, @studentNumber + 1), 1) AS schoolRank,";
+   }
+   $query .= "
             @studentNumber := IF(@prevSchool=`contestant2`.`schoolID`, @studentNumber + 1, 1) as studentNumber, 
             @prevScore:=score,
+            @prevDuration:=duration
             @prevSchool:=`contestant2`.`schoolID`
     FROM 
     (
@@ -161,7 +176,8 @@ function computeRanksSchool($db, $contestInfos, $category) {
    (
        SELECT 
           @curRank :=0, 
-          @prevScore:=null, 
+          @prevScore:=null,
+          @prevDuration:=null,
           @studentNumber:=0, 
           @prevSchool:=null
          ) r

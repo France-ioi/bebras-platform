@@ -73,6 +73,7 @@ $tablesModels = array (
          "minAward2Rank" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "rankGrades" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "rankNbContestants" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "rankTimes" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "printCertificates" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "showResults" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "printCodes" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
@@ -696,6 +697,7 @@ $viewsModels = array(
          "minAward2Rank" => array(),
          "rankGrades" => array(),
          "rankNbContestants" => array(),
+         "rankTimes" => array(),
          "maxScore" => array(
             "type" => "int",
             "tableName" => "contest_question",
