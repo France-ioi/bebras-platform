@@ -458,6 +458,10 @@ function addDiploma(content, diploma, contest, school, user) {
 
    if(diploma.grade) {
       var grade = i18n.t('grade_' + diploma.grade);
+      if(contest.ID == '619714287977504425' && (diploma.grade == 11 || diploma.grade == 12)) {
+         // Special grade text for two grades merged in rankings
+         var grade = '1re - Term';
+      }
       var levelNbContestants = "";
       if (contest.rankNbContestants == '1') {
          levelNbContestants = " - " + i18n.t('nbContestants_' + diploma.nbContestants);
