@@ -160,7 +160,7 @@ function computeRanksSchool($db, $contestInfos, $category) {
    $query .= "
             @studentNumber := IF(@prevSchool=`contestant2`.`schoolID`, @studentNumber + 1, 1) as studentNumber, 
             @prevScore:=score,
-            @prevDuration:=duration
+            @prevDuration:=duration,
             @prevSchool:=`contestant2`.`schoolID`
     FROM 
     (
