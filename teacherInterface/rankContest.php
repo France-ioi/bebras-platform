@@ -15,7 +15,7 @@ if (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"]) {
 // To reset ranks: update contestant set rank = NULL;
 
 function getContestInfos($db, $contestID) {
-   $stmt = $db->prepare('select ID, allowTeamsOfTwo, rankGrades, rankNbContestants from contest where ID = :contestID');
+   $stmt = $db->prepare('select ID, allowTeamsOfTwo, rankGrades, rankNbContestants, rankTimes from contest where ID = :contestID');
    $stmt->execute(array('contestID' => $contestID));
    $contestInfos = $stmt->fetch(PDO::FETCH_ASSOC);
    if (!$contestInfos) {
