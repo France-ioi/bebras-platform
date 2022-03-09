@@ -178,7 +178,12 @@ function computeRanksSchool($db, $contestInfos, $category) {
       WHERE 
           `team`.`participationType` = 'Official' AND ";
    if ($contestInfos['rankGrades']) {
-      $query .= " `contestant`.`grade` = :grade AND ";
+      if($contestInfos['ID'] == '619714287977504425') {
+         // Contest in which we merge grades 11 and 12
+         $query .= " (`contestant`.`grade` = :grade1 OR `contestant`.`grade` = :grade2) AND ";
+      } else {
+         $query .= " `contestant`.`grade` = :grade AND ";
+      }
    }
    if ($category != null) {
       $query .= " `contest`.`categoryColor` = :category AND ";
@@ -208,7 +213,17 @@ function computeRanksSchool($db, $contestInfos, $category) {
    for ($i = 1; $i<= $maxContestants; $i++) {
       if ($contestInfos['rankGrades']) {
          foreach ($contestInfos['grades'] as $grade) {
-            $values = array(':contestID' => $contestInfos['ID'], 'grade' => $grade);
+            if($contestInfos['ID'] == '619714287977504425') {
+               // Contest in which we merge grades 11 and 12
+               $values = [':contestID' => $contestInfos['ID'], 'grade1' => $grade, 'grade2' => $grade];
+               if($grade == 11) {
+                  $values['grade2'] = 12;
+               } else if($grade == 12) {
+                  continue;
+               }
+            } else {
+               $values = array(':contestID' => $contestInfos['ID'], 'grade' => $grade);
+            }
             if ($maxContestants != 1) {
                $values['nbContestants'] = $i;
             }
