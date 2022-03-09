@@ -153,7 +153,7 @@ function computeRanksSchool($db, $contestInfos, $category) {
        SELECT 
            `contestant2`.`ID`,";
    if($contestInfos['rankTimes']) {
-      $query .= "@curRank := IF(@prevSchool=`contestant2`.`schoolID`, IF(@prevScore=`contestant2`.`score` AND @prevDuration=contestant2.duration, @curRank, @studentNumber), 1) AS schoolRank,";
+      $query .= "@curRank := IF(@prevSchool=`contestant2`.`schoolID`, IF(@prevScore=`contestant2`.`score` AND @prevDuration=contestant2.duration, @curRank, @studentNumber + 1), 1) AS schoolRank,";
    } else {
       $query .= "@curRank := IF(@prevSchool=`contestant2`.`schoolID`, IF(@prevScore=`contestant2`.`score`, @curRank, @studentNumber + 1), 1) AS schoolRank,";
    }
@@ -187,7 +187,7 @@ function computeRanksSchool($db, $contestInfos, $category) {
       $query .= " `team`.`nbContestants` = :nbContestants AND ";  
    }
    $query .= "(`contest`.`ID` = :contestID OR `contest`.`parentContestID` = :contestID)
-      ORDER BY `group`.`schoolID`, `team`.`score`, duration DESC
+      ORDER BY `group`.`schoolID`, `team`.`score` DESC, duration ASC
    ) `contestant2`,
    (
        SELECT 
