@@ -92,7 +92,7 @@ function computeRanks($db, $contestInfos, $category) {
             (`contest`.`ID` = :contestID OR `contest`.`parentContestID` = :contestID)
             ORDER BY
             `team`.`score` DESC,
-            duration DESC
+            duration ASC
          ) `contestant2`, 
          (
             SELECT 
@@ -187,7 +187,7 @@ function computeRanksSchool($db, $contestInfos, $category) {
       $query .= " `team`.`nbContestants` = :nbContestants AND ";  
    }
    $query .= "(`contest`.`ID` = :contestID OR `contest`.`parentContestID` = :contestID)
-      ORDER BY `group`.`schoolID`, `team`.`score` DESC
+      ORDER BY `group`.`schoolID`, `team`.`score`, duration DESC
    ) `contestant2`,
    (
        SELECT 
