@@ -169,6 +169,7 @@ function computeRanksSchool($db, $contestInfos, $category) {
           `contestant`.`firstName`,
           `contestant`.`lastName`,
           `team`.`score`,
+          TIMEDIFF(`team`.`endTime`, `team`.`startTime`) AS duration,
           `group`.`schoolID`
       FROM `contestant`
             JOIN `team` ON (`contestant`.`teamID` = `team`.`ID`)
