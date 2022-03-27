@@ -85,7 +85,11 @@ WHERE users.ID IN (".$strUserIds.")
 AND groups.idTeamItem = :idTeamItem");*/
 $stmt = $db2->prepare("
 SELECT users.ID AS userId, groups.ID AS groupId, groups.sName, groups.iTeamParticipating,
-alkindi_teams.sPassword, alkindi_teams.idNewGroup, alkindi_teams.country
+alkindi_teams.sPassword, alkindi_teams.idNewGroup, alkindi_teams.country,
+alkindi_teams.thirdScore, alkindi_teams.thirdTime,
+alkindi_teams.score1, alkindi_teams.time1,
+alkindi_teams.score2, alkindi_teams.time2,
+alkindi_teams.score3, alkindi_teams.time3
 FROM pixal.groups
 JOIN pixal.groups_groups ON groups_groups.idGroupParent = groups.ID
 JOIN pixal.users ON groups_groups.idGroupChild = users.idGroupSelf
@@ -102,9 +106,9 @@ while($row = $stmt->fetch()) {
          'password' => $row['sPassword'],
          'idNewGroup' => $row['idNewGroup'],
          'country' => $row['country'],
-/*         'thirdScore' => $row['thirdScore'],
+         'thirdScore' => $row['thirdScore'],
          'thirdTime' => $row['thirdTime'],
-         'rank' => $row['rank'],
+/*         'rank' => $row['rank'],
          'rankBigRegion' => $row['rankBigRegion'],
          'rankRegion' => $row['rankRegion'],
          'qualifiedFinal' => $row['qualifiedFinal'],*/
@@ -114,8 +118,8 @@ while($row = $stmt->fetch()) {
          ];
    }
    for($i = 1; $i <= 3; $i++) {
-//      $teams[$row['groupId']]['scores'][$i] = $row["score$i"];
-//      $teams[$row['groupId']]['times'][$i] = $row["time$i"];
+      $teams[$row['groupId']]['scores'][$i] = $row["score$i"];
+      $teams[$row['groupId']]['times'][$i] = $row["time$i"];
    }
    $code = $codes[$row['userId']];
    $teams[$row['groupId']]['members'][] = $code;
@@ -311,7 +315,7 @@ if(count($userIds) < count($contestants)) {
    <td colspan="4">Scores (phase de qualification)</td>
    <td rowspan="2">Mot de passe<br>pour l'épreuve</td>
    <td colspan="4">Scores (épreuve)</td>
-<!--   <td rowspan="2">Classement (épreuve)</td>-->
+   <td rowspan="2">Classement (épreuve)</td>
 </tr>
 <tr>
    <td>Colonnes</td>
@@ -383,11 +387,11 @@ foreach($teams as $groupId => $data) {
           echo "<td><pre>" . $data['password'] . "</pre></td>";
           if($data['idNewGroup']) {
              if($data['thirdScore'] !== null) {
-                echo "<td>" . $data['scores'][1] . ' | ' . $data['scores'][2] . "</td>";
-                echo "<td>" . $data['scores'][3] . ' | ' . $data['scores'][4] . ' | ' . $data['scores'][5] . "</td>";
-                echo "<td>" . $data['scores'][6] . ' | ' . $data['scores'][7] . "</td>";
-                echo "<td><b>" . $data['thirdScore'] . "</b> / 700</td>";
-                if($data['rank'] != 0) {
+                echo "<td>" . $data['scores'][1] . "</td>";
+                echo "<td>" . $data['scores'][2] . "</td>";
+                echo "<td>" . $data['scores'][3] . "</td>";
+                echo "<td><b>" . $data['thirdScore'] . "</b> / 300</td>";
+                if(false && $data['rank'] != 0) {
                     if($data['qualifiedFinal'] != '1') {
                         echo "<td>";
                         echo "Équipe non qualifiée pour la finale<br>";
@@ -413,7 +417,7 @@ foreach($teams as $groupId => $data) {
           echo "<td colspan=\"6\"><i>Phase de qualification en cours</i></td>";
        }
     } else {
-       echo "<td colspan=\"9\"><i>N'a pas commencé la phase de qualification</i></td>";
+       echo "<td colspan=\"10\"><i>N'a pas commencé la phase de qualification</i></td>";
     }
     echo "</tr>";
 }
