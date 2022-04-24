@@ -47,6 +47,7 @@ var teamScore = 0;
 var maxTeamScore = 0;
 var sending = false;
 var answersToSend = {};
+var lastAnswersToSendUpdate = null;
 var answers = {};
 var defaultAnswers = {};
 var lastSelectQuestionTime = 0;
@@ -79,6 +80,10 @@ var imagesPreloaded = [];
 var doLogActivity = false;
 // TODO :: Remove after 2022-09
 var oldRandomSeedTempFix = false;
+// Send last activity pings
+var sendLastActivity = false;
+// Backup QR code handler
+var backupQRCode = null;
 
 function getParameterByName(name) {
    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -352,6 +357,35 @@ function taskProxyLoadListener(id, state, details) {
  */
 window.logTaskActivity = function(details) {
    logActivity(null, null, 'extra', details, 0);
+}
+
+function doPing() {
+   // Pings then starts the timer again
+   // Errors are managed by the global jQuery error handler
+   $.post('ping.php', { teamID: teamID, teamPassword: teamPassword }).success(function() {
+      connectionErrorToggle(false);
+      startPing(true);
+   }).error(failedPinging);
+}
+
+var pingTimeout = null;
+function startPing(isLoop) {
+   // Starts (or resets) the ping timer, which will ping every minute
+   if(!isLoop) {
+      connectionErrorToggle(false);
+   }
+   if (!sendLastActivity) { return; }
+   if (pingTimeout) {
+      clearTimeout(pingTimeout);
+   }
+   pingTimeout = setTimeout(doPing, 1000);
+}
+
+function stopPing() {
+   if (pingTimeout) {
+      clearTimeout(pingTimeout);
+   }
+   pingTimeout = null;
 }
 
 /**
@@ -2099,6 +2133,7 @@ window.startPreparation = function() {
    groupMaxCategory = personalPageData.maxCategory;
    groupLanguage = personalPageData.language;
    SrlModule.initMode(personalPageData.srlModule);
+   sendLastActivity = personalPageData.sendPings;
    if (personalPageData.childrenContests.length > 0) {
       $("#divPersonalPage").hide();
       offerContestSelectionPanels();
@@ -2106,6 +2141,7 @@ window.startPreparation = function() {
    } else {
       groupWasChecked(personalPageData, "PersonalPage", personalPageData.registrationData.code, false, false);
    }
+   startPing();
 }
 
 /*
@@ -2157,7 +2193,9 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
             return;
          }
          doLogActivity = data.logActivity;
+         sendLastActivity = !!data.sendPings;
          updateContestHeader(data);
+         startPing();
          SrlModule.initMode(data.srlModule);
          oldRandomSeedTempFix = !!data.oldRandomSeedTempFix;
 
@@ -2646,7 +2684,9 @@ function initContestData(data, newContestID) {
    contestOpen = !!parseInt(data.contestOpen);
    contestVisibility = data.contestVisibility;
    contestShowSolutions = !!parseInt(data.contestShowSolutions);
+   startPing();
    SrlModule.initMode(data.srlModule);
+   sendLastActivity = data.sendPings;
    oldRandomSeedTempFix = !!data.oldRandomSeedTempFix;
    if (newInterface) {
       $("#question-iframe-container").addClass("newInterfaceIframeContainer").show();
@@ -2797,6 +2837,7 @@ function closeContest(message) {
    } else {
       doCloseContest(message);
    }
+   stopPing();
    SrlModule.triggerActivity('ends');
 }
 
@@ -2828,7 +2869,7 @@ function doCloseContest(message) {
 */
 function finalCloseContest(message) {
    TimeManager.stopNow();
-   $.post("data.php", {SID: SID, action: "closeContest", teamID: teamID, teamPassword: teamPassword, teamScore: ffTeamScore},
+   $.post("data.php", {SID: SID, action: "closeContest", teamID: teamID, teamPassword: teamPassword, teamScore: ffTeamScore, finalAnswersSent: !hasAnswersToSend()},
       function() {}, "json"
    ).always(function() {
       window.onbeforeunload = function(){};
@@ -3215,6 +3256,7 @@ function submitAnswer(questionKey, answer, score) {
       $("#bullet_" + questionKey).html("&loz;");
    }
    answersToSend[questionsKeyToID[questionKey]] = { answer: answer, sending:false, 'score': score };
+   lastAnswersToSendUpdate = new Date();
    nbSubmissions++;
    Tracker.trackData({dataType:"answer", teamID: teamID, questionKey: questionKey, answer: answer});
    sendAnswers();
@@ -3268,9 +3310,38 @@ function failedSendingAnswers() {
    setTimeout(sendAnswers, delay);
 }
 
+function hasAnswersToSend() {
+   return !!Object.keys(answersToSend).length;
+}
+
+function connectionErrorToggle(display) {
+   if(display) {
+      $('.newInterface').addClass('connection-error-visible');
+      if(hasAnswersToSend()) {
+         $('.connection-error-icon').addClass('connection-error-icon-data');
+      } else {
+         $('.connection-error-icon').removeClass('connection-error-icon-data');
+      }
+   } else {
+      $('.newInterface').removeClass('connection-error-visible');
+   }
+}
+
+window.toggleConnectionError = function(val) {
+   $('.connection-error').toggle(val);
+}
+
+function failedPinging() {
+    connectionErrorToggle(true);
+    startPing(true);
+}
+
 function initErrorHandler() {
    // TODO: call on document for jquery 1.8+
    $( "body" ).ajaxError(function(e, jqxhr, settings, exception) {
+     if ( settings.url == "answer.php" || settings.url == "ping.php" ) {
+         failedPinging();
+     }
      if ( settings.url == "answer.php" ) {
          failedSendingAnswers();
      } else {
@@ -3297,6 +3368,29 @@ function base64url_encode(str) {
 	return base64_encode(str).replace('+', '-').replace('/', '_');
 }
 
+function saveAnswersToStorage() {
+   // Save answersToSend to local storage
+   if (!teamPassword) { return; }
+   var itemKey = 'answersToSend-' + teamPassword;
+   if (hasAnswersToSend()) {
+      // Save answers
+      try {
+         localStorage.setItem(itemKey, answersToSend);
+      } catch (e) { }
+      try {
+         sessionStorage.setItem(itemKey, answersToSend);
+      } catch (e) { }
+   } else {
+      // Remove key from storage
+      try {
+         localStorage.removeItem(itemKey);
+      } catch (e) { }
+      try {
+         sessionStorage.removeItem(itemKey);
+      } catch (e) { }
+   }
+}
+
 function sendAnswers() {
    if (sending) {
       return;
@@ -3314,7 +3408,7 @@ function sendAnswers() {
    }
 
    var endpoint = sendAnswersTryAlternate ? "https://concours4.castor-informatique.fr/answer.php" : "answer.php";
-   var params = {SID: SID, "answers": answersToSend, teamID: teamID, teamPassword: teamPassword};
+   var params = { SID: SID, "answers": answersToSend, teamID: teamID, teamPassword: teamPassword, sendLastActivity: sendLastActivity };
    var startTime = Date.now();
    function answersError(msg, details) {
       var errorId = Math.floor(Math.random()*1000000000000);
@@ -3344,6 +3438,7 @@ function sendAnswers() {
       function(data) {
          sending = false;
          clearTimeout(sendAnswersTimeout);
+         startPing();
          if (!data.success) {
             answersError('error from answer.php while sending answers', data.message);
             if (confirm(t("response_transmission_error_1") + " " + data.message + t("response_transmission_error_2"))) {
@@ -3395,22 +3490,58 @@ function getEncodedAnswers() {
 }
 
 /*
+ * Return base64-encoded scores remaining to send
+ */
+
+function getEncodedScores() {
+   var listScores = [];
+   for(var questionID in answersToSend) {
+      listScores.push(questionID);
+      listScores.push(scores[questionID]);
+   }
+   if (listScores.length !== 0) {
+      listScores.splice(0, 0, teamPassword, window.location.hostname, lastAnswersToSendUpdate.toISOString());
+      return base64_encode(JSON.stringify(listScores));
+   } else {
+      return null;
+   }
+}
+
+/*
  * Attempt to send the answers payload to a backup server by adding
  * an image to the DOM.
  */
 function backupSendAnswers() {
+   // IMG method
    var encodedAnswers = getEncodedAnswers();
    var img = $('#backup-send-answers');
    if(!img.length) {
       $('body').append($('<img>', {
          id: 'backup-send-answers',
-         width: 1, height: 1, 'class': 'hidden'}));
+         width: 1,
+         height: 1,
+         'class': 'hidden'
+      }));
       var img = $('#backup-send-answers');
    }
    var newSrc = 'https://backup.castor-informatique.fr/?q=' + encodeURIComponent(encodedAnswers);
    if(img.attr('src') != newSrc) {
       $('#backup-send-answers').attr('src', newSrc);
    }
+
+   // QR code
+   if(!sendLastActivity) {
+      $('.divClosedQRCodeInfo').hide();
+      $('#divClosedQRCode').hide();
+      return;
+   }
+   $('.divClosedQRCodeInfo').show();
+   $('#divClosedQRCode').show();
+   var encodedScores = getEncodedScores();
+   if(!backupQRCode) {
+      backupQRCode = new QRCode(document.getElementById('divClosedQRCode'), '');
+   }
+   backupQRCode.makeCode('https://backup.castor-informatique.fr/?s=' + encodeURIComponent(encodedScores));
 }
 
 // Solutions

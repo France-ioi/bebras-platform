@@ -658,6 +658,13 @@ function initModels(isLogged) {
                      },
                width: 100
             },
+            sendPings: {
+               label: t("contest_sendPings_label"),
+               editable: true,
+               edittype: "select", editoptions: editYesNo,
+               stype: "select", searchoptions: searchYesNo,
+               width: 100
+            },
             allowFromHome: {
                label: t("contest_allowFromHome_label"),
                editable: true,

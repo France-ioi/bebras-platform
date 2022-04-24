@@ -1,0 +1,2 @@
+ALTER TABLE `team` ADD `lastAnswerTime` DATETIME NULL AFTER `endTime`, ADD `lastPingTime` DATETIME NULL AFTER `lastAnswerTime`, ADD `finalAnswerTime` DATETIME NULL AFTER `lastPingTime`;
+ALTER TABLE `history_team` ADD `lastAnswerTime` DATETIME NULL AFTER `endTime`, ADD `lastPingTime` DATETIME NULL AFTER `lastAnswerTime`, ADD `finalAnswerTime` DATETIME NULL AFTER `lastPingTime`;

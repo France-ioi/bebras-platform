@@ -660,9 +660,14 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
          </table>
       </div>
       <div class="headerAutoHeight">
+         <div class="connection-error">
+            <span class="connection-error-icon">&#9888;</span>
+            <span data-i18n="connection_error"></span>
+            <span class="connection-error-close" onclick="toggleConnectionError(false);">&times;</span>
+         </div>
          <table class="headerAutoHeight_table">
             <tr>
-               <td class="headerAutoHeight_logo" data-i18n="[html]top_image_new"></td>
+               <td class="headerAutoHeight_logo"><span data-i18n="[html]top_image_new"></span><span class="connection-error-icon" onclick="toggleConnectionError(true);">&#9888;</span></td>
                <td class="headerAutoHeight_time"><b><span class='minutes'></span>:<span class='seconds'></span></b></td>
                <td class="headerAutoHeight_title"><div class="questionTitle"></div><div id="questionStars"></div></td>
                <td class="headerAutoHeight_score showTotalScore"><b><span class='scoreTotalFullFeedback'></span></b></td>
@@ -715,6 +720,9 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
       </p>
       <textarea cols=60 rows=20 id="encodedAnswers"></textarea>
       <br><a class="btn btn-primary" id="divClosedEncodedDownload" data-i18n="closed_download_encoded"></a>
+      <br>
+      <p class="divClosedQRCodeInfo" data-i18n="closed_qr_code"></p>
+      <div id="divClosedQRCode"></div>
    </div>
    <div id="divClosedRemindPassword" style="display:none">
       <p>
@@ -756,6 +764,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
   script_tag('/bower_components/pem-platform/task-pr.js');
   script_tag('/raphael-min.js');
   script_tag('/common.js');
+  script_tag('/qrcode.min.js');
   global $config;
 ?>
 <script>

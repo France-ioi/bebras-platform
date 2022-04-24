@@ -376,6 +376,7 @@
     "contest_certificateTitle_label": "Titre sur le certificat",
     "contest_logActivity_label": "Log des activités",
     "contest_srlModule_label": "Module SRL",
+    "contest_sendPings_label": "Envoi des pings",
     "contest_allowFromHome_label": "Participation à la maison",
     "groups_from_home_disabled": "La génération de codes individuels de participation à la maison n'est pas disponible en ce moment pour cette activité.",
     "expectedStartTime_long_label": "Heure de passage prévue",
