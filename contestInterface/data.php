@@ -263,12 +263,12 @@ function handleCloseContest($db) {
    }
    $teamID = $_SESSION["teamID"];
    $score = isset($_POST['teamScore']) ? $_POST['teamScore'] : null;
-   $query = "UPDATE `team` SET `endTime` = UTC_TIMESTAMP(), `endTime` = UTC_TIMESTAMP(), `tmpScore` = ? WHERE `ID` = ? AND `endTime` is NULL";
+   $query = "UPDATE `team` SET `endTime` = UTC_TIMESTAMP(),";
    if(isset($_POST['finalAnswersSent']) && $_POST['finalAnswersSent']) {
       $query .= "`finalAnswerTime` = UTC_TIMESTAMP(), ";
    }
    $query .= " `tmpScore` = ? WHERE `ID` = ? AND `endTime` is NULL";
-   $stmtUpdate = $db->prepare();
+   $stmtUpdate = $db->prepare($query);
    $stmtUpdate->execute(array($score, $teamID));
    $_SESSION["closed"] = true;
    $stmt = $db->prepare("SELECT `endTime` FROM `team` WHERE `ID` = ?");
