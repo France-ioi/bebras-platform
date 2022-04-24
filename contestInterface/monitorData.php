@@ -1,8 +1,7 @@
 <?php
 require_once("../shared/common.php");
 
-//$stmt = $db->prepare("SELECT ID FROM `group` WHERE password = :password;");
-$stmt = $db->prepare("SELECT ID FROM `group` WHERE code = :password;");
+$stmt = $db->prepare("SELECT ID FROM `group` WHERE password = :password;");
 $stmt->execute(['password' => $_POST['password']]);
 $groupId = $stmt->fetchColumn();
 
