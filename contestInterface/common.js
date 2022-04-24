@@ -378,7 +378,7 @@ function startPing(isLoop) {
    if (pingTimeout) {
       clearTimeout(pingTimeout);
    }
-   pingTimeout = setTimeout(doPing, 1000);
+   pingTimeout = setTimeout(doPing, 60000);
 }
 
 function stopPing() {
