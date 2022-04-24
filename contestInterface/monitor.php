@@ -5,6 +5,7 @@ require_once("../shared/common.php");
 ?>
 <html>
 <head>
+<title>Surveillance de l'état de connexion d'un groupe</title>
 <meta charset='utf-8'>
 <?php
 script_tag('/bower_components/jquery/jquery.min.js');

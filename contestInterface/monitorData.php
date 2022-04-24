@@ -18,8 +18,6 @@ SELECT
 FROM team
 JOIN contestant ON contestant.teamID = team.ID
 WHERE groupID = :groupID
-ORDER BY startTime DESC
-LIMIT 20
 ");
 $stmt->execute(['groupID' => $groupId]);
 $data = $stmt->fetchAll();

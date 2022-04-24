@@ -59,9 +59,9 @@ function renderTable() {
         var priority = 0;
         var name = team.firstName + ' ' + team.lastName;
         var subHtml = '';
-        subHtml += '<td class="team-code">';
+        subHtml += '<td>';
         subHtml += name + '<br>';
-        subHtml += (showTeamCodes ? team.password : team.password.substr(0, 3) + '...' )
+        subHtml += '<span class="team-code">' + (showTeamCodes ? team.password : team.password.substr(0, 3) + '...' ) + '</span>';
         subHtml += '</td>';
         var pingMinutes = Math.floor(((new Date(team.currentTime)).getTime() - (new Date(team.lastPingTime)).getTime()) / (1000 * 60));
         if(team.finalAnswerTime) {
