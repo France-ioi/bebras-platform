@@ -74,6 +74,25 @@ function handleAnswers($tinyOrm) {
       error_log('DynamoDB error trying to write records: teamID: '.$teamID.', answers: '.json_encode($items).', items: '.json_encode($items));
       exitWithJsonFailure($e->getAwsErrorCode(), array('error' => 'DynamoDB'));
    }
+
+   // Update lastAnswerTime and finalAnswersTime if required
+   $teamUpdates = [];
+   if (isset($_POST['sendLastActivity']) && $_POST['sendLastActivity']) {
+      $teamUpdates[] = "lastPingTime = UTC_TIMESTAMP()";
+      $teamUpdates[] = "lastAnswerTime = UTC_TIMESTAMP()";
+   }
+   if (isset($_POST['finalAnswersSent']) && $_POST['finalAnswersSent']) {
+      $teamUpdates[] = "finalAnswerTime = UTC_TIMESTAMP()";
+   }
+   if (count($teamUpdates)) {
+      if(!isset($db)) {
+         // Need to connect to mysql
+         $db = connect_pdo($config);
+      }
+      $stmt = $db->prepare("UPDATE team SET " . implode(', ', $teamUpdates) . " WHERE ID = :id AND password = :password;");
+      $stmt->execute(['id' => $teamID, 'password' => $teamPassword]);
+   }
+
    addBackendHint("ClientIP.answer:pass");
    addBackendHint(sprintf("Team(%s):answer", escapeHttpValue($teamID)));
    exitWithJson(array("success" => true));

@@ -5,13 +5,9 @@ require_once("commonAdmin.php");
 
 $idTeamItem = "1516175780610161014";
 $idItems = [
-/*"532647690497199341",
-"134681515031039304",
-"1219260860211948277",
-"36816274423673297",
-"794469105323096133",
-"72197693631116221",
-"942219830652070444"*/
+"9817350343946595",
+"1847479682777653689",
+"69803208283061228"
 ];
 
 if (!isset($_SESSION["userID"])) {
@@ -69,7 +65,7 @@ $strUserIds = implode(",", $userIds);
 
 // Get all teams associated with those users
 $teams = [];
-$stmt = $db2->prepare("
+/*$stmt = $db2->prepare("
 SELECT users.ID AS userId, groups.ID AS groupId, groups.sName, groups.iTeamParticipating,
 alkindi_teams.sPassword, alkindi_teams.idNewGroup, alkindi_teams.country,
 alkindi_teams.thirdScore, alkindi_teams.thirdTime,
@@ -81,6 +77,19 @@ alkindi_teams.score5, alkindi_teams.time5,
 alkindi_teams.score6, alkindi_teams.time6,
 alkindi_teams.score7, alkindi_teams.time7,
 alkindi_teams.rank, alkindi_teams.rankBigRegion, alkindi_teams.rankRegion, alkindi_teams.qualifiedFinal
+FROM pixal.groups
+JOIN pixal.groups_groups ON groups_groups.idGroupParent = groups.ID
+JOIN pixal.users ON groups_groups.idGroupChild = users.idGroupSelf
+LEFT JOIN pixal.alkindi_teams ON alkindi_teams.idGroup = groups.ID
+WHERE users.ID IN (".$strUserIds.")
+AND groups.idTeamItem = :idTeamItem");*/
+$stmt = $db2->prepare("
+SELECT users.ID AS userId, groups.ID AS groupId, groups.sName, groups.iTeamParticipating,
+alkindi_teams.sPassword, alkindi_teams.idNewGroup, alkindi_teams.country,
+alkindi_teams.thirdScore, alkindi_teams.thirdTime,
+alkindi_teams.score1, alkindi_teams.time1,
+alkindi_teams.score2, alkindi_teams.time2,
+alkindi_teams.score3, alkindi_teams.time3
 FROM pixal.groups
 JOIN pixal.groups_groups ON groups_groups.idGroupParent = groups.ID
 JOIN pixal.users ON groups_groups.idGroupChild = users.idGroupSelf
@@ -99,16 +108,16 @@ while($row = $stmt->fetch()) {
          'country' => $row['country'],
          'thirdScore' => $row['thirdScore'],
          'thirdTime' => $row['thirdTime'],
-         'rank' => $row['rank'],
+/*         'rank' => $row['rank'],
          'rankBigRegion' => $row['rankBigRegion'],
          'rankRegion' => $row['rankRegion'],
-         'qualifiedFinal' => $row['qualifiedFinal'],
+         'qualifiedFinal' => $row['qualifiedFinal'],*/
          'scores' => [],
          'times' => [],
          'members' => []
          ];
    }
-   for($i = 1; $i <= 7; $i++) {
+   for($i = 1; $i <= 3; $i++) {
       $teams[$row['groupId']]['scores'][$i] = $row["score$i"];
       $teams[$row['groupId']]['times'][$i] = $row["time$i"];
    }
@@ -303,22 +312,20 @@ if(count($userIds) < count($contestants)) {
 <tr>
    <td rowspan="2">Nom de l'équipe</td>
    <td rowspan="2">Membres</td>
-<!--   <td colspan="4">Scores (phase de qualification)</td>
+   <td colspan="4">Scores (phase de qualification)</td>
    <td rowspan="2">Mot de passe<br>pour l'épreuve</td>
    <td colspan="4">Scores (épreuve)</td>
-   <td rowspan="2">Classement (épreuve)</td>-->
+   <td rowspan="2">Classement (épreuve)</td>
 </tr>
 <tr>
-<!--
-   <td>Mots<br>connus</td>
-   <td>Image<br>brouillée</td>
-   <td>Substitutions<br>composées</td>
+   <td>Colonnes</td>
+   <td>Vigenère 2D</td>
+   <td>Base de<br>mots de passe</td>
    <td><b>Total</b></td>
-   <td>Mots<br>connus</td>
-   <td>Image<br>brouillée</td>
-   <td>Substitutions<br>composées</td>
+   <td>Colonnes</td>
+   <td>Vigenère 2D</td>
+   <td>Base de<br>mots de passe</td>
    <td><b>Total</b></td>
--->
 </tr>
 <?php
 foreach($teams as $groupId => $data) {
@@ -372,18 +379,18 @@ foreach($teams as $groupId => $data) {
     echo "</td>";
     if($data['participating']) {
        $teamScores = isset($scores[$groupId]) ? $scores[$groupId] : array_fill(0, count($idItems), null);
-       echo "<td>" . formatScore($teamScores[0]) . ' | ' . formatScore($teamScores[1]) . "</td>";
-       echo "<td>" . formatScore($teamScores[2]) . ' | ' . formatScore($teamScores[3]) . ' | ' . formatScore($teamScores[4]) . "</td>";
-       echo "<td>" . formatScore($teamScores[5]) . ' | ' . formatScore($teamScores[6]) . "</td>";
-       echo "<td><b>" . (isset($scoreTotals[$groupId]) ? $scoreTotals[$groupId] : '-') . "</b> / 700</td>";
+       echo "<td>" . formatScore($teamScores[0]) . "</td>";
+       echo "<td>" . formatScore($teamScores[1]) . "</td>";
+       echo "<td>" . formatScore($teamScores[2]) . "</td>";
+       echo "<td><b>" . (isset($scoreTotals[$groupId]) ? $scoreTotals[$groupId] : '-') . "</b> / 300</td>";
        if($data['password']) {
           echo "<td><pre>" . $data['password'] . "</pre></td>";
           if($data['idNewGroup']) {
              if($data['thirdScore'] !== null) {
-                echo "<td>" . $data['scores'][1] . ' | ' . $data['scores'][2] . "</td>";
-                echo "<td>" . $data['scores'][3] . ' | ' . $data['scores'][4] . ' | ' . $data['scores'][5] . "</td>";
-                echo "<td>" . $data['scores'][6] . ' | ' . $data['scores'][7] . "</td>";
-                echo "<td><b>" . $data['thirdScore'] . "</b> / 700</td>";
+                echo "<td>" . $data['scores'][1] . "</td>";
+                echo "<td>" . $data['scores'][2] . "</td>";
+                echo "<td>" . $data['scores'][3] . "</td>";
+                echo "<td><b>" . $data['thirdScore'] . "</b> / 300</td>";
                 if($data['rank'] != 0) {
                     if($data['qualifiedFinal'] != '1') {
                         echo "<td>";
@@ -404,13 +411,13 @@ foreach($teams as $groupId => $data) {
              echo "<td colspan=\"5\"><i>N'a pas encore utilisé le mot de passe pour l'épreuve d'1h30 sous surveillance</i></td>";
           }
        } elseif($data['country'] == 'fr' || $data['country'] == 'ch') {
-          $reqScore = $data['country'] == 'ch' ? 200 : 300;
+          $reqScore = $data['country'] == 'ch' ? 200 : 200;
           echo "<td colspan=\"6\"><i>N'est pas encore qualifiée pour l'épreuve (n'a pas atteint $reqScore points)</i></td>";
        } else {
           echo "<td colspan=\"6\"><i>Phase de qualification en cours</i></td>";
        }
     } else {
-       //echo "<td colspan=\"10\"><i>N'a pas commencé la phase de qualification</i></td>";
+       echo "<td colspan=\"10\"><i>N'a pas commencé la phase de qualification</i></td>";
     }
     echo "</tr>";
 }

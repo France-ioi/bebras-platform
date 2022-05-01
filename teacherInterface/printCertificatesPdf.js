@@ -458,6 +458,10 @@ function addDiploma(content, diploma, contest, school, user) {
 
    if(diploma.grade) {
       var grade = i18n.t('grade_' + diploma.grade);
+      if(contest.ID == '619714287977504425' && (diploma.grade == 11 || diploma.grade == 12)) {
+         // Special grade text for two grades merged in rankings
+         var grade = '1re - Term';
+      }
       var levelNbContestants = "";
       if (contest.rankNbContestants == '1') {
          levelNbContestants = " - " + i18n.t('nbContestants_' + diploma.nbContestants);
@@ -527,7 +531,14 @@ The styles depend on the contest.
          width: 750
       }
    ];
-   if (showYear) {
+   if (showYear == "middle") {
+      contentStack.push(
+         {stack: [yearBackground], absolutePosition: {x:650, y:40}}//this is an image
+      );
+      contentStack.splice(3, 0,
+         {text: contest.year, alignment: 'center', fontSize:36, bold: true, color:'#7B3E26', margin: [0, 0, 0, 40]}
+      );
+   } else if(showYear) {
       contentStack.push(
          {stack: [yearBackground], absolutePosition: {x:650, y:40}},//this is an image
          {text: contest.year, absolutePosition: {x:680, y:85}, fontSize:36, bold: true, color:'#7B3E26'}

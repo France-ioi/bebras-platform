@@ -96,6 +96,7 @@ $tablesModels = array (
          "certificateTitle" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "logActivity" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "srlModule" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "sendPings" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "allowFromHome" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
       )
    ),
@@ -692,6 +693,7 @@ $viewsModels = array(
          "certificateTitle" => array(),
          "logActivity" => array(),
          "srlModule" => array(),
+         "sendPings" => array(),
          "allowFromHome" => array(),
          "minAward1Rank" => array(),
          "minAward2Rank" => array(),
