@@ -7,7 +7,7 @@
       "vendor-dir": "vendor"
    },
    "require": {
-      "guzzlehttp/guzzle": "6.2.3",
+      "guzzlehttp/guzzle": "6.5.6",
       "aws/aws-sdk-php": "3.26.1",
       "France-IOI/pem-task-compiler": "*@dev",
       "doctrine/cache": "1.3.*",
