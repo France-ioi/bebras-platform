@@ -86,6 +86,7 @@ AND groups.idTeamItem = :idTeamItem");*/
 $stmt = $db2->prepare("
 SELECT users.ID AS userId, groups.ID AS groupId, groups.sName, groups.iTeamParticipating,
 alkindi_teams.sPassword, alkindi_teams.idNewGroup, alkindi_teams.country,
+alkindi_teams.rank, alkindi_teams.rankBigRegion, alkindi_teams.rankRegion,
 alkindi_teams.thirdScore, alkindi_teams.thirdTime,
 alkindi_teams.score1, alkindi_teams.time1,
 alkindi_teams.score2, alkindi_teams.time2,
@@ -108,10 +109,10 @@ while($row = $stmt->fetch()) {
          'country' => $row['country'],
          'thirdScore' => $row['thirdScore'],
          'thirdTime' => $row['thirdTime'],
-/*         'rank' => $row['rank'],
+         'rank' => $row['rank'],
          'rankBigRegion' => $row['rankBigRegion'],
          'rankRegion' => $row['rankRegion'],
-         'qualifiedFinal' => $row['qualifiedFinal'],*/
+         'qualifiedFinal' => $row['qualifiedFinal'],
          'scores' => [],
          'times' => [],
          'members' => []
@@ -394,12 +395,13 @@ foreach($teams as $groupId => $data) {
                 if($data['rank'] != 0) {
                     if($data['qualifiedFinal'] != '1') {
                         echo "<td>";
-                        echo "Équipe non qualifiée pour la finale<br>";
+                        echo "<i>Équipe non qualifiée pour la finale</i><br>";
                         echo "Rang national : " . $data['rank'] . '<br>';
                         echo "Rang académie : " . $data['rankRegion'];
                         echo "</td>";
                     } else {
-                        echo "<td><i>Résultat en attente de validation, coordinateur contacté.</i></td>";
+                        //echo "<td><i>Résultat en attente de validation, coordinateur contacté.</i></td>";
+                        echo "<td>Équipe finaliste</td>";
                     }
                 } else {
                     echo "<td><i>Classements à venir</i></td>";
