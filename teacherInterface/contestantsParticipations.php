@@ -337,10 +337,10 @@ foreach ($schools as $schoolID => $school) {
       echo "<td colspan='".$colSpan."'"." rowSpan='".$rowSpan."' ";
       echo ">".$mainContestsNames[$mainContestKey]."</td>";
    }
-   echo "<td rowspan=2 style='width:100px'>".translate("results_ranking_national")."</td>";
-   echo "<td rowspan=2 style='width:100px'>".translate("results_ranking_school")."</td>";
    echo "<td rowspan=2 style='width:70px'>Quart de finale</td>";
    echo "<td rowspan=2 style='width:70px'>Demi-finale</td>";
+   echo "<td rowspan=2 style='width:100px'>".translate("results_ranking_national")."</td>";
+   echo "<td rowspan=2 style='width:100px'>".translate("results_ranking_school")."</td>";
    echo "</tr><tr>";
    foreach ($contestIDs as $mainContestKey) {
       if (!isset($contests[$mainContestKey])) {
@@ -400,14 +400,6 @@ foreach ($schools as $schoolID => $school) {
          }
       }
       echo "<td>";
-      if ($contestant["infos"]["algoreaRank"] != null) {
-         echo $contestant["infos"]["algoreaRank"]."e<br/>des ".translate("grade_short_".$contestant["infos"]["grade"])."<br/>(3e tour)";
-      } echo "</td>";
-      echo "<td>";
-      if ($contestant["infos"]["algoreaSchoolRank"] != null) {
-         echo $contestant["infos"]["algoreaSchoolRank"]."e<br/>des ".translate("grade_short_".$contestant["infos"]["grade"])."<br/>(3e tour)";
-      } echo "</td>";
-      echo "<td>";
       if ($contestant["infos"]["round"] == "1") {
          $scoreQuart = $contestant["infos"]["scoreQuart2022"];
          if (($scoreQuart != null) && ($scoreQuart > 0)) {
@@ -438,6 +430,22 @@ foreach ($schools as $schoolID => $school) {
          echo "-";
       }
       echo "</td>";
+      echo "<td>";
+      if ($contestant["infos"]["algoreaRank"] != null) {
+         if ($contestant["infos"]["qualifiedFinal"] == '1') {
+            echo "Qualifié en finale";
+         } else {
+            echo $contestant["infos"]["algoreaRank"]."e<br/>des ".translate("grade_short_".$contestant["infos"]["grade"]);
+         }
+      } echo "</td>";
+      echo "<td>";
+      if ($contestant["infos"]["algoreaSchoolRank"] != null) {
+         if ($contestant["infos"]["qualifiedFinal"] == '1') {
+            echo "Qualifié en finale";
+         } else {
+            echo $contestant["infos"]["algoreaSchoolRank"]."e<br/>des ".translate("grade_short_".$contestant["infos"]["grade"]);
+         }
+      } echo "</td>";
       
       echo "</tr>";
    }
