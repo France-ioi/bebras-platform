@@ -4094,8 +4094,9 @@ SrlModule.startParticipation = function() {
 }
 
 SrlModule.getTimestamp = function() {
-   var str = (new Date()).toISOString();
-   return str.slice(0, 10) + ' ' + str.slice(11, 19);
+   var date = new Date();
+   var str = date.toISOString();
+   return str.slice(0, 10) + ' ' + str.slice(11, 19) + '.' + date.getMilliseconds();
 }
 
 SrlModule.setTask = function(questionKey) {
