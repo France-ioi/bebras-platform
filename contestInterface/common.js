@@ -78,8 +78,6 @@ var bodyOnResize = null;
 var imagesPreloaded = [];
 // Actually make the logActivity requests
 var doLogActivity = false;
-// TODO :: Remove after 2022-09
-var oldRandomSeedTempFix = false;
 // Send last activity pings
 var sendLastActivity = false;
 // Backup QR code handler
@@ -420,10 +418,6 @@ var platform = {
          unlockedLevels = questionUnlockedLevels[questionIframe.questionKey];
       }
       var randomSeed = teamID;
-      if(!oldRandomSeedTempFix) {
-         // TODO :: Remove after 2022-09
-         randomSeed = (parseInt(teamID) + parseInt(questionID)) % Number.MAX_SAFE_INTEGER;
-      }
       var res = {
          'minScore': questionData.minScore,
          'maxScore': questionData.maxScore,
@@ -1968,6 +1962,7 @@ window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, 
    $("#login_link_to_home").hide();
    if (data.teamID !== undefined) { // The password of the team was provided directly
       $("#div" + curStep).hide();
+      // TODO TODO TODO it's here i need to change things
       teamID = data.teamID;
       teamPassword = groupCode;
       loadContestData(contestID, contestFolder);
@@ -2197,7 +2192,6 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
          updateContestHeader(data);
          startPing();
          SrlModule.initMode(data.srlModule);
-         oldRandomSeedTempFix = !!data.oldRandomSeedTempFix;
 
          groupMinCategory = data.minCategory;
          groupMaxCategory = data.maxCategory;
@@ -2687,7 +2681,6 @@ function initContestData(data, newContestID) {
    startPing();
    SrlModule.initMode(data.srlModule);
    sendLastActivity = data.sendPings;
-   oldRandomSeedTempFix = !!data.oldRandomSeedTempFix;
    if (newInterface) {
       $("#question-iframe-container").addClass("newInterfaceIframeContainer").show();
       $(".oldInterface").html("").hide();
@@ -2713,6 +2706,7 @@ function loadSession() {
       data: {SID: SID, action: 'loadSession'},
       dataType: 'json',
       success: function(data) {
+         // TODO TODO TODO : here it's where i go like either say ok or say that you need to confirm, also need to send the browserid in the request
          SID = data.SID;
          if (data.teamID) {
             if (!confirm(data.message)) { // t("restart_previous_contest") json not loaded yet!
