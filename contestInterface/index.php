@@ -541,6 +541,30 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
     </div><!-- #divLogin -->
   </div>
 </div><!-- #divCheckNbContestants -->
+
+<div id="divConfirmContestants" style="display: none;">
+   <div data-i18n="[html]confirm_contestants_intro"></div>
+   <ul id="confirmContestantsList">
+   </ul>
+   <div data-i18n="[html]confirm_contestants_outro"></div>
+   <p>
+      <button type="button" onclick="confirmContestants()" class="btn btn-primary" data-i18n="login_start_contest"></button>
+      <button type="button" onclick="cancelLogin()" class="btn btn-default" data-i18n="error_close"></button>
+   </p>
+</div>
+
+<div id="divConfirmNewBrowser" style="display: none;">
+   <div data-i18n="[html]confirm_new_browser_intro"></div>
+   <p>
+      <button type="button" onclick="confirmNewBrowser()" class="btn btn-primary" data-i18n="login_start_contest"></button>
+      <button type="button" onclick="cancelLogin()" class="btn btn-default" data-i18n="error_close"></button>
+   </p>
+</div>
+
+<div id="divClosedNewBrowser" style="display: none;">
+   <div data-i18n="[html]closed_new_browser"></div>
+</div>
+
 <div id="divStartContest" style="display:none">
    <div data-i18n="[html]contest_start_intro"></div>
    <table>

@@ -72,6 +72,8 @@ $config->contestInterface->downgradeToHTTP = false;
 $config->contestInterface->redirectToHTTPS = false;
 $config->contestInterface->srlModuleUrl = null;
 $config->contestInterface->oldInterfaceScoreModifiersDisplay = true;
+$config->contestInterface->confirmContestants = false;
+$config->contestInterface->checkBrowserID = false;
 
 $config->teacherInterface = (object) array();
 $config->teacherInterface->sHotlineNumber = '';

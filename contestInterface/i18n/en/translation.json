@@ -216,5 +216,9 @@
     "breadcrumb_language": "Language",
     "breadcrumb_category": "Category",
     "breadcrumb_sequence": "Content",
-    "teammate": "Teammate"
+    "teammate": "Teammate",
+    "confirm_contestants_intro": "You are going to start the participation of the following team :",
+    "confirm_contestants_outro": "Continue only if it is you.",
+    "confirm_new_browser_intro": "<p><b>Warning : this participation is already ongoing from another browser.</b></p><p>If you proceed, the other browser will be disconnected. Unsaved data might be lost.</p>",
+    "closed_new_browser": "<b>This participation was continued from another browser. Please resume from this other browser.</b>"
 }

@@ -357,10 +357,22 @@ window.logTaskActivity = function(details) {
    logActivity(null, null, 'extra', details, 0);
 }
 
+function browserIDChanged() {
+   // BrowserID changed, current participation cannot proceed
+   stopPing();
+   hideQuestionIframe();
+   $('#divQuestions').hide();
+   $('#divClosedNewBrowser').show();
+}
+
 function doPing() {
    // Pings then starts the timer again
    // Errors are managed by the global jQuery error handler
-   $.post('ping.php', { teamID: teamID, teamPassword: teamPassword }).success(function() {
+   $.post('ping.php', { teamID: teamID, teamPassword: teamPassword, browserID: browserID }).success(function(res) {
+      if(res.browserIDChanged) {
+         browserIDChanged();
+         return;
+      }
       connectionErrorToggle(false);
       startPing(true);
    }).error(failedPinging);
@@ -376,7 +388,7 @@ function startPing(isLoop) {
    if (pingTimeout) {
       clearTimeout(pingTimeout);
    }
-   pingTimeout = setTimeout(doPing, 60000);
+   pingTimeout = setTimeout(doPing, 5000);
 }
 
 function stopPing() {
@@ -385,6 +397,41 @@ function stopPing() {
    }
    pingTimeout = null;
 }
+
+var browserID = null;
+// var tabID = Math.floor(Math.random() * 1000000000 + 1);
+// var activeTabID = null;
+function initBrowserID() {
+   var storage = null;
+   try {
+      localStorage.setItem('test', 'test');
+      storage = localStorage;
+   } catch(e) {
+      try {
+         sessionStorage.setItem('test', 'test');
+         storage = sessionStorage;
+      } catch(e) {}
+   }
+   if(!storage) {
+      browserID = Math.floor(Math.random() * 1000000000);
+      return;
+   }
+
+   browserID = storage.getItem('browserID');
+   if(!browserID) {
+      browserID = Math.floor(Math.random() * 1000000000);
+   }
+   storage.setItem('browserID', browserID);
+
+   // window.addEventListener('storage', function(e) {
+   //    if(e.key == 'activeTabID') {
+   //       activeTabID = e.newValue;
+   //    }
+   // });
+   // storage.setItem('activeTabID', tabID);
+}
+initBrowserID();
+
 
 /**
  * The platform object as defined in the Bebras API specifications
@@ -1957,15 +2004,54 @@ window.validateRegistrationCode = function(teamMate) {
       }, "json");
 }
 
+window.cancelLogin = function() {
+   destroySession(true);
+}
+
+window.confirmContestants = function() {
+   $('#divConfirmContestants').hide();
+   loadContestData(contestID, contestFolder);
+}
+
+function checkBrowserID(data, callback) {
+   // Check that the browserID is the same
+   if(!data.browserID || data.browserID == browserID) {
+      callback();
+      return;
+   }
+
+   $('#mainNav').hide();
+   $('#divConfirmNewBrowser').show();
+
+   window.confirmNewBrowser = function() {
+      $.post(
+         "data.php",
+         {SID: SID, action: "updateBrowserID", browserID: browserID},
+         function() {
+            $('#divConfirmNewBrowser').hide();
+            callback();
+         },
+         "json"
+      );
+   }
+}
+
 window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, contestID) {
    initContestData(data, contestID);
    $("#login_link_to_home").hide();
    if (data.teamID !== undefined) { // The password of the team was provided directly
       $("#div" + curStep).hide();
-      // TODO TODO TODO it's here i need to change things
       teamID = data.teamID;
       teamPassword = groupCode;
-      loadContestData(contestID, contestFolder);
+      if(data.contestants !== undefined && data.contestants.length) {
+         // We have a list of contestants to display to the user to confirm
+         $('#divConfirmContestants').show();
+         for(var i = 0; i < data.contestants.length ; i++) {
+            $('#confirmContestantsList').append('<li>' + data.contestants[i].firstName + ' ' + data.contestants[i].lastName + '</li>');
+         }
+      } else {
+         loadContestData(contestID, contestFolder);
+      }
    } else {
       var throughPersonalPage = data.registrationData != undefined;
       if ((data.nbMinutesElapsed > data.groupsExpirationMinutes) &&
@@ -2166,50 +2252,51 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
                $("#" + curStep + "Result").html(t("invalid_code"));
             }
             return;
-         } else {
-          $("#submitParticipationCode").delay(250).slideUp(400);
          }
+         $("#submitParticipationCode").delay(250).slideUp(400);
          $('#mainNav').hide();
          $("#login_link_to_home").hide();
          $("#div" + curStep).hide();
 
-         childrenContests = data.childrenContests;
-         groupCheckedData = {
-            data: data,
-            curStep: curStep,
-            groupCode: groupCode,
-            getTeams: getTeams,
-            isPublic: data.isPublic
-         };
+         checkBrowserID(data, function() {
+            childrenContests = data.childrenContests;
+            groupCheckedData = {
+               data: data,
+               curStep: curStep,
+               groupCode: groupCode,
+               getTeams: getTeams,
+               isPublic: data.isPublic
+            };
 
 
-         if ((data.registrationData != undefined) && (!data.isOfficialContest)) {
-            window.showPersonalPage(data);
-            return;
-         }
-         doLogActivity = data.logActivity;
-         sendLastActivity = !!data.sendPings;
-         updateContestHeader(data);
-         startPing();
-         SrlModule.initMode(data.srlModule);
+            if ((data.registrationData != undefined) && (!data.isOfficialContest)) {
+               window.showPersonalPage(data);
+               return;
+            }
+            doLogActivity = data.logActivity;
+            sendLastActivity = !!data.sendPings;
+            updateContestHeader(data);
+            startPing();
+            SrlModule.initMode(data.srlModule);
 
-         groupMinCategory = data.minCategory;
-         groupMaxCategory = data.maxCategory;
-         groupLanguage = data.language;
-         
-         if (data.allContestsDone) {
-            $("#" + curStep).hide();
-            $("#divAllContestsDone").show();
-            return;
-         }
+            groupMinCategory = data.minCategory;
+            groupMaxCategory = data.maxCategory;
+            groupLanguage = data.language;
+            
+            if (data.allContestsDone) {
+               $("#" + curStep).hide();
+               $("#divAllContestsDone").show();
+               return;
+            }
 
-         if ((!getTeams) && (data.childrenContests != undefined) && (data.childrenContests.length != 0)) {
-            $("#" + curStep).hide();
-            $('#divAccessContest').show();
-            offerCategories(data);
-         } else {
-            groupWasChecked(data, curStep, groupCode, getTeams, data.isPublic);
-         }
+            if ((!getTeams) && (data.childrenContests != undefined) && (data.childrenContests.length != 0)) {
+               $("#" + curStep).hide();
+               $('#divAccessContest').show();
+               offerCategories(data);
+            } else {
+               groupWasChecked(data, curStep, groupCode, getTeams, data.isPublic);
+            }
+         });
       }
    };
    if(window.redirectToHTTPSIfError) {
@@ -2706,18 +2793,18 @@ function loadSession() {
       data: {SID: SID, action: 'loadSession'},
       dataType: 'json',
       success: function(data) {
-         // TODO TODO TODO : here it's where i go like either say ok or say that you need to confirm, also need to send the browserid in the request
          SID = data.SID;
          if (data.teamID) {
             if (!confirm(data.message)) { // t("restart_previous_contest") json not loaded yet!
                destroySession();
                return;
             }
-            teamID = data.teamID;
-            initContestData(data);
             $("#divCheckGroup").hide();
-            loadContestData(contestID, contestFolder);
-            return;
+            checkBrowserID(data, function() {
+               teamID = data.teamID;
+               initContestData(data);
+               loadContestData(contestID, contestFolder);
+            });
          }
       }
    };
@@ -2732,11 +2819,14 @@ function loadSession() {
    $.ajax(parameters);
 }
 
-function destroySession() {
+function destroySession(reloadAfter) {
    SID = null; // are we sure about that?
    $.post("data.php", {action: 'destroySession'},
       function(data) {
          SID = data.SID;
+         if(reloadAfter) {
+            window.location.reload();
+         }
       }, "json");
 }
 
@@ -3402,7 +3492,7 @@ function sendAnswers() {
    }
 
    var endpoint = sendAnswersTryAlternate ? "https://concours4.castor-informatique.fr/answer.php" : "answer.php";
-   var params = { SID: SID, "answers": answersToSend, teamID: teamID, teamPassword: teamPassword, sendLastActivity: sendLastActivity };
+   var params = { SID: SID, "answers": answersToSend, teamID: teamID, teamPassword: teamPassword, sendLastActivity: sendLastActivity, browserID: browserID };
    var startTime = Date.now();
    function answersError(msg, details) {
       var errorId = Math.floor(Math.random()*1000000000000);
@@ -3434,6 +3524,10 @@ function sendAnswers() {
          clearTimeout(sendAnswersTimeout);
          startPing();
          if (!data.success) {
+            if(data.browserIDChanged) {
+               browserIDChanged();
+               return;
+            }
             answersError('error from answer.php while sending answers', data.message);
             if (confirm(t("response_transmission_error_1") + " " + data.message + t("response_transmission_error_2"))) {
                failedSendingAnswers();

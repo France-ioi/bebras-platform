@@ -47,6 +47,22 @@ function handleAnswers($tinyOrm) {
       error_log('teamID '.$teamID.' sent answer with password '.$teamPassword.(count($rows) ? ' instead of '.$rows[0]['password'] : ' (no such team)'));
       exitWithJsonFailure("Requête invalide (password)");
    }
+
+   // Check browserID if needed
+   if($config->contestInterface->checkBrowserID && isset($_POST['browserID'])) {
+      if(!isset($db)) {
+         // Need to connect to mysql
+         $db = connect_pdo($config);
+      }
+      $stmt = $db->prepare("SELECT browserID FROM team WHERE ID = :teamID");
+      $stmt->execute(['teamID' => $teamID]);
+      $curBrowserID = $stmt->fetchColumn();
+      if($curBrowserID !== null && $curBrowserID != $_POST['browserID']) {
+         error_log('teamID '.$teamID.' sent answer with browserID '.$_POST['browserID'].' instead of '.$curBrowserID);
+         exitWithJsonFailure("Requête invalide (browserID)", ['browserIDChanged' => true]);
+      }
+   }
+
    $row = $rows[0];
    $answers = $_POST["answers"];
    $curTime = new DateTime(null, new DateTimeZone("UTC"));

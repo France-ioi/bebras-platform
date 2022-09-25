@@ -218,5 +218,9 @@
     "breadcrumb_language": "Langage",
     "breadcrumb_category": "Categorie",
     "breadcrumb_sequence": "Contenu",
-    "teammate": "Équipier"
+    "teammate": "Équipier",
+    "confirm_contestants_intro": "Vous allez commencer la participation de l'équipe suivante :",
+    "confirm_contestants_outro": "Ne continuez que si c'est bien vous.",
+    "confirm_new_browser_intro": "<p><b>Attention : cette participation est déjà en cours depuis un autre navigateur.</b></p><p>Si vous continuez, l'autre navigateur sera déconnecté. Des données non-enregistrées risquent d'être perdues.</p>",
+    "closed_new_browser": "<b>Cette participation a été continuée depuis un autre navigateur. Veuillez poursuivre sur cet autre navigateur.</b>"
 }

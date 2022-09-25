@@ -199,6 +199,17 @@ function handleStartTimer($db) {
    ));
 }
 
+function handleUpdateBrowserID($db) {
+   addBackendHint("ClientIP.loadOther:data");
+   $teamID = $_SESSION["teamID"];
+   $stmt = $db->prepare("UPDATE `team` SET `browserID` = :browserID WHERE `ID` = :teamID");
+   $stmt->execute(array("teamID" => $teamID, "browserID" => $_POST['browserID']));
+
+   exitWithJson((object)array(
+      "success" => true,
+   ));
+}
+
 function handleLoadContestData($db) {
    global $tinyOrm, $config;
    if (!isset($_SESSION["teamID"])) {
@@ -280,7 +291,7 @@ function handleCloseContest($db) {
 }
 
 function handleLoadSession() {
-   global $config;
+   global $config, $db;
    $sid = session_id();
    // If the session is new or closed, just return the SID.
    if (!isset($_SESSION["teamID"]) || isset($_SESSION["closed"])) {
@@ -297,7 +308,7 @@ function handleLoadSession() {
    if ($config->defaultLanguage == "en") {
       $message = "Would you like to continue the participation that was started?";
    }
-   exitWithJson(array(
+   $data = array(
       "success" => true,
       "teamID" => $_SESSION["teamID"],
       "message" => $message,
@@ -324,7 +335,13 @@ function handleLoadSession() {
       "logActivity" => $_SESSION["logActivity"],
       "srlModule" => $_SESSION["srlModule"],
       "sendPings" => $_SESSION["sendPings"],
-      "SID" => $sid));
+      "SID" => $sid);
+   if($config->contestInterface->checkBrowserID) {
+      $stmt = $db->prepare("SELECT browserID FROM team WHERE ID = :id");
+      $stmt->execute(['id' => $_SESSION['teamID']]);
+      $data["browserID"] = $stmt->fetchColumn();
+   }
+   exitWithJson($data);
 }
 
 function handleDestroySession() {
@@ -828,6 +845,10 @@ if ($action === "loadContestData") {
 
 if ($action == "startTimer") {
    handleStartTimer($db);
+}
+
+if ($action == "updateBrowserID") {
+   handleUpdateBrowserID($db);
 }
 
 if ($action === "getRemainingSeconds") {

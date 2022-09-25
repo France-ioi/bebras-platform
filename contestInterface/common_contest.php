@@ -23,7 +23,7 @@ function exitWithJson($json) {
 function exitWithJsonFailure($message, $extras = null) {
    $result = array("success" => false, "message" => $message);
    if ($extras != null) {
-      array_replace($result, $extras);
+      $result = array_replace($result, $extras);
    }
    global $backend_hints;
    global $failure_backend_hints;
@@ -92,7 +92,7 @@ function updateSessionWithContestInfos($row) {
 function commonLoginTeam($db, $password) {
    global $tinyOrm, $config;
    $password = trim($password);
-   $stmt = $db->prepare("SELECT `team`.`ID` as `teamID`, `group`.`ID` as `groupID`, IFNULL(`team`.`contestID`, `group`.`contestID`) as `contestID`, `group`.`isPublic`, `group`.`name`, `team`.`nbMinutes`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`groupsExpirationMinutes`, `contest`.`askParticipationCode`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`showTotalScore`, `contest`.`nextQuestionAuto`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, IFNULL(subContest.folder, `contest`.`folder`) as `folder`, `contest`.`name` as `contestName`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`allowPauses`, `contest`.`visibility`, `contest`.`headerImageURL`, `contest`.`headerHTML`, `contest`.`logActivity`, `contest`.`srlModule`, `contest`.`sendPings`, `group`.`schoolID`, `team`.`endTime` FROM `team` JOIN `group` ON (`team`.`groupID` = `group`.`ID`) JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) LEFT JOIN `contest` subContest ON subContest.ID = team.contestID WHERE `team`.`password` = ?");
+   $stmt = $db->prepare("SELECT `team`.`ID` as `teamID`, `group`.`ID` as `groupID`, IFNULL(`team`.`contestID`, `group`.`contestID`) as `contestID`, `group`.`isPublic`, `group`.`name`, `team`.`nbMinutes`, `team`.`browserID`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`groupsExpirationMinutes`, `contest`.`askParticipationCode`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`showTotalScore`, `contest`.`nextQuestionAuto`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, IFNULL(subContest.folder, `contest`.`folder`) as `folder`, `contest`.`name` as `contestName`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`allowPauses`, `contest`.`visibility`, `contest`.`headerImageURL`, `contest`.`headerHTML`, `contest`.`logActivity`, `contest`.`srlModule`, `contest`.`sendPings`, `group`.`schoolID`, `team`.`createTime`, `team`.`startTime`, `team`.`endTime` FROM `team` JOIN `group` ON (`team`.`groupID` = `group`.`ID`) JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) LEFT JOIN `contest` subContest ON subContest.ID = team.contestID WHERE `team`.`password` = ?");
    $stmt->execute(array($password));
    $row = $stmt->fetchObject();
    if (!$row) {
@@ -125,7 +125,7 @@ function commonLoginTeam($db, $password) {
    $_SESSION["schoolID"] = $row->schoolID;
    $_SESSION["isPublic"] = intval($row->isPublic);
 
-   return (object)array(
+   $data = [
       "success" => true,
       "name" => $_SESSION["name"],
       "teamID" => $_SESSION["teamID"],
@@ -153,7 +153,28 @@ function commonLoginTeam($db, $password) {
       "logActivity" => $_SESSION["logActivity"],
       "srlModule" => $_SESSION["srlModule"],
       "sendPings" => $_SESSION["sendPings"],
-      );
+      "browserID" => $row->browserID,
+   ];
+
+   // Team was created but not started, send contestant information to be checked
+   if($config->contestInterface->confirmContestants && $row->teamID !== null && $row->startTime === null) {
+      $stmt = $db->prepare("SELECT lastName, firstName FROM contestant WHERE teamID = :teamID");
+      $stmt->execute(['teamID' => $_SESSION["teamID"]]);
+      $contestants = $stmt->fetchAll();
+      $nonAnonymous = true;
+      foreach($contestants as $contestant) {
+         if($contestant['lastName'] != 'Anonymous' || $contestant['firstName'] != 'Anonymous') {
+            $nonAnonymous = true;
+            break;
+         }
+      }
+      // Only send if there is at least one contestant whose name isn't Anonymous Anonymous
+      if($nonAnonymous) {
+         $data['contestants'] = $contestants;
+      }
+   }
+
+   return (object)$data;
 }
 
 function reconnectSession($db) {
