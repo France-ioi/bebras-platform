@@ -366,6 +366,7 @@ function browserIDChanged() {
 }
 
 function doPing() {
+	return;
    // Pings then starts the timer again
    // Errors are managed by the global jQuery error handler
    $.post('ping.php', { teamID: teamID, teamPassword: teamPassword, browserID: browserID }).success(function(res) {
