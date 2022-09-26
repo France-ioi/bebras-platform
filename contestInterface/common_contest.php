@@ -86,7 +86,7 @@ function updateSessionWithContestInfos($row) {
    $_SESSION["headerHTML"] = $row->headerHTML;
    $_SESSION["logActivity"] = intval($row->logActivity);
    $_SESSION["srlModule"] = $row->srlModule;
-   $_SESSION["sendPings"] = $row->sendPings;
+   $_SESSION["sendPings"] = intval($row->sendPings);
 }
 
 function commonLoginTeam($db, $password) {

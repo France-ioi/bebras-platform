@@ -27,7 +27,7 @@ function handlePing() {
       $db = connect_pdo($config);
    }
 
-   if($config->contestInterface->checkBrowserID) {
+   if($config->contestInterface->checkBrowserID && isset($_POST['browserID'])) {
       $stmt = $db->prepare("SELECT browserID FROM team WHERE ID = :teamID");
       $stmt->execute(['teamID' => $teamID]);
       $curBrowserID = $stmt->fetchColumn();
@@ -38,13 +38,15 @@ function handlePing() {
    }
 
    // Update lastActivityTime and browserID
+   $params = ['id' => $teamID, 'password' => $teamPassword];
    $query  = "UPDATE team SET lastPingTime = UTC_TIMESTAMP()";
-   if($config->contestInterface->checkBrowserID) {
+   if($config->contestInterface->checkBrowserID && isset($_POST['browserID'])) {
       $query .= ", browserID = IFNULL(browserId, :browserID)";
+      $params['browserID'] = $_POST['browserID'];
    }
    $query .= " WHERE ID = :id AND password = :password;";
    $stmt = $db->prepare($query);
-   $stmt->execute(['id' => $teamID, 'password' => $teamPassword, 'browserID' => $_POST['browserID']]);
+   $stmt->execute($params);
 
    addBackendHint("ClientIP.ping:pass");
    addBackendHint(sprintf("Team(%s):ping", escapeHttpValue($teamID)));

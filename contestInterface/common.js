@@ -366,8 +366,7 @@ function browserIDChanged() {
 }
 
 function doPing() {
-	return;
-   // Pings then starts the timer again
+	// Pings then starts the timer again
    // Errors are managed by the global jQuery error handler
    $.post('ping.php', { teamID: teamID, teamPassword: teamPassword, browserID: browserID }).success(function(res) {
       if(res.browserIDChanged) {
@@ -389,7 +388,7 @@ function startPing(isLoop) {
    if (pingTimeout) {
       clearTimeout(pingTimeout);
    }
-   pingTimeout = setTimeout(doPing, 5000);
+   pingTimeout = setTimeout(doPing, 60000);
 }
 
 function stopPing() {
@@ -2275,7 +2274,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
                return;
             }
             doLogActivity = data.logActivity;
-            sendLastActivity = !!data.sendPings;
+            sendLastActivity = data.sendPings;
             updateContestHeader(data);
             startPing();
             SrlModule.initMode(data.srlModule);
