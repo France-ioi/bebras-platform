@@ -554,7 +554,8 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
 </div>
 
 <div id="divConfirmNewBrowser" style="display: none;">
-   <div data-i18n="[html]confirm_new_browser_intro"></div>
+   <div id="divConfirmNewBrowserIntro" data-i18n="[html]confirm_new_browser_intro"></div>
+   <div id="divConfirmNewTabIntro" data-i18n="[html]confirm_new_tab_intro" style="display: none;"></div>
    <p>
       <button type="button" onclick="confirmNewBrowser()" class="btn btn-primary" data-i18n="login_start_contest"></button>
       <button type="button" onclick="cancelLogin()" class="btn btn-default" data-i18n="error_close"></button>
@@ -563,6 +564,10 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
 
 <div id="divClosedNewBrowser" style="display: none;">
    <div data-i18n="[html]closed_new_browser"></div>
+</div>
+
+<div id="divClosedNewTab" style="display: none;">
+   <div data-i18n="[html]closed_new_tab"></div>
 </div>
 
 <div id="divStartContest" style="display:none">
