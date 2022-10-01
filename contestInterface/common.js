@@ -357,12 +357,20 @@ window.logTaskActivity = function(details) {
    logActivity(null, null, 'extra', details, 0);
 }
 
-function browserIDChanged() {
+var browserIDStopping = false;
+function browserIDChanged(isTab) {
    // BrowserID changed, current participation cannot proceed
+   if(browserIDStopping) { return; }
+   browserIDStopping = true;
    stopPing();
+   TimeManager.stopNow();
    hideQuestionIframe();
    $('#divQuestions').hide();
-   $('#divClosedNewBrowser').show();
+   if(isTab) {
+      $('#divClosedNewTab').show();
+   } else {
+      $('#divClosedNewBrowser').show();
+   }
 }
 
 function doPing() {
@@ -398,10 +406,7 @@ function stopPing() {
    pingTimeout = null;
 }
 
-var browserID = null;
-// var tabID = Math.floor(Math.random() * 1000000000 + 1);
-// var activeTabID = null;
-function initBrowserID() {
+function getStorage() {
    var storage = null;
    try {
       localStorage.setItem('test', 'test');
@@ -412,6 +417,13 @@ function initBrowserID() {
          storage = sessionStorage;
       } catch(e) {}
    }
+   return storage;
+}
+
+var browserID = null;
+var tabID = Math.floor(Math.random() * 1000000000 + 1);
+function initBrowserID() {
+   var storage = getStorage();
    if(!storage) {
       browserID = Math.floor(Math.random() * 1000000000);
       return;
@@ -422,15 +434,28 @@ function initBrowserID() {
       browserID = Math.floor(Math.random() * 1000000000);
    }
    storage.setItem('browserID', browserID);
-
-   // window.addEventListener('storage', function(e) {
-   //    if(e.key == 'activeTabID') {
-   //       activeTabID = e.newValue;
-   //    }
-   // });
-   // storage.setItem('activeTabID', tabID);
 }
 initBrowserID();
+
+function setSelfAsActiveTab() {
+   var storage = getStorage();
+   if(!storage) { return; }
+   window.addEventListener('storage', function(e) {
+      if(e.key == 'activeTabID') {
+         var activeTabID = e.newValue;
+         // Always start sending answers when that happens, to make sure a possible new tab gets all the answers
+         sendAnswers();
+         if(activeTabID == 'null') {
+            // Another tab is checking for activity, write again our own ID
+            storage.setItem('activeTabID', tabID);
+         } else {
+            // Another tab is becoming active, end this one
+            browserIDChanged(true);
+         }
+      }
+   });
+   storage.setItem('activeTabID', tabID);
+}
 
 
 /**
@@ -2014,12 +2039,38 @@ window.confirmContestants = function() {
 }
 
 function checkBrowserID(data, callback) {
+   function cb() {
+      setSelfAsActiveTab();
+      callback();
+   }
    // Check that the browserID is the same
    if(!data.browserID || data.browserID == browserID) {
-      callback();
+      // BrowserID is fine
+      var storage = getStorage();
+      if(storage) {
+         // Check for other active tabs
+         storage.setItem('activeTabID', 'null');
+         setTimeout(function() {
+            if(storage.getItem('activeTabID') != 'null') {
+               // Another tab is active
+               askConfirmNewBrowser(cb, true);
+            } else {
+               cb();
+            }
+         }, 10);
+      } else {
+         cb();
+      }
       return;
    }
+   askConfirmNewBrowser(cb);
+}
 
+function askConfirmNewBrowser(callback, showTabMessage) {
+   if(showTabMessage) {
+      $('#divConfirmNewBrowserIntro').hide();
+      $('#divConfirmNewTabIntro').show();
+   }
    $('#mainNav').hide();
    $('#divConfirmNewBrowser').show();
 
