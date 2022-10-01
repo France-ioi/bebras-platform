@@ -48,6 +48,9 @@ function handleAnswers($tinyOrm) {
       exitWithJsonFailure("Requête invalide (password)");
    }
 
+   $teamUpdates = [];
+   $teamUpdatesParams = ['id' => $teamID, 'password' => $teamPassword];
+
    // Check browserID if needed
    if($config->contestInterface->checkBrowserID && isset($_POST['browserID'])) {
       if(!isset($db)) {
@@ -60,6 +63,10 @@ function handleAnswers($tinyOrm) {
       if($curBrowserID !== null && $curBrowserID != $_POST['browserID']) {
          error_log('teamID '.$teamID.' sent answer with browserID '.$_POST['browserID'].' instead of '.$curBrowserID);
          exitWithJsonFailure("Requête invalide (browserID)", ['browserIDChanged' => true]);
+      }
+      if($curBrowserID === null) {
+         $teamUpdates[] = 'browserID = :browserID';
+         $teamUpdatesParams['browserID'] = $_POST['browserID'];
       }
    }
 
@@ -92,7 +99,6 @@ function handleAnswers($tinyOrm) {
    }
 
    // Update lastAnswerTime and finalAnswersTime if required
-   $teamUpdates = [];
    if (isset($_POST['sendLastActivity']) && $_POST['sendLastActivity']) {
       $teamUpdates[] = "lastPingTime = UTC_TIMESTAMP()";
       $teamUpdates[] = "lastAnswerTime = UTC_TIMESTAMP()";
@@ -106,7 +112,7 @@ function handleAnswers($tinyOrm) {
          $db = connect_pdo($config);
       }
       $stmt = $db->prepare("UPDATE team SET " . implode(', ', $teamUpdates) . " WHERE ID = :id AND password = :password;");
-      $stmt->execute(['id' => $teamID, 'password' => $teamPassword]);
+      $stmt->execute($teamUpdatesParams);
    }
 
    addBackendHint("ClientIP.answer:pass");
