@@ -809,6 +809,20 @@ function handleGetConfig() {
    exitWithJson(["success" => true, "config" => $clientConfig]);
 }
 
+function handleSAChangeContest($db) {
+   // Temporary fix to allow participants to change contests
+   global $config;
+   if(!isset($_SESSION['teamPassword'])) {
+      exitWithJson((object)array("success" => false, "message" => 'missing_session'));
+   }
+   $oldGroupID = '850310155603756873';
+   $newGroupID = '158733900281394472';
+   $newContestID = '838399132875151978';
+   $stmt = $db->prepare("UPDATE team SET groupID = :newGroupID, contestID = :newContestID WHERE password = :teamPassword AND groupID = :oldGroupID");
+   $stmt->execute(['teamPassword' => $_SESSION['teamPassword'], 'newContestID' => $newContestID, 'oldGroupID' => $oldGroupID, 'newGroupID' => $newGroupID]);
+   handleCheckTeamPassword($db, $_SESSION['teamPassword']);
+}
+
 if (!isset($_POST["action"])) {
    addFailureBackendHint("ClientIP.loadOther:fail");
    exitWithJsonFailure("Aucune action fournie");
@@ -869,6 +883,10 @@ if ($action === 'getConfig') {
 
 if ($action === 'checkRegistration') {
    handleCheckRegistrationCode($db);
+}
+
+if ($action === 'saChangeContest') {
+   handleSAChangeContest($db);
 }
 
 exitWithJsonFailure("Action inconnue");

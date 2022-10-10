@@ -18,6 +18,8 @@ var scratchToBlocklyContestID = {
   "214570189714244964": "285545191426515178" // 2020.3 green
 };
 
+// ID for saudi-arabia contest selection
+var saudiArabiaContestID = '65812334681483681';
 
 var contestID;
 var contestFolder;
@@ -2038,6 +2040,18 @@ window.confirmContestants = function() {
    loadContestData(contestID, contestFolder);
 }
 
+window.confirmContestantsSA = function(changeContest) {
+   if(changeContest) {
+      $('#divConfirmContestants').hide();
+      $.post("data.php", {SID: SID, action: "saChangeContest"}, function(data) {
+         initContestData(data, null);
+         loadContestData(contestID, contestFolder);
+      }, "json");
+   } else {
+      window.confirmContestants();
+   }
+}
+
 function checkBrowserID(data, callback) {
    function cb() {
       setSelfAsActiveTab();
@@ -2099,6 +2113,12 @@ window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, 
          $('#divConfirmContestants').show();
          for(var i = 0; i < data.contestants.length ; i++) {
             $('#confirmContestantsList').append('<li>' + data.contestants[i].firstName + ' ' + data.contestants[i].lastName + '</li>');
+         }
+         // Temporary fix for SA
+         if(data.contestID == saudiArabiaContestID) {
+            $('#divConfirmContestants').addClass('confirmContestantsSA');
+         } else {
+            $('#divConfirmContestants').removeClass('confirmContestantsSA');
          }
       } else {
          loadContestData(contestID, contestFolder);

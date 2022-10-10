@@ -1255,3 +1255,9 @@ screen and (max-width: 1024px) and (orientation: landscape) {
   vertical-align: middle;
   line-height: 96vh;
 }
+#divConfirmContestants.confirmContestantsSA .normalConfirmContestants {
+  display: none;
+}
+#divConfirmContestants.confirmContestantsSA .saConfirmContestants {
+  display: block !important;
+}

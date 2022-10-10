@@ -547,8 +547,13 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
    <ul id="confirmContestantsList">
    </ul>
    <div data-i18n="[html]confirm_contestants_outro"></div>
-   <p>
+   <p class="normalConfirmContestants">
       <button type="button" onclick="confirmContestants()" class="btn btn-primary" data-i18n="login_start_contest"></button>
+      <button type="button" onclick="cancelLogin()" class="btn btn-default" data-i18n="error_close"></button>
+   </p>
+   <p class="saConfirmContestants" style="display: none;">
+      <button type="button" onclick="confirmContestantsSA(false)" class="btn btn-primary">تسابق باللغة العربية</button>
+      <button type="button" onclick="confirmContestantsSA(true)" class="btn btn-primary">Compete in English</button>
       <button type="button" onclick="cancelLogin()" class="btn btn-default" data-i18n="error_close"></button>
    </p>
 </div>
