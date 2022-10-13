@@ -364,6 +364,7 @@ function browserIDChanged(isTab) {
    // BrowserID changed, current participation cannot proceed
    if(browserIDStopping) { return; }
    browserIDStopping = true;
+   isActiveTab = false;
    stopPing();
    TimeManager.stopNow();
    hideQuestionIframe();
@@ -439,21 +440,22 @@ function initBrowserID() {
 }
 initBrowserID();
 
+
+var isActiveTab = false;
 function setSelfAsActiveTab() {
    var storage = getStorage();
    if(!storage) { return; }
+   isActiveTab = true;
    window.addEventListener('storage', function(e) {
+      if(!isActiveTab) { return; }
+      // Always start sending answers when that happens, to make sure a possible new tab gets all the answers
+      sendAnswers();
       if(e.key == 'activeTabID') {
-         var activeTabID = e.newValue;
-         // Always start sending answers when that happens, to make sure a possible new tab gets all the answers
-         sendAnswers();
-         if(activeTabID == 'null') {
-            // Another tab is checking for activity, write again our own ID
-            storage.setItem('activeTabID', tabID);
-         } else {
-            // Another tab is becoming active, end this one
-            browserIDChanged(true);
-         }
+         // Another tab is becoming active, end this one
+         browserIDChanged(true);
+      } else if(e.key == 'activeTabCheck') {
+         // Another tab is checking if this one is active, answer
+         storage.setItem('activeTabCheck', tabID);
       }
    });
    storage.setItem('activeTabID', tabID);
@@ -2063,15 +2065,15 @@ function checkBrowserID(data, callback) {
       var storage = getStorage();
       if(storage) {
          // Check for other active tabs
-         storage.setItem('activeTabID', 'null');
+         storage.setItem('activeTabCheck', 'null');
          setTimeout(function() {
-            if(storage.getItem('activeTabID') != 'null') {
+            if(storage.getItem('activeTabCheck') != 'null') {
                // Another tab is active
                askConfirmNewBrowser(cb, true);
             } else {
                cb();
             }
-         }, 10);
+         }, 100);
       } else {
          cb();
       }
@@ -3027,6 +3029,7 @@ function finalCloseContest(message) {
    $.post("data.php", {SID: SID, action: "closeContest", teamID: teamID, teamPassword: teamPassword, teamScore: ffTeamScore, finalAnswersSent: !hasAnswersToSend()},
       function() {}, "json"
    ).always(function() {
+      isActiveTab = false;
       window.onbeforeunload = function(){};
       if (!contestShowSolutions) {
          $("#divClosedPleaseWait").hide();
