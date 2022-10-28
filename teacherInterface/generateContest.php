@@ -299,6 +299,9 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
       $bebrasJsDstFile = $curKey.'/bebras.js';
       contestPutContents($bebrasJsDstFile, $bebrasJsContent);
 
+      // Convert images to base64
+      $task->convertImagesBase64();
+
       $curImages = $task->copyImages(PEMTaskCompiler::TASK, $curKey, 'contestCopyFile');
       $images = array_merge($images, Bebras::addAbsoluteStaticPath($curImages, $contestFolder.'/'.$curKey));
       $curImagesSols = $task->copyImages(PEMTaskCompiler::SOLUTION, $curKey, 'contestCopyFileSols');
@@ -329,10 +332,11 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
       // Javascript grader
       $strGraders .= '<div id="javascript-grader-'.$curKey.'" data-content="'.htmlspecialchars($task->getGrader(), ENT_COMPAT, 'UTF-8').'"></div>'."\r\n";
 
-      $questionRelatedJs = Bebras::moveQuestionImagesSrc($questionJs, $curKey, $contestFolder);
-      $solutionRelatedJs = Bebras::moveQuestionImagesSrc($solutionJs, $curKey, $contestFolder);
-      $cssQuestions .= Bebras::moveQuestionImagesSrc($questionCss, $curKey, $contestFolder);
-      $cssSolutions .= Bebras::moveQuestionImagesSrc($solutionCss, $curKey, $contestFolder);
+      $absolutePath = (Bebras::getAbsoluteStaticPath()).'/contests/'.$contestFolder.'/'.$curKey;
+      $questionRelatedJs = $task->moveQuestionImagesSrc($absolutePath, $questionJs);
+      $solutionRelatedJs = $task->moveQuestionImagesSrc($absolutePath, $solutionJs);
+      $cssQuestions .= $task->moveQuestionImagesSrc($absolutePath, $questionCss);
+      $cssSolutions .= $task->moveQuestionImagesSrc($absolutePath, $solutionCss);
 
       // Content
       $questionBody = $task->getContent(PEMTaskCompiler::TASK);
@@ -343,7 +347,7 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
 
       $strQuestion .= '<div id="question-'.$curKey.'" class="question"><div id="task" class="taskView">'."\r\n"
               .'<style>'.$cssQuestions.'</style>'
-              .Bebras::moveQuestionImagesSrc($questionBody, $curKey, $contestFolder)
+              .$task->moveQuestionImagesSrc($absolutePath, $questionBody)
               .'</div></div>'."\r\n";
 
       $strQuestion .= '<div id="javascript-'.$curKey.'" data-content="'.htmlspecialchars($questionRelatedJs, ENT_COMPAT, 'UTF-8').'"></div>'."\r\n";
@@ -356,7 +360,7 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
       }
       $strSolutions .= '<div id="solution-'.$curKey.'" class="solution">'."\r\n"
               .'<style>'.$cssSolutions.'</style>'
-              .Bebras::moveQuestionImagesSrc($questionSolution, $curKey, $contestFolder)
+              .$task->moveQuestionImagesSrc($absolutePath, $questionSolution)
               .'</div>'."\r\n"
               .'<div id="javascript-solution-'.$curKey.'" data-content="'.htmlspecialchars($solutionRelatedJs, ENT_COMPAT, 'UTF-8').'"></div>'."\r\n";
       $strQuestions.= $strQuestion;
