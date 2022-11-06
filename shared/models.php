@@ -476,7 +476,7 @@ $viewsModels = array(
       "adminOnly" => false,
       "joins" => array(
          "group" => array("srcTable" => "team", "srcField" => "groupID", "dstField" => "ID"),
-         "user_user" => array("type" => "LEFT", "srcTable" => "group", "on" => "(`[PREFIX]user_user`.`targetUserID` = :userID and `group`.`userID` = `user_user`.`userID`)"),
+         "userIDs" => array("sql" => "(SELECT userID FROM user_user WHERE user_user.targetUserID = '29230267012781870' AND user_user.accessType <> 'none' UNION SELECT '29230267012781870')"),
          "contestant" => array("srcTable" => "team", "srcField" => "ID", "dstField" => "teamID")
       ),
       "fields" => array(
@@ -493,7 +493,7 @@ $viewsModels = array(
       "filters" => array(
          "schoolID" => array("joins" => array("group"), "condition" => "`[PREFIX]group`.`schoolID` = :schoolID"),
          "groupField" => $fieldGroupFilterTeam,
-         "userID" => array("joins" => array("user_user"), "condition" => "(`group`.`userID` = :userID OR `[PREFIX]user_user`.`accessType` <> 'none')"),
+         "userID" => array("joins" => array("group", "userIDs"), "condition" => "`group`.`userID` = `[PREFIX]userIDs`.`userID`"),
          "contestants" => array(
             "joins" => array("contestant"),
             "condition" => "concat(`[PREFIX]contestant`.`firstName`,' ',`[PREFIX]contestant`.`lastName`) LIKE :contestants")
