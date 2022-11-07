@@ -49,6 +49,7 @@ class tinyOrm {
       if ($config->db->use == 'dynamoDB') {
          $this->marshaler = new Marshaler();
       }
+      $this->ttl = $config->db->dynamoDBTTL ? time() + $config->db->dynamoDBTTL : null;
    }
    private $data_types;
    private function getRandomID() {
@@ -122,9 +123,13 @@ class tinyOrm {
    
    private function insertDynamoDB($table, $fields, $options) {
       $fields = $this->normalizeFields($table, $fields, 'dynamoDB');
+      $item = $this->formatAttributes($fields);
+      if($this->ttl) {
+         $item['ttl'] = ['N' => strval($this->ttl)];
+      }
       $query = array(
          'TableName' => $this->ddb_prefix . $table,
-         'Item' => $this->formatAttributes($fields),
+         'Item' => $item,
          'ReturnConsumedCapacity' => 'TOTAL'
       );
       $res = $this->dynamoDB->putItem($query);
@@ -150,6 +155,9 @@ class tinyOrm {
          $i = $i + 1;
          $itemRequest = $this->normalizeFields($table, $item, 'dynamoDB');
          $itemRequest = $this->formatAttributes($itemRequest);
+         if($this->ttl) {
+            $itemRequest['ttl'] = ['N' => strval($this->ttl)];
+         }
          $request['RequestItems'][$this->ddb_prefix . $table][] = array('PutRequest' => array('Item' => $itemRequest));
       }
       return $this->dynamoDB->batchWriteItem($request);
@@ -349,6 +357,9 @@ class tinyOrm {
          $type = ($type == 'int') ? 'N' : 'S';
          $value = ($type == 'N') ? new Aws\DynamoDb\NumberValue($value) : $value;
          $request['AttributeUpdates'][$field]['Value'] = array($type => $value);
+      }
+      if($this->ttl) {
+         $request['AttributeUpdates']['ttl'] = ['Action' => 'PUT', 'Value' => ['N' => strval($this->ttl)]];
       }
       try {
          $res = $this->dynamoDB->updateItem($request);

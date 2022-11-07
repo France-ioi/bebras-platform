@@ -20,6 +20,7 @@ $config->db = (object) array();
 $config->db->use = 'mysql';
 $config->db->dynamoSessions = false;
 $config->db->dynamoDBPrefix = ''; // prefix for team and team_question
+$config->db->dynamoDBTTL = null; // TTL in seconds
 $config->db->testMode = false;
 
 // MySQL
