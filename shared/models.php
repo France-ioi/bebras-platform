@@ -476,7 +476,7 @@ $viewsModels = array(
       "adminOnly" => false,
       "joins" => array(
          "group" => array("srcTable" => "team", "srcField" => "groupID", "dstField" => "ID"),
-         "userIDs" => array("sql" => "(SELECT userID FROM user_user WHERE user_user.targetUserID = '29230267012781870' AND user_user.accessType <> 'none' UNION SELECT '29230267012781870')"),
+         "userIDs" => array("sql" => "(SELECT userID FROM user_user WHERE user_user.targetUserID = :userID AND user_user.accessType <> 'none' UNION SELECT :userID)"),
          "contestant" => array("srcTable" => "team", "srcField" => "ID", "dstField" => "teamID")
       ),
       "fields" => array(
