@@ -682,6 +682,8 @@ var platform = {
          logActivity(null, null, 'extra', data[1], 0);
       } else if(data[0] == 'srl') {
          SrlModule.taskLog(data[1], success);
+      } else if(data[0] == 'error') {
+         logError.apply(null, data[1]);
       }
    }
 };
