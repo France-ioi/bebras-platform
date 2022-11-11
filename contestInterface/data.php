@@ -814,15 +814,22 @@ function handleGetConfig() {
 
 function handleSAChangeContest($db) {
    // Temporary fix to allow participants to change contests
-   global $config;
+   global $config, $tinyOrm;
    if(!isset($_SESSION['teamPassword'])) {
       exitWithJson((object)array("success" => false, "message" => 'missing_session'));
    }
-   $oldGroupID = '850310155603756873';
-   $newGroupID = '158733900281394472';
-   $newContestID = '838399132875151978';
+   $oldGroupID = '239572853327649918';
+   $newGroupID = '509265656747441449';
+   $newContestID = '509265656747441449';
    $stmt = $db->prepare("UPDATE team SET groupID = :newGroupID, contestID = :newContestID WHERE password = :teamPassword AND groupID = :oldGroupID");
    $stmt->execute(['teamPassword' => $_SESSION['teamPassword'], 'newContestID' => $newContestID, 'oldGroupID' => $oldGroupID, 'newGroupID' => $newGroupID]);
+   $teamID = $_SESSION['teamID'];
+   try {
+      $tinyOrm->update('team', array('groupID' => $newGroupID), array('ID' => $teamID));
+   } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
+      error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
+      error_log('DynamoDB error updating team for teamID: '.$teamID);
+   }
    handleCheckTeamPassword($db, $_SESSION['teamPassword']);
 }
 

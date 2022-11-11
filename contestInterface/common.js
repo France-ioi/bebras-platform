@@ -19,7 +19,7 @@ var scratchToBlocklyContestID = {
 };
 
 // ID for saudi-arabia contest selection
-var saudiArabiaContestID = '65812334681483681';
+var saudiArabiaContestID = '239572853327649918';
 
 var contestID;
 var contestFolder;

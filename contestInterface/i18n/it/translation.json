@@ -213,5 +213,6 @@
     "semifinal_comment": "",
     "breadcrumb_language": "Linguaggio:",
     "breadcrumb_category": "Categorie:",
-    "breadcrumb_sequence": "Contenuto:"
+    "breadcrumb_sequence": "Contenuto:",
+    "error_contest_closed": "The contest associated with your participation is currently closed."
 }

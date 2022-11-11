@@ -114,7 +114,7 @@ function commonLoginTeam($db, $password) {
       }
    }
    if ($row->open == "Closed") {
-      return (object)array("success" => false, "message" => "Le concours lié à votre participation est actuellement fermé. Il réouvrira bientôt.");
+      return (object)array("success" => false, "message" => "error_contest_closed");
    }
    updateSessionWithContestInfos($row);
    $_SESSION["teamID"] = $row->teamID;
