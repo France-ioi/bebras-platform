@@ -224,5 +224,6 @@
     "confirm_new_browser_intro": "<p><b>Attention : cette participation est déjà en cours depuis un autre navigateur.</b></p><p>Si vous continuez, l'autre navigateur sera déconnecté. Des données non-enregistrées risquent d'être perdues.</p>",
     "confirm_new_tab_intro": "<p><b>Attention : vous participez déjà à une activité depuis un autre onglet de ce navigateur.</b></p><p>Si vous continuez, l'autre onglet sera déconnecté. Des données non-enregistrées risquent d'être perdues.</p>",
     "closed_new_browser": "<b>Cette participation a été continuée depuis un autre navigateur. Veuillez poursuivre sur cet autre navigateur.</b>",
-    "closed_new_tab": "<b>Vous participez à une activité depuis un autre onglet de ce navigateur. Veuillez poursuivre sur cet autre onglet.</b>"
+    "closed_new_tab": "<b>Vous participez à une activité depuis un autre onglet de ce navigateur. Veuillez poursuivre sur cet autre onglet.</b>",
+    "error_contest_closed": "Le concours lié à votre participation est actuellement fermé."
 }

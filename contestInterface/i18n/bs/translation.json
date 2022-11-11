@@ -140,5 +140,6 @@
     "breadcrumb_language": "Language",
     "breadcrumb_category": "Category",
     "breadcrumb_sequence": "Content",
-    "teammate": "Teammate"
+    "teammate": "Teammate",
+    "error_contest_closed": "The contest associated with your participation is currently closed."
 }

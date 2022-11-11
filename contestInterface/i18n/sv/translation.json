@@ -204,5 +204,6 @@
     "category_grades_all_description": "<p>Uppgifter från alla årskurser blandat</p>",
     "breadcrumb_language": "Language",
     "breadcrumb_category": "Category",
-    "breadcrumb_sequence": "Content"
+    "breadcrumb_sequence": "Content",
+    "error_contest_closed": "The contest associated with your participation is currently closed."
 }
