@@ -824,11 +824,17 @@ function handleSAChangeContest($db) {
    $stmt = $db->prepare("UPDATE team SET groupID = :newGroupID, contestID = :newContestID WHERE password = :teamPassword AND groupID = :oldGroupID");
    $stmt->execute(['teamPassword' => $_SESSION['teamPassword'], 'newContestID' => $newContestID, 'oldGroupID' => $oldGroupID, 'newGroupID' => $newGroupID]);
    $teamID = $_SESSION['teamID'];
-   try {
-      $tinyOrm->update('team', array('groupID' => $newGroupID), array('ID' => $teamID));
-   } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
-      error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
-      error_log('DynamoDB error updating team for teamID: '.$teamID);
+   $stmt = $db->prepare("SELECT ID, groupID, nbMinutes, password, startTime FROM team WHERE ID = :teamID");
+   $stmt->execute(['teamID' => $teamID]);
+   $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+   if (count($rows) == 1) {
+      try {
+         $row = $rows[0];
+         $tinyOrm->insert('team', $row, []);
+      } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
+         error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
+         error_log('DynamoDB error updating team for teamID: '.$teamID);
+      }
    }
    handleCheckTeamPassword($db, $_SESSION['teamPassword']);
 }
