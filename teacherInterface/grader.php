@@ -78,6 +78,9 @@ if (!$row) {
 $questionID = $row->questionID;
 
 $teamQuestionTable = getTeamQuestionTableForGrading();
+if(isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'] && isset($_REQUEST['database']) && $_REQUEST['database']) {
+   $teamQuestionTable = $_REQUEST['database'];
+}
 $teamQuestions = array();
 $checkStatus = "none";
 if ($onlyMarked) {
@@ -92,13 +95,9 @@ if (!$groupID) {
 	   'WHERE `contest_question`.`contestID` = :contestID1 AND `group`.`contestID` = :contestID2 '.
 	   'AND `'.$teamQuestionTable.'`.`questionID` = :questionID '.
 	   'AND `'.$teamQuestionTable.'`.`score` IS NULL '.
-      'AND `'.$teamQuestionTable.'`.`checkStatus` = \''.$checkStatus.'\' LIMIT :limit';
+      'AND `'.$teamQuestionTable.'`.`checkStatus` = \''.$checkStatus.'\' LIMIT '.intval($limit);
    $stmt = $db->prepare($query);
-   $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT); 
-   $stmt->bindValue(':contestID1', $contestID); 
-   $stmt->bindValue(':contestID2', $contestID); 
-   $stmt->bindValue(':questionID', $questionID); 
-   $stmt->execute();
+   $stmt->execute(['contestID1' => $contestID, 'contestID2' => $contestID, 'questionID' => $questionID]);
    while ($teamQuestion = $stmt->fetchObject()) {
       $teamQuestions[] = array(
           'questionID' => $teamQuestion->questionID,
