@@ -820,6 +820,12 @@ function handleSAChangeContest($db) {
    $newContestID = '509265656747441449';
    $stmt = $db->prepare("UPDATE team SET groupID = :newGroupID, contestID = :newContestID WHERE password = :teamPassword AND groupID = :oldGroupID");
    $stmt->execute(['teamPassword' => $_SESSION['teamPassword'], 'newContestID' => $newContestID, 'oldGroupID' => $oldGroupID, 'newGroupID' => $newGroupID]);
+   try {
+      $tinyOrm->update('team', array('groupID' => $newGroupID), array('ID' => $_SESSION['teamID']));
+   } catch (Aws\DynamoDb\Exception\DynamoDbException $e) {
+      error_log($e->getAwsErrorCode() . " - " . $e->getAwsErrorType());
+      error_log('DynamoDB error updating team for teamID: '.$teamID);
+   }
    handleCheckTeamPassword($db, $_SESSION['teamPassword']);
 }
 
