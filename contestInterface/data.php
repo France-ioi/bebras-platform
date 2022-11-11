@@ -308,6 +308,9 @@ function handleLoadSession() {
    if ($config->defaultLanguage == "en") {
       $message = "Would you like to continue the participation that was started?";
    }
+   if ($config->defaultLanguage == "ar") {
+	   $message = "هل ترغب في استكمال المسابقة التي بدأتها؟";
+   }
    $data = array(
       "success" => true,
       "teamID" => $_SESSION["teamID"],
