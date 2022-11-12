@@ -565,7 +565,13 @@ if ($action == "markAboveMinScore") {
 
 
 echo "<h3><a href='".$startUrl."&action=gradeContest'>Recompute scores</a></h3>";
+echo "<p>Add &db=db_name to the URL to use another database</p>";
 if ($action == "gradeContest") {
+   if (isset($_GET["db"])) {
+      $db = json_encode($_GET["db"]);
+   } else {
+      $db = 'null';
+   }
    $language = $config->defaultLanguage;
    // JSON3 shim for IE6-9 compatibility.
    script_tag('/bower_components/json3/lib/json3.min.js');
@@ -578,7 +584,7 @@ if ($action == "gradeContest") {
    script_tag('/gradeContest.js');
    echo "<p>Statut : <div id='gradeContestState'><span class='nbCurrent'></span><span class='current'></span><span class='gradeProcessing'></span></div></p>";
    echo "<iframe id='preview_question' src='' style='width:800px;height:800px;'></iframe>";
-   echo "<script>gradeContestWithRefresh('".$contestID."', true);</script>";
+   echo "<script>gradeContestWithRefresh('".$contestID."', true, ".$db.");</script>";
 }
 
 echo "<h3><a href='".$startUrl."&action=showScoresToCompute'>Remaining scores to compute (checkStatus = requested)</a></h3>";

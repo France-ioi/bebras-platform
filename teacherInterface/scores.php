@@ -66,6 +66,9 @@ if ($groupID) {
 }
 
 $teamQuestionTable = getTeamQuestionTableForGrading();
+if(isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'] && isset($_REQUEST['database']) && $_REQUEST['database']) {
+   $teamQuestionTable = $_REQUEST['database'];
+}
 
 $stmtUpdate = null;
 foreach ($_POST['scores'] as $scoreInfos) {
@@ -96,7 +99,7 @@ foreach ($_POST['scores'] as $scoreInfos) {
       $stmtUpdate = $db->prepare($query);
       $stmtUpdate->execute($args);
    } else {
-      if ($config->db->use == 'dynamoDB') {
+      if ($config->db->use == 'dynamoDB' && $teamQuestionTable == 'team_question') {
          // verify that team is in the asked group:
          $stmt = $db->prepare("SELECT `groupID` from team where ID = ?;");
          $stmt->execute(array($scoreInfos['teamID']));
