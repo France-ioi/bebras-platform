@@ -449,8 +449,7 @@ if ($action == "setTeamParticipationType") {
       JOIN `contest` ON `group`.contestID = contest.ID
       SET team.participationType = `group`.participationType
       WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
-      AND team.participationType IS NULL
-      AND team.score IS NULL",
+      AND team.participationType IS NULL",
    array("contestID" => $contestID));
 }      
 
@@ -1118,7 +1117,7 @@ echo "<p>To allocate algoreaCodes, insert records such as INSERT INTO award_thre
 
 echo "<h3><a href='".$startUrl."&action=cleanRanksUnofficial'>Remove ranks of unofficial participants.</a></h3>";
 if ($action == "cleanRanksUnofficial") {
-   execSelectAndShowResults("Remove ranks of unofficial participants", "
+   execQueryAndShowNbRows("Remove ranks of unofficial participants", "
       UPDATE contestant
       JOIN team ON contestant.teamID = team.ID
       JOIN `group` ON team.groupID = `group`.ID
@@ -1331,6 +1330,15 @@ if ($action == "newRegistrations") {
       array());
 }
 
+echo "<h3><a href='".$startUrl."&action=propagateRegistrations'>Propagate algorea_registration.code into contestant.algoreaCode</a></h3>";
+if ($action == "propagateRegistrations") {
+      execQueryAndShowNbRows("Propagate algorea_registration.code into contestant.algoreaCode", "
+         UPDATE contestant JOIN algorea_registration ON contestant.registrationID = algorea_registration.ID
+         SET contestant.algoreaCode = algorea_registration.code
+         WHERE contestant.algoreaCode IS NULL",
+      array());
+}
+
 
 echo "<h3><a href='".$startUrl."&action=checkRegistrations'>Check for modifications since registrations were created</a></h3>";
 if ($action == "checkRegistrations") {
@@ -1370,8 +1378,8 @@ if ($action == "updateRegistrationsSchoolUser") {
          JOIN contestant ON contestant.registrationID = algorea_registration.ID
          JOIN team ON contestant.teamID = team.ID
          JOIN `group` ON `group`.ID = team.groupID
-         SET algorea_registration.userID = `group`.userID
-         algorea_registration.schoolID = `group`.schoolID,
+         SET algorea_registration.userID = `group`.userID,
+         algorea_registration.schoolID = `group`.schoolID
          WHERE `group`.contestID = :contestID
          AND (algorea_registration.userID != `group`.userID OR
 		    algorea_registration.schoolID != `group`.schoolID)",
@@ -1463,6 +1471,42 @@ if ($action == "createRegistrationCategory") {
    execQueryAndShowNbRows("Create records for green category", 
       "INSERT IGNORE INTO registration_category (registrationID, category) SELECT ID, 'verte' FROM algorea_registration WHERE algorea_registration.category IN ('verte', 'bleue')",
       array());
+
+   execQueryAndShowNbRows("Create records for yellow category, part 2", 
+      "INSERT IGNORE INTO registration_category (registrationID, category) SELECT ID, 'jaune' ".
+      "FROM (SELECT algorea_registration.ID ".
+            "FROM algorea_registration ".
+            "JOIN contestant ON algorea_registration.ID = contestant.registrationID ".
+            "JOIN team ON team.ID = contestant.teamID ".
+            "JOIN `group` ON `group`.ID = team.groupID ".
+            "JOIN `contest` ON `contest`.ID = `group`.contestID ".
+            "WHERE contest.categoryColor = 'jaune' ".
+            "AND contest.qualificationCategory = 'orange') tmp",
+            array());
+
+   execQueryAndShowNbRows("Create records for orange category, part 2", 
+      "INSERT IGNORE INTO registration_category (registrationID, category) SELECT ID, 'orange' ".
+      "FROM (SELECT algorea_registration.ID ".
+            "FROM algorea_registration ".
+            "JOIN contestant ON algorea_registration.ID = contestant.registrationID ".
+            "JOIN team ON team.ID = contestant.teamID ".
+            "JOIN `group` ON `group`.ID = team.groupID ".
+            "JOIN `contest` ON `contest`.ID = `group`.contestID ".
+            "WHERE contest.categoryColor = 'orange' ".
+            "AND contest.qualificationCategory = 'verte') tmp",
+            array());
+
+   execQueryAndShowNbRows("Create records for green category, part 2", 
+      "INSERT IGNORE INTO registration_category (registrationID, category) SELECT ID, 'verte' ".
+      "FROM (SELECT algorea_registration.ID ".
+            "FROM algorea_registration ".
+            "JOIN contestant ON algorea_registration.ID = contestant.registrationID ".
+            "JOIN team ON team.ID = contestant.teamID ".
+            "JOIN `group` ON `group`.ID = team.groupID ".
+            "JOIN `contest` ON `contest`.ID = `group`.contestID ".
+            "WHERE contest.categoryColor = 'verte' ".
+            "AND contest.qualificationCategory = 'bleue') tmp",
+            array());
 }
 
 echo "<h3><a href='".$startUrl."&action=updateRegistrationCategory'>Update students best scores in each category</a></h3>";
@@ -1523,7 +1567,7 @@ if ($action == "updateRegistrationCategory") {
       SET registration_category.bestScoreTeam = tmp.maxScore",
       array());
 
-   execQueryAndShowNbRows("Update best score for team participations", 
+   execQueryAndShowNbRows("Update date of best score for team participations", 
       "UPDATE
       (SELECT registration_category.ID, MAX(team.startTime) as maxTime
       FROM registration_category
@@ -1532,7 +1576,7 @@ if ($action == "updateRegistrationCategory") {
       JOIN `group` ON team.`groupID` = `group`.ID
       JOIN `contest` ON `group`.contestID = contest.ID
       WHERE team.participationType = 'Official'
-      AND team.nbContestants = 1
+      AND team.nbContestants = 2
       AND team.score = registration_category.bestScoreTeam
       AND contest.categoryColor = registration_category.category
       GROUP BY registration_category.ID
