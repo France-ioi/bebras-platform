@@ -110,7 +110,7 @@ function gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questio
    var selectorState = curGroupID ? '#gradeGroupState' : '#gradeContestState';
    // Compute scores of a pack
    if (curPackIndex >= curGradingData.teamQuestions.length) {
-      grade(curContestID, curGroupID, questionKeys, questionPaths, curIndex + 1, onlyMarked);
+      grade(curContestID, curGroupID, questionKeys, questionPaths, curIndex + 1, onlyMarked, database);
       return;
    }
    
