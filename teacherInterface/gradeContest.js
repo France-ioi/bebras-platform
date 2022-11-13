@@ -126,7 +126,9 @@ function gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questio
       var teamQuestion = curGradingData.teamQuestions[curTeamQuestion];
 
       // XXX : must be in sync with common.js!!!
-      curGradingData.randomSeed = (parseInt(teamQuestion.teamID) + parseInt(teamQuestion.questionID)) % Number.MAX_SAFE_INTEGER;
+      // TODO :: remettre le bon randomSeed
+      //curGradingData.randomSeed = (parseInt(teamQuestion.teamID) + parseInt(teamQuestion.questionID)) % Number.MAX_SAFE_INTEGER;
+      curGradingData.randomSeed = teamQuestion.teamID;
       var usesRandomSeed = (('usesRandomSeed' in curGradingBebras) && curGradingBebras.usesRandomSeed);
       // If the answer is in cache and the task doesn't use randomSeed, the server side will update it
       // but only in the case of a contest global evaluation
@@ -206,7 +208,9 @@ function gradeOneAnswer(task, answers, i, scores, finalCallback) {
       gradeOneAnswer(task, answers, i+1, scores, finalCallback);
       return;
    }
-   curGradingData.randomSeed = (parseInt(scores[i].teamID) + parseInt(scores[i].questionID)) % Number.MAX_SAFE_INTEGER;
+   // TODO :: remettre le bon randomSeed
+   // curGradingData.randomSeed = (parseInt(scores[i].teamID) + parseInt(scores[i].questionID)) % Number.MAX_SAFE_INTEGER;
+   curGradingData.randomSeed = scores[i].teamID;
    task.gradeAnswer(answer, null, function(score) {
       scores[i].score = score;
       scores[i].checkStatus = 'computed';
