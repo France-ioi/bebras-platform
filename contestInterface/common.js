@@ -1498,7 +1498,7 @@ function fillListQuestions(sortedQuestionIDs, questionsData)
    $(".questionList").html("<table>" + strListQuestions + "</table>");
    if (fullFeedback) {
       $(".questionListHeader").css("width", "240px");
-      $(".question, #divQuestionParams, #divClosed, .questionsTable, #question-iframe-container").css("left", "245px");
+      $(".question, #divQuestionParams, #divClosed, #question-iframe-container").css("left", "248px");
    }
 }
 
@@ -3178,7 +3178,7 @@ function sendScores() {
          }
          $(".questionScore").css("width", "50px");
          $(".questionListHeader").css("width", "265px");
-         $(".question, #divQuestionParams, #divClosed, .questionsTable").css("left", "272px");
+         $(".question, #divQuestionParams, #divClosed").css("left", "272px");
          var sortedQuestionIDs = getSortedQuestionIDs(questionsData);
          for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
             var questionID = sortedQuestionIDs[iQuestionID];

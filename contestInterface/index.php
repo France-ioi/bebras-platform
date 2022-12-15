@@ -667,18 +667,14 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
       <div style="text-align:center;width:180px;">
          <button type="button" id="buttonClose" class="buttonClose" style="display:none;" data-i18n="questions_finish_early" onclick='tryCloseContest()'></button>
       </div>
-      <table class="questionsTable">
-         <tr><td>
-            <div id="divQuestionParams">
-               <table style="width:100%"><tr>
-                  <td style="width:10%" data-i18n="[html]top_image"></td>
-                  <td><div class="questionTitle"></div></td>
-                  <td style="width:25%" class="questionPointsTd"><div id="questionPoints"></div></td>
-               </tr></table>
-            </div>
-         </td></tr>
-      </table>
-   </div>
+      <div id="divQuestionParams">
+          <table style="width:100%"><tr>
+            <td style="width:10%" data-i18n="[html]top_image"></td>
+            <td><div class="questionTitle"></div></td>
+            <td style="width:25%" class="questionPointsTd"><div id="questionPoints"></div></td>
+          </tr></table>
+      </div>
+</div>
    <div class="newInterface headerElements">
       <div class="header">
          <table class="header_table">
