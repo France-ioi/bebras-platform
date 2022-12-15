@@ -84,6 +84,9 @@
   if ($config->defaultLanguage == "ar") {
      stylesheet_tag('/style_rtl.css');
   }
+  if ($config->contestInterface->extraStylesheet) {
+     stylesheet_tag($config->contestInterface->extraStylesheet);
+  }
 ?>
 <body style="display: none;">
 <div id="divHeader">
