@@ -94,6 +94,7 @@ $config->teacherInterface->useAlgoreaCodes = false; // change if your award is a
 // Point teacherInterface->baseUrl to an URL serving the teacherInterface directory.
 $config->teacherInterface->baseUrl = 'http://coordinateur.castor-informatique.fr';
 $config->teacherInterface->teacherPersonalCodeContestID = 0;
+$config->teacherInterface->displayDuration = false;
 
 $config->certificates = (object) array();
 $config->certificates->webServiceUrl = 'http://castor-informatique.fr.localhost/certificates/';

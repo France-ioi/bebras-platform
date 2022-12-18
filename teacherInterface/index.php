@@ -308,7 +308,8 @@
       'useAlgoreaCodes' => $config->teacherInterface->useAlgoreaCodes,
       'grades' => $config->grades,
       'noGender' => (isset($config->teacherInterface->noGender) && $config->teacherInterface->noGender),
-      'readOnly' => $config->readOnly
+      'readOnly' => $config->readOnly,
+      'displayDuration' => $config->teacherInterface->displayDuration
    ]) ?>;
    init();
 </script>

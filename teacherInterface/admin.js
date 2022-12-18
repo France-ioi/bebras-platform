@@ -324,6 +324,7 @@ function initModels(isLogged) {
                value:getGradesList(false)}, searchoptions:{ value:"_NOF_:" + t("option_no_filter") + getGradesList(true)},
                stype: "select", width:75},
             score: {label: t("contestant_score_label"), editable: false, width:75},
+            duration: {label: t("contestant_duration_label"), editable: false, width: 100, search: false},
             nbContestants: {label: t("contestant_nbContestants_label"), editable: false, width:60, editoptions:{
                value:{
                   "1": t("nbContestants_1"),
@@ -466,6 +467,7 @@ function initModels(isLogged) {
                search: false
             },
             score: {label: t("team_view_score_label"), editable: false, width: 100, search: false},
+            duration: {label: t("team_view_duration_label"), editable: false, width: 100, search: false},
             participationType: {label: t("participationType_label"), longLabel: t("participationType_long_label"), editable: false, required: false, edittype: "select", width: 130, editoptions:{ value:{"Official": t("participationType_official"), "Unofficial": t("participationType_unofficial")}}, comment: t("participationType_comment")},
          }
       },
@@ -709,6 +711,10 @@ function initModels(isLogged) {
    if (config.noGender) {
       delete models.user_create.fields.gender;
       delete models.user_edit.fields.gender;
+   }
+   if (!config.displayDuration) {
+      delete models.contestant.fields.duration;
+      delete models.team_view.fields.duration;
    }
    
    // These fields are only needed if your are an admin
