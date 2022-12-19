@@ -104,7 +104,7 @@
 // Check browser parameters
 $browserVerified = true;
 $browserOld = false;
-if($config->contestInterface->browserCheck) {
+if($config->contestInterface->browserCheck && isset($_SERVER['HTTP_USER_AGENT'])) {
   require_once __DIR__.'/../vendor/autoload.php';
   $browser = new WhichBrowser\Parser($_SERVER['HTTP_USER_AGENT']);
   if($config->contestInterface->browserCheck == 'bebras-platform') {
