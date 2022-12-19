@@ -143,13 +143,15 @@ $config->transferTeamQuestion = (object) array(
 $config->validationMailBody = "Bonjour,\r\n\r\nPour valider votre inscription en tant que coordinateur pour le concours Castor, ouvrez le lien suivant dans votre navigateur  : \r\n\r\n%s\r\n\r\nN'hésitez pas à nous contacter si vous rencontrez des difficultés.\r\n\r\nCordialement,\r\n-- \r\nL'équipe du Castor Informatique";
 $config->validationMailTitle = "Castor Informatique : validation d'inscription";
 
-date_default_timezone_set($config->timezone);
-
 if (is_readable(__DIR__.'/config_local.php')) {
    include_once __DIR__.'/config_local.php';
 }
 if (is_readable(__DIR__.'/config/index.php')) {
    include_once __DIR__.'/config/index.php';
+}
+
+if($config->timezone) {
+   date_default_timezone_set($config->timezone);
 }
 
 // for dbv...
