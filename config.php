@@ -102,6 +102,8 @@ $config->certificates->allow = false;
 $config->certificates->confIndexForThisPlatform = 0; // index of the conf in certificates/ (you shouldn't need to change it)
 $config->certificates->partnerLogos = [];
 $config->certificates->partnerLogosWidths = null;
+$config->certificates->hideCode = false;
+$config->certificates->hideType = false;
 
 $config->grades = [-1,4,5,6,16,7,17,8,18,9,19,10,13,11,14,12,15,20,-4];
 
