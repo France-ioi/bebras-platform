@@ -82,13 +82,35 @@ function localDateToUtc(cellValue, options, rowOject) {
    return res;
 }
 
-function checkTaskPath(path) {
-   if(!path) { return; }
+function checkTaskPath(path, silent) {
+   function displayWarning(msg) {
+      if(silent) {
+         console.log(msg);
+         return;
+      }
+      if(msg) {
+         $('#preview_question_warning').show();
+         $('#preview_question_warning').html(msg);
+      } else {
+         $('#preview_question_warning').hide();
+      }
+   }
+   if(!path) {
+      displayWarning("Task path is empty.");
+      return;
+   }
+   var msg = '';
    if(path.indexOf('\\') != -1) {
-      console.log("Warning : task path contains a \\. That might cause issues in loading the task. (Path : `" + path + "`)");
+      msg += "Warning : task path contains a \\. That might cause issues in loading the task.";
    }
    if(!path.match(/index.*\.html/)) {
-      console.log("Warning : task path doesn't seem to contain any index(_lang).html. That might cause issues in loading the task. (Path : `" + path + "`)");
+      msg += "Warning : task path doesn't seem to contain any index(_lang).html. That might cause issues in loading the task.";
+   }
+   if(msg) {
+      msg += " (Path : `" + path + "`)";
+      displayWarning(msg);
+   } else {
+      displayWarning();
    }
 }
 
@@ -944,11 +966,25 @@ function loadListContests() {
 
 function loadListQuestions() {
    loadGrid("question", "key", 20, [20, 50, 200], function(id) {
-      selectedQuestionID = id;
-      var path = questions[id].path;
-      checkTaskPath(path);
-      var url = "bebras-tasks/" + path;
-      $("#preview_question").attr("src", url);
+      function setPath() {
+         selectedQuestionID = id;
+         var path = questions[id].path;
+         checkTaskPath(path);
+         if(!path) {
+            $("#preview_question").attr("src", '');
+            return;
+         }
+         var url = "bebras-tasks/" + path;
+         $("#preview_question").attr("src", url);
+      }
+
+      if(questions[id] && questions[id].path) {
+         setPath();
+      } else {
+         // Question might be new, try reloading first
+         // TODO :: could just reload each time?
+         loadQuestions().done(setPath);
+      }
    }, true);
 }
 
@@ -1775,7 +1811,7 @@ Generator.prototype.doTask = function () {
    var taskUrl = self.questionsUrl[currentTaskIndex];
    var taskKey = self.questionsKey[currentTaskIndex];
    generating = true;
-   checkTaskPath(taskUrl);
+   checkTaskPath(taskUrl, true);
    $('#preview_question').attr("src", "bebras-tasks/" + taskUrl);
    $('#preview_question').on('load', onQuestionLoaded);
    function onQuestionLoaded () {
