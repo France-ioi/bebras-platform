@@ -672,13 +672,15 @@ function initModels(isLogged) {
                   "none": t("option_srlModule_none"),
                   "log": t("option_srlModule_log"),
                   "random": t("option_srlModule_random"),
-                  "full": t("option_srlModule_full")
+                  "full": t("option_srlModule_full"),
+                  "algorea": t("option_srlModule_algorea")
                }},
                searchoptions:{ value:"_NOF_:" + t("option_no_filter") +
                      ";none:" + t("option_srlModule_none") +
                      ";log:" + t("option_srlModule_log") +
                      ";random:" + t("option_srlModule_random") +
-                     ";full:" + t("option_srlModule_full")
+                     ";full:" + t("option_srlModule_full") +
+                     ";algorea:" + t("option_srlModule_algorea")
                      },
                width: 100
             },

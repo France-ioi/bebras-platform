@@ -95,6 +95,7 @@
     "option_srlModule_log": "Journal seul",
     "option_srlModule_random": "Aléatoire",
     "option_srlModule_full": "Complet",
+    "option_srlModule_algorea": "Mode Algoréa",
     "contestID_label": "Épreuve",
     "contestID_comment": "Vous pouvez créer des groupes pour entraîner vos élèves sur les épreuves passées.",
     "grade_-1": "Professeur",

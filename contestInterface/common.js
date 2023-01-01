@@ -4131,6 +4131,9 @@ SrlModule.initMode = function(mode) {
    if(mode == 'log' || mode == 'random' || mode == 'full') {
       SrlModule.mode = mode;
       SrlModule.init();
+   } else if(mode == 'algorea' && (parseInt(teamID.substr(-3)) % 100 <= SrlModule.randomPercentage)) {
+      SrlModule.mode = 'log';
+      SrlModule.init();
    }
 }
 

@@ -92,6 +92,7 @@
     "option_srlModule_log": "Log only",
     "option_srlModule_random": "Randomized",
     "option_srlModule_full": "Full",
+    "option_srlModule_algorea": "Algorea mode",
     "contestID_label": "Contest",
     "contestID_comment": "You can create groups to give your students practice with past contests. The creation of groups for the 2013 contest is not possible yet.",
     "grade_3": "3rd grade",
