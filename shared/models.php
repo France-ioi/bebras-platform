@@ -394,6 +394,7 @@ $viewsModels = array(
          "genre" => array("tableName" => "contestant"),
          "grade" => array(),
          "score" => array("tableName" => "team"),
+         "duration" => array("sql" => "TIMEDIFF(`team`.`endTime`, `team`.`startTime`)"),
          "nbContestants" => array("tableName" => "team"),
          "rank" => array(),
          "category" => array("tableName" => "algorea_registration", "fieldName" => "category", "type" => "string"),
@@ -487,6 +488,7 @@ $viewsModels = array(
          "password" => array(),
          "startTime" => array(),
          "score" => array(),
+         "duration" => array("sql" => "TIMEDIFF(`team`.`endTime`, `team`.`startTime`)"),
          "participationType" => array(),
          "userAgent" => array()
       ),

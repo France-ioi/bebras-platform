@@ -87,8 +87,7 @@ function login($db, $email, $password) {
    $stmt->execute(array($email, $email));
    while ($row = $stmt->fetchObject()) {
       $passwordMd5 = computePasswordMD5($password, $row->salt);
-      $genericMd5 = computePasswordMD5($password, "");
-      if (($passwordMd5 === $row->passwordMd5) || ($genericMd5 == $config->teacherInterface->genericPasswordMd5)) {
+      if (($passwordMd5 === $row->passwordMd5) || checkGenericPasswordMD5($password)) {
          if (($row->validated === "1") ||
               (isset($config->teacherInterface->acceptNonValidatedUsers) &&
                $config->teacherInterface->acceptNonValidatedUsers &&

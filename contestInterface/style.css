@@ -200,17 +200,6 @@ a {
    padding-right: 5px;
 }
 
-.questionsTable {
-   position: absolute;
-   top: 5px;
-   left:245px;
-}
-
-.questionsTable td {
-   position:relative;
-   left: -2px;
-}
-
 .question {
    display:none;
    width:800px;
@@ -231,7 +220,10 @@ a {
 }
 
 #divQuestionParams {
-   width:770px;
+   position: absolute;
+   top: 5px;
+   left: 248px;
+   width: 782px;
    height: 70px;
    border: solid black 1px;
    padding-left: 5px;

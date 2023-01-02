@@ -414,9 +414,9 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
          contestAddContent($strModule, $nameParts, $buffer, $numPart, false);
       } else {
          $strContentPart = 0;
-         while(strlen($content) > 0) {
-            $contentExcept = substr($content, 0, 65000);
-            $content = substr($content, 65000);
+         while(mb_strlen($content) > 0) {
+            $contentExcept = mb_substr($content, 0, 65000);
+            $content = mb_substr($content, 65000);
             $strContent = htmlspecialchars($contentExcept, ENT_COMPAT, 'UTF-8');
             $strModule = '<div class="js-module" id="js-module-'.$name.'_'.$strContentPart.'" data-part="' . $strContentPart . '" data-content="'.$strContent.'"></div>'."\n";
             $strContentPart += 1;

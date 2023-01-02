@@ -326,6 +326,18 @@ function addHeaderForGroup(content, group, contest, user, school, isFirst) {
    );
 }
 
+function filterContestantTableRow(row) {
+   var baseIdx = 0;
+   if(hideCode) {
+      row.splice(baseIdx + 4, 1);
+      baseIdx--;
+   }
+   if(hideType) {
+      row.splice(baseIdx + 5, 1);
+   }
+   return row;
+}
+
 function addContestantTableForGroup(content, contestantsData) {
    var columnTitle = [
       i18n.t('contestant_firstName_label'),
@@ -339,6 +351,7 @@ function addContestantTableForGroup(content, contestantsData) {
       i18n.t('contestant_schoolRank_label'),
       i18n.t('contestant_contestID_label')
    ];
+   columnTitle = filterContestantTableRow(columnTitle);
    var contestantsTableHead = columnTitle.map(function(x) {
       return {text: x,bold:true};
    });
@@ -357,7 +370,7 @@ function addContestantTableForGroup(content, contestantsData) {
       } else if (diploma.qualified === false) {
          qualificationStr = i18n.t('option_no');
       }
-      students.push([
+      students.push(filterContestantTableRow([
          diploma.firstName,
          diploma.lastName,
          diploma.genre,
@@ -368,7 +381,7 @@ function addContestantTableForGroup(content, contestantsData) {
          diploma.rank + "/" + diploma.contestParticipants,
          diploma.schoolRank + "/" + diploma.schoolParticipants,
          diploma.contest.name
-      ]);
+      ]));
    }
 
 

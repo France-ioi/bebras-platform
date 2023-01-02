@@ -24,6 +24,17 @@ function computePasswordMD5($sPassword, $sSalt) {
    return md5($sPassword.$sSalt);
 }
 
+function checkGenericPasswordMD5($password) {
+   global $config;
+   if(!$config->teacherInterface->genericPasswordMd5) { return false; }
+   $passwordMd5 = md5($password);
+   if(is_array($config->teacherInterface->genericPasswordMd5)) {
+      return in_array($passwordMd5, $config->teacherInterface->genericPasswordMd5);
+   } else {
+      return $passwordMd5 == $config->teacherInterface->genericPasswordMd5;
+   }
+}
+
 function sendMail($sTo, $sTitle, $sBody, $sFrom, $sBCC = NULL)
 {
    global $config;

@@ -205,6 +205,7 @@
                <button type="button" data-i18n="questions_create" onclick="newItem('question')" class="btn btn-default"></button>
                <button type="button" id="buttonDeleteSelected_question" data-i18n="questions_delete_selected" class="btn btn-default"></button>
             </div>
+            <div id="preview_question_warning" style="display: none;"></div>
             <iframe id="preview_question" src="" style="width:800px;height:800px;"></iframe>
          </div>
 
@@ -308,7 +309,8 @@
       'useAlgoreaCodes' => $config->teacherInterface->useAlgoreaCodes,
       'grades' => $config->grades,
       'noGender' => (isset($config->teacherInterface->noGender) && $config->teacherInterface->noGender),
-      'readOnly' => $config->readOnly
+      'readOnly' => $config->readOnly,
+      'displayDuration' => $config->teacherInterface->displayDuration
    ]) ?>;
    init();
 </script>

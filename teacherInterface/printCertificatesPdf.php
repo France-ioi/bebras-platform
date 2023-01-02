@@ -103,6 +103,8 @@ var mainColor = '<?=$config->certificates->mainColor?>';
 var accentColor = '<?=$config->certificates->accentColor?>';
 var showYear = <?=$config->certificates->showYear?>;
 var titleFontSize = <?=$config->certificates->titleFontSize?>;
+var hideCode = <?=$config->certificates->hideCode ? 'true' : 'false' ?>;
+var hideType = <?=$config->certificates->hideType ? 'true' : 'false' ?>;
 </script>
 <?php
 script_tag('/bower_components/i18next/i18next.min.js');

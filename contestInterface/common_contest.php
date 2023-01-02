@@ -92,7 +92,7 @@ function updateSessionWithContestInfos($row) {
 function commonLoginTeam($db, $password) {
    global $tinyOrm, $config;
    $password = trim($password);
-   $stmt = $db->prepare("SELECT `team`.`ID` as `teamID`, `group`.`ID` as `groupID`, IFNULL(`team`.`contestID`, `group`.`contestID`) as `contestID`, `group`.`isPublic`, `group`.`name`, `team`.`nbMinutes`, `team`.`browserID`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`groupsExpirationMinutes`, `contest`.`askParticipationCode`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`showTotalScore`, `contest`.`nextQuestionAuto`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, IFNULL(subContest.folder, `contest`.`folder`) as `folder`, `contest`.`name` as `contestName`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`allowPauses`, `contest`.`visibility`, `contest`.`headerImageURL`, `contest`.`headerHTML`, `contest`.`logActivity`, `contest`.`srlModule`, `contest`.`sendPings`, `group`.`schoolID`, `team`.`createTime`, `team`.`startTime`, `team`.`endTime` FROM `team` JOIN `group` ON (`team`.`groupID` = `group`.`ID`) JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) LEFT JOIN `contest` subContest ON subContest.ID = team.contestID WHERE `team`.`password` = ?");
+   $stmt = $db->prepare("SELECT `team`.`ID` as `teamID`, `group`.`ID` as `groupID`, IFNULL(`team`.`contestID`, `group`.`contestID`) as `contestID`, `group`.`grade` as `grade`, `group`.`isPublic`, `group`.`name`, `team`.`nbMinutes`, `team`.`browserID`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`groupsExpirationMinutes`, `contest`.`askParticipationCode`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`showTotalScore`, `contest`.`nextQuestionAuto`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, IFNULL(subContest.folder, `contest`.`folder`) as `folder`, `contest`.`name` as `contestName`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`allowPauses`, `contest`.`visibility`, `contest`.`headerImageURL`, `contest`.`headerHTML`, `contest`.`logActivity`, `contest`.`srlModule`, `contest`.`sendPings`, `group`.`schoolID`, `team`.`createTime`, `team`.`startTime`, `team`.`endTime` FROM `team` JOIN `group` ON (`team`.`groupID` = `group`.`ID`) JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) LEFT JOIN `contest` subContest ON subContest.ID = team.contestID WHERE `team`.`password` = ?");
    $stmt->execute(array($password));
    $row = $stmt->fetchObject();
    if (!$row) {
@@ -115,6 +115,10 @@ function commonLoginTeam($db, $password) {
    }
    if ($row->open == "Closed") {
       return (object)array("success" => false, "message" => "error_contest_closed");
+   }
+   if($row->srlModule == 'algorea' && !in_array($row->grade, [4, 5, 6])) {
+      // Algorea only records for grades 4, 5 and 6
+      $row->srlModule = 'none';
    }
    updateSessionWithContestInfos($row);
    $_SESSION["teamID"] = $row->teamID;

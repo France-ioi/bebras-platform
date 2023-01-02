@@ -22,7 +22,7 @@ script_tag('/bower_components/jquery/jquery.min.js');
 
 
 if (isset($_REQUEST["password"])) {
-   if (md5($_REQUEST["password"]) == $config->teacherInterface->genericPasswordMd5) {
+   if (checkGenericPasswordMD5($_REQUEST["password"])) {
       $_SESSION["isAdmin"] = true;
    } else {
       echo translate("invalid_password");

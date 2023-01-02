@@ -1298,140 +1298,123 @@ var TimeManager = {
    ended: false,  // is set to true once the contest is closed
    initialRemainingSeconds: null, // time remaining when the contest is loaded (in case of an interruption)
    timeStart: null, // when the contest was loaded (potentially after an interruption)
-   totalTime: null, // time allocated to this contest
    endTimeCallback: null, // function to call when out of time
    interval: null,
    prevTime: null,
    synchronizing: false,
-   syncCounter: 0,  // counter used to limit number of pending getRemainingTime requests
    isDrifting: false, // time skipped
-
-   setTotalTime: function(totalTime) {
-      this.totalTime = totalTime;
-   },
+   finalTimeout: null,
 
    init: function(isTimed, initialRemainingSeconds, ended, contestOverCallback, endTimeCallback) {
       this.initialRemainingSeconds = parseInt(initialRemainingSeconds);
       this.ended = ended;
       this.endTimeCallback = endTimeCallback;
-      var curDate = new Date();
-      this.timeStart = curDate.getTime() / 1000;
+      this.timeStart = this.getNow();
+      if(this.interval) {
+         clearInterval(this.interval);
+      }
+      if(this.finalTimeout) {
+         clearTimeout(this.finalTimeout);
+      }
       if (this.ended) {
          contestOverCallback();
       } else if (isTimed) {
          this.prevTime = this.timeStart;
          this.updateTime();
          this.interval = setInterval(this.updateTime, 1000);
-         this.minuteInterval = setInterval(this.minuteIntervalHandler, 60000);
       } else {
          $(".header_time").hide();
       }
    },
 
-   getRemainingSeconds: function() {
-      var curDate = new Date();
-      var curTime = curDate.getTime() / 1000;
-      var usedSeconds = (curTime - this.timeStart);
-      var remainingSeconds = this.initialRemainingSeconds - usedSeconds;
-      if (remainingSeconds < 0) {
-         remainingSeconds = 0;
-      }
-      return remainingSeconds;
+   displayTime: function(remainingSeconds) {
+      var rs = remainingSeconds < 0 ? 0 : remainingSeconds;
+      var minutes = Math.floor(rs / 60);
+      var seconds = Math.floor(rs - 60 * minutes);
+      $(".minutes").html((this.isDrifting ? '~' : '') + minutes);
+      $(".seconds").html(Utils.pad2(seconds));
    },
 
-   // fallback when sync with server fails:
-   simpleTimeAdjustment: function() {
+   getNow: function() {
       var curDate = new Date();
-      var timeDiff = curDate.getTime() / 1000 - TimeManager.prevTime;
-      TimeManager.timeStart += timeDiff - 1;
-      setTimeout(function() {
-         TimeManager.syncWithServer();
-      }, 120000);
+      return curDate.getTime() / 1000;
+   },
+
+   getRemainingSeconds: function() {
+      var remainingSeconds = this.timeStart + this.initialRemainingSeconds - this.getNow();
+      return remainingSeconds >= 0 ? remainingSeconds : 0;
    },
 
    syncWithServer: function() {
-      if (this.syncCounter >= 1) {
-         //console.log('ignored spurious call to syncWithServer');
+      if (this.synchronizing) {
          return;
       }
-      this.syncCounter += 1;
-      TimeManager.synchronizing = true;
-      $(".minutes").html('');
-      $(".seconds").html('synchro...');
+      this.synchronizing = true;
       var self = this;
       $.post('data.php', {SID: SID, action: 'getRemainingSeconds', teamID: teamID},
          function(data) {
+            self.prevTime = self.getNow();
             if (data.success) {
                var remainingSeconds = self.getRemainingSeconds();
-               TimeManager.timeStart = TimeManager.timeStart + parseInt(data.remainingSeconds) - remainingSeconds;
-               /*
-               var curDate = new Date();
-               var curTime = curDate.getTime() / 1000;
-               console.log("remainingSeconds before sync : " + remainingSeconds + " timeStart : " + TimeManager.timeStart);
-               TimeManager.timeStart = curTime - (TimeManager.initialRemainingSeconds - parseInt(data.remainingSeconds));
-               remainingSeconds = self.getRemainingSeconds();
-               console.log("remainingSeconds after sync : " + remainingSeconds + " timeStart : " + TimeManager.timeStart);
-               this.prevTime = curTime;
-               */
-            } else if(TimeManager.isDrifting) {
-               // Server lost the session, effectively end
-               if (remainingSeconds <= 0) {
-                  clearInterval(this.interval);
-                  clearInterval(this.minuteInterval);
-                  TimeManager.endTimeCallback();
-               }
-            } else {
-               TimeManager.simpleTimeAdjustment();
+               self.timeStart = self.timeStart + parseInt(data.remainingSeconds) - remainingSeconds;
+            } else if (remainingSeconds <= 30) {
+               // Server probably the session, is probably the end
+               // Only end if the number of seconds left is less than 30, in case there's a temporary server issue
+               self.synchronizing = false;
+               self.isDrifting = false;
+               self.timeOver();
             }
-            TimeManager.isDrifting = false;
+            self.isDrifting = false;
+            // Prevent from resynchronizing for 30 seconds
+            setTimeout(function() { self.synchronizing = false;}, 30000);
          },
-      'json').done(function() {
-         var curDate = new Date();
-         TimeManager.prevTime = curDate.getTime() / 1000;
-         TimeManager.synchronizing = false;
-      }).fail(function() {
-         TimeManager.simpleTimeAdjustment();
-         TimeManager.synchronizing = false;
+      'json').fail(function() {
+         setTimeout(function() { self.synchronizing = false;}, 5000);
       });
    },
 
-   minuteIntervalHandler: function() {
-      TimeManager.syncCounter = 0;
-   },
-
    updateTime: function() {
-      if (TimeManager.ended || TimeManager.synchronizing) {
+      if (TimeManager.ended) {
          return;
       }
-      var curDate = new Date();
-      var curTime = curDate.getTime() / 1000;
+      var curTime = TimeManager.getNow();
       var timeDiff = Math.abs(curTime - TimeManager.prevTime);
-      // We traveled through time, more than 60s difference compared to 1 second ago !
-      if (timeDiff > 60 || timeDiff < -60) {
+      if (timeDiff >= 30) {
+         // We traveled through time, more than 30s difference compared to 1 "second" ago !
          TimeManager.isDrifting = true;
+      }
+      if(TimeManager.isDrifting) {
          TimeManager.syncWithServer();
-         return;
       }
       TimeManager.prevTime = curTime;
       var remainingSeconds = TimeManager.getRemainingSeconds();
-      var minutes = Math.floor(remainingSeconds / 60);
-      var seconds = Math.floor(remainingSeconds - 60 * minutes);
-      $(".minutes").html(minutes);
-      $(".seconds").html(Utils.pad2(seconds));
+      TimeManager.displayTime(remainingSeconds, false);
+
       if (remainingSeconds <= 0) {
-         clearInterval(this.interval);
-         clearInterval(this.minuteInterval);
-         TimeManager.endTimeCallback();
+         // Time is over locally
+         if(TimeManager.isDrifting) {
+            // Give a last chance to synchronize as time might not be over
+            TimeManager.synchronizing = false;
+            TimeManager.syncWithServer();
+            TimeManager.finalTimeout = setTimeout(function() {
+               TimeManager.timeOver();
+            }, 30000);
+         } else {
+            // Time is in sync, contest is over
+            TimeManager.timeOver();
+         }
       }
    },
 
-   setEnded: function(ended) {
-      this.ended = ended;
+   stopNow: function() {
+      clearInterval(TimeManager.interval);
+      TimeManager.ended = true;
    },
 
-   stopNow: function() {
-      var curDate = new Date();
-      this.ended = true;
+   timeOver: function() {
+      TimeManager.displayTime(0);
+      TimeManager.stopNow();
+      TimeManager.endTimeCallback();
    },
 
    isContestOver: function() {
@@ -1498,7 +1481,7 @@ function fillListQuestions(sortedQuestionIDs, questionsData)
    $(".questionList").html("<table>" + strListQuestions + "</table>");
    if (fullFeedback) {
       $(".questionListHeader").css("width", "240px");
-      $(".question, #divQuestionParams, #divClosed, .questionsTable, #question-iframe-container").css("left", "245px");
+      $(".question, #divQuestionParams, #divClosed, #question-iframe-container").css("left", "248px");
    }
 }
 
@@ -3178,7 +3161,7 @@ function sendScores() {
          }
          $(".questionScore").css("width", "50px");
          $(".questionListHeader").css("width", "265px");
-         $(".question, #divQuestionParams, #divClosed, .questionsTable").css("left", "272px");
+         $(".question, #divQuestionParams, #divClosed").css("left", "272px");
          var sortedQuestionIDs = getSortedQuestionIDs(questionsData);
          for (var iQuestionID = 0; iQuestionID < sortedQuestionIDs.length; iQuestionID++) {
             var questionID = sortedQuestionIDs[iQuestionID];
@@ -4147,6 +4130,9 @@ var SrlModule = {
 SrlModule.initMode = function(mode) {
    if(mode == 'log' || mode == 'random' || mode == 'full') {
       SrlModule.mode = mode;
+      SrlModule.init();
+   } else if(mode == 'algorea' && (parseInt(teamID.substr(-3)) % 100 <= SrlModule.randomPercentage)) {
+      SrlModule.mode = 'log';
       SrlModule.init();
    }
 }

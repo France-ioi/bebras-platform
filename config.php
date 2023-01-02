@@ -65,6 +65,7 @@ $config->contestInterface = (object) array();
 $config->contestInterface->baseUrl = 'http://concours.castor-informatique.fr';
 $config->contestInterface->sAbsoluteStaticPathNoS3 = 'http://concours.castor-informatique.fr';
 $config->contestInterface->sAssetsStaticPathNoS3 = 'http://concours.castor-informatique.fr';
+$config->contestInterface->extraStylesheet = null;
 $config->contestInterface->sessionLength = 3600;
 $config->contestInterface->browserCheck = 'bebras-platform';
 $config->contestInterface->logActivity = false;
@@ -81,7 +82,7 @@ $config->teacherInterface->sHotlineNumber = '';
 $config->teacherInterface->sCoordinatorFolder = 'http://coordinateur.castor-informatique.fr/';
 $config->teacherInterface->sAssetsStaticPath = 'http://castor.pem.dev/contestInterface/';
 $config->teacherInterface->sAbsoluteStaticPath = 'http://coordinateur.castor-informatique.fr/';
-$config->teacherInterface->genericPasswordMd5 = '';
+$config->teacherInterface->genericPasswordMd5 = ''; // Can be an array
 $config->teacherInterface->countryCode = 'FR';
 $config->teacherInterface->domainCountryCode = 'FR';
 $config->teacherInterface->generationMode = 'local';
@@ -93,11 +94,16 @@ $config->teacherInterface->useAlgoreaCodes = false; // change if your award is a
 // Point teacherInterface->baseUrl to an URL serving the teacherInterface directory.
 $config->teacherInterface->baseUrl = 'http://coordinateur.castor-informatique.fr';
 $config->teacherInterface->teacherPersonalCodeContestID = 0;
+$config->teacherInterface->displayDuration = false;
 
 $config->certificates = (object) array();
 $config->certificates->webServiceUrl = 'http://castor-informatique.fr.localhost/certificates/';
 $config->certificates->allow = false;
 $config->certificates->confIndexForThisPlatform = 0; // index of the conf in certificates/ (you shouldn't need to change it)
+$config->certificates->partnerLogos = [];
+$config->certificates->partnerLogosWidths = null;
+$config->certificates->hideCode = false;
+$config->certificates->hideType = false;
 
 $config->grades = [-1,4,5,6,16,7,17,8,18,9,19,10,13,11,14,12,15,20,-4];
 
@@ -139,13 +145,15 @@ $config->transferTeamQuestion = (object) array(
 $config->validationMailBody = "Bonjour,\r\n\r\nPour valider votre inscription en tant que coordinateur pour le concours Castor, ouvrez le lien suivant dans votre navigateur  : \r\n\r\n%s\r\n\r\nN'hésitez pas à nous contacter si vous rencontrez des difficultés.\r\n\r\nCordialement,\r\n-- \r\nL'équipe du Castor Informatique";
 $config->validationMailTitle = "Castor Informatique : validation d'inscription";
 
-date_default_timezone_set($config->timezone);
-
 if (is_readable(__DIR__.'/config_local.php')) {
    include_once __DIR__.'/config_local.php';
 }
 if (is_readable(__DIR__.'/config/index.php')) {
    include_once __DIR__.'/config/index.php';
+}
+
+if($config->timezone) {
+   date_default_timezone_set($config->timezone);
 }
 
 // for dbv...

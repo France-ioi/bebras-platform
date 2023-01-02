@@ -84,6 +84,9 @@
   if ($config->defaultLanguage == "ar") {
      stylesheet_tag('/style_rtl.css');
   }
+  if ($config->contestInterface->extraStylesheet) {
+     stylesheet_tag($config->contestInterface->extraStylesheet);
+  }
 ?>
 <body style="display: none;">
 <div id="divHeader">
@@ -101,7 +104,7 @@
 // Check browser parameters
 $browserVerified = true;
 $browserOld = false;
-if($config->contestInterface->browserCheck) {
+if($config->contestInterface->browserCheck && isset($_SERVER['HTTP_USER_AGENT'])) {
   require_once __DIR__.'/../vendor/autoload.php';
   $browser = new WhichBrowser\Parser($_SERVER['HTTP_USER_AGENT']);
   if($config->contestInterface->browserCheck == 'bebras-platform') {
@@ -664,18 +667,14 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
       <div style="text-align:center;width:180px;">
          <button type="button" id="buttonClose" class="buttonClose" style="display:none;" data-i18n="questions_finish_early" onclick='tryCloseContest()'></button>
       </div>
-      <table class="questionsTable">
-         <tr><td>
-            <div id="divQuestionParams">
-               <table style="width:100%"><tr>
-                  <td style="width:10%" data-i18n="[html]top_image"></td>
-                  <td><div class="questionTitle"></div></td>
-                  <td style="width:25%" class="questionPointsTd"><div id="questionPoints"></div></td>
-               </tr></table>
-            </div>
-         </td></tr>
-      </table>
-   </div>
+      <div id="divQuestionParams">
+          <table style="width:100%"><tr>
+            <td style="width:10%" data-i18n="[html]top_image"></td>
+            <td><div class="questionTitle"></div></td>
+            <td style="width:25%" class="questionPointsTd"><div id="questionPoints"></div></td>
+          </tr></table>
+      </div>
+</div>
    <div class="newInterface headerElements">
       <div class="header">
          <table class="header_table">

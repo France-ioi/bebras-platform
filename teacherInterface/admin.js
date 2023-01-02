@@ -82,13 +82,35 @@ function localDateToUtc(cellValue, options, rowOject) {
    return res;
 }
 
-function checkTaskPath(path) {
-   if(!path) { return; }
+function checkTaskPath(path, silent) {
+   function displayWarning(msg) {
+      if(silent) {
+         console.log(msg);
+         return;
+      }
+      if(msg) {
+         $('#preview_question_warning').show();
+         $('#preview_question_warning').html(msg);
+      } else {
+         $('#preview_question_warning').hide();
+      }
+   }
+   if(!path) {
+      displayWarning("Task path is empty.");
+      return;
+   }
+   var msg = '';
    if(path.indexOf('\\') != -1) {
-      console.log("Warning : task path contains a \\. That might cause issues in loading the task. (Path : `" + path + "`)");
+      msg += "Warning : task path contains a \\. That might cause issues in loading the task.";
    }
    if(!path.match(/index.*\.html/)) {
-      console.log("Warning : task path doesn't seem to contain any index(_lang).html. That might cause issues in loading the task. (Path : `" + path + "`)");
+      msg += "Warning : task path doesn't seem to contain any index(_lang).html. That might cause issues in loading the task.";
+   }
+   if(msg) {
+      msg += " (Path : `" + path + "`)";
+      displayWarning(msg);
+   } else {
+      displayWarning();
    }
 }
 
@@ -324,6 +346,7 @@ function initModels(isLogged) {
                value:getGradesList(false)}, searchoptions:{ value:"_NOF_:" + t("option_no_filter") + getGradesList(true)},
                stype: "select", width:75},
             score: {label: t("contestant_score_label"), editable: false, width:75},
+            duration: {label: t("contestant_duration_label"), editable: false, width: 100, search: false},
             nbContestants: {label: t("contestant_nbContestants_label"), editable: false, width:60, editoptions:{
                value:{
                   "1": t("nbContestants_1"),
@@ -466,6 +489,7 @@ function initModels(isLogged) {
                search: false
             },
             score: {label: t("team_view_score_label"), editable: false, width: 100, search: false},
+            duration: {label: t("team_view_duration_label"), editable: false, width: 100, search: false},
             participationType: {label: t("participationType_label"), longLabel: t("participationType_long_label"), editable: false, required: false, edittype: "select", width: 130, editoptions:{ value:{"Official": t("participationType_official"), "Unofficial": t("participationType_unofficial")}}, comment: t("participationType_comment")},
          }
       },
@@ -648,13 +672,15 @@ function initModels(isLogged) {
                   "none": t("option_srlModule_none"),
                   "log": t("option_srlModule_log"),
                   "random": t("option_srlModule_random"),
-                  "full": t("option_srlModule_full")
+                  "full": t("option_srlModule_full"),
+                  "algorea": t("option_srlModule_algorea")
                }},
                searchoptions:{ value:"_NOF_:" + t("option_no_filter") +
                      ";none:" + t("option_srlModule_none") +
                      ";log:" + t("option_srlModule_log") +
                      ";random:" + t("option_srlModule_random") +
-                     ";full:" + t("option_srlModule_full")
+                     ";full:" + t("option_srlModule_full") +
+                     ";algorea:" + t("option_srlModule_algorea")
                      },
                width: 100
             },
@@ -709,6 +735,10 @@ function initModels(isLogged) {
    if (config.noGender) {
       delete models.user_create.fields.gender;
       delete models.user_edit.fields.gender;
+   }
+   if (!config.displayDuration) {
+      delete models.contestant.fields.duration;
+      delete models.team_view.fields.duration;
    }
    
    // These fields are only needed if your are an admin
@@ -938,11 +968,25 @@ function loadListContests() {
 
 function loadListQuestions() {
    loadGrid("question", "key", 20, [20, 50, 200], function(id) {
-      selectedQuestionID = id;
-      var path = questions[id].path;
-      checkTaskPath(path);
-      var url = "bebras-tasks/" + path;
-      $("#preview_question").attr("src", url);
+      function setPath() {
+         selectedQuestionID = id;
+         var path = questions[id].path;
+         checkTaskPath(path);
+         if(!path) {
+            $("#preview_question").attr("src", '');
+            return;
+         }
+         var url = "bebras-tasks/" + path;
+         $("#preview_question").attr("src", url);
+      }
+
+      if(questions[id] && questions[id].path) {
+         setPath();
+      } else {
+         // Question might be new, try reloading first
+         // TODO :: could just reload each time?
+         loadQuestions().done(setPath);
+      }
    }, true);
 }
 
@@ -1769,7 +1813,7 @@ Generator.prototype.doTask = function () {
    var taskUrl = self.questionsUrl[currentTaskIndex];
    var taskKey = self.questionsKey[currentTaskIndex];
    generating = true;
-   checkTaskPath(taskUrl);
+   checkTaskPath(taskUrl, true);
    $('#preview_question').attr("src", "bebras-tasks/" + taskUrl);
    $('#preview_question').on('load', onQuestionLoaded);
    function onQuestionLoaded () {
