@@ -2740,7 +2740,21 @@ window.relogin = function() {
    }
    Utils.disableButton("buttonRelogin");
    $("#divCheckGroup").hide();
-   loadContestData(contestID, contestFolder, groupPassword);
+   $.post("data.php", {SID: SID, action: "checkReloginTeam", teamID: teamID, groupPassword: groupPassword},
+      function (data) {
+         if(!data.success) {
+            $("#ReloginResult").html(data.message);
+            return;
+         }
+         if(data.password) {
+            $('#groupCode').val(data.password);
+            checkGroup();
+         } else {
+            loadContestData(contestID, contestFolder, groupPassword);
+         }
+      },
+      "json");
+
 };
 
 /*

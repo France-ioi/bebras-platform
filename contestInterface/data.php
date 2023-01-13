@@ -839,6 +839,23 @@ function handleSAChangeContest($db) {
    handleCheckTeamPassword($db, $_SESSION['teamPassword']);
 }
 
+function handleCheckReloginTeam($db) {
+   if (!isset($_SESSION["teamID"])) {
+      if (!isset($_POST["groupPassword"])) {
+         exitWithJsonFailure("Mot de passe manquant");
+      }
+      if (!isset($_POST["teamID"])) {
+         exitWithJsonFailure("Équipe manquante");
+      }
+      if (!isset($_SESSION["groupID"])) {
+         exitWithJsonFailure("Groupe non chargé");
+      }
+      $password = strtolower(trim($_POST["groupPassword"]));
+      reloginTeam($db, $password, $_POST["teamID"], true);
+   }
+   exitWithJson(["success" => true]);
+}
+
 if (!isset($_POST["action"])) {
    addFailureBackendHint("ClientIP.loadOther:fail");
    exitWithJsonFailure("Aucune action fournie");
@@ -903,6 +920,10 @@ if ($action === 'checkRegistration') {
 
 if ($action === 'saChangeContest') {
    handleSAChangeContest($db);
+}
+
+if ($action == "checkReloginTeam") {
+   handleCheckReloginTeam($db);
 }
 
 exitWithJsonFailure("Action inconnue");

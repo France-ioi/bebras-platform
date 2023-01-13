@@ -208,7 +208,7 @@ function reconnectSession($db) {
    return true;
 }
 
-function reloginTeam($db, $password, $teamID) {
+function reloginTeam($db, $password, $teamID, $isCheck=false) {
    global $tinyOrm, $config;
    $stmt = $db->prepare("SELECT `group`.`password`, `contest`.`status`, `group`.`isPublic` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `group`.`ID` = ?");
    $stmt->execute(array($_SESSION["groupID"]));
@@ -222,11 +222,24 @@ function reloginTeam($db, $password, $teamID) {
    if ($row->status == "Closed" || $row->status == "PreRanking") {
       exitWithJsonFailure("Concours fermé");
    }
-   $stmt = $db->prepare("SELECT `password`, `nbMinutes` FROM `team` WHERE `ID` = ? AND `groupID` = ?");
-   $stmt->execute(array($teamID, $_SESSION["groupID"]));
+   $stmt = $db->prepare("SELECT `password`, `nbMinutes` FROM `team` WHERE `ID` = :teamID AND `groupID` = :groupID");
+   $stmt->execute(['teamID' => $teamID, 'groupID' => $_SESSION["groupID"]]);
    $row = $stmt->fetchObject();
    if (!$row) {
-      exitWithJsonFailure("Équipe invalide pour ce groupe");
+      // No team in that group, look for a team in a sub-group
+      $stmt = $db->prepare("SELECT `team`.`password` FROM `team` JOIN `group` ON `group`.`ID` = `team`.`groupID` WHERE `team`.`ID` = :teamID AND `group`.`parentGroupID` = :groupID");
+      $stmt->execute(['teamID' => $teamID, 'groupID' => $_SESSION["groupID"]]);
+      $row = $stmt->fetchObject();
+      if (!$row) {
+         exitWithJsonFailure("Équipe invalide pour ce groupe");
+      }
+      // We have to do a re-re-login as the groupID is different
+      if($isCheck) {
+         // Send password
+         exitWithJson(["success" => true, "password" => $row->password]);
+      } else {
+         commonLoginTeam($db, $row->password);
+      }
    }
    if ($config->db->use == 'dynamoDB') {
       try {
