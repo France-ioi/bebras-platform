@@ -579,6 +579,10 @@ function selectRecordsForJQGrid($db, $modelName, $params, $roles) {
       customJqGridDataFilter($result, $request);
    }
 
+   if ($modelName == 'contestant' && !$config->teacherInterface->displayDuration) {
+      unset($model['fields']['duration']);
+   }
+
    $limits = $result["limits"];
    if ($format === "xml") {
       displayRowsAsXml($result["items"], $model, $limits["page"], $limits["nbPages"], $result["nbTotalItems"]);

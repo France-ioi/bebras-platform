@@ -2415,7 +2415,7 @@ function validateForm(modelName) {
       if (!item.schoolID) {
          return;
       }
-       
+
       var contest = contests[item.contestID];
       var contestStartDate = null;
       if ((contest.startDate != null) && (contest.startDate != "0000-00-00 00:00:00")) {
@@ -2436,6 +2436,23 @@ function validateForm(modelName) {
           (contestEndDate && date > contestEndDate)) {
          jqAlert(t("warning_contest_outside_official_date") + "(" + utcDateFormatter(contest.startDate) + " - " + utcDateFormatter(contest.endDate) + ")");
          return;
+      }
+
+      // Make sure minCategory and maxCategory are in the right order
+      if(item.minCategory && item.maxCategory) {
+         var categoriesIdx = {
+            'blanche': 1,
+            'jaune': 2,
+            'orange': 3,
+            'verte': 4
+         };
+         var minCategory = categoriesIdx[item.minCategory];
+         var maxCategory = categoriesIdx[item.maxCategory];
+         if(minCategory && maxCategory && maxCategory < minCategory) {
+            var tmp = item.minCategory;
+            item.minCategory = item.maxCategory;
+            item.maxCategory = tmp;
+         }
       }
    }
    $("#edit_form_error").html("");

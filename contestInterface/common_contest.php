@@ -87,12 +87,14 @@ function updateSessionWithContestInfos($row) {
    $_SESSION["logActivity"] = intval($row->logActivity);
    $_SESSION["srlModule"] = $row->srlModule;
    $_SESSION["sendPings"] = intval($row->sendPings);
+   // TODO :: Remove after 2023-09
+   $_SESSION["oldRandomSeedTempFix"] = isset($row->oldRandomSeedTempFix) ? $row->oldRandomSeedTempFix == 1 : false;
 }
 
 function commonLoginTeam($db, $password) {
    global $tinyOrm, $config;
    $password = trim($password);
-   $stmt = $db->prepare("SELECT `team`.`ID` as `teamID`, `group`.`ID` as `groupID`, IFNULL(`team`.`contestID`, `group`.`contestID`) as `contestID`, `group`.`grade` as `grade`, `group`.`isPublic`, `group`.`name`, `team`.`nbMinutes`, `team`.`browserID`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`groupsExpirationMinutes`, `contest`.`askParticipationCode`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`showTotalScore`, `contest`.`nextQuestionAuto`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, IFNULL(subContest.folder, `contest`.`folder`) as `folder`, `contest`.`name` as `contestName`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`allowPauses`, `contest`.`visibility`, `contest`.`headerImageURL`, `contest`.`headerHTML`, `contest`.`logActivity`, `contest`.`srlModule`, `contest`.`sendPings`, `group`.`schoolID`, `team`.`createTime`, `team`.`startTime`, `team`.`endTime` FROM `team` JOIN `group` ON (`team`.`groupID` = `group`.`ID`) JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) LEFT JOIN `contest` subContest ON subContest.ID = team.contestID WHERE `team`.`password` = ?");
+   $stmt = $db->prepare("SELECT `team`.`ID` as `teamID`, `group`.`ID` as `groupID`, IFNULL(`team`.`contestID`, `group`.`contestID`) as `contestID`, `group`.`grade` as `grade`, `group`.`isPublic`, `group`.`name`, `team`.`nbMinutes`, `team`.`browserID`, `contest`.`bonusScore`, `contest`.`allowTeamsOfTwo`, `contest`.`groupsExpirationMinutes`, `contest`.`askParticipationCode`, `contest`.`newInterface`, `contest`.`customIntro`, `contest`.`fullFeedback`, `contest`.`showTotalScore`, `contest`.`nextQuestionAuto`, `contest`.`nbUnlockedTasksInitial`, `contest`.`subsetsSize`, IFNULL(subContest.folder, `contest`.`folder`) as `folder`, `contest`.`name` as `contestName`, `contest`.`open`, `contest`.`showSolutions`, `contest`.`allowPauses`, `contest`.`visibility`, `contest`.`headerImageURL`, `contest`.`headerHTML`, `contest`.`logActivity`, `contest`.`srlModule`, `contest`.`sendPings`, `group`.`schoolID`, `team`.`createTime`, `team`.`startTime`, `team`.`endTime`, `team`.`createTime` <= '2023-01-30 23:00:00' AS oldRandomSeedTempFix FROM `team` JOIN `group` ON (`team`.`groupID` = `group`.`ID`) JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) LEFT JOIN `contest` subContest ON subContest.ID = team.contestID WHERE `team`.`password` = ?");
    $stmt->execute(array($password));
    $row = $stmt->fetchObject();
    if (!$row) {
@@ -157,6 +159,8 @@ function commonLoginTeam($db, $password) {
       "logActivity" => $_SESSION["logActivity"],
       "srlModule" => $_SESSION["srlModule"],
       "sendPings" => $_SESSION["sendPings"],
+      // TODO :: Remove after 2023-09
+      "oldRandomSeedTempFix" => $_SESSION["oldRandomSeedTempFix"],
       "browserID" => $row->browserID,
    ];
 
@@ -208,7 +212,7 @@ function reconnectSession($db) {
    return true;
 }
 
-function reloginTeam($db, $password, $teamID) {
+function reloginTeam($db, $password, $teamID, $isCheck=false) {
    global $tinyOrm, $config;
    $stmt = $db->prepare("SELECT `group`.`password`, `contest`.`status`, `group`.`isPublic` FROM `group` JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`) WHERE `group`.`ID` = ?");
    $stmt->execute(array($_SESSION["groupID"]));
@@ -222,11 +226,24 @@ function reloginTeam($db, $password, $teamID) {
    if ($row->status == "Closed" || $row->status == "PreRanking") {
       exitWithJsonFailure("Concours fermé");
    }
-   $stmt = $db->prepare("SELECT `password`, `nbMinutes` FROM `team` WHERE `ID` = ? AND `groupID` = ?");
-   $stmt->execute(array($teamID, $_SESSION["groupID"]));
+   $stmt = $db->prepare("SELECT `password`, `nbMinutes` FROM `team` WHERE `ID` = :teamID AND `groupID` = :groupID");
+   $stmt->execute(['teamID' => $teamID, 'groupID' => $_SESSION["groupID"]]);
    $row = $stmt->fetchObject();
    if (!$row) {
-      exitWithJsonFailure("Équipe invalide pour ce groupe");
+      // No team in that group, look for a team in a sub-group
+      $stmt = $db->prepare("SELECT `team`.`password` FROM `team` JOIN `group` ON `group`.`ID` = `team`.`groupID` WHERE `team`.`ID` = :teamID AND `group`.`parentGroupID` = :groupID");
+      $stmt->execute(['teamID' => $teamID, 'groupID' => $_SESSION["groupID"]]);
+      $row = $stmt->fetchObject();
+      if (!$row) {
+         exitWithJsonFailure("Équipe invalide pour ce groupe");
+      }
+      // We have to do a re-re-login as the groupID is different
+      if($isCheck) {
+         // Send password
+         exitWithJson(["success" => true, "password" => $row->password]);
+      } else {
+         commonLoginTeam($db, $row->password);
+      }
    }
    if ($config->db->use == 'dynamoDB') {
       try {

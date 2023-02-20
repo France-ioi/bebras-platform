@@ -80,6 +80,8 @@ var bodyOnResize = null;
 var imagesPreloaded = [];
 // Actually make the logActivity requests
 var doLogActivity = false;
+// TODO :: Remove after 2022-09
+var oldRandomSeedTempFix = false;
 // Send last activity pings
 var sendLastActivity = false;
 // Backup QR code handler
@@ -493,7 +495,11 @@ var platform = {
       if (questionUnlockedLevels[questionIframe.questionKey] != null) {
          unlockedLevels = questionUnlockedLevels[questionIframe.questionKey];
       }
-      var randomSeed = teamID;
+      var randomSeed = (parseInt(teamID) + parseInt(questionID)) % Number.MAX_SAFE_INTEGER;
+      if(oldRandomSeedTempFix) {
+         // TODO :: Remove after 2023-09
+         randomSeed = teamID;
+      }
       var res = {
          'minScore': questionData.minScore,
          'maxScore': questionData.maxScore,
@@ -2336,6 +2342,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
             updateContestHeader(data);
             startPing();
             SrlModule.initMode(data.srlModule);
+            oldRandomSeedTempFix = !!data.oldRandomSeedTempFix;
 
             groupMinCategory = data.minCategory;
             groupMaxCategory = data.maxCategory;
@@ -2740,7 +2747,21 @@ window.relogin = function() {
    }
    Utils.disableButton("buttonRelogin");
    $("#divCheckGroup").hide();
-   loadContestData(contestID, contestFolder, groupPassword);
+   $.post("data.php", {SID: SID, action: "checkReloginTeam", teamID: teamID, groupPassword: groupPassword},
+      function (data) {
+         if(!data.success) {
+            $("#ReloginResult").html(data.message);
+            return;
+         }
+         if(data.password) {
+            $('#groupCode').val(data.password);
+            checkGroup();
+         } else {
+            loadContestData(contestID, contestFolder, groupPassword);
+         }
+      },
+      "json");
+
 };
 
 /*
@@ -2826,6 +2847,7 @@ function initContestData(data, newContestID) {
    startPing();
    SrlModule.initMode(data.srlModule);
    sendLastActivity = data.sendPings;
+   oldRandomSeedTempFix = !!data.oldRandomSeedTempFix;
    if (newInterface) {
       $("#question-iframe-container").addClass("newInterfaceIframeContainer").show();
       $(".oldInterface").html("").hide();
