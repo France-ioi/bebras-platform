@@ -114,7 +114,7 @@ function computeRanks($db, $contestInfos, $category) {
    for ($i = 1; $i<= $maxContestants; $i++) {
       if ($contestInfos['rankGrades']) {
          foreach ($contestInfos['grades'] as $grade) {
-            if($contestInfos['ID'] == '619714287977504425') {
+            if($contestInfos['ID'] == '340246770863129004') {
                // Contest in which we merge grades 11 and 12
                $values = [':contestID' => $contestInfos['ID'], 'grade1' => $grade, 'grade2' => $grade];
                if($grade == 11) {
@@ -178,7 +178,7 @@ function computeRanksSchool($db, $contestInfos, $category) {
       WHERE 
           `team`.`participationType` = 'Official' AND ";
    if ($contestInfos['rankGrades']) {
-      if($contestInfos['ID'] == '619714287977504425') {
+      if($contestInfos['ID'] == '340246770863129004') {
          // Contest in which we merge grades 11 and 12
          $query .= " (`contestant`.`grade` = :grade1 OR `contestant`.`grade` = :grade2) AND ";
       } else {
