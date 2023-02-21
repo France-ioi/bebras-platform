@@ -75,7 +75,7 @@ function computeRanks($db, $contestInfos, $category) {
                `team`.`participationType` = 'Official' AND 
 ";
    if ($contestInfos['rankGrades']) {
-      if($contestInfos['ID'] == '619714287977504425') {
+      if($contestInfos['ID'] == '340246770863129004') {
          // Contest in which we merge grades 11 and 12
          $query .= " (`contestant`.`grade` = :grade1 OR `contestant`.`grade` = :grade2) AND ";
       } else {
