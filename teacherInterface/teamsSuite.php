@@ -3,11 +3,13 @@
 require_once("../shared/common.php");
 require_once("commonAdmin.php");
 
-$idTeamItem = "1516175780610161014";
+$idTeamItem = "12465436879381532";
 $idItems = [
-"9817350343946595",
-"1847479682777653689",
-"69803208283061228"
+"1535768290741011912",
+"1912265293662327758",
+"1960478301819322275",
+"1480025779204807917",
+"68120197184668496"
 ];
 
 if (!isset($_SESSION["userID"])) {
@@ -106,13 +108,13 @@ while($row = $stmt->fetch()) {
          'participating' => $row['iTeamParticipating'] == '1',
          'password' => $row['sPassword'],
          'idNewGroup' => $row['idNewGroup'],
-         'country' => $row['country'],
+/*         'country' => $row['country'],
          'thirdScore' => $row['thirdScore'],
          'thirdTime' => $row['thirdTime'],
          'rank' => $row['rank'],
          'rankBigRegion' => $row['rankBigRegion'],
          'rankRegion' => $row['rankRegion'],
-         'qualifiedFinal' => $row['qualifiedFinal'],
+         'qualifiedFinal' => $row['qualifiedFinal'],*/
          'scores' => [],
          'times' => [],
          'members' => []
@@ -313,20 +315,24 @@ if(count($userIds) < count($contestants)) {
 <tr>
    <td rowspan="2">Nom de l'équipe</td>
    <td rowspan="2">Membres</td>
-   <td colspan="4">Scores (phase de qualification)</td>
-   <td rowspan="2">Mot de passe<br>pour l'épreuve</td>
+   <td colspan="8">Scores (phase de qualification)</td>
+<!--   <td rowspan="2">Mot de passe<br>pour l'épreuve</td>
    <td colspan="4">Scores (épreuve)</td>
-   <td rowspan="2">Classement (épreuve)</td>
+   <td rowspan="2">Classement (épreuve)</td>-->
 </tr>
 <tr>
-   <td>Colonnes</td>
+   <td>Puzzle Coloré 1</td>
+   <td>Stream Cipher 1</td>
+   <td>Vignère sur<br>des mots 1</td>
+   <td>Puzzle Coloré 2</td>
+   <td>Stream Cipher 2</td>
+   <td>Vignère sur<br>des mots 2</td>
+   <td>Stream Cipher 3</td>
+   <td><b>Total</b></td>
+<!--   <td>Colonnes</td>
    <td>Vigenère 2D</td>
    <td>Base de<br>mots de passe</td>
-   <td><b>Total</b></td>
-   <td>Colonnes</td>
-   <td>Vigenère 2D</td>
-   <td>Base de<br>mots de passe</td>
-   <td><b>Total</b></td>
+   <td><b>Total</b></td>-->
 </tr>
 <?php
 foreach($teams as $groupId => $data) {
@@ -382,9 +388,13 @@ foreach($teams as $groupId => $data) {
        $teamScores = isset($scores[$groupId]) ? $scores[$groupId] : array_fill(0, count($idItems), null);
        echo "<td>" . formatScore($teamScores[0]) . "</td>";
        echo "<td>" . formatScore($teamScores[1]) . "</td>";
+       echo "<td>-</td>";
        echo "<td>" . formatScore($teamScores[2]) . "</td>";
-       echo "<td><b>" . (isset($scoreTotals[$groupId]) ? $scoreTotals[$groupId] : '-') . "</b> / 300</td>";
-       if($data['password']) {
+       echo "<td>" . formatScore($teamScores[3]) . "</td>";
+       echo "<td>-</td>";
+       echo "<td>" . formatScore($teamScores[4]) . "</td>";
+       echo "<td><b>" . (isset($scoreTotals[$groupId]) ? $scoreTotals[$groupId] : '-') . "</b> / 700</td>";
+/*       if(&& $data['password']) {
           echo "<td><pre>" . $data['password'] . "</pre></td>";
           if($data['idNewGroup']) {
              if($data['thirdScore'] !== null) {
@@ -417,9 +427,9 @@ foreach($teams as $groupId => $data) {
           echo "<td colspan=\"6\"><i>N'est pas encore qualifiée pour l'épreuve (n'a pas atteint $reqScore points)</i></td>";
        } else {
           echo "<td colspan=\"6\"><i>Phase de qualification en cours</i></td>";
-       }
+       }*/
     } else {
-       echo "<td colspan=\"10\"><i>N'a pas commencé la phase de qualification</i></td>";
+       echo "<td colspan=\"8\"><i>N'a pas commencé la phase de qualification</i></td>";
     }
     echo "</tr>";
 }
