@@ -508,6 +508,7 @@ function selectRecords($db, $modelName, $recordID, $roles, $extraFilters = array
 }
 
 function selectRecordsForJQGrid($db, $modelName, $params, $roles) {
+   global $config;
    $format = "xml";
    if (isset($params["format"])) {
       $format = $params["format"];
@@ -517,6 +518,11 @@ function selectRecordsForJQGrid($db, $modelName, $params, $roles) {
    }
    
    $model = getViewModel($modelName);
+
+   if ($modelName == 'contestant' && !$config->teacherInterface->displayDuration) {
+      unset($model['fields']['duration']);
+   }
+
    $request = array(
       "modelName" => $modelName,
       "model" => $model,
@@ -577,10 +583,6 @@ function selectRecordsForJQGrid($db, $modelName, $params, $roles) {
    // TODO: document
    if (function_exists('customJqGridDataFilter')) {
       customJqGridDataFilter($result, $request);
-   }
-
-   if ($modelName == 'contestant' && !$config->teacherInterface->displayDuration) {
-      unset($model['fields']['duration']);
    }
 
    $limits = $result["limits"];
