@@ -95,6 +95,9 @@ $config->teacherInterface->useAlgoreaCodes = false; // change if your award is a
 $config->teacherInterface->baseUrl = 'http://coordinateur.castor-informatique.fr';
 $config->teacherInterface->teacherPersonalCodeContestID = 0;
 $config->teacherInterface->displayDuration = false;
+// Remove some columns from the teacher interface
+// Example : ['contestant' => 3]
+$config->teacherInterface->removeLastColumns = [];
 
 $config->certificates = (object) array();
 $config->certificates->webServiceUrl = 'http://castor-informatique.fr.localhost/certificates/';

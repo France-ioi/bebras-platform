@@ -310,7 +310,8 @@
       'grades' => $config->grades,
       'noGender' => (isset($config->teacherInterface->noGender) && $config->teacherInterface->noGender),
       'readOnly' => $config->readOnly,
-      'displayDuration' => $config->teacherInterface->displayDuration
+      'displayDuration' => $config->teacherInterface->displayDuration,
+      'removeLastColumns' => $config->teacherInterface->removeLastColumns
    ]) ?>;
    init();
 </script>

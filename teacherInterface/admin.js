@@ -740,6 +740,17 @@ function initModels(isLogged) {
       delete models.contestant.fields.duration;
       delete models.team_view.fields.duration;
    }
+   if (config.removeLastColumns) {
+      for (var mName in config.removeLastColumns) {
+         var fields = [];
+         for(var field in models[mName].fields) {
+            fields.push(field);
+         }
+         for(var i = fields.length - config.removeLastColumns[mName]; i < fields.length; i++) {
+            delete models[mName].fields[fields[i]];
+         }
+      }
+   }
    
    // These fields are only needed if your are an admin
    if (isAdmin())
