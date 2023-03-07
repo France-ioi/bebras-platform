@@ -84,7 +84,7 @@ function localDateToUtc(cellValue, options, rowOject) {
 
 function checkTaskPath(path, silent) {
    function displayWarning(msg) {
-      if(silent) {
+      if(silent && msg) {
          console.log(msg);
          return;
       }
