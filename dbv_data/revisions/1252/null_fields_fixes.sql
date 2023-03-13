@@ -1,0 +1,45 @@
+ALTER TABLE `team` CHANGE `groupID` `groupID` BIGINT(20) NULL;
+ALTER TABLE `team` CHANGE `old_groupID` `old_groupID` BIGINT(20) NULL;
+ALTER TABLE `team` CHANGE `max_grade` `max_grade` INT(11) NULL;
+ALTER TABLE `team` CHANGE `newScore` `newScore` INT(11) NULL DEFAULT NULL;
+ALTER TABLE `team` CHANGE `cached_contestants` `cached_contestants` VARCHAR(300) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+ALTER TABLE `team` CHANGE `userAgent` `userAgent` VARCHAR(300) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+ALTER TABLE `team` CHANGE `nbContestants` `nbContestants` TINYINT(1) NULL DEFAULT NULL;
+ALTER TABLE `team` CHANGE `tmpScore` `tmpScore` INT(11) NULL DEFAULT NULL;
+ALTER TABLE `team` CHANGE `tmpLastAnswerDate` `tmpLastAnswerDate` DATETIME NULL DEFAULT NULL;
+ALTER TABLE `team` CHANGE `iVersion` `iVersion` INT(11) NULL DEFAULT NULL;
+ALTER TABLE `contestant` CHANGE `lastName` `lastName` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+ALTER TABLE `contestant` CHANGE `firstName` `firstName` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+ALTER TABLE `contestant` CHANGE `studentID` `studentID` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+ALTER TABLE `contestant` CHANGE `teamID` `teamID` BIGINT(20) NULL DEFAULT NULL;
+ALTER TABLE `contestant` CHANGE `cached_schoolID` `cached_schoolID` BIGINT(20) NULL DEFAULT NULL;
+ALTER TABLE `group` CHANGE `minCategory` `minCategory` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+ALTER TABLE `group` CHANGE `maxCategory` `maxCategory` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+ALTER TABLE `group` CHANGE `language` `language` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+ALTER TABLE `algorea_registration` CHANGE `email` `email` VARCHAR(70) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT '';
+ALTER TABLE `algorea_registration` CHANGE `zipCode` `zipCode` VARCHAR(10) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT '';
+ALTER TABLE `algorea_registration` CHANGE `studentID` `studentID` VARCHAR(30) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT '';
+ALTER TABLE `algorea_registration` CHANGE `category` `category` VARCHAR(30) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT '';
+ALTER TABLE `algorea_registration` CHANGE `validatedCategory` `validatedCategory` VARCHAR(30) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT '';
+ALTER TABLE `user` CHANGE `officialEmailValidated` `officialEmailValidated` TINYINT(4) NOT NULL DEFAULT '0';
+ALTER TABLE `user` CHANGE `comment` `comment` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+ALTER TABLE `user` CHANGE `lastLoginDate` `lastLoginDate` DATETIME NULL DEFAULT NULL;
+ALTER TABLE `user` CHANGE `isAdmin` `isAdmin` TINYINT(4) NOT NULL DEFAULT '0';
+ALTER TABLE `user` CHANGE `allowMultipleSchools` `allowMultipleSchools` TINYINT(4) NOT NULL DEFAULT '0';
+ALTER TABLE `user` CHANGE `validated` `validated` TINYINT(11) NOT NULL DEFAULT '0' COMMENT 'account validated as an admin for the given school';
+ALTER TABLE `user` CHANGE `recoverCode` `recoverCode` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+ALTER TABLE `user` CHANGE `passwordMd5` `passwordMd5` VARCHAR(40) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+ALTER TABLE `user` CHANGE `salt` `salt` VARCHAR(40) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+ALTER TABLE `user` CHANGE `alternativeEmailValidated` `alternativeEmailValidated` TINYINT(4) NOT NULL DEFAULT '0';
+ALTER TABLE `school` CHANGE `validated` `validated` TINYINT(4) NOT NULL DEFAULT '0';
+ALTER TABLE `school` CHANGE `nbStudents` `nbStudents` INT(11) NOT NULL DEFAULT '0';
+
+# Ne fonctionne pas pour toutes les bases
+
+ALTER TABLE `team` CHANGE `tmpScore2` `tmpScore2` INT(11) NULL DEFAULT NULL;
+ALTER TABLE `team` CHANGE `tmpScore3` `tmpScore3` INT(11) NULL DEFAULT NULL;
+ALTER TABLE `algorea_registration` CHANGE `old_groupID` `old_groupID` BIGINT(20) NULL DEFAULT NULL;
+ALTER TABLE `algorea_registration` CHANGE `scoreDemi2019` `scoreDemi2019` INT(11) NULL DEFAULT NULL;
+ALTER TABLE `algorea_registration` CHANGE `rankDemi2019` `rankDemi2019` INT(11) NULL DEFAULT NULL;
+ALTER TABLE `algorea_registration` CHANGE `lastParticipation` `lastParticipation` DATETIME NULL DEFAULT NULL;
+ALTER TABLE `team` CHANGE `newScore` `newScore` INT(11) NULL DEFAULT NULL;
