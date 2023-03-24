@@ -177,17 +177,18 @@ function processRequest($post) {
    $userId = isset($userIds[$code]) ? $userIds[$code] : false;
 
    if($post['action'] == 'create') {
+      $name = $post['name'] ? $post['name'] : '.';
       if($userId) {
          queryPlatform([
             'action' => 'createTeam',
             'idItem' => $idTeamItem,
             'user_id' => $userId,
-            'name' => $post['name']
+            'name' => $name
             ]);
       } else {
          $newTeamId = (string) mt_rand(100000, 999999999);
          $stmt = $db2->prepare("INSERT INTO pixal.teams_requests (code, team_id, name) VALUES(:code, :team_id, :name);");
-         $stmt->execute(['code' => $code, 'team_id' => $newTeamId, 'name' => $post['name']]);
+         $stmt->execute(['code' => $code, 'team_id' => $newTeamId, 'name' => $name]);
       }
    } elseif($post['action'] == 'add') {
       // Check teacher has rights over that team
