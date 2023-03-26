@@ -417,7 +417,7 @@ foreach($teams as $groupId => $data) {
                 echo "<td>" . $data['scores'][5] . "</td>";
                 echo "<td>" . $data['scores'][6] . "</td>";
                 echo "<td>" . $data['scores'][7] . "</td>";
-                echo "<td><b>" . $data['thirdScore'] . "</b> / 300</td>";
+                echo "<td><b>" . $data['thirdScore'] . "</b> / 700</td>";
                 if(false && $data['rank'] != 0) {
                     if($data['qualifiedFinal'] != '1') {
                         echo "<td>";
