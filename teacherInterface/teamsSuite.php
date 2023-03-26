@@ -94,7 +94,11 @@ alkindi_teams.rank, alkindi_teams.rankBigRegion, alkindi_teams.rankRegion,
 alkindi_teams.thirdScore, alkindi_teams.thirdTime,
 alkindi_teams.score1, alkindi_teams.time1,
 alkindi_teams.score2, alkindi_teams.time2,
-alkindi_teams.score3, alkindi_teams.time3
+alkindi_teams.score3, alkindi_teams.time3,
+alkindi_teams.score4, alkindi_teams.time4,
+alkindi_teams.score5, alkindi_teams.time5,
+alkindi_teams.score6, alkindi_teams.time6,
+alkindi_teams.score7, alkindi_teams.time7
 FROM pixal.groups
 JOIN pixal.groups_groups ON groups_groups.idGroupParent = groups.ID
 JOIN pixal.users ON groups_groups.idGroupChild = users.idGroupSelf
@@ -111,9 +115,9 @@ while($row = $stmt->fetch()) {
          'password' => $row['sPassword'],
          'idNewGroup' => $row['idNewGroup'],
          'country' => $row['country'],
-/*         'thirdScore' => $row['thirdScore'],
+         'thirdScore' => $row['thirdScore'],
          'thirdTime' => $row['thirdTime'],
-         'rank' => $row['rank'],
+/*         'rank' => $row['rank'],
          'rankBigRegion' => $row['rankBigRegion'],
          'rankRegion' => $row['rankRegion'],
          'qualifiedFinal' => $row['qualifiedFinal'],*/
@@ -122,7 +126,7 @@ while($row = $stmt->fetch()) {
          'members' => []
          ];
    }
-   for($i = 1; $i <= 3; $i++) {
+   for($i = 1; $i <= 7; $i++) {
       $teams[$row['groupId']]['scores'][$i] = $row["score$i"];
       $teams[$row['groupId']]['times'][$i] = $row["time$i"];
    }
@@ -322,10 +326,10 @@ if(count($userIds) < count($contestants)) {
    <td colspan="8">Scores (phase de qualification)</td>
    <td rowspan="2">Mot de passe<br>pour l'épreuve</td>
    <td colspan="8">Scores (épreuve)</td>
-   <!--<td rowspan="2">Classement (épreuve)</td>-->
+   <td rowspan="2">Classement (épreuve)</td>
 </tr>
 <tr>
-<td>Puzzle Coloré 1</td>
+   <td>Puzzle Coloré 1</td>
    <td>Stream Cipher 1</td>
    <td>Vignère sur<br>des mots 1</td>
    <td>Puzzle Coloré 2</td>
@@ -405,12 +409,16 @@ foreach($teams as $groupId => $data) {
        if($data['password']) {
           echo "<td><pre>" . $data['password'] . "</pre></td>";
           if($data['idNewGroup']) {
-             if(false && $data['thirdScore'] !== null) {
+             if($data['thirdScore'] !== null) {
                 echo "<td>" . $data['scores'][1] . "</td>";
                 echo "<td>" . $data['scores'][2] . "</td>";
                 echo "<td>" . $data['scores'][3] . "</td>";
+                echo "<td>" . $data['scores'][4] . "</td>";
+                echo "<td>" . $data['scores'][5] . "</td>";
+                echo "<td>" . $data['scores'][6] . "</td>";
+                echo "<td>" . $data['scores'][7] . "</td>";
                 echo "<td><b>" . $data['thirdScore'] . "</b> / 300</td>";
-                if($data['rank'] != 0) {
+                if(false && $data['rank'] != 0) {
                     if($data['qualifiedFinal'] != '1') {
                         echo "<td>";
                         echo "<i>Équipe non qualifiée pour la finale</i><br>";
@@ -425,19 +433,19 @@ foreach($teams as $groupId => $data) {
                     echo "<td><i>Classements à venir</i></td>";
                 }
              } else {
-                echo "<td colspan=\"8\"><i>Scores à venir</i></td>";
+                echo "<td colspan=\"9\"><i>Scores à venir</i></td>";
              }
           } else {
-             echo "<td colspan=\"8\"><i>N'a pas encore utilisé le mot de passe pour l'épreuve d'1h30 sous surveillance</i></td>";
+             echo "<td colspan=\"9\"><i>N'a pas encore utilisé le mot de passe pour l'épreuve d'1h30 sous surveillance</i></td>";
           }
        } elseif($data['country'] == 'fr' || $data['country'] == 'ch') {
           $reqScore = $data['country'] == 'ch' ? 300 : 350;
-          echo "<td colspan=\"9\"><i>N'est pas encore qualifiée pour l'épreuve (n'a pas atteint $reqScore points)</i></td>";
+          echo "<td colspan=\"18\"><i>N'est pas encore qualifiée pour l'épreuve (n'a pas atteint $reqScore points)</i></td>";
        } else {
-          echo "<td colspan=\"9\"><i>Phase de qualification en cours</i></td>";
+          echo "<td colspan=\"18\"><i>Phase de qualification en cours</i></td>";
        }
     } else {
-       echo "<td colspan=\"9\"><i>N'a pas commencé la phase de qualification</i></td>";
+       echo "<td colspan=\"18\"><i>N'a pas commencé la phase de qualification</i></td>";
     }
     echo "</tr>";
 }
