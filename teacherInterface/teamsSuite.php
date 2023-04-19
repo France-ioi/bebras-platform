@@ -418,7 +418,7 @@ foreach($teams as $groupId => $data) {
                 echo "<td>" . $data['scores'][6] . "</td>";
                 echo "<td>" . $data['scores'][7] . "</td>";
                 echo "<td><b>" . $data['thirdScore'] . "</b> / 700</td>";
-                if(false && $data['rank'] != 0) {
+                if($data['rank'] != 0) {
                     if($data['qualifiedFinal'] != '1') {
                         echo "<td>";
                         echo "<i>Équipe non qualifiée pour la finale</i><br>";
@@ -426,8 +426,8 @@ foreach($teams as $groupId => $data) {
                         echo "Rang académie : " . $data['rankRegion'];
                         echo "</td>";
                     } else {
-                        //echo "<td><i>Résultat en attente de validation, coordinateur contacté.</i></td>";
-                        echo "<td>Équipe finaliste</td>";
+                        echo "<td><i>Résultat en attente de validation, coordinateur contacté.</i></td>";
+                        //echo "<td>Équipe finaliste</td>";
                     }
                 } else {
                     echo "<td><i>Classements à venir</i></td>";
