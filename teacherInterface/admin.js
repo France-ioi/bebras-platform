@@ -697,6 +697,20 @@ function initModels(isLogged) {
                edittype: "select", editoptions: editYesNo,
                stype: "select", searchoptions: searchYesNo,
                width: 100
+            },
+            certificateAllNames: {
+               label: t("contest_certificateAllNames_label"),
+               editable: true,
+               edittype: "select", editoptions: editYesNo,
+               stype: "select", searchoptions: searchYesNo,
+               width: 100
+            },
+            certificateIsIntermediate: {
+               label: t("contest_certificateIsIntermediate_label"),
+               editable: true,
+               edittype: "select", editoptions: editYesNo,
+               stype: "select", searchoptions: searchYesNo,
+               width: 100
             }
          }
       },

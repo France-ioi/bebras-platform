@@ -98,6 +98,8 @@ $tablesModels = array (
          "srlModule" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "sendPings" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
          "allowFromHome" => array("type" => "int", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "certificateAllNames" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
+         "certificateIsIntermediate" => array("type" => "string", "access" => array("write" => array("admin"), "read" => array("admin"))),
       )
    ),
    "contest_question" => array(
@@ -408,14 +410,17 @@ $viewsModels = array(
          "qualificationCode" => array("fieldName" => "algoreaCode"),
          "groupName" => array("tableName" => "full_groups", "fieldName" => "name"),         
          "schoolName" => array("tableName" => "school", "fieldName" => "name"),         
+         "teamID" => array(),
       ),
       "filters" => array(
          "groupField" => $fieldGroupFilter,
          "official" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`participationType` = 'Official'", 'ignoreValue' => true),
          "score" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`score` = :score"),
          "contestID" => array("joins" => array("full_groups"), "condition" => "`[PREFIX]full_groups`.`contestID` = :contestID"),
+         "relatedContestID" => array("joins" => array("contest", "full_groups"), "condition" => "(`[PREFIX]full_groups`.`contestID` = :relatedContestID OR `[PREFIX]contest`.`parentContestID` = :relatedContestID)"),
          "teamID" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`ID` = :teamID"),
          "groupID" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`groupID` = :groupID"),
+         "relatedGroupID" => array("joins" => array("full_groups", "team"), "condition" => "(`[PREFIX]team`.`groupID` = :relatedGroupID OR `full_groups`.`parentGroupID` = :relatedGroupID)"),
          "schoolID" => array("joins" => array("full_groups"), "condition" => "`full_groups`.`schoolID` = :schoolID"),
          "userID" => array("joins" => array("full_groups"), "condition" => "(`full_groups`.`userID` = :userID OR `full_groups`.`targetUserID` = :userID)"),
          "ownerUserID" => array("joins" => array("full_groups"), "condition" => "`full_groups`.`userID` = :[PREFIX_FIELD]ownerUserID"),
@@ -557,7 +562,9 @@ $viewsModels = array(
          "checkNoChild" => array(
             "condition" => "(`[PREFIX]group`.`parentGroupID` IS NULL)",
             "ignoreValue" => true
-         )
+         ),
+         "relatedContestID" => array("joins" => array("contest"), "condition" => "(`[PREFIX]group`.`contestID` = :relatedContestID OR `[PREFIX]contest`.`parentContestID` = :relatedContestID)"),
+         "relatedGroupID" => array("condition" => "(`[PREFIX]group`.`ID` = :relatedGroupID OR `[PREFIX]group`.`parentGroupID` = :relatedGroupID)")
       )
    ),
    "contest_question" => array(
@@ -697,6 +704,8 @@ $viewsModels = array(
          "srlModule" => array(),
          "sendPings" => array(),
          "allowFromHome" => array(),
+         "certificateAllNames" => array(),
+         "certificateIsIntermediate" => array(),
          "minAward1Rank" => array(),
          "minAward2Rank" => array(),
          "rankGrades" => array(),

@@ -22,6 +22,14 @@ var allData = {};
 function loadData(tableName, callback, filters) {
    var params = {oper: "select", tableName: tableName};
    for (var filterName in filters) {
+      if(filterName == 'groupID' && (tableName == 'contestant' || tableName == 'group')) {
+         params['relatedGroupID'] = filters[filterName];
+         continue;
+      }
+      if(filterName == 'contestID' && (tableName == 'contestant' || tableName == 'group')) {
+         params['relatedContestID'] = filters[filterName];
+         continue;
+      }
       params[filterName] = filters[filterName];
    }
    return $.post("jqGridData.php", params,
@@ -43,7 +51,7 @@ function loadData(tableName, callback, filters) {
 var thresholdsByGrade = {};
 function getThresholds() {
    for (var iThreshold in allData.award_threshold) {
-      threshold = allData.award_threshold[iThreshold];
+      var threshold = allData.award_threshold[iThreshold];
       if (!thresholdsByGrade[threshold.gradeID]) {
         thresholdsByGrade[threshold.gradeID] = {};
       }
@@ -109,8 +117,22 @@ function mergeUsers() {
    allData.users = users;
 };
 
+function getContestantsPerTeam() {
+   var contestantPerTeam = {};
+   for (var contestantID in allData.contestant) {
+      var contestant = allData.contestant[contestantID];
+      var teamID = contestant.teamID;
+      if (contestantPerTeam[teamID] == undefined) {
+         contestantPerTeam[teamID] = [];
+      }
+      contestantPerTeam[teamID].push(contestant);
+   }
+   return contestantPerTeam;
+}
+
 function fillDataDiplomas(params) {
    var contestantPerGroup = {}
+   var contestantPerTeam = getContestantsPerTeam();
    var contest = allData.contest[params.contestID];
    for (var contestantID in allData.contestant) {
       var contestant = allData.contestant[contestantID];
@@ -160,6 +182,19 @@ function fillDataDiplomas(params) {
       } else {
         diplomaContestant.schoolParticipants = allData.schoolContestants;
         diplomaContestant.contestParticipants = allData.contestContestants;
+      }
+      diplomaContestant.certificateIsIntermediate = contest.certificateIsIntermediate;
+      diplomaContestant.certificateAllNames = contest.certificateAllNames;
+      if(contest.certificateAllNames == 1 && contestant.nbContestants > 1) {
+         var teamContestants = contestantPerTeam[contestant.teamID];
+         for(var i = 0; i < teamContestants.length; i++) {
+            if(teamContestants[i] !== contestant) {
+               if(!diplomaContestant.otherContestants) {
+                  diplomaContestant.otherContestants = [];
+               }
+               diplomaContestant.otherContestants.push(teamContestants[i]);
+            }
+         }
       }
       contestantPerGroup[groupID].push(diplomaContestant);
    }
@@ -394,22 +429,43 @@ function addContestantTableForGroup(content, contestantsData) {
    });
 }
 
-function getDisplayedScoreAndRank(diploma) {
+function joinDiplomaLines(parts) {
+   var str = "";
+   for (var iPart = 0; iPart < parts.length; iPart++) {
+      if (iPart == parts.length - 1 && iPart > 0) {
+         str += i18n.t("certificates_and") + " ";
+      }
+      str += parts[iPart];
+      if (iPart == parts.length - 1) {
+         str += ".";
+      } else if (iPart < parts.length - 2) {
+         str += ",";
+      }
+      str += "\n";
+   }
+   return str;
+}
+
+function getDisplayedScoreAndRank(diploma, contest, gradeAndLevel) {
    var minScoreDisplayed = parseInt($("#minScoreDisplayed").val());
    var maxRankPercentileDisplayed = parseInt($("#maxRankPercentileDisplayed").val()) / 100;
    var maxSchoolRankPercentileDisplayed = parseInt($("#maxSchoolRankPercentileDisplayed").val()) / 100;
-   var scoreAndRank = [
-   ];
+   var scoreAndRank = [];
+   var displayStr = "";
 
    // Belongs to a team with multiple contestants
    var inTeam = parseInt(diploma.nbContestants) > 1;
-   if(inTeam) {
-      scoreAndRank.push(i18n.t("certificates_in_team"));
+   if(diploma.certificateAllNames != 1) {
+      scoreAndRank.push(i18n.t("certificates_in_team"));      
    }
+   var intermediateI18nKey = diploma.certificateIsIntermediate == 1 ? "certificates_ranking_intermediate" : "certificates_ranking";
+   var withIntermediate = i18n.exists(intermediateI18nKey); // Are there cases where it's not?
    function getI18nTeam(key) {
-      if(!inTeam) { return key; }
-      var keyTeam = key + '_team';
-      return i18n.exists(keyTeam) ? keyTeam : key;
+      var key2 = key + (withIntermediate ? '_short' : '');
+      key = i18n.exists(key2) ? key2 : key;
+      var key2 = key + (inTeam ? '_team' : '');
+      key = i18n.exists(key2) ? key2 : key;
+      return key;
    }
 
    // Score
@@ -417,14 +473,24 @@ function getDisplayedScoreAndRank(diploma) {
       scoreAndRank.push(i18n.t(getI18nTeam("certificates_points_obtained"), { points: diploma.score }));
    }
 
-   // Qualitifcation to category
+   // Qualification to category
    if ((diploma.category != undefined) && (diploma.category != "blanche")) {
-/*      if (diploma.round == "1") {
-         scoreAndRank.push("la qualification en catégorie " + diploma.category + " et en demi-finale");
-      } else {
-*/         
-         scoreAndRank.push(i18n.t("certificates_qualification_to_category", {category: diploma.category}));
-/*      }*/
+      scoreAndRank.push(i18n.t("certificates_qualification_to_category", {category: diploma.category}));
+   }
+
+   var intermediateStr = "";
+   if(withIntermediate) {
+      displayStr += joinDiplomaLines(scoreAndRank);
+      intermediateStr += i18n.t(intermediateI18nKey);
+      if(gradeAndLevel) {
+         if(i18n.exists("certificates_among")) {
+            intermediateStr += i18n.t("certificates_among") + gradeAndLevel;
+         } else {
+            intermediateStr += " (" + gradeAndLevel + ")";
+         }
+      }
+      intermediateStr += ' :\n';
+      scoreAndRank = [];
    }
 
    // Teacher setting : display global rank for top X%
@@ -446,20 +512,10 @@ function getDisplayedScoreAndRank(diploma) {
    if (diploma.qualified) {
       scoreAndRank.push(qualificationText);
    }
-   var str = "";
-   for (var iPart = 0; iPart < scoreAndRank.length; iPart++) {
-      if ((iPart == scoreAndRank.length - 1) && (iPart > (inTeam ? 1 : 0))) {
-         str += i18n.t("certificates_and") + " ";
-      }
-      str += scoreAndRank[iPart];
-      if (iPart == scoreAndRank.length - 1) {
-         str += ".";
-      } else if (iPart < scoreAndRank.length - 2 && (iPart != 1 || !inTeam)) {
-         str += ",";
-      }
-      str += "\n";
+   if(scoreAndRank.length > 0) {
+      displayStr += intermediateStr + joinDiplomaLines(scoreAndRank);
    }
-   return str;
+   return displayStr;
 }
 
 function addDiploma(content, diploma, contest, school, user) {
@@ -469,6 +525,7 @@ function addDiploma(content, diploma, contest, school, user) {
    }
    var yearBackground = {image: allImages.yearBackground, width:150};
 
+   var gradeAndLevel = '';
    if(diploma.grade) {
       var grade = i18n.t('grade_' + diploma.grade);
       if(contest.ID == '619714287977504425' && (diploma.grade == 11 || diploma.grade == 12)) {
@@ -480,7 +537,8 @@ function addDiploma(content, diploma, contest, school, user) {
          levelNbContestants = " - " + i18n.t('nbContestants_' + diploma.nbContestants);
       }
 
-      var contestSubtitle = i18n.t('certificates_category') + grade + levelNbContestants;
+      gradeAndLevel = grade + levelNbContestants;
+      var contestSubtitle = i18n.t('certificates_category') + gradeAndLevel;
    } else {
       var contestSubtitle = '';
    }
@@ -501,16 +559,43 @@ The styles depend on the contest.
 
 */
 
-   var scoreAndRank = getDisplayedScoreAndRank(diploma);
+   var scoreAndRank = getDisplayedScoreAndRank(diploma, contest, gradeAndLevel);
 
    var contestTitle = contest.certificateTitle || window.defaultCertificateTitle;
 
    var contentStack = [
       {image: 'background', absolutePosition: {x:40, y:45}, width:750},
-      {stack: [contestLogo], absolutePosition: {x:20, y:40}},//this is an image
+      {stack: [contestLogo], absolutePosition: {x:20, y:40}}, //this is an image
       {text: contestTitle, style: ['contestName', 'accentColor'], margin: [0, 30, 0, 20]},
-      {text: contestSubtitle, style: ['contestSubtitle', 'mainColor']},
-      {text: [diploma.firstName, ' ', diploma.lastName], style: ['accentColor', 'contestantName'], margin: [0, 40, 0, 0]},
+      {text: contestSubtitle, style: ['contestSubtitle', 'mainColor']}
+   ];
+
+   var contestantNames = [diploma.firstName, ' ', diploma.lastName]
+   var contestantNamesMargins = [0, 40, 0];
+   if (diploma.otherContestants) {
+      for(var i = 0; i < diploma.otherContestants.length; i++) {
+         if(i < diploma.otherContestants.length - 1) {
+            contestantNames[contestantNames.length - 1] += ', ';
+         } else if(i == diploma.otherContestants.length - 1) {
+            contestantNames.push(' ' + i18n.t('certificates_and') + ' ')
+            contestantNamesMargins.push(0);
+         }
+         if(diploma.otherContestants.length > 1 && i == Math.floor((diploma.otherContestants.length + 1) / 2) - 1) {
+            contestantNames.push('\n');
+            contestantNamesMargins.push(0);
+         }
+         contestantNames.push(diploma.otherContestants[i].firstName);
+         contestantNames.push(' ');
+         contestantNames.push(diploma.otherContestants[i].lastName);
+         contestantNamesMargins.push(0);
+         contestantNamesMargins.push(40);
+         contestantNamesMargins.push(0);
+      }
+   }
+   contestantNamesMargins.push(0);
+   contentStack.push({text: contestantNames, style: ['accentColor', 'contestantName'], margin: contestantNamesMargins});
+
+   contentStack = contentStack.concat([
       {text: scoreAndRank, style: 'diplomaScore', margin: [0, 20, 0, 0]},
       {
          table: {
@@ -543,7 +628,7 @@ The styles depend on the contest.
          absolutePosition: {x: 20, y: 530},
          width: 750
       }
-   ];
+   ]);
    if (showYear == "middle") {
       contentStack.push(
          {stack: [yearBackground], absolutePosition: {x:650, y:40}}//this is an image

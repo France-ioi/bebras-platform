@@ -457,6 +457,12 @@ function selectRecords($db, $modelName, $recordID, $roles, $extraFilters = array
          if (isset($extraFilters["contestID"])) {
             $request["filters"]["contestID"] = $extraFilters["contestID"];
          }
+         if (isset($extraFilters["relatedGroupID"])) {
+            $request["filters"]["relatedGroupID"] = $extraFilters["relatedGroupID"];
+         }
+         if (isset($extraFilters["relatedContestID"])) {
+            $request["filters"]["relatedContestID"] = $extraFilters["relatedContestID"];
+         }
          $request["filters"]["checkAccessUserID"] = $_SESSION["userID"];
          $request["filters"]["checkSchoolUserID"] = $_SESSION["userID"];
       } else if ($modelName === "contest") {
@@ -487,6 +493,12 @@ function selectRecords($db, $modelName, $recordID, $roles, $extraFilters = array
          }
          if (isset($extraFilters["official"])) {
             $request["filters"]["official"] = true;
+         }
+         if (isset($extraFilters["relatedGroupID"])) {
+            $request["filters"]["relatedGroupID"] = $extraFilters["relatedGroupID"];
+         }
+         if (isset($extraFilters["relatedContestID"])) {
+            $request["filters"]["relatedContestID"] = $extraFilters["relatedContestID"];
          }
          $request["filters"]["userID"] = $_SESSION["userID"];
       } else if ($modelName === "user") {

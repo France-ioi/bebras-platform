@@ -1,0 +1,2 @@
+ALTER TABLE `contest` ADD `certificateAllNames` TINYINT(1) NOT NULL DEFAULT '0' , ADD `certificateIsIntermediate` TINYINT(1) NOT NULL DEFAULT '0';
+ALTER TABLE `history_contest` ADD `certificateAllNames` TINYINT(1) NOT NULL DEFAULT '0' , ADD `certificateIsIntermediate` TINYINT(1) NOT NULL DEFAULT '0' ;

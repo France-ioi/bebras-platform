@@ -383,6 +383,8 @@
     "contest_srlModule_label": "Module SRL",
     "contest_sendPings_label": "Envoi des pings",
     "contest_allowFromHome_label": "Participation à la maison",
+    "contest_certificateAllNames_label": "Tous les noms sur le certificat",
+    "contest_certificateIsIntermediate_label": "Afficher \"intermédiare\" sur le certificat",
     "groups_from_home_disabled": "La génération de codes individuels de participation à la maison n'est pas disponible en ce moment pour cette activité.",
     "expectedStartTime_long_label": "Heure de passage prévue",
     "option_hidden_contest": "Caché",
@@ -610,6 +612,9 @@
     "certificates_global_rank_nototal_team": "ont obtenu la __rank__ place",
     "certificates_school_rank": "a obtenu la __rank__ place sur __total__ dans l'établissement",
     "certificates_school_rank_team": "ont obtenu la __rank__ place sur __total__ dans l'établissement",
+    "certificates_global_rank_short": "__rank__ place sur __total__",
+    "certificates_global_rank_nototal_short": "__rank__ place",
+    "certificates_school_rank_short": "__rank__ place sur __total__ dans l'établissement",
     "certificates_semifinals_rank": "la __rank__ place en demi-finale",
     "certificates_certified_on": "Certifié le",
     "certificates_certified_by": "par ",
@@ -619,10 +624,13 @@
     "certificates_rank_1_suffix": "ère",
     "certificates_rank_n_suffix": "e",
     "certificates_and": "et",
+    "certificates_among": " parmi les ",
     "certificates_option_display": "Paramètres d'affichage des scores et classements",
     "certificates_min_score_displayed": "Afficher le score s'il est au minimum de %s points.",
     "certificates_max_school_rank_percentile_displayed": "Afficher le classement dans l'établissement pour les %s%% mieux classés.",
     "certificates_max_rank_percentile_displayed": "Afficher le classement général pour les %s%% mieux classés.",
+    "certificates_ranking": "Classement",
+    "certificates_ranking_intermediate": "Classement intermédiaire",
     "groups_edit_contestants": "Codes individuels"
 }
 
