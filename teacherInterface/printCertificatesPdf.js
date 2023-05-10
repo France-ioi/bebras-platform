@@ -455,7 +455,7 @@ function getDisplayedScoreAndRank(diploma, contest, gradeAndLevel) {
 
    // Belongs to a team with multiple contestants
    var inTeam = parseInt(diploma.nbContestants) > 1;
-   if(diploma.certificateAllNames != 1) {
+   if(diploma.certificateAllNames != 1 && inTeam) {
       scoreAndRank.push(i18n.t("certificates_in_team"));      
    }
    var intermediateI18nKey = diploma.certificateIsIntermediate == 1 ? "certificates_ranking_intermediate" : "certificates_ranking";
