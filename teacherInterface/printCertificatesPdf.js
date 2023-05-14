@@ -456,7 +456,7 @@ function getDisplayedScoreAndRank(diploma, contest, gradeAndLevel) {
    // Belongs to a team with multiple contestants
    var inTeam = parseInt(diploma.nbContestants) > 1;
    if(diploma.certificateAllNames != 1 && inTeam) {
-      scoreAndRank.push(i18n.t("certificates_in_team"));      
+      displayStr += i18n.t("certificates_in_team") + "\n";
    }
    var intermediateI18nKey = diploma.certificateIsIntermediate == 1 ? "certificates_ranking_intermediate" : "certificates_ranking";
    var withIntermediate = i18n.exists(intermediateI18nKey); // Are there cases where it's not?
