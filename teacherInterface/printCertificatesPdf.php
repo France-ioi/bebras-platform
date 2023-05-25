@@ -65,12 +65,18 @@ foreach ($config->certificates->partnerLogos as $numLogo => $fileName) {
 }
 $nbLogos = count($config->certificates->partnerLogos);
 $logoStartX = 165 - ($totalWidth + (10 * ($nbLogos - 1))) / 2;
+if (isset($config->certificates->partnerLogosX)) {
+   $logoStartX = intVal($config->certificates->partnerLogosX);
+}
 $xPos = $logoStartX;
 $partnersStartY = 510;
 if (isset($config->certificates->partnerLogosY)) {
    $partnersStartY = intVal($config->certificates->partnerLogosY);
 }
-$strJS = "var partnersStartY = ".$partnersStartY.";\nvar partnerLogos = [\n";
+$strJS  = "var partnersWidth = ".$totalWidth.";\n";
+$strJS .= "var partnersStartX = ".$logoStartX.";\n";
+$strJS .= "var partnersStartY = ".$partnersStartY.";\n";
+$strJS .= "var partnerLogos = [\n";
 foreach ($partnerImagesInfos as $iLogo => $logoInfo) {
    $width = $logoInfo[2];
 

@@ -605,6 +605,8 @@
     "certificates_in_team": "et son équipe",
     "certificates_points_obtained": "a obtenu __points__ points",
     "certificates_points_obtained_team": "ont obtenu __points__ points",
+    "certificates_points_obtained_color": "a obtenu __points__ points en catégorie __color__",
+    "certificates_points_obtained_team_color": "ont obtenu __points__ points en catégorie __color__",
     "certificates_qualification_to_category": "la qualification en catégorie __category__",
     "certificates_global_rank": "a obtenu la __rank__ place sur __total__",
     "certificates_global_rank_team": "ont obtenu la __rank__ place sur __total__",

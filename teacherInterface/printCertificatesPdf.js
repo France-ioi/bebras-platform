@@ -470,7 +470,12 @@ function getDisplayedScoreAndRank(diploma, contest, gradeAndLevel) {
 
    // Score
    if (diploma.score >= minScoreDisplayed) {
-      scoreAndRank.push(i18n.t(getI18nTeam("certificates_points_obtained"), { points: diploma.score }));
+      var scoreI18nKey = getI18nTeam("certificates_points_obtained");
+      if(contest.categoryColor && i18n.exists(scoreI18nKey + "_color")) {
+         scoreAndRank.push(i18n.t(scoreI18nKey + "_color", { points: diploma.score, color: contest.categoryColor }));
+      } else {
+         scoreAndRank.push(i18n.t(scoreI18nKey, { points: diploma.score }));
+      }
    }
 
    // Qualification to category
@@ -605,7 +610,7 @@ The styles depend on the contest.
             ]
          },
          layout: 'noBorders',
-         absolutePosition: {x: 20, y: partnersStartY - 30}
+         absolutePosition: {x: Math.max(20, partnersStartX + partnersWidth / 2 - 150), y: partnersStartY - 30}
       },
       {
          stack: [partnerLogos] // this is an array of images
