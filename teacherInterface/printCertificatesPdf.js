@@ -610,7 +610,7 @@ The styles depend on the contest.
             ]
          },
          layout: 'noBorders',
-         absolutePosition: {x: Math.max(20, partnersStartX + partnersWidth / 2 - 150), y: partnersStartY - 30}
+         absolutePosition: {x: partnersStartX + partnersWidth / 2 - 150, y: partnersStartY - 30}
       },
       {
          stack: [partnerLogos] // this is an array of images
