@@ -1692,4 +1692,16 @@ if ($action == "updateAlgoreaRanks") {
    execQueryAndShowNbRows("Remove ranks when total Algorea score is 0", 
      "UPDATE algorea_registration SET algoreaRank = NULL, algoreaSchoolRank = NULL WHERE totalScoreAlgorea = 0" ,
         array());
+   
+   execQueryAndShowNbRows("Copy algoreaRanks to contestant table for selected contest",
+      "UPDATE contestant
+      JOIN `algorea_registration` ON contestant.algoreaCode = algorea_registration.code
+      JOIN team ON team.ID = contestant.teamID
+      JOIN contest ON contest.ID = team.contestID
+      SET contestant.rank = algorea_registration.algoreaRank, contestant.schoolRank = algorea_registration.algoreaSchoolRank
+      WHERE contestant.rank IS NULL
+         AND algorea_registration.algoreaRank IS NOT NULL
+         AND algorea_registration.totalScoreAlgorea > 0
+         AND contest.parentContestID = :contestID;",
+         array("contestID" => $contestID));
 }
