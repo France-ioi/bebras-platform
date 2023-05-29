@@ -171,6 +171,18 @@ function getTeamQuestionTableForGrading() {
    return "team_question";
 }
 
+function verifyFioiQualification($idUser) {
+   $aco = ["ssl" => ["verify_peer" => false]];
+   try {
+      $server_output = file_get_contents('https://www.france-ioi.org/algorea/verifyQualification.php?idUser=' . $idUser, false, stream_context_create($aco));
+      $server_output = json_decode($server_output, true);
+      return isset($server_output["success"]) && $server_output["success"];
+   } catch(Exception $e) {
+      error_log('bad server_output from fioi-api:' . $server_output);
+      return array('success' => false, 'error' => 'Erreur lors de la vérification de la qualification.');
+   }
+}
+
 if (!isset($_SESSION["userType"])) {
    $_SESSION["userType"] = "user";
 }

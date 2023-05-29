@@ -134,12 +134,14 @@ $query = "
       algorea_registration.grade as regGrade,
       algorea_registration.category,
       algorea_registration.validatedCategory,
+      algorea_registration.franceioiID,
       algorea_registration.round,
+      algorea_registration.qualifiedFromSite,
       algorea_registration.algoreaRank,
       algorea_registration.algoreaSchoolRank,
-      algorea_registration.scoreQuart2022,
-      algorea_registration.scoreDemi2022,
-      algorea_registration.rankDemi2022,
+      algorea_registration.scoreQuart2023,
+      algorea_registration.scoreDemi2023,
+      algorea_registration.rankDemi2023,
       algorea_registration.qualifiedFinal,
       `group`.contestID,
       contest.parentContestID,
@@ -180,12 +182,14 @@ $query = "
       algorea_registration.grade as regGrade,
       algorea_registration.category,
       algorea_registration.validatedCategory,
+      algorea_registration.franceioiID,
       algorea_registration.round,
+      algorea_registration.qualifiedFromSite,
       algorea_registration.algoreaRank,
       algorea_registration.algoreaSchoolRank,
-      algorea_registration.scoreQuart2022,
-      algorea_registration.scoreDemi2022,
-      algorea_registration.rankDemi2022,
+      algorea_registration.scoreQuart2023,
+      algorea_registration.scoreDemi2023,
+      algorea_registration.rankDemi2023,
       algorea_registration.qualifiedFinal,
       `group`.contestID,
       contest.parentContestID,
@@ -246,43 +250,40 @@ while ($row = $stmt->fetchObject()) {
       $contests[$mainContestKey][$row->categoryColor] = $contestKey;
    }
    if (!isset($contestants[$row->ID])) {
+      $infos = array(
+         "ID" => $row->ID,
+         "franceioiID" => $row->franceioiID,
+         "round" => $row->round,
+         "qualifiedFromSite" => $row->qualifiedFromSite,
+         "scoreQuart2023" => $row->scoreQuart2023,
+         "scoreDemi2023" => $row->scoreDemi2023,
+         "rankDemi2023" => $row->rankDemi2023,
+         "qualifiedFinal" => $row->qualifiedFinal,
+         "algoreaRank" => $row->algoreaRank,
+         "algoreaSchoolRank" => $row->algoreaSchoolRank,
+         "bebrasGroup" => "-"
+      );
+
       if ($row->regFirstName != null) {
-         $infos = array(
-             "ID" => $row->ID,
-             "firstName" => $row->regFirstName,
-             "lastName" => $row->regLastName,
-             "grade" => $row->regGrade,
-             "code" => $row->code,
-             "round" => $row->round,
-             "scoreQuart2022" => $row->scoreQuart2022,
-             "scoreDemi2022" => $row->scoreDemi2022,
-             "rankDemi2022" => $row->rankDemi2022,
-             "qualifiedFinal" => $row->qualifiedFinal,
-             "qualifiedCategory" => $row->category,
-             "validatedCategory" => $row->validatedCategory,
-             "algoreaRank" => $row->algoreaRank,
-             "algoreaSchoolRank" => $row->algoreaSchoolRank,
-             "bebrasGroup" => "-"
-          );
+         $infos = array_merge($infos, array(
+            "firstName" => $row->regFirstName,
+            "lastName" => $row->regLastName,
+            "grade" => $row->regGrade,
+            "code" => $row->code,
+            "qualifiedCategory" => $row->category,
+            "validatedCategory" => $row->validatedCategory
+         ));
       } else {
-         $infos = array(
-             "ID" => $row->ID,
-             "firstName" => $row->firstName,
-             "lastName" => $row->lastName,
-             "grade" => $row->grade,
-             "code" => "-",
-             "round" => $row->round,
-             "scoreQuart2022" => $row->scoreQuart2022,
-             "scoreDemi2022" => $row->scoreDemi2022,
-             "rankDemi2022" => $row->rankDemi2022,
-             "qualifiedFinal" => $row->qualifiedFinal,
-             "qualifiedCategory" => "-",
-             "validatedCategory" => "-",
-             "algoreaRank" => $row->algoreaRank,
-             "algoreaSchoolRank" => $row->algoreaSchoolRank,
-             "bebrasGroup" => "-"
-          );
+         $infos = array_merge($infos, array(
+            "firstName" => $row->firstName,
+            "lastName" => $row->lastName,
+            "grade" => $row->grade,
+            "code" => "-",
+            "qualifiedCategory" => "-",
+            "validatedCategory" => "-"
+         ));
       }
+
       $contestants[$row->ID] = array(
           "infos" => $infos,
           "results" => array()
@@ -400,8 +401,16 @@ foreach ($schools as $schoolID => $school) {
          }
       }
       echo "<td>";
-      if ($contestant["infos"]["round"] == "1") {
-         $scoreQuart = $contestant["infos"]["scoreQuart2022"];
+      if ($contestant["infos"]["round"] != "1" && $contestant["infos"]["qualifiedFromSite"] != "1" && $contestant["infos"]["franceioiID"]) {
+         $fioiQualification = verifyFioiQualification($contestant["infos"]["franceioiID"]);
+         if($fioiQualification["success"]) {
+            $contestant["infos"]["qualifiedFromSite"] = "1";
+            $updateStmt = $db->prepare("UPDATE algorea_registration SET qualifiedFromSite = 1 WHERE ID = :ID");
+            $updateStmt->execute(['ID' => $contestant["infos"]["ID"]]);
+         }
+      }
+      if ($contestant["infos"]["round"] == "1" || $contestant["infos"]["qualifiedFromSite"] == "1") {
+         $scoreQuart = $contestant["infos"]["scoreQuart2023"];
          if (($scoreQuart != null) && ($scoreQuart > 0)) {
             echo $scoreQuart;
          } else {
@@ -412,7 +421,7 @@ foreach ($schools as $schoolID => $school) {
       }
       echo "</td>";
       echo "<td>";
-      $scoreDemi = $contestant["infos"]["scoreDemi2022"];
+      $scoreDemi = $contestant["infos"]["scoreDemi2023"];
       if($scoreDemi) {
          echo $scoreDemi;
          echo "<br/>";
@@ -420,7 +429,7 @@ foreach ($schools as $schoolID => $school) {
          echo "<span class='rank'>";
          if ($qualifiedFinal == "0") {
             echo "Non qualifié(e) pour la finale<br/>";
-            echo "Rang ".$contestant["infos"]["rankDemi2022"]." de ";
+            echo "Rang ".$contestant["infos"]["rankDemi2023"]." de ";
             echo translate("grade_short_".$contestant["infos"]["grade"]);
          } else if ($qualifiedFinal == "1") {
             echo "Qualifié(e) pour la finale";
