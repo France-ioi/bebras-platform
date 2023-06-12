@@ -1384,11 +1384,12 @@ if ($action == "updateRegistrationsSchoolUser") {
          JOIN contestant ON contestant.registrationID = algorea_registration.ID
          JOIN team ON contestant.teamID = team.ID
          JOIN `group` ON `group`.ID = team.groupID
+         JOIN contest ON `group`.contestID = contest.ID
          SET algorea_registration.userID = `group`.userID,
          algorea_registration.schoolID = `group`.schoolID
-         WHERE `group`.contestID = :contestID
+         WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
          AND (algorea_registration.userID != `group`.userID OR
-		    algorea_registration.schoolID != `group`.schoolID)",
+		    algorea_registration.schoolID != `group`.schoolID) AND `group`.userID != 0",
       array("contestID" => $contestID));
 }
 
