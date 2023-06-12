@@ -140,6 +140,7 @@ $query = "
       algorea_registration.algoreaRank,
       algorea_registration.algoreaSchoolRank,
       algorea_registration.scoreQuart2023,
+      algorea_registration.qualifiedDemi2023,
       algorea_registration.scoreDemi2023,
       algorea_registration.rankDemi2023,
       algorea_registration.qualifiedFinal,
@@ -188,6 +189,7 @@ $query = "
       algorea_registration.algoreaRank,
       algorea_registration.algoreaSchoolRank,
       algorea_registration.scoreQuart2023,
+      algorea_registration.qualifiedDemi2023,
       algorea_registration.scoreDemi2023,
       algorea_registration.rankDemi2023,
       algorea_registration.qualifiedFinal,
@@ -256,6 +258,7 @@ while ($row = $stmt->fetchObject()) {
          "round" => $row->round,
          "qualifiedFromSite" => $row->qualifiedFromSite,
          "scoreQuart2023" => $row->scoreQuart2023,
+         "qualifiedDemi2023" => $row->qualifiedDemi2023,
          "scoreDemi2023" => $row->scoreDemi2023,
          "rankDemi2023" => $row->rankDemi2023,
          "qualifiedFinal" => $row->qualifiedFinal,
@@ -422,6 +425,7 @@ foreach ($schools as $schoolID => $school) {
       echo "</td>";
       echo "<td>";
       $scoreDemi = $contestant["infos"]["scoreDemi2023"];
+      $qualifiedDemi = $contestant["infos"]["qualifiedDemi2023"];
       if($scoreDemi) {
          echo $scoreDemi;
          echo "<br/>";
@@ -435,6 +439,10 @@ foreach ($schools as $schoolID => $school) {
             echo "Qualifié(e) pour la finale";
          }
          echo "</span>";
+      } elseif($qualifiedDemi == "1") {
+         echo "<span class='rank'>Qualifié(e), n'a pas participé</span>";
+      } elseif($qualifiedDemi == "2") {
+         echo "<span class='rank'>Veuillez nous contacter</span>";
       } else {
          echo "-";
       }
