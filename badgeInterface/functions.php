@@ -39,7 +39,13 @@ function verifyCode($badgeName, $code) {
     return null;
   }
 
-  $contestant['sSex'] = ($contestant['genre'] == 2 ? 'Male' : 'Female');
+  if($contestant['genre'] == 1) {
+    $contestant['sSex'] = 'Female';
+  } else if($contestant['genre'] == 2) {
+    $contestant['sSex'] = 'Male';
+  } else {
+    $contestant['sSex'] = '';
+  }
   unset($contestant['genre']);
 
   // Data is transmitted everywhere along the badge
