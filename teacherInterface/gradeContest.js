@@ -59,6 +59,7 @@ function grade(curContestID, curGroupID, questionKeys, questionPaths, curIndex, 
                TaskProxyManager.getTaskProxy('preview_question', function(task) {
                   var platform = new Platform(task);
                   platform.updateDisplay = function(data, success, error) { success(); };
+                  platform.log = function(data, success, error) { success(); }
                   platform.getTaskParams = function(key, defaultValue, success, error) {
                      var res = {};
                      if (key) {
