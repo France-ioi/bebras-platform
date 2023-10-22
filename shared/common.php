@@ -147,7 +147,9 @@ function translate($key) {
       $teacherTranslationStrings = json_decode(file_get_contents(__DIR__.'/../teacherInterface/i18n/'.$config->defaultLanguage.'/translation.json'), true);
       if ($config->customStringsName) {
          $specificStrings = json_decode(file_get_contents(__DIR__.'/../teacherInterface/i18n/'.$config->defaultLanguage.'/'.$config->customStringsName.'.json'), true);
-         $teacherTranslationStrings = array_merge($teacherTranslationStrings, $specificStrings);
+         if($specificStrings) {
+            $teacherTranslationStrings = array_merge($teacherTranslationStrings, $specificStrings);
+         }
       }
    }
    if (isset($teacherTranslationStrings[$key])) {
