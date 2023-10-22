@@ -4,6 +4,9 @@ body {
   min-width: fit-content;
   min-width: -moz-fit-content;
 }
+body.body-margin {
+  margin: 16px;
+}
 a,
 .ui-widget-content a {
   color: #4D87CE;

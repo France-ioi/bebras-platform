@@ -98,6 +98,8 @@ $config->teacherInterface->displayDuration = false;
 // Remove some columns from the teacher interface
 // Example : ['contestant' => 3]
 $config->teacherInterface->removeLastColumns = [];
+// Configuration for addManualCodes.php
+$config->teacherInterface->manualCodesReferenceGroup = null;
 
 $config->certificates = (object) array();
 $config->certificates->webServiceUrl = 'http://castor-informatique.fr.localhost/certificates/';

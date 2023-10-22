@@ -633,7 +633,11 @@
     "certificates_max_rank_percentile_displayed": "Afficher le classement général pour les %s%% mieux classés.",
     "certificates_ranking": "Classement",
     "certificates_ranking_intermediate": "Classement intermédiaire",
-    "groups_edit_contestants": "Codes individuels"
+    "groups_edit_contestants": "Codes individuels",
+    "manual_codes_title": "Ajout de codes générés à la main",
+    "manual_codes_instructions": "Cette page vous permet d'ajouter une liste de codes créés à la main. Veuillez entrer votre liste de codes, séparés par des espaces, des retours à la ligne et/ou des virgules.",
+    "manual_codes_added": "groupes ajoutés",
+    "manual_codes_existing": "groupes déjà existants"
 }
 
 

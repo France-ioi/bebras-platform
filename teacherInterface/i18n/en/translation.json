@@ -592,5 +592,9 @@
     "certificates_max_school_rank_percentile_displayed": "Print the school rank for the top %s%% only.",
     "certificates_max_rank_percentile_displayed": "Print the national rank for the top %s%% only.",
     "certificates_ranking": "Ranking",
-    "certificates_ranking_intermediate": "Intermediate ranking"
+    "certificates_ranking_intermediate": "Intermediate ranking",
+    "manual_codes_title": "Add manually generated codes",
+    "manual_codes_instructions": "This page allows you to add a list of codes created manually. Please enter your list of codes, separated by spaces, line breaks and/or commas.",
+    "manual_codes_added": "groups added",
+    "manual_codes_existing": "existing groups"
 }
