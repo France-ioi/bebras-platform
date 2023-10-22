@@ -2,7 +2,6 @@
    require_once("commonAdmin.php");
    require_once("./config.php");
    header('Content-type: text/html');
-   global $config;
 ?><!DOCTYPE html>
 <html>
 <head>
