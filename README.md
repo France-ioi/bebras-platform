@@ -1,6 +1,6 @@
 # Bebras Platform
 
-This repository contains everythin you need to run the *Bebras* Task Platform, historically developped for (and run at) [French Beaver Contest](http://castor-informatique.fr/).
+This repository contains everything you need to run the *Bebras* Task Platform, historically developped for (and run at) [French Beaver Contest](http://castor-informatique.fr/).
 
 ## Prerequisites
 
