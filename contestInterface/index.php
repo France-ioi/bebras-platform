@@ -27,7 +27,8 @@
     "redirectToHTTPSIfError" => !!$config->redirectToHTTPSIfError,
     "upgradeToHTTPS" => $config->upgradeToHTTPS,
     "logActivity" => $config->contestInterface->logActivity,
-    "oldInterfaceScoreModifiersDisplay" => $config->contestInterface->oldInterfaceScoreModifiersDisplay
+    "oldInterfaceScoreModifiersDisplay" => $config->contestInterface->oldInterfaceScoreModifiersDisplay,
+    "checkBrowserID" => $config->contestInterface->checkBrowserID,
     ]) ?>;
 
   window.config.downgradeToHTTP = window.config.downgradeToHTTP && (window.location.protocol != 'https:');

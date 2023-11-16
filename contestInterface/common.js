@@ -2046,6 +2046,11 @@ window.confirmContestantsSA = function(changeContest) {
 }
 
 function checkBrowserID(data, callback) {
+   if(!config.checkBrowserID) {
+      callback();
+      return;
+   }
+   
    function cb() {
       setSelfAsActiveTab();
       callback();
