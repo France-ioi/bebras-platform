@@ -452,7 +452,7 @@ function setSelfAsActiveTab() {
       if(!isActiveTab) { return; }
       // Always start sending answers when that happens, to make sure a possible new tab gets all the answers
       sendAnswers();
-      if(e.key == 'activeTabID') {
+      if(e.key == 'activeTabID' && storage.getItem('activeTabID') != tabID) {
          // Another tab is becoming active, end this one
          browserIDChanged(true);
       } else if(e.key == 'activeTabCheck') {
