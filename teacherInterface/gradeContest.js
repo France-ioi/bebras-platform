@@ -208,9 +208,9 @@ function gradeOneAnswer(task, answers, i, scores, finalCallback) {
       gradeOneAnswer(task, answers, i+1, scores, finalCallback);
       return;
    }
-   // TODO :: remettre le bon randomSeed
-   // curGradingData.randomSeed = (parseInt(scores[i].teamID) + parseInt(scores[i].questionID)) % Number.MAX_SAFE_INTEGER;
-   curGradingData.randomSeed = scores[i].teamID;
+   curGradingData.randomSeed = (parseInt(scores[i].teamID) + parseInt(scores[i].questionID)) % Number.MAX_SAFE_INTEGER;
+   // ancien randomSeed
+   //curGradingData.randomSeed = scores[i].teamID;
    task.gradeAnswer(answer, null, function(score) {
       scores[i].score = score;
       scores[i].checkStatus = 'computed';
