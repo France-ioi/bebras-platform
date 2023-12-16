@@ -502,7 +502,7 @@ if ($action == "handleRecover") {
       JOIN `group` ON team.groupID = `group`.ID
       JOIN `contest` ON `group`.contestID = contest.ID
       JOIN team_question_recover ON (team_question.teamID = team_question_recover.teamID AND team_question.questionID = team_question_recover.questionID AND team_question.answer != team_question_recover.answer)
-      SET team_question.answer = team_question_recover.answer, team_question.score = NULL, team_question.date = NOW(), checkStatus = 'requested'
+      SET team_question.answer = team_question_recover.answer, team_question.score = NULL, team_question.date = NOW(), team_question.checkStatus = 'requested'
       WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)",
       array("contestID" => $contestID));
 }
@@ -568,9 +568,9 @@ echo "<h3><a href='".$startUrl."&action=gradeContest'>Recompute scores</a></h3>"
 echo "<p>Add &db=db_name to the URL to use another database</p>";
 if ($action == "gradeContest") {
    if (isset($_GET["db"])) {
-      $db = json_encode($_GET["db"]);
+      $database = json_encode($_GET["db"]);
    } else {
-      $db = 'null';
+      $database = 'null';
    }
    $language = $config->defaultLanguage;
    // JSON3 shim for IE6-9 compatibility.
@@ -584,7 +584,7 @@ if ($action == "gradeContest") {
    script_tag('/gradeContest.js');
    echo "<p>Statut : <div id='gradeContestState'><span class='nbCurrent'></span><span class='current'></span><span class='gradeProcessing'></span></div></p>";
    echo "<iframe id='preview_question' src='' style='width:800px;height:800px;'></iframe>";
-   echo "<script>gradeContestWithRefresh('".$contestID."', true, ".$db.");</script>";
+   echo "<script>gradeContestWithRefresh('".$contestID."', true, ".$database.");</script>";
 }
 
 echo "<h3><a href='".$startUrl."&action=showScoresToCompute'>Remaining scores to compute (checkStatus = requested)</a></h3>";
