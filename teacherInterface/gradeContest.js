@@ -125,10 +125,8 @@ function gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questio
    for (var curTeamQuestion = curPackIndex; curTeamQuestion < packEndIndex; curTeamQuestion++) {
       var teamQuestion = curGradingData.teamQuestions[curTeamQuestion];
 
-      // XXX : must be in sync with common.js!!!
-      // TODO :: remettre le bon randomSeed
-      //curGradingData.randomSeed = (parseInt(teamQuestion.teamID) + parseInt(teamQuestion.questionID)) % Number.MAX_SAFE_INTEGER;
-      curGradingData.randomSeed = teamQuestion.teamID;
+      curGradingData.randomSeed = (parseInt(teamQuestion.teamID) + parseInt(teamQuestion.questionID)) % Number.MAX_SAFE_INTEGER;
+      //curGradingData.randomSeed = teamQuestion.teamID;
       var usesRandomSeed = (('usesRandomSeed' in curGradingBebras) && curGradingBebras.usesRandomSeed);
       // If the answer is in cache and the task doesn't use randomSeed, the server side will update it
       // but only in the case of a contest global evaluation
