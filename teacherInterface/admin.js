@@ -2041,11 +2041,15 @@ function newForm(modelName, title, message, item) {
          html += "<input type='password'  style='width:350px' id='" + fieldId + "' "+requiredString+"/>";
       } else if (field.edittype === "select") {
          if (fieldName == "contestID") {
-            html += t("content_type") + " <select id='group_contestCategoryID'>";
-            for (var categoryID = 0; categoryID < contestCategories.length; categoryID++) {
-               html += "<option value='" + categoryID + "'>"  + contestCategories[categoryID] + "</option>";
+            if(contestCategories.length > 1) {
+               html += t("content_type") + " <select id='group_contestCategoryID'>";
+               for (var categoryID = 0; categoryID < contestCategories.length; categoryID++) {
+                  html += "<option value='" + categoryID + "'>"  + contestCategories[categoryID] + "</option>";
+               }
+               html += "</select><br/><br/>";
+            } else {
+               html += "<input id='group_contestCategoryID' type='text' value='0' style='display: none;'>";
             }
-            html += "</select><br/><br/>";
          }
          html += "<select id='" + fieldId + "'>";
          html += "<option value='0'>" + t("select") + "</option>";
