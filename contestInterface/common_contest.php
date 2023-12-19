@@ -122,6 +122,14 @@ function commonLoginTeam($db, $password) {
       // Algorea only records for grades 4, 5 and 6
       $row->srlModule = 'none';
    }
+
+   if($row->endTime !== null || ($row->startTime !== null && $row->nbMinutes !== null && strtotime($row->startTime) + ($row->nbMinutes + 10) * 60 < time())) {
+      // Ignore the browserID if the participation ended
+      // Maybe this could be used as a "participation ended" flag
+      $row->browserID = null;
+      $_SESSION["ignoreBrowserID"] = true;
+   }
+
    updateSessionWithContestInfos($row);
    $_SESSION["teamID"] = $row->teamID;
    $_SESSION["name"] = $row->name;

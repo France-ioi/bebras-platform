@@ -340,7 +340,7 @@ function handleLoadSession() {
       "sendPings" => $_SESSION["sendPings"],
       "oldRandomSeedTempFix" => $_SESSION["oldRandomSeedTempFix"],
       "SID" => $sid);
-   if($config->contestInterface->checkBrowserID) {
+   if($config->contestInterface->checkBrowserID && !isset($_SESSION["ignoreBrowserID"])) {
       $stmt = $db->prepare("SELECT browserID FROM team WHERE ID = :id");
       $stmt->execute(['id' => $_SESSION['teamID']]);
       $data["browserID"] = $stmt->fetchColumn();
