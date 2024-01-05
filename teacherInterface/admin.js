@@ -2052,7 +2052,7 @@ function newForm(modelName, title, message, item, footer) {
                   html += "<option value='" + categoryID + "'>"  + contestCategories[categoryID] + "</option>";
                }
                html += "</select><br/><br/>";
-            } else if(contestCategories.length == 1) {
+            } else if(contestCategories.length == 1 && contestCategories[0] != "-----") {
                html += t("content_type") + " : " + contestCategories[0] + "<br/><br/>";
                html += "<input id='group_contestCategoryID' type='text' value='0' style='display: none;'>";
             } else {
