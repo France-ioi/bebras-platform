@@ -250,6 +250,7 @@
     "school_not_provided": "Et ole antanut koulusi tietoja, joten et voi luoda ryhmää.",
     "create_group": "Luo ryhmä",
     "create_group_comment": "<p>Luo yksi &quot;ryhmä&quot; per erillinen osallistujaryhmä. Kukin yksittäinen osallistujaryhmä koostuu keskenään samaan aikaa kilpailuun osallistuvista saman tason osallistujista. Jos esimerkiksi saman luokan oppilaista osa tekee kilpailun yhtenä ajankohtana ja osa toisena, tarvitaan kaksi ryhmää. Tai jos kahden eri luokkatason oppilaita osallistuu kilpailuun samaan aikaan, tarvitaan kaksi ryhmää (kummallekin tasolle oma). Tämä yleistyy useammille tasoille ja ajankohdille luonnollisella tavalla. Lisäksi, jos haluat järjestää harjoituskilpailun (käyttäen aiempien vuosien kilpailua), täytyy harjoituskilpailua varten luoda omat erilliset ryhmät.</p>",
+    "create_group_footer": "",
     "alert_school_has_multiple_coordinators": "Tällä koululla on __nbUsers__ järjestävää opettajaa. Koulun tietoja voi editoida vain jos koululla on ainoastaan yksi järjestävä opettaja. Ota yhteys osoitteeseen __infoEmail__ jos havaitset virheitä koulun tiedoissa.",
     "alert_awards_received": "Saiko koulusi odottamasi palkinnot?",
     "confirm_contest_operation": "Haluatko varmasti tehdä tämän nyt? (Älä tee tätä kun kilpailu on vielä käynnissä!)",

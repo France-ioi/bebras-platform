@@ -240,6 +240,7 @@ function getGroupsColModel() {
    return model;
 }
 
+var groupSelectAfterLoad = null;
 function groupLoadComplete() {
    $.each($("#grid_group").find("tr"), function(i, row) {
       var id = row.id;
@@ -250,6 +251,10 @@ function groupLoadComplete() {
           }
       }
    });
+   if(groupSelectAfterLoad) {
+      $("#grid_group").jqGrid('setSelection', groupSelectAfterLoad);
+      groupSelectAfterLoad = null;
+   }
 }
 
 function getContestQuestionsColModel() {
@@ -1624,7 +1629,7 @@ function newGroup() {
       jqAlert(t("school_not_provided"));
       return;
    }
-   newForm("group", t("create_group"), t("create_group_comment"));
+   newForm("group", t("create_group"), t("create_group_comment"), null, t("create_group_footer"));
    updateContestOptions();
    groupFormHandleContestChange();
 }
@@ -2012,7 +2017,7 @@ function updateContestOptions(group) {
    $("#group_contestID").html(options);
 }
 
-function newForm(modelName, title, message, item) {
+function newForm(modelName, title, message, item, footer) {
    var js = "";
    var html = "<h2>" + title + "</h2>" + message +
       "<input type='hidden' id='" + modelName + "_ID' /><table>";
@@ -2047,6 +2052,9 @@ function newForm(modelName, title, message, item) {
                   html += "<option value='" + categoryID + "'>"  + contestCategories[categoryID] + "</option>";
                }
                html += "</select><br/><br/>";
+            } else if(contestCategories.length == 1) {
+               html += t("content_type") + " : " + contestCategories[0] + "<br/><br/>";
+               html += "<input id='group_contestCategoryID' type='text' value='0' style='display: none;'>";
             } else {
                html += "<input id='group_contestCategoryID' type='text' value='0' style='display: none;'>";
             }
@@ -2106,6 +2114,9 @@ function newForm(modelName, title, message, item) {
    if (modelName == 'user_create') {
       html += '<label><input type="checkbox" id="users_okMail">';
       html += t('user_accept_email')+'</label>';
+   }
+   if(footer) {
+      html += footer;
    }
    html += "<input id='buttonValidate_" + modelName + "' type='button' value='OK' onclick='validateForm(\"" + modelName + "\")' class='btn btn-primary'/> ";
    html += "<input id='buttonCancel_" + modelName + "' type='button' value='" + t("cancel") + "' onclick='endEditForm(\"" + modelName + "\", 0 , {})' class='btn btn-default'/>";
@@ -2598,6 +2609,7 @@ function endEditSchool(schoolID) {
 }
 
 function endEditGroup(groupID) {
+   groupSelectAfterLoad = groupID;
    loadContests().done(function() {
       models.group = getGroupsColModel();
       $('#grid_group').jqGrid('setGridParam', {colModel:jqGridModel("group")}).trigger('reloadGrid');

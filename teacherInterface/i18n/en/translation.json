@@ -255,6 +255,7 @@
     "school_not_provided": "You have not provided your school's information, so you cannot create a group.",
     "create_group": "Create a group",
     "create_group_comment": "<p>You need to create as many \\&quot;groups\\&quot; as participation sessions you plan to organize for each level. For example, if students from the same class participate at two different times, that's two groups. If you want two classes of different levels to participate at the same time, that's two groups. If you organize a practice session on a 2012 contest before the real contest, you will need groups for the training, and different groups for the contest.",
+    "create_group_footer": "",
     "alert_school_has_multiple_coordinators": "This school has __nbUsers__ coordinators. You can only edit the details of a school if there is only one coordinator associated to it. Please contact __infoEmail__ if you notice an error.",
     "alert_awards_received": "Did your school receive the expected awards?",
     "confirm_contest_operation": "Are you sure you want to do this now? (Do not do this while the contest is running!)",

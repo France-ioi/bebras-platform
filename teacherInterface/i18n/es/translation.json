@@ -265,6 +265,7 @@
     "school_not_provided": "Aún no ha cargado la información sobre tu escuela y por lo tanto, no puedes crear el grupo",
     "create_group": "Crear un grupo",
     "create_group_comment": "<p>Debes crear tantos  « grupos » como sesiones para cada estudiante. De esta forma, por ejemplo, si haces pasar a una misma clase en dos horarios diferentes, entonces serán dos grupos. Si haces pasar dos clases de diferentes niveles a la misma hora, serán igualmente dos grupos. Si organizas una práctica con una prueba de un año anterior  antes de la actividad verdadera, deberás crear grupos para la práctica y grupos para la actividad.",
+    "create_group_footer": "",
     "alert_school_has_multiple_coordinators": "Esta escuela tiene __nbUsers__ coordinadores. No puedes modificar los detalles de una escuela si no está asociada con un coordinador. Escribe a  __infoEmail__ si existe algún error.",
     "alert_awards_received": "¿Tu escuela ha recibido los diplomas previstos?",
     "confirm_contest_operation": "¿Estás seguro que quieres hacer esto ahora? (No puedes hacerlo durante la actividad)",

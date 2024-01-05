@@ -274,6 +274,7 @@
     "school_not_provided": "Vous n'avez pas encore fourni les informations sur votre établissement, et ne pouvez donc pas créer de groupe",
     "create_group": "Créer un groupe",
     "create_group_comment": "<p>Vous devez créer autant de « groupes » que de sessions de passage souhaitées pour chaque épreuve. Ainsi, par exemple, si vous faites passer une même classe à deux horaires différents, cela fait deux groupes. Si vous faites passer deux classes de niveaux différents au même horaire, cela fait deux groupes. Si vous organisez un entraînement sur une épreuve d'une année précédente avant le vrai concours, il faudra des groupes pour l'entraînement et des groupes pour le concours.",
+    "create_group_footer": "",
     "alert_school_has_multiple_coordinators": "Cet établissement a __nbUsers__ coordinateurs. Vous ne pouvez modifier les détails d'un établissement que s'il n'est associé qu'à un seul coordinateur. Contactez __infoEmail__ si vous remarquez une erreur.",
     "alert_awards_received": "Votre établissement a-t-il bien reçu les lots prévus ?",
     "confirm_contest_operation": "Êtes-vous certain de vouloir faire cette opération maintenant ? (Ne pas faire en plein concours)",
