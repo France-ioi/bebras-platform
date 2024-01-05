@@ -52,7 +52,7 @@ td, th {
 
 if (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"]) {
    echo translate("admin_restricted");
-   //exit;
+   exit;
 }
 
 if (!isset($_GET["contestID"])) {
