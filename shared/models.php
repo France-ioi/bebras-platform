@@ -293,6 +293,7 @@ $viewsModels = array(
          "lastName" => array(),
          "genre" => array(),
          "grade" => array(),
+         "lastGradeUpdate" => array(),
          "score" => array("tableName" => "algorea_registration", "fieldName" => "totalScoreAlgorea"),
          "rank" => array("tableName" => "algorea_registration", "fieldName" => "algoreaRank"),
          "schoolRank" => array("tableName" => "algorea_registration", "fieldName" => "algoreaSchoolRank"),

@@ -403,12 +403,13 @@ function handleCheckPassword($db) {
 }
 
 function getRegistrationData($db, $code) {
+   // TODO :: configuration option for the lastGradeUpdate last date
    $query = "SELECT `algorea_registration`.`ID`, `code`, `category` as `qualifiedCategory`, `validatedCategory`, `firstName`, `lastName`, `genre`, `grade`, `studentID`, `phoneNumber`, `email`, `zipCode`, ".
       "IFNULL(`algorea_registration`.`schoolID`, 0) as `schoolID`, IFNULL(`algorea_registration`.  `userID`, 0) as `userID`, IFNULL(`school_user`.`allowContestAtHome`, 1) as `allowContestAtHome`,
-      `round`, `algorea_registration`.`groupID` ".
-      "FROM `algorea_registration` ".
-      "LEFT JOIN `school_user` ON (`school_user`.`schoolID` = `algorea_registration`.`schoolID` AND `school_user`.`userID` = `algorea_registration`.`userID`) ".
-      "WHERE `code` = :code";
+      `round`, `algorea_registration`.`groupID`, `algorea_registration`.`lastGradeUpdate` <= NOW() - INTERVAL 6 MONTH AS `gradeNeedsUpdated`
+      FROM `algorea_registration`
+      LEFT JOIN `school_user` ON (`school_user`.`schoolID` = `algorea_registration`.`schoolID` AND `school_user`.`userID` = `algorea_registration`.`userID`)
+      WHERE `code` = :code";
    $stmt = $db->prepare($query);
    $stmt->execute(array("code" => $code));
    return $stmt->fetchObject();
@@ -858,6 +859,29 @@ function handleCheckReloginTeam($db) {
    exitWithJson(["success" => true]);
 }
 
+function handleUpdateGrade($db) {
+   if (!isset($_POST["code"])) {
+      exitWithJsonFailure("Code manquant");
+   }
+   if (!isset($_POST["grade"])) {
+      exitWithJsonFailure("Grade manquant");
+   }
+
+   $code = $_POST["code"];
+   $registrationData = getRegistrationData($db, $code);
+   if ($registrationData->gradeNeedsUpdated == "1") {
+      $stmt = $db->prepare("UPDATE algorea_registration SET grade = :grade, lastGradeUpdate = NOW() WHERE code = :code");
+      $stmt->execute(array("grade" => $_POST["grade"], "code" => $code));
+   } // we silently ignore if where the grade can't be updated
+
+   handleGroupFromRegistrationCode($db, $code);
+
+   // We shouldn't end up here, it would only happen if the row in algorea_registration
+   // somehow disappeared between the check a few lines above and now
+   exitWithJsonFailure("Participant introuvable");
+}
+
+
 if (!isset($_POST["action"])) {
    addFailureBackendHint("ClientIP.loadOther:fail");
    exitWithJsonFailure("Aucune action fournie");
@@ -926,6 +950,10 @@ if ($action === 'saChangeContest') {
 
 if ($action == "checkReloginTeam") {
    handleCheckReloginTeam($db);
+}
+
+if ($action == "updateGrade") {
+   handleUpdateGrade($db);
 }
 
 exitWithJsonFailure("Action inconnue");

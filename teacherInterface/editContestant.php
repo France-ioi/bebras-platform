@@ -72,7 +72,7 @@ if (isset($_REQUEST["changeUser"])) {
    $grade = $_REQUEST["grade"];
    $category = $_REQUEST["category"];
    
-   $query = "UPDATE algorea_registration SET firstName = :firstName, lastName = :lastName, grade = :grade, category = :category WHERE code = :code";
+   $query = "UPDATE algorea_registration SET firstName = :firstName, lastName = :lastName, grade = :grade, lastGradeUpdate = NOW(), category = :category WHERE code = :code";
    $stmt = $db->prepare($query);
    $stmt->execute(array(
       "code" => $participationCode,

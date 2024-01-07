@@ -600,17 +600,30 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
 
 
 <div id="divPersonalPage" style="display:none">
-   <h2>Page personnelle</h2> 
-   <p>
-   <table id="personalData">
+   <h2 class="personalPageMain">Page personnelle</h2> 
+   <p class="personalPageMain">
+   </p>
+   <table id="personalData" class="personalPageMain">
       <tr><td>Nom :</td><td id="persoLastName"></td></tr>
       <tr><td>Prénom :</td><td id="persoFirstName"></td></tr>
-      <tr><td>Classe :</td><td id="persoGrade"></td></tr>
+      <tr id="persoGradeRow"><td>Classe :</td><td id="persoGrade"></td></tr>
       <tr><td>Qualifié pour la catégorie :</td><td id="persoCategory"></td></tr>
       <!--<tr><td>Qualifié en demi-finale :</td><td id="persoSemifinal"></td></tr>-->
    </table>
+   <p id="persoGradeUpdate">
+     <span>Veuillez reconfirmer votre classe :</span><br>
+     <select id="persoGradeNew">
+        <option value="" data-i18n="grade_select" selected></option>
+<?php
+               foreach ($config->grades as $grade) {
+                  echo "<option value='".$grade."' data-i18n='grade_".$grade."'></option>";
+               }
+?>
+      </select>
+      <button type="button" id="buttonPersoGradeUpdate" onclick="updatePersoGrade()" class="btn btn-primary">Mettre à jour ma classe</button>
    </p>
-   <p>   
+   <p>
+   </p>
    <table>
       <tr>
          <td><button type="button" id="buttonStartPreparation" onclick="startPreparation()" class="btn btn-primary">Démarrer une préparation</button></td>
@@ -618,7 +631,6 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
          <td><button type="button" id="buttonStartContest" onclick="startContest()" class="btn btn-primary" >Démarrer le concours</button> <i id="msgStartContest" style="display: none;">Vous avez déjà participé à ce concours officiel.</i></td>
       </tr>
    </table>
-   </p>
    <p id="contestAtHomePrevented" style="display:none">
        Votre enseignant a indiqué que le concours officiel doit se faire en classe, avec un code de groupe.<br/>
        Vous ne pouvez donc pas commencer le concours depuis cette interface, mais vous pouvez faire des préparations à la maison.

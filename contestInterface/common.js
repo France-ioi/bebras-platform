@@ -2190,7 +2190,7 @@ window.rankToStr = function(rank, nameGrade, nbContestants) {
       } else {
          strRank += "e";
       }
-      strRank += "<br/>" + $nameGrade + " ";
+      strRank += "<br/>" + nameGrade + " ";
       if (nbContestants == 1) {
          strRank += "individuels";
       } else {
@@ -2200,23 +2200,41 @@ window.rankToStr = function(rank, nameGrade, nbContestants) {
    return strRank;
 }
 
+window.updatePersoGrade = function() {
+   var newGrade = $('#persoGradeNew').val();
+   $.post("data.php", {SID: SID, action: "updateGrade", grade: newGrade, code: personalPageData.registrationData.code}, window.showPersonalPage);
+}
+
 window.showPersonalPage = function(data) {
    personalPageData = data;
+
    $("#divPersonalPage").show();
+   $("#divPersonalPage").children().show();
+
    $("#persoLastName").html(data.registrationData.lastName);
    $("#persoFirstName").html(data.registrationData.firstName);
-   $nameGrade = t("grade_" + data.registrationData.grade).toLowerCase();
-   $("#persoGrade").html($nameGrade);
+   var nameGrade = t("grade_" + data.registrationData.grade).toLowerCase();
+   if(nameGrade == "grade_" + data.registrationData.grade) {
+      nameGrade = '-';
+   }
+   $("#persoGrade").html(nameGrade);
    $("#persoCategory").html(data.registrationData.qualifiedCategory);
    if (data.registrationData.round == 1) {
       $("#persoSemifinal").html("oui" + t("semifinal_comment"));
    } else {
       $("#persoSemifinal").html("non");
    }
-   if (data.registrationData.allowContestAtHome == "0") {
-      $("#buttonStartContest").attr("disabled", "disabled");
-      $("#contestAtHomePrevented").show();
+
+   if(data.registrationData.gradeNeedsUpdated == "1") {
+      // Grade needs to be updated by the user
+      $('#divPersonalPage').children().hide();
+      $('.personalPageMain').show();
+      $('#persoGradeUpdate').show();
+      $('#persoGradeNew').val(data.registrationData.grade);
+      return;
    }
+   $('#persoGradeUpdate').hide();
+
    var htmlParticipations = "";
    var canParticipateOfficial = true;
    for (var iParticipation = 0; iParticipation < data.registrationData.participations.length; iParticipation++) {
