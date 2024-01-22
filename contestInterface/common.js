@@ -2256,8 +2256,8 @@ window.showPersonalPage = function(data) {
       } else if (participation.score !== null) {
          score = parseInt(participation.score);
       }
-      var rank = rankToStr(participation.rank, $nameGrade, participation.nbContestants);
-      var schoolRank = rankToStr(participation.schoolRank, $nameGrade, participation.nbContestants);
+      var rank = rankToStr(participation.rank, nameGrade, participation.nbContestants);
+      var schoolRank = rankToStr(participation.schoolRank, nameGrade, participation.nbContestants);
       
       htmlParticipations += "<tr><td>" + participation.contestName + "</td>" +
          "<td>" + window.utcDateFormatter(participation.startTime) + "</td>" +
