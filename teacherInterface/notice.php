@@ -40,7 +40,10 @@ if (isset($_GET["groupID"])) {
 
 // If not admin, only allow access to the correct user
 if (!$_SESSION["isAdmin"]) {
-   $query .= " AND `group`.`userID` = :userID";
+   $query .= " AND (`group`.`userID` = :userID
+                    OR EXISTS (SELECT 1 FROM `user_user`
+                               WHERE `user_user`.`userID` = `group`.`userID`
+                               AND `user_user`.`targetUserID` = :userID))";
    $params["userID"] = $_SESSION["userID"];
 }
 
