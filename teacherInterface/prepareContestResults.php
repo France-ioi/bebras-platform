@@ -582,6 +582,7 @@ if ($action == "gradeContest") {
    script_tag('/bower_components/i18next/i18next.min.js');
    script_tag('/bower_components/pem-platform/task-pr.js');
    script_tag('/gradeContest.js');
+   echo "<div id='gradeContestRandomSeedState'></div>";
    echo "<p>Statut : <div id='gradeContestState'><span class='nbCurrent'></span><span class='current'></span><span class='gradeProcessing'></span></div></p>";
    echo "<iframe id='preview_question' src='' style='width:800px;height:800px;'></iframe>";
    echo "<script>gradeContestWithRefresh('".$contestID."', true, ".$database.");</script>";

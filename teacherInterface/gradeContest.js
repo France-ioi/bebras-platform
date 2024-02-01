@@ -2,6 +2,7 @@ var gradePackSize = 20;
 var curGradingData = null;
 var curGradingBebras = null;
 var curGradingScoreCache = {};
+var randomSeedTasks = {};
 
 function loopGradeContest(curContestID, curGroupID, onlyMarked, database) {
    // Retrieve the list of questions of the contest
@@ -264,11 +265,42 @@ function gradeQuestionPackEnd(task, curContestID, curGroupID, questionKeys, ques
    });
 }
 
+function updateRandomSeedDisplay() {
+   var tasksWithRandomSeed = 0;
+   var tasksWithoutRandomSeed = 0;
+   for(var qk in randomSeedTasks) {
+      if (randomSeedTasks[qk]) {
+         tasksWithRandomSeed++;
+      } else {
+         tasksWithoutRandomSeed++;
+      }
+   }
+   var text = '';
+   if(tasksWithRandomSeed > 0 && tasksWithoutRandomSeed > 0) {
+      text = 'Warning : Some tasks use randomSeed, some don\'t. Tasks not using randomSeed : ';
+      for(var qk in randomSeedTasks) {
+         if (!randomSeedTasks[qk]) {
+            text += qk + ' ';
+         }
+      }
+   } else if(tasksWithRandomSeed > 0) {
+      text = 'All tasks so far use randomSeed.';
+   } else if(tasksWithoutRandomSeed > 0) {
+      text = 'All tasks so far do not use randomSeed.';
+   }
+   $('#gradeContestRandomSeedState').text(text);
+}
+
 function gradeQuestion(task, curContestID, curGroupID, questionKeys, questionPaths, curIndex, onlyMarked, database) {
    // Compute all scores by pack
    if (curGradingBebras.grader[0] && curGradingBebras.grader[0].content) {
       $('#preview_question')[0].contentWindow.eval($('#preview_question')[0].contentWindow.eval(curGradingBebras.grader[0].content));
    }
+
+   // Update randomSeed display
+   var usesRandomSeed = (('usesRandomSeed' in curGradingBebras) && curGradingBebras.usesRandomSeed);
+   randomSeedTasks[curGradingData.questionKey] = !!usesRandomSeed;
+   updateRandomSeedDisplay();
    
    gradeQuestionPack(task, curContestID, curGroupID, questionKeys, questionPaths, curIndex, 0, onlyMarked, database);
 }
