@@ -43,7 +43,8 @@ if (!$_SESSION["isAdmin"]) {
    $query .= " AND (`group`.`userID` = :userID
                     OR EXISTS (SELECT 1 FROM `user_user`
                                WHERE `user_user`.`userID` = `group`.`userID`
-                               AND `user_user`.`targetUserID` = :userID))";
+                               AND `user_user`.`targetUserID` = :userID
+                               AND `user_user`.`accessType` IN ('read', 'write')))";
    $params["userID"] = $_SESSION["userID"];
 }
 
