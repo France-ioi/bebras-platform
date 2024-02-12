@@ -277,6 +277,7 @@
     "create_group_footer": "",
     "alert_school_has_multiple_coordinators": "Cet établissement a __nbUsers__ coordinateurs. Vous ne pouvez modifier les détails d'un établissement que s'il n'est associé qu'à un seul coordinateur. Contactez __infoEmail__ si vous remarquez une erreur.",
     "alert_awards_received": "Votre établissement a-t-il bien reçu les lots prévus ?",
+    "confirm_contestant_modification": "Le nouveau nom est très différent de l'ancien nom, êtes-vous certain de vouloir modifier le nom de cet élève ? Attention : il ne faut pas remplacer un élève par un autre ; les modifications du nom sont réservées à la correction d'erreurs.",
     "confirm_contest_operation": "Êtes-vous certain de vouloir faire cette opération maintenant ? (Ne pas faire en plein concours)",
     "confirm_make_team_unofficial": "Êtes-vous sûr de passer cette équipe en participation hors concours ? Cette opération est irréversible. En cas d'erreur, merci de nous envoyer un courrier électronique.",
     "select_contest": "Vous devez sélectionner une activité",

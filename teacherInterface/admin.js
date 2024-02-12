@@ -151,6 +151,67 @@ function initErrorHandler() {
    });
 }
 
+function levenshtein(a, b) {
+   if(a.length == 0) return b.length; 
+   if(b.length == 0) return a.length; 
+
+   var matrix = [];
+
+   var i;
+   for(i = 0; i <= b.length; i++){
+      matrix[i] = [i];
+   }
+
+   var j;
+   for(j = 0; j <= a.length; j++){
+      matrix[0][j] = j;
+   }
+
+   for(i = 1; i <= b.length; i++){
+      for(j = 1; j <= a.length; j++){
+         if(b.charAt(i-1) == a.charAt(j-1)){
+            matrix[i][j] = matrix[i-1][j-1];
+         } else {
+            matrix[i][j] = Math.min(matrix[i-1][j-1] + 1, // substitution
+            Math.min(matrix[i][j-1] + 1, // insertion
+            matrix[i-1][j] + 1)); // deletion
+         }
+      }
+   }
+
+   return matrix[b.length][a.length];
+};
+
+function checkContestantModifications() {
+   if(!originalContestantRow) { return [true, '']; }
+   var original = originalContestantRow;
+   var inputs = $("#grid_contestant").find("#" + original.id).find('input');
+   if(!inputs) { return [true, '']; }
+
+   var fields = {};
+   inputs.each(function () {
+      fields[this.name] = this.value;
+   });
+   if(fields.firstName === undefined || fields.lastName === undefined) {
+      return [true, ''];
+   }
+   var distance = Math.min(
+      levenshtein(fields.firstName, original.firstName) + levenshtein(fields.lastName, original.lastName),
+      levenshtein(fields.firstName, original.lastName) + levenshtein(fields.lastName, original.firstName)
+      );
+
+   if(distance > 5) {
+      if(confirm(t("confirm_contestant_modification"))) {
+         original.firstName = fields.firstName;
+         original.lastName = fields.lastName;
+      } else {
+         inputs.filter('[name=firstName]').val(original.firstName);
+         inputs.filter('[name=lastName]').val(original.lastName);
+      }
+   }
+
+   return [true, ''];
+}
 
 function getRegionsObjects(isFilter) {
    var choices = "";
@@ -340,7 +401,17 @@ function initModels(isLogged) {
                         edittype: "select", editoptions: editYesNo,
                         stype: "select", searchoptions: searchYesNo
                        },
-            firstName: {label: t("contestant_firstName_label"), editable: true, edittype: "text", width:150},
+            firstName: {
+               label: t("contestant_firstName_label"),
+               editable: true,
+               edittype: "text",
+               width: 150,
+               editrules: {
+                  custom_func: checkContestantModifications,
+                  custom: true,
+                  required: true
+               }
+            },
             lastName: {label: t("contestant_lastName_label"), editable: true, edittype: "text", width:150},
             genre: {label: t("contestant_genre_label"),
                editable: true, edittype: "select", editoptions:{ value:{"1": t("option_female"), "2": t("option_male")}},
@@ -722,7 +793,13 @@ function initModels(isLogged) {
       question: {
          tableName: "question",
          fields: {
-            key: {label: t("question_key_label"), editable: true, edittype: "text", width: 120},
+            key: {
+               label: t("question_key_label"),
+               editable: true,
+               edittype: "text",
+               width: 120,
+               beforeSave: function(s) { return s.replace(/\//g, ''); }
+            },
             path: {label: t("question_path_label"), editable: true, edittype: "text", width: 300},
             name: {label: t("question_name_label"), editable: true, edittype: "text", width: 300},
             answerType: {label: t("question_answerType_label"), editable: true, edittype: "select", width: 150,
@@ -815,6 +892,7 @@ function jqGridModel(modelName) {
          editable: !config.readOnly && field.editable,
          edittype: field.edittype,
          editoptions: field.editoptions,
+         editrules: field.editrules,
          formatter: field.formatter,
          unformat: field.unformat,
          formatoptions: field.formatoptions,
@@ -867,6 +945,27 @@ function teamViewLoadComplete() {
    });
 }
 
+function beforeSaveRow(grid, display) {
+   if(!grid) { return true; }
+   var modelName = grid.id.split("_")[1];
+   var valid = true;
+   $(grid).find('input').each(function () {
+      var field = models[modelName].fields[this.name];
+      if (field === undefined) { return; }
+      if (field.beforeSave) {
+         $(this).val(field.beforeSave($(this).val()));
+      }
+      if (field.editrules) {
+         var fieldValid = field.editrules.custom_func($(this).val());
+         valid = valid && fieldValid[0];
+         if(display && !fieldValid[0]) {
+            alert(fieldValid[1]);
+         }
+      }
+   });
+   return valid;
+}
+
 function loadGrid(modelName, sortName, rowNum, rowList, onSelectRow, withToolbar) {
   var lastSel = 0;
   var loadComplete;
@@ -877,7 +976,6 @@ function loadGrid(modelName, sortName, rowNum, rowList, onSelectRow, withToolbar
   }
 
   var tableName = models[modelName].tableName;
-//  console.error($("#grid_" + modelName));
   $("#grid_" + modelName).jqGrid({
     url: "jqGridData.php?tableName=" + tableName,
     datatype: 'xml',
@@ -894,10 +992,15 @@ function loadGrid(modelName, sortName, rowNum, rowList, onSelectRow, withToolbar
     gridview: true,
     width: "100%",
     height: "100%",
-    caption: '',
+    caption: '',  
     onSelectRow: function(id){
-       if(id && (id !== lastSel)){ 
-          $('#grid_' + modelName).saveRow(lastSel); 
+       if(id && (id !== lastSel)){
+          if(beforeSaveRow($('#grid_' + modelName)[0], true)) {
+            $('#grid_' + modelName).saveRow(lastSel); 
+          } else if(lastSel) {
+            // We're already deselecting the row so we have to restore it if it's not valid
+            $('#grid_' + modelName).restoreRow(lastSel);
+          }
           lastSel = id; 
           onSelectRow(id);
        } else {
@@ -927,18 +1030,9 @@ function loadGrid(modelName, sortName, rowNum, rowList, onSelectRow, withToolbar
      $("#grid_" + modelName).jqGrid('filterToolbar', {autosearch:true, searchOnEnter:true});
   }
   $.extend(true, $.jgrid.inlineEdit, {
-            beforeSaveRow: function (options, rowid) {
-                var modelName = this.id.split("_")[1];
-                $(this).find('input').each(function () {
-                    var field = models[modelName].fields[this.name];
-                    if (field != undefined && field.beforeSave) {
-                       $(this).val(field.beforeSave($(this).val()));
-                    }
-                });
-                return true;
-            }
-        });
-   }
+     beforeSaveRow: function () { beforeSaveRow(this); }
+  });
+}
 
 function loadCustomAwards() {
    $.post("nextContestData.php", {}, function(res) {
@@ -966,8 +1060,12 @@ function loadCustomAwards() {
    }, 'json');
 }
 
+var originalContestantRow = null;
 function loadContestants() {
-   loadGrid("contestant", "", 20, [20, 50, 200, 500], function() {}, true);
+   loadGrid("contestant", "", 20, [20, 50, 200, 500], function(id) {
+      originalContestantRow = $('#grid_contestant').jqGrid('getRowData', id);
+      originalContestantRow.id = id;
+   }, true);
 }
 
 function loadListAwards() {

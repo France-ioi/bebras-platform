@@ -307,6 +307,11 @@ function checkRequestColleagues($db, &$request, &$record, $operation, &$roles) {
    return true;
 }
 
+function checkRequestQuestion($db, &$request, &$record, $operation, &$roles) {
+   $record["key"] = str_replace('/', '', $record["key"]);
+   return true;
+}
+
 function createRequest($modelName) {
    return array(
       "modelName" => $modelName,
@@ -324,7 +329,8 @@ function checkRequest($db, &$request, &$record, $operation, &$roles) {
       "user" => "checkRequestUser",
       "school" => "checkRequestSchool",
       "colleagues" => "checkRequestColleagues",
-      "school_user" => "checkRequestSchoolUser"
+      "school_user" => "checkRequestSchoolUser",
+      "question" => "checkRequestQuestion"
    );
    $modelName = $request["modelName"];
    if (isset($requestCheckFunctions[$modelName])) {
@@ -356,6 +362,18 @@ function updateRecord($db, $modelName, $record, $roles) {
    fillRequestWithRecords($request, $record);
    updateRows($db, $request, $roles);
    //updateRowsDynamoDB($request, $roles);
+
+   if ($modelName == "contestant") {
+      $queryUpdateAlgoreaRegistration = "
+         UPDATE `algorea_registration`
+         SET `firstName` = :firstName, `lastName` = :lastName, `grade` = :grade
+         WHERE `contestantID` = :contestantID
+            OR EXISTS (SELECT 1 FROM `contestant` WHERE `contestant`.`ID` = :contestantID AND `contestant`.`registrationID` = `algorea_registration`.`ID`)
+         ";
+      $stmt = $db->prepare($queryUpdateAlgoreaRegistration);
+      $stmt->execute(["firstName" => $record["firstName"], "lastName" => $record["lastName"], "grade" => $record["grade"], "contestantID" => $record["ID"]]);
+   }
+
    echo json_encode(array("success" => true, "recordID" => $record["ID"]));
 }
 
