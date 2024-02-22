@@ -505,6 +505,7 @@ var platform = {
          'maxScore': questionData.maxScore,
          'noScore': questionData.noAnswerScore,
          'randomSeed': randomSeed,
+         'fullFeedback': !!fullFeedback,
          'options': questionData.options,
          'pointsAsStars': newInterface,
          'unlockedLevels': unlockedLevels
