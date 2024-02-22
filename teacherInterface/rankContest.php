@@ -51,9 +51,9 @@ function computeRanks($db, $contestInfos, $category) {
          SELECT 
             `contestant2`.`ID`,";
    if($contestInfos['rankTimes']) {
-      $query .= "@curRank := IF(@prevScore=`contestant2`.`score` AND @prevDuration=contestant2.duration, @curRank, @studentNumber) AS rank,";
+      $query .= "@curRank := IF(@prevScore=`contestant2`.`score` AND @prevDuration=contestant2.duration, @curRank, @studentNumber) AS `rank`,";
    } else {
-      $query .= "@curRank := IF(@prevScore=`contestant2`.`score`, @curRank, @studentNumber) AS rank,";
+      $query .= "@curRank := IF(@prevScore=`contestant2`.`score`, @curRank, @studentNumber) AS `rank`,";
    }
    $query .= "
             @studentNumber := @studentNumber + 1 as studentNumber,
