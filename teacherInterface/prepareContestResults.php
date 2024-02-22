@@ -157,8 +157,7 @@ if ($action == "showStats") {
    execSelectAndShowResults("Number of contestants (contestants participating in two subcontests are counted twice)", "
       SELECT team.participationType, count(*) FROM contestant
       JOIN team ON (contestant.teamID = team.ID)
-      JOIN `group` ON (`team`.groupID = `group`.ID)
-      JOIN `contest` ON `group`.contestID = contest.ID
+      JOIN `contest` ON `team`.contestID = contest.ID
       WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
       GROUP BY team.participationType
       ",
