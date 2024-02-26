@@ -34,7 +34,7 @@ var nbUnlockedTasksInitial;
 var newInterface;
 var customIntro;
 var solutionsLoaded;
-var teamID = 0;
+var teamID = "0";
 var teamPassword = "";
 var contestImagePreload = {};
 var questionsData = {};
@@ -2274,7 +2274,8 @@ window.showPersonalPage = function(data) {
       }
    }
    $('#buttonStartPreparation').toggle(!!data.childrenContests.length);
-   $('#buttonStartContest').prop('disabled', !canParticipateOfficial);
+   $('#buttonStartContest').prop('disabled', !canParticipateOfficial || data.registrationData.allowContestAtHome == "0");
+   $("#contestAtHomePrevented").toggle(data.registrationData.allowContestAtHome == "0");
    $('#msgStartContest').toggle(!canParticipateOfficial);
    $("#pastParticipations").append(htmlParticipations);
 }
@@ -2365,6 +2366,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
             sendLastActivity = data.sendPings;
             updateContestHeader(data);
             startPing();
+            teamID = data.teamID;
             SrlModule.initMode(data.srlModule);
             oldRandomSeedTempFix = !!data.oldRandomSeedTempFix;
 
@@ -4177,7 +4179,7 @@ SrlModule.initMode = function(mode) {
    if(mode == 'log' || mode == 'random' || mode == 'full') {
       SrlModule.mode = mode;
       SrlModule.init();
-   } else if(mode == 'algorea' && (parseInt(teamID.substr(-3)) % 100 <= SrlModule.randomPercentage)) {
+   } else if(mode == 'algorea' && teamID && (parseInt(teamID.substr(-3)) % 100 <= SrlModule.randomPercentage)) {
       SrlModule.mode = 'log';
       SrlModule.init();
    }
