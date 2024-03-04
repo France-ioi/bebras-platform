@@ -3,15 +3,12 @@
 require_once("../shared/common.php");
 require_once("commonAdmin.php");
 
-$idTeamItem = "12465436879381532";
+$idTeamItem = "1867666484394099478";
 $idItems = [
-"1535768290741011912",
-"1912265293662327758",
-"1340486898687297965",
-"1960478301819322275",
-"1480025779204807917",
-"667062746337086610",
-"68120197184668496"
+"581446144392688579",
+"185246091959140531",
+"1230323526360190072",
+"123435675693601481"
 ];
 
 if (!isset($_SESSION["userID"])) {
@@ -66,7 +63,6 @@ while($row = $stmt->fetch()) {
 }
 $strUserIds = implode(",", $userIds);
 
-
 // Get all teams associated with those users
 $teams = [];
 /*$stmt = $db2->prepare("
@@ -87,24 +83,24 @@ JOIN pixal.users ON groups_groups.idGroupChild = users.idGroupSelf
 LEFT JOIN pixal.alkindi_teams ON alkindi_teams.idGroup = groups.ID
 WHERE users.ID IN (".$strUserIds.")
 AND groups.idTeamItem = :idTeamItem");*/
-$stmt = $db2->prepare("
-SELECT users.ID AS userId, groups.ID AS groupId, groups.sName, groups.iTeamParticipating,
+$stmt = $db2->prepare($abc = "
+SELECT users.ID AS userId, `groups`.ID AS groupId, `groups`.sName, `groups`.iTeamParticipating,
 alkindi_teams.sPassword, alkindi_teams.idNewGroup, alkindi_teams.country,
 alkindi_teams.rank, alkindi_teams.rankBigRegion, alkindi_teams.rankRegion,
-alkindi_teams.thirdScore, alkindi_teams.thirdTime,
-alkindi_teams.score1, alkindi_teams.time1,
+alkindi_teams.thirdScore, alkindi_teams.thirdTime ".
+/*alkindi_teams.score1, alkindi_teams.time1,
 alkindi_teams.score2, alkindi_teams.time2,
 alkindi_teams.score3, alkindi_teams.time3,
 alkindi_teams.score4, alkindi_teams.time4,
 alkindi_teams.score5, alkindi_teams.time5,
 alkindi_teams.score6, alkindi_teams.time6,
-alkindi_teams.score7, alkindi_teams.time7
-FROM pixal.groups
-JOIN pixal.groups_groups ON groups_groups.idGroupParent = groups.ID
+alkindi_teams.score7, alkindi_teams.time7*/
+"FROM pixal.`groups`
+JOIN pixal.groups_groups ON groups_groups.idGroupParent = `groups`.ID
 JOIN pixal.users ON groups_groups.idGroupChild = users.idGroupSelf
-LEFT JOIN pixal.alkindi_teams ON alkindi_teams.idGroup = groups.ID
+LEFT JOIN pixal.alkindi_teams ON alkindi_teams.idGroup = `groups`.ID
 WHERE users.ID IN (".$strUserIds.")
-AND groups.idTeamItem = :idTeamItem");
+AND `groups`.idTeamItem = :idTeamItem");
 $stmt->execute(['idTeamItem' => $idTeamItem]);
 while($row = $stmt->fetch()) {
    if(!isset($teams[$row['groupId']])) {
@@ -120,15 +116,15 @@ while($row = $stmt->fetch()) {
          'rank' => $row['rank'],
          'rankBigRegion' => $row['rankBigRegion'],
          'rankRegion' => $row['rankRegion'],
-         'qualifiedFinal' => $row['qualifiedFinal'],
+//         'qualifiedFinal' => $row['qualifiedFinal'],
          'scores' => [],
          'times' => [],
          'members' => []
          ];
    }
    for($i = 1; $i <= 7; $i++) {
-      $teams[$row['groupId']]['scores'][$i] = $row["score$i"];
-      $teams[$row['groupId']]['times'][$i] = $row["time$i"];
+//      $teams[$row['groupId']]['scores'][$i] = $row["score$i"];
+//      $teams[$row['groupId']]['times'][$i] = $row["time$i"];
    }
    $code = $codes[$row['userId']];
    $teams[$row['groupId']]['members'][] = $code;
@@ -323,27 +319,16 @@ if(count($userIds) < count($contestants)) {
 <tr>
    <td rowspan="2">Nom de l'équipe</td>
    <td rowspan="2">Membres</td>
-   <td colspan="8">Scores (phase de qualification)</td>
-   <td rowspan="2">Mot de passe<br>pour l'épreuve</td>
+   <td colspan="5">Scores (phase de qualification)</td>
+<!--   <td rowspan="2">Mot de passe<br>pour l'épreuve</td>
    <td colspan="8">Scores (épreuve)</td>
-   <td rowspan="2">Classement (épreuve)</td>
+   <td rowspan="2">Classement (épreuve)</td>-->
 </tr>
 <tr>
-   <td>Puzzle Coloré 1</td>
-   <td>Stream Cipher 1</td>
-   <td>Vignère sur<br>des mots 1</td>
-   <td>Puzzle Coloré 2</td>
-   <td>Stream Cipher 2</td>
-   <td>Vignère sur<br>des mots 2</td>
-   <td>Stream Cipher 3</td>
-   <td><b>Total</b></td>
-   <td>Puzzle Coloré 1</td>
-   <td>Stream Cipher 1</td>
-   <td>Vignère sur<br>des mots 1</td>
-   <td>Puzzle Coloré 2</td>
-   <td>Stream Cipher 2</td>
-   <td>Vignère sur<br>des mots 2</td>
-   <td>Stream Cipher 3</td>
+   <td>Substitution cyclique 1</td>
+   <td>Substitution cyclique 2</td>
+   <td>Labyrinthe à bille</td>
+   <td>Image masquée</td>
    <td><b>Total</b></td>
 </tr>
 <?php
@@ -402,11 +387,8 @@ foreach($teams as $groupId => $data) {
        echo "<td>" . formatScore($teamScores[1]) . "</td>";
        echo "<td>" . formatScore($teamScores[2]) . "</td>";
        echo "<td>" . formatScore($teamScores[3]) . "</td>";
-       echo "<td>" . formatScore($teamScores[4]) . "</td>";
-       echo "<td>" . formatScore($teamScores[5]) . "</td>";
-       echo "<td>" . formatScore($teamScores[6]) . "</td>";
-       echo "<td><b>" . (isset($scoreTotals[$groupId]) ? $scoreTotals[$groupId] : '-') . "</b> / 700</td>";
-       if($data['password']) {
+       echo "<td><b>" . (isset($scoreTotals[$groupId]) ? $scoreTotals[$groupId] : '-') . "</b> / 400</td>";
+       if(false && $data['password']) {
           echo "<td><pre>" . $data['password'] . "</pre></td>";
           if($data['idNewGroup']) {
              if($data['thirdScore'] !== null) {
@@ -440,12 +422,12 @@ foreach($teams as $groupId => $data) {
           }
        } elseif($data['country'] == 'fr' || $data['country'] == 'ch') {
           $reqScore = $data['country'] == 'ch' ? 300 : 350;
-          echo "<td colspan=\"18\"><i>N'est pas encore qualifiée pour l'épreuve (n'a pas atteint $reqScore points)</i></td>";
+//          echo "<td colspan=\"18\"><i>N'est pas encore qualifiée pour l'épreuve (n'a pas atteint $reqScore points)</i></td>";
        } else {
-          echo "<td colspan=\"18\"><i>Phase de qualification en cours</i></td>";
+          echo "<td colspan=\"5\"><i>Phase de qualification en cours</i></td>";
        }
     } else {
-       echo "<td colspan=\"18\"><i>N'a pas commencé la phase de qualification</i></td>";
+       echo "<td colspan=\"5\"><i>N'a pas commencé la phase de qualification</i></td>";
     }
     echo "</tr>";
 }
