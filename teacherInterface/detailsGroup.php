@@ -20,6 +20,7 @@ $groupID = $_GET["groupID"];
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" href="<?= $config->faviconfile ?>" />
 
 <style>
 table tr td { border: solid black 1px; min-width: 40px; }
