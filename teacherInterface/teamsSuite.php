@@ -320,11 +320,16 @@ if(count($userIds) < count($contestants)) {
    <td rowspan="2">Nom de l'équipe</td>
    <td rowspan="2">Membres</td>
    <td colspan="5">Scores (phase de qualification)</td>
-<!--   <td rowspan="2">Mot de passe<br>pour l'épreuve</td>
-   <td colspan="8">Scores (épreuve)</td>
-   <td rowspan="2">Classement (épreuve)</td>-->
+   <td rowspan="2">Mot de passe<br>pour l'épreuve</td>
+   <td colspan="5">Scores (épreuve)</td>
+   <td rowspan="2">Classement (épreuve)</td>
 </tr>
 <tr>
+<td>Substitution cyclique 1</td>
+   <td>Substitution cyclique 2</td>
+   <td>Labyrinthe à bille</td>
+   <td>Image masquée</td>
+   <td><b>Total</b></td>
    <td>Substitution cyclique 1</td>
    <td>Substitution cyclique 2</td>
    <td>Labyrinthe à bille</td>
@@ -388,7 +393,7 @@ foreach($teams as $groupId => $data) {
        echo "<td>" . formatScore($teamScores[2]) . "</td>";
        echo "<td>" . formatScore($teamScores[3]) . "</td>";
        echo "<td><b>" . (isset($scoreTotals[$groupId]) ? $scoreTotals[$groupId] : '-') . "</b> / 400</td>";
-       if(false && $data['password']) {
+       if($data['password']) {
           echo "<td><pre>" . $data['password'] . "</pre></td>";
           if($data['idNewGroup']) {
              if($data['thirdScore'] !== null) {
@@ -396,10 +401,7 @@ foreach($teams as $groupId => $data) {
                 echo "<td>" . $data['scores'][2] . "</td>";
                 echo "<td>" . $data['scores'][3] . "</td>";
                 echo "<td>" . $data['scores'][4] . "</td>";
-                echo "<td>" . $data['scores'][5] . "</td>";
-                echo "<td>" . $data['scores'][6] . "</td>";
-                echo "<td>" . $data['scores'][7] . "</td>";
-                echo "<td><b>" . $data['thirdScore'] . "</b> / 700</td>";
+                echo "<td><b>" . $data['thirdScore'] . "</b> / 400</td>";
                 if($data['rank'] != 0) {
                     if($data['qualifiedFinal'] != '1') {
                         echo "<td>";
@@ -415,19 +417,20 @@ foreach($teams as $groupId => $data) {
                     echo "<td><i>Classements à venir</i></td>";
                 }
              } else {
-                echo "<td colspan=\"9\"><i>Scores à venir</i></td>";
+                echo "<td colspan=\"6\"><i>Scores à venir</i></td>";
              }
           } else {
-             echo "<td colspan=\"9\"><i>N'a pas encore utilisé le mot de passe pour l'épreuve d'1h30 sous surveillance</i></td>";
+             echo "<td colspan=\"6\"><i>N'a pas encore utilisé le mot de passe pour l'épreuve d'1h30 sous surveillance</i></td>";
           }
        } elseif($data['country'] == 'fr' || $data['country'] == 'ch') {
-          $reqScore = $data['country'] == 'ch' ? 300 : 350;
-//          echo "<td colspan=\"18\"><i>N'est pas encore qualifiée pour l'épreuve (n'a pas atteint $reqScore points)</i></td>";
+          //$reqScore = $data['country'] == 'ch' ? 300 : 350;
+          $reqScore = 150;
+          echo "<td colspan=\"18\"><i>N'est pas encore qualifiée pour l'épreuve (n'a pas atteint $reqScore points)</i></td>";
        } else {
-          echo "<td colspan=\"5\"><i>Phase de qualification en cours</i></td>";
+          echo "<td colspan=\"7\"><i>Phase de qualification en cours</i></td>";
        }
     } else {
-       echo "<td colspan=\"5\"><i>N'a pas commencé la phase de qualification</i></td>";
+       echo "<td colspan=\"7\"><i>N'a pas commencé la phase de qualification</i></td>";
     }
     echo "</tr>";
 }
