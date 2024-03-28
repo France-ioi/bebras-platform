@@ -551,7 +551,7 @@
     "codes_participant_exists": "Vous avez déjà un participant nommé %s %s dans cet établissement, qui a pour code : %s.",
     "codes_generated": "Le code %s a été généré pour %s %s",
     "codes_extra_title": "Codes de participants supplémentaires",
-    "codes_list_existing": "Voici la liste des codes de participants que vous avez créé manuellement :",
+    "codes_list_existing": "Voici la liste des codes de participants que vous avez créés manuellement :",
     "codes_category": "Catégorie",
     "codes_generate_new_title": "Créer un nouveau code :",
     "codes_generate_new_explanation": "<p>Vous pouvez ici créer un code de participant pour un élève qui n'a pas pu en obtenir lors d'une étape précédente, ou bien pour vous-même, pour tester le fonctionnement.</p><p>Assurez-vous de ne pas créer un code pour une personne qui en dispose déjà.</p>",

@@ -52,6 +52,10 @@ echo "<body style='max-width: 800px'>";
 
 echo "<h1>Codes de participants associés à un groupe</h1>";
 
+echo "<p>Cette page n'est plus utilisée. Si vous voulez créer de nouveaux codes ou revoir les codes déjà créés, veuillez utiliser la page de <a href=\"extraQualificationCode.php\">création de codes de participants supplémentaires</a>.</p>";
+
+die();
+
 $rowGroup = getGroupInfo($groupID, $userID);
 
 if (!$rowGroup->allowFromHome) {
