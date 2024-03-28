@@ -1399,10 +1399,6 @@ if ($action == "updateCategories") {
    execQueryAndShowNbRows("Set category to 'blanche' if none is defined", "
       UPDATE
       algorea_registration
-      JOIN contestant ON algorea_registration.ID = contestant.registrationID
-      JOIN team ON contestant.teamID = team.ID
-      JOIN `group` ON `group`.ID = team.groupID
-      JOIN `contest` ON `contest`.ID = `group`.contestID
       SET algorea_registration.category = 'blanche'
       WHERE algorea_registration.category IS NULL OR algorea_registration.category = ''",
       array());
@@ -1417,8 +1413,9 @@ if ($action == "updateCategories") {
       SET algorea_registration.category = 'jaune'
       WHERE algorea_registration.category = 'blanche'
       AND team.score >= contest.qualificationScore
+      AND (contest.ID = :contestID OR contest.parentContestID = :contestID)
       AND contest.qualificationCategory = 'jaune'",
-      array());
+      array("contestID" => $contestID));
 
    execQueryAndShowNbRows("Set category to 'orange' if qualified by a contest", "
       UPDATE
@@ -1430,8 +1427,9 @@ if ($action == "updateCategories") {
       SET algorea_registration.category = 'orange'
       WHERE (algorea_registration.category = 'blanche' OR algorea_registration.category = 'jaune')
       AND team.score >= contest.qualificationScore
+      AND (contest.ID = :contestID OR contest.parentContestID = :contestID)
       AND contest.qualificationCategory = 'orange'",
-     array());
+      array("contestID" => $contestID));
 
    execQueryAndShowNbRows("Set category to 'verte' if qualified by a contest", "
       UPDATE
@@ -1443,8 +1441,9 @@ if ($action == "updateCategories") {
       SET algorea_registration.category = 'verte'
       WHERE (algorea_registration.category = 'blanche' OR algorea_registration.category = 'jaune' OR algorea_registration.category = 'orange')
       AND team.score >= contest.qualificationScore
+      AND (contest.ID = :contestID OR contest.parentContestID = :contestID)
       AND contest.qualificationCategory = 'verte'",
-     array());
+      array("contestID" => $contestID));
 
    execQueryAndShowNbRows("Set category to 'bleue' if qualified by a contest", "
       UPDATE
@@ -1456,8 +1455,9 @@ if ($action == "updateCategories") {
       SET algorea_registration.category = 'bleue'
       WHERE (algorea_registration.category = 'blanche' OR algorea_registration.category = 'jaune' OR algorea_registration.category = 'orange' OR algorea_registration.category = 'verte')
       AND team.score >= contest.qualificationScore
+      AND (contest.ID = :contestID OR contest.parentContestID = :contestID)
       AND contest.qualificationCategory = 'bleue'",
-     array());
+      array("contestID" => $contestID));
 }
 
 echo "<h3><a href='".$startUrl."&action=createRegistrationCategory'>Create records for each students best scores in each category</a></h3>";
