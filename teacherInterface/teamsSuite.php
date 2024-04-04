@@ -87,11 +87,11 @@ $stmt = $db2->prepare($abc = "
 SELECT users.ID AS userId, `groups`.ID AS groupId, `groups`.sName, `groups`.iTeamParticipating,
 alkindi_teams.sPassword, alkindi_teams.idNewGroup, alkindi_teams.country,
 alkindi_teams.rank, alkindi_teams.rankBigRegion, alkindi_teams.rankRegion,
-alkindi_teams.thirdScore, alkindi_teams.thirdTime ".
+alkindi_teams.thirdScore, alkindi_teams.thirdTime,
 alkindi_teams.score1, alkindi_teams.time1,
 alkindi_teams.score2, alkindi_teams.time2,
 alkindi_teams.score3, alkindi_teams.time3,
-alkindi_teams.score4, alkindi_teams.time4,
+alkindi_teams.score4, alkindi_teams.time4,".
 /*alkindi_teams.score5, alkindi_teams.time5,
 alkindi_teams.score6, alkindi_teams.time6,
 alkindi_teams.score7, alkindi_teams.time7*/
