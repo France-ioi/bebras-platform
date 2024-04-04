@@ -91,7 +91,7 @@ alkindi_teams.thirdScore, alkindi_teams.thirdTime,
 alkindi_teams.score1, alkindi_teams.time1,
 alkindi_teams.score2, alkindi_teams.time2,
 alkindi_teams.score3, alkindi_teams.time3,
-alkindi_teams.score4, alkindi_teams.time4,".
+alkindi_teams.score4, alkindi_teams.time4 ".
 /*alkindi_teams.score5, alkindi_teams.time5,
 alkindi_teams.score6, alkindi_teams.time6,
 alkindi_teams.score7, alkindi_teams.time7*/
