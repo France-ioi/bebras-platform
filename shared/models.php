@@ -426,7 +426,7 @@ $viewsModels = array(
          "userID" => array("joins" => array("full_groups"), "condition" => "(`full_groups`.`userID` = :userID OR `full_groups`.`targetUserID` = :userID)"),
          "ownerUserID" => array("joins" => array("full_groups"), "condition" => "`full_groups`.`userID` = :[PREFIX_FIELD]ownerUserID"),
          "awarded" => array("joins" => array("team", "algorea_registration"), "ignoreValue" => true, "condition" => "(`[PREFIX]team`.`participationType` = 'Official' and `[PREFIX]algorea_registration`.`code` is not null)"),
-         "printable" => array("joins" => array("contest"), "condition" => "`[PREFIX]contest`.`printCodes` = 1", "ignoreValue" => true)
+         "printable" => array("joins" => array("contest"), "condition" => "EXISTS (SELECT 1 FROM `[PREFIX]contest` AS `related_contest` WHERE `related_contest`.`printCodes` = 1 AND (`related_contest`.`ID` = `[PREFIX]contest`.`ID` OR `related_contest`.`ID` = `[PREFIX]contest`.`parentContestID`))", "ignoreValue" => true)
       ),
       'orders' => array(
          array('field' => 'contestID'),

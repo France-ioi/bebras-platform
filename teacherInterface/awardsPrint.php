@@ -55,7 +55,7 @@ if (isset($_REQUEST["assigned"])) {
       $request["filters"]["userID"] = $_SESSION["userID"];
    }
    if (isset($_GET["groupID"])) {
-      $request["filters"]["groupID"] = $_GET["groupID"];
+      $request["filters"]["relatedGroupID"] = $_GET["groupID"];
    }
    if (isset($_GET["schoolID"])) {
       $request["filters"]["schoolID"] = $_GET["schoolID"];
