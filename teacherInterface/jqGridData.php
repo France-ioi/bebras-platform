@@ -309,6 +309,7 @@ function checkRequestColleagues($db, &$request, &$record, $operation, &$roles) {
 
 function checkRequestQuestion($db, &$request, &$record, $operation, &$roles) {
    $record["key"] = str_replace('/', '', $record["key"]);
+   $record["path"] = str_replace('&amp;', '&', $record["path"]);
    return true;
 }
 
