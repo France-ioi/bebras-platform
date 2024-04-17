@@ -91,11 +91,13 @@ alkindi_teams.thirdScore, alkindi_teams.thirdTime,
 alkindi_teams.score1, alkindi_teams.time1,
 alkindi_teams.score2, alkindi_teams.time2,
 alkindi_teams.score3, alkindi_teams.time3,
-alkindi_teams.score4, alkindi_teams.time4 ".
+alkindi_teams.score4, alkindi_teams.time4, ".
 /*alkindi_teams.score5, alkindi_teams.time5,
 alkindi_teams.score6, alkindi_teams.time6,
 alkindi_teams.score7, alkindi_teams.time7*/
-"FROM pixal.`groups`
+"
+alkindi_teams.rank, alkindi_teams.rankBigRegion, alkindi_teams.rankRegion, alkindi_teams.qualifiedFinal, alkindi_teams.qualifiedFinalMaybe
+FROM pixal.`groups`
 JOIN pixal.groups_groups ON groups_groups.idGroupParent = `groups`.ID
 JOIN pixal.users ON groups_groups.idGroupChild = users.idGroupSelf
 LEFT JOIN pixal.alkindi_teams ON alkindi_teams.idGroup = `groups`.ID
@@ -116,7 +118,8 @@ while($row = $stmt->fetch()) {
          'rank' => $row['rank'],
          'rankBigRegion' => $row['rankBigRegion'],
          'rankRegion' => $row['rankRegion'],
-//         'qualifiedFinal' => $row['qualifiedFinal'],
+         'qualifiedFinal' => $row['qualifiedFinal'],
+         'qualifiedFinalMaybe' => $row['qualifiedFinalMaybe'],
          'scores' => [],
          'times' => [],
          'members' => []
@@ -405,7 +408,11 @@ foreach($teams as $groupId => $data) {
                 if($data['rank'] != 0) {
                     if($data['qualifiedFinal'] != '1') {
                         echo "<td>";
-                        echo "<i>Équipe non qualifiée pour la finale</i><br>";
+                        if($data['qualifiedFinalMaybe'] != '1') {
+                           echo "<i>Équipe non qualifiée pour la finale</i><br>";
+                        } else {
+                           echo "<i>Équipe non qualifiée pour la finale (sauf en cas de désistements)</i><br>";
+                        }
                         echo "Rang national : " . $data['rank'] . '<br>';
                         echo "Rang académie : " . $data['rankRegion'];
                         echo "</td>";
