@@ -51,7 +51,7 @@ function getGroupForSubContest($db, $oldGroupID, $newContestID) {
       $groupPassword = genAccessCode($db);
       $groupID = getRandomID();
       $query = "INSERT INTO `group` (`ID`, `name`, `contestID`, `schoolID`, `userID`, `grade`, `expectedStartTime`, `startTime`, `code`, `password`, `isGenerated`, `nbStudents`, `nbStudentsEffective`, `nbTeamsEffective`, `parentGroupID`, `language`, `minCategory`, `maxCategory`, `participationType`) ".
-         "SELECT :groupID, LEFT(CONCAT(IF(`oldGroup`.`isGenerated`, CONCAT(CONCAT('Indiv ', `oldGroup`.`grade`), ' '), CONCAT(`oldGroup`.`name`, '/')), `contest`.`name`), 50), :contestID, `oldGroup`.`schoolID`, `oldGroup`.`userID`, `oldGroup`.`grade`, NOW(), NOW(), :groupCode, :password, 1, 0, 0, 0, :oldGroupID, `contest`.`language`, `contest`.`categoryColor`, `contest`.`categoryColor`, IFNULL(`oldGroup`.`participationType`, 'Official'), FROM `contest`, `group` `oldGroup` WHERE `contest`.`ID` = :contestID AND `oldGroup`.`ID` = :oldGroupID";
+         "SELECT :groupID, LEFT(CONCAT(IF(`oldGroup`.`isGenerated`, CONCAT(CONCAT('Indiv ', `oldGroup`.`grade`), ' '), CONCAT(`oldGroup`.`name`, '/')), `contest`.`name`), 50), :contestID, `oldGroup`.`schoolID`, `oldGroup`.`userID`, `oldGroup`.`grade`, NOW(), NOW(), :groupCode, :password, 1, 0, 0, 0, :oldGroupID, `contest`.`language`, `contest`.`categoryColor`, `contest`.`categoryColor`, IFNULL(`oldGroup`.`participationType`, 'Official') FROM `contest`, `group` `oldGroup` WHERE `contest`.`ID` = :contestID AND `oldGroup`.`ID` = :oldGroupID";
       $stmt = $db->prepare($query);
       $stmt->execute(array(
          "contestID" => $newContestID,
