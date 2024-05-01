@@ -237,7 +237,7 @@ function getGradesList(isFilter) {
    for (var iGrade = 0; iGrade < grades.length; iGrade++) {
       var grade = grades[iGrade];
       gradesList["" + grade] = t("grade_" + grade);
-      gradesFilter = ";" + grade + ":" + t("grade_" + grade);
+      gradesFilter += ";" + grade + ":" + t("grade_" + grade);
    }
    if (isFilter) {
       return gradesFilter;
@@ -247,6 +247,18 @@ function getGradesList(isFilter) {
 }
 
 function getGroupsColModel() {
+   // Get list of contests the groups participate in
+   var groupContestIDs = [];
+   for(groupID in groups) {
+      var contestID = groups[groupID].contestID;
+      if(contestID && contests[contestID] && !contests[contestID].parentContestID && groupContestIDs.indexOf(contestID) == -1) {
+         groupContestIDs.push(contestID);
+      }
+   }
+   function filterGroupContests(contestID) {
+      return groupContestIDs.indexOf(contestID) != -1;
+   }
+
    var model = {
       tableName: "group",
       fields: {
@@ -266,12 +278,20 @@ function getGroupsColModel() {
          },
          contestID: {label: t("contestID_label"),
             editable: true, edittype: "select", editoptions: { value:getItemNames(contests)},
-            stype: "select", searchoptions: { value:getItemNames(contests, true)},
+            stype: "select", searchoptions: { value:getItemNames(contests, true, filterGroupContests)},
             required: true, 
             width: 260, comment: t("contestID_comment")},
-         grade: {label: t("contestant_grade_label"), editable: true, edittype: "select", width: 100, required: true, editoptions:{
-            value: getGradesList(false)}},
-         participationType: {label: t("participationType_label"), longLabel: t("participationType_long_label"), editable: true, required: true, edittype: "select", width: 100, editoptions:{ value:{"Official": t("participationType_official"), "Unofficial": t("participationType_unofficial")}}, comment: t("participationType_comment")},
+         grade: {
+            label: t("contestant_grade_label"), editable: true, edittype: "select", width: 100, required: true,
+            editoptions:{value: getGradesList(false)},
+            stype: "select", searchoptions: { value:"_NOF_:" + t("option_no_filter") + getGradesList(true)},
+         },
+         participationType: {
+            label: t("participationType_label"), longLabel: t("participationType_long_label"), editable: true, required: true, edittype: "select", width: 100,
+            editoptions:{ value:{"Official": t("participationType_official"), "Unofficial": t("participationType_unofficial")}},
+            stype: "select", searchoptions:{ value:"_NOF_:" + t("option_no_filter") + ";Official:" + t("participationType_official") + ";Unofficial:" + t("participationType_unofficial")},
+            comment: t("participationType_comment")
+         },
          expectedStartTime: {
             label: t("expectedStartTime_label") + "<br/>(" + jstz.determine().name() + ")",
             longLabel: t("expectedStartTime_long_label"),
@@ -1131,7 +1151,7 @@ function loadContestQuestions() {
 }
 
 function loadListGroups() {
-   loadGrid("group", "name", 20, [10, 20, 50], function(id) {selectedGroupID = id;}, isAdmin());
+   loadGrid("group", "name", 20, [10, 20, 50], function(id) {selectedGroupID = id;}, true);
 }
 
 function filterSchool() {
@@ -1468,13 +1488,16 @@ function loadData(tableName, callback) {
    );
 }
 
-function getItemNames(items, withUnselect) {
+function getItemNames(items, withUnselect, filterFunc) {
    var itemNames = "";
    if (withUnselect) {
       itemNames += "_NOF_:" + t("option_no_filter") + ";";
    }
    var toSort = [];
    for (var itemID in items) {
+      if(filterFunc && !filterFunc(itemID)) {
+         continue;
+      }
       toSort.push({ID : itemID, name: items[itemID].name});
    }
    toSort.sort(function(itemA, itemB) {
