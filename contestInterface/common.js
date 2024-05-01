@@ -362,13 +362,6 @@ window.logTaskActivity = function(details) {
 }
 
 
-function postWithPow() {
-   return crypto.subtle.digest("SHA-512", new TextEncoder("utf-8").encode(str)).then(buf => {
-      return Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
-   });
-}
-
-
 var browserIDStopping = false;
 function browserIDChanged(isTab) {
    // BrowserID changed, current participation cannot proceed
@@ -3340,6 +3333,7 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
    questionData.visited = true;
    var questionKey = questionData.key;
 
+   var questionIframeLoadingTimeout = null;
    if (newInterface) {
       $(".questionListIntro").hide();
       $(".questionList").hide();
@@ -3349,7 +3343,7 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
 
       $(".questionIframeLoading").show();
       // Safety to avoid forever hiding the iframe
-      setTimeout(function() {
+      questionIframeLoadingTimeout = setTimeout(function() {
          $(".questionIframeLoading").hide();
          }, 15000);
 
@@ -3363,6 +3357,10 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
          return;
       }
       prevTaskTimeout = null;
+      if(questionIframeLoadingTimeout) {
+         clearTimeout(questionIframeLoadingTimeout);
+         questionIframeLoadingTimeout = null;
+      }
 
       Tracker.trackData({dataType:"selectQuestion", teamID: teamID, questionKey: questionKey, clicked: clicked});
       var questionName = questionData.name.replace("'", "&rsquo;").split("[")[0];
