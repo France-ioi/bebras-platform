@@ -3343,11 +3343,19 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
       // Safety to avoid forever hiding the iframe
       setTimeout(function() {
          $(".questionIframeLoading").hide();
-         }, 5000);
+         }, 15000);
 
    }
 
-   var nextStep = function() {
+   var prevTaskTimeout = null;
+   var nextStep = function(dontCheckTimeout) {
+      if(prevTaskTimeout) {
+         clearTimeout(prevTaskTimeout);
+      } else if(!dontCheckTimeout) {
+         return;
+      }
+      prevTaskTimeout = null;
+
       Tracker.trackData({dataType:"selectQuestion", teamID: teamID, questionKey: questionKey, clicked: clicked});
       var questionName = questionData.name.replace("'", "&rsquo;").split("[")[0];
       var minScore = questionData.minScore;
@@ -3397,7 +3405,13 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
    };
 
    if (questionIframe.task) {
+      // Get the answer and possibly grade it before moving onto the next task
+      var prevTaskTimeout = setTimeout(function() {
+         nextStep();
+      }, 10000);
+
       questionIframe.task.getAnswer(function(answer) {
+         if (!prevTaskTimeout) { return; }
          if ( ! TimeManager.isContestOver() && ((answer !== defaultAnswers[questionIframe.questionKey]) || (typeof answers[questionIframe.questionKey] != 'undefined'))) {
             if (fullFeedback) {
                platform.validate("stay", function() {
@@ -3407,6 +3421,7 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
                });
             } else if (((typeof answers[questionIframe.questionKey] == 'undefined') || (answers[questionIframe.questionKey] != answer))
                        && !confirm(t("confirm_leave_question"))) {
+               // User didn't validate their latest answer
                return;
             } else {
                nextStep();
@@ -3419,7 +3434,7 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
          nextStep();
       });
    } else {
-      nextStep();
+      nextStep(true);
    }
 };
 
