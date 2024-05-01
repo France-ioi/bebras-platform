@@ -3414,7 +3414,9 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
       // Get the answer and possibly grade it before moving onto the next task
       var prevTaskTimeout = setTimeout(function() {
          // Force the questionIframe to skip unloading the previous task
-         questionIframe.loaded = false;
+         if(questionIframe.task) {
+            questionIframe.task.iframe_loaded = false;
+         }
          nextStep();
       }, 10000);
 
