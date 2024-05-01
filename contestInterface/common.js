@@ -361,6 +361,14 @@ window.logTaskActivity = function(details) {
    logActivity(null, null, 'extra', details, 0);
 }
 
+
+function postWithPow() {
+   return crypto.subtle.digest("SHA-512", new TextEncoder("utf-8").encode(str)).then(buf => {
+      return Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
+   });
+}
+
+
 var browserIDStopping = false;
 function browserIDChanged(isTab) {
    // BrowserID changed, current participation cannot proceed
@@ -1213,7 +1221,7 @@ var questionIframe = {
     *
     * @param {string} questionKey
     */
-   load: function(taskViews, questionKey, callback) {
+   load: function(taskViews, questionKey, callback, force) {
       var that = this;
       var cb = function() {
          showQuestionIframe();
@@ -3400,13 +3408,15 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
          taskViews.solution = true;
       }
       if (!noLoad) {
-         questionIframe.load(taskViews, questionKey, function() {});
+         questionIframe.load(taskViews, questionKey, function() {}, true);
       }
    };
 
    if (questionIframe.task) {
       // Get the answer and possibly grade it before moving onto the next task
       var prevTaskTimeout = setTimeout(function() {
+         // Force the questionIframe to skip unloading the previous task
+         questionIframe.loaded = false;
          nextStep();
       }, 10000);
 
@@ -3417,7 +3427,7 @@ window.selectQuestion = function(questionID, clicked, noLoad) {
                platform.validate("stay", function() {
                   nextStep();
                }, function() {
-                  logError(arguments);                  
+                  logError(arguments);
                });
             } else if (((typeof answers[questionIframe.questionKey] == 'undefined') || (answers[questionIframe.questionKey] != answer))
                        && !confirm(t("confirm_leave_question"))) {
