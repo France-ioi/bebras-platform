@@ -606,6 +606,7 @@ var platform = {
          } else {
             submitAnswer(questionKey, answer, null);
             answers[questionKey] = answer;
+            setTimeout(questionIframe.updateHeight, 1000);
             platform.continueValidate(mode);
             if (success) {success();}
          }
