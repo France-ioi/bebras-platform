@@ -609,7 +609,6 @@ var platform = {
             platform.continueValidate(mode);
             if (success) {success();}
          }
-//         if (success) {success();}
       }, logError);
    },
    firstNonVisitedQuestion: function(delay) {
@@ -653,7 +652,7 @@ var platform = {
          window.backToList();
          return;
       }
-      if (!nextQuestionAuto) {
+      if (!nextQuestionAuto && mode != "next") {
          return;
       }
       var questionData = questionsData[questionsKeyToID[questionIframe.questionKey]];
