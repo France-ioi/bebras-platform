@@ -673,11 +673,29 @@ if ($action == "showScoreAnomalies") {
       FROM team_question
       JOIN team ON team_question.teamID = team.ID
       JOIN `question` ON team_question.questionID = question.ID
+      JOIN contest ON team.contestID = contest.ID
       WHERE team_question.checkStatus = 'difference'
       AND team.participationType = 'Official'
+      AND (contest.ID = :contestID OR contest.parentContestID = :contestID)
       ",
       array("contestID" => $contestID));
 }
+
+echo "<h3><a href='".$startUrl."&action=recomputeScoreAnomalies'>Mark score anomalies to be recomputed</a></h3>";
+if ($action == "recomputeScoreAnomalies") {
+   execQueryAndShowNbRows("Mark score anomalies to be recomputed", "
+      UPDATE team_question
+      JOIN team ON team_question.teamID = team.ID
+      JOIN `question` ON team_question.questionID = question.ID
+      JOIN contest ON team.contestID = contest.ID
+      SET team_question.checkStatus = 'requested'
+      WHERE team_question.checkStatus = 'difference'
+      AND team.participationType = 'Official'
+      AND (contest.ID = :contestID OR contest.parentContestID = :contestID)
+      ",
+      array("contestID" => $contestID));
+}
+
 
 echo "<h3><a href='".$startUrl."&action=fixScoreErrors'>After verification only: replace score with ffScore if ffScore is better (and vice-versa)</a></h3>";
 if ($action == "fixScoreErrors") {
@@ -1306,8 +1324,9 @@ if ($action == "mergeStudents") {
          AND contestant.grade = algorea_registration.grade
          SET contestant.registrationID = algorea_registration.ID
          WHERE contestant.registrationID IS NULL
+         AND (contest.ID = :contestID OR contest.parentContestID = :contestID)
          AND team.participationType = 'Official'",
-         array());
+         array("contestID" => $contestID));
 }
 
 echo "<h3><a href='".$startUrl."&action=newRegistrations'>Create registrations for students that don't have one yet</a></h3>";
