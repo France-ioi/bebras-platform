@@ -604,9 +604,11 @@ var platform = {
                if (success) {success();}
             }, logError);
          } else {
-            logActivity(teamID, questionID, "submission", answer, null);
-            submitAnswer(questionKey, answer, null);
-            answers[questionKey] = answer;
+            if(answers[questionKey] != answer) {
+               logActivity(teamID, questionID, "submission", answer, null);
+               submitAnswer(questionKey, answer, null);
+               answers[questionKey] = answer;
+            }
             setTimeout(questionIframe.updateHeight, 1000);
             platform.continueValidate(mode);
             if (success) {success();}
