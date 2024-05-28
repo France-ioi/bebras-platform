@@ -2240,6 +2240,14 @@ window.showPersonalPage = function(data) {
    }
    $('#persoGradeUpdate').hide();
 
+   if(data.registrationData.round == "1") {
+      $('#personalPageHeaderQualified').show();
+      $('#personalPageHeaderNonQualified').hide();
+   } else {
+      $('#personalPageHeaderQualified').hide();
+      $('#personalPageHeaderNonQualified').show();
+   }
+
    var htmlParticipations = "";
    var canParticipateOfficial = true;
    for (var iParticipation = 0; iParticipation < data.registrationData.participations.length; iParticipation++) {

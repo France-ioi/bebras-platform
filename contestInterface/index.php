@@ -623,6 +623,14 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
       <button type="button" id="buttonPersoGradeUpdate" onclick="updatePersoGrade()" class="btn btn-primary">Mettre à jour ma classe</button>
    </p>
    <p>
+<?php
+    if($config->contestInterface->personalPageDisplayHeader) {
+?>
+      <span id="personalPageHeaderQualified" data-i18n="[html]personal_page_header_qualified" style="display: none;"></span>
+      <span id="personalPageHeaderNonQualified" data-i18n="[html]personal_page_header_nonqualified" style="display: none;"></span>
+<?php
+    }
+?>
    </p>
    <table>
       <tr>
