@@ -139,10 +139,10 @@ $query = "
       algorea_registration.qualifiedFromSite,
       algorea_registration.algoreaRank,
       algorea_registration.algoreaSchoolRank,
-      algorea_registration.scoreQuart2023,
-      algorea_registration.qualifiedDemi2023,
-      algorea_registration.scoreDemi2023,
-      algorea_registration.rankDemi2023,
+      algorea_registration.scoreQuart2024,
+      algorea_registration.qualifiedDemi2024,
+      algorea_registration.scoreDemi2024,
+      algorea_registration.rankDemi2024,
       algorea_registration.qualifiedFinal,
       `group`.contestID,
       contest.parentContestID,
@@ -188,10 +188,10 @@ $query = "
       algorea_registration.qualifiedFromSite,
       algorea_registration.algoreaRank,
       algorea_registration.algoreaSchoolRank,
-      algorea_registration.scoreQuart2023,
-      algorea_registration.qualifiedDemi2023,
-      algorea_registration.scoreDemi2023,
-      algorea_registration.rankDemi2023,
+      algorea_registration.scoreQuart2024,
+      algorea_registration.qualifiedDemi2024,
+      algorea_registration.scoreDemi2024,
+      algorea_registration.rankDemi2024,
       algorea_registration.qualifiedFinal,
       `group`.contestID,
       contest.parentContestID,
@@ -257,10 +257,10 @@ while ($row = $stmt->fetchObject()) {
          "franceioiID" => $row->franceioiID,
          "round" => $row->round,
          "qualifiedFromSite" => $row->qualifiedFromSite,
-         "scoreQuart2023" => $row->scoreQuart2023,
-         "qualifiedDemi2023" => $row->qualifiedDemi2023,
-         "scoreDemi2023" => $row->scoreDemi2023,
-         "rankDemi2023" => $row->rankDemi2023,
+         "scoreQuart2024" => $row->scoreQuart2024,
+         "qualifiedDemi2024" => $row->qualifiedDemi2024,
+         "scoreDemi2024" => $row->scoreDemi2024,
+         "rankDemi2024" => $row->rankDemi2024,
          "qualifiedFinal" => $row->qualifiedFinal,
          "algoreaRank" => $row->algoreaRank,
          "algoreaSchoolRank" => $row->algoreaSchoolRank,
@@ -413,7 +413,7 @@ foreach ($schools as $schoolID => $school) {
          }
       }
       if ($contestant["infos"]["round"] == "1" || $contestant["infos"]["qualifiedFromSite"] == "1") {
-         $scoreQuart = $contestant["infos"]["scoreQuart2023"];
+         $scoreQuart = $contestant["infos"]["scoreQuart2024"];
          if (($scoreQuart != null) && ($scoreQuart > 0)) {
             echo $scoreQuart;
          } else {
@@ -424,8 +424,8 @@ foreach ($schools as $schoolID => $school) {
       }
       echo "</td>";
       echo "<td>";
-      $scoreDemi = $contestant["infos"]["scoreDemi2023"];
-      $qualifiedDemi = $contestant["infos"]["qualifiedDemi2023"];
+      $scoreDemi = $contestant["infos"]["scoreDemi2024"];
+      $qualifiedDemi = $contestant["infos"]["qualifiedDemi2024"];
       if($scoreDemi) {
          echo $scoreDemi;
          echo "<br/>";
@@ -433,16 +433,16 @@ foreach ($schools as $schoolID => $school) {
          echo "<span class='rank'>";
          if ($qualifiedFinal == "0") {
             echo "Non qualifié(e) pour la finale<br/>";
-            // echo "Rang ".$contestant["infos"]["rankDemi2023"]." de ";
+            // echo "Rang ".$contestant["infos"]["rankDemi2024"]." de ";
             // echo translate("grade_short_".$contestant["infos"]["grade"]);
          } else if ($qualifiedFinal == "1") {
             echo "Qualifié(e) pour la finale";
          }
          echo "</span>";
       } elseif($qualifiedDemi == "1") {
-         echo "<span class='rank'>Qualifié(e), n'a pas participé</span>";
+         echo "<span class='rank'>Qualifié(e), n'a pas encore participé</span>";
       } elseif($qualifiedDemi == "2") {
-         echo "<span class='rank'>Veuillez nous contacter</span>";
+         echo "<span class='rank'>Formulaire à remplir pour validation</span>";
       } else {
          echo "-";
       }
