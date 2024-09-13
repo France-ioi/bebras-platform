@@ -2408,7 +2408,11 @@ function editForm(modelName, title, item) {
 
 function checkEmailFormat(email) {
    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-   return re.test(email);
+   if(!re.test(email)) { return false; }
+   // Check all characters are ASCII
+   // as much as special characters can be allowed in email addresses, it's generally a user mistake
+   var asciiRe = /^[\x00-\x7F]*$/;
+   return asciiRe.test(email);
 }
 
 function checkUser(user, isCreate) {
