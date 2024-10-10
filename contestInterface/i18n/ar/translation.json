@@ -209,5 +209,26 @@
     "confirm_new_tab_intro": "تنبيه: هذه المسابقة جارية بالفعل من متصفح آخر إذا تابعت ، فسيتم قطع اتصال المتصفح الآخر. قد يتم فقد البيانات غير المحفوظة",
     "closed_new_browser": "مازالت المسابقة مستمرة من متصفح آخر. الرجاء الاستئناف من هذا المتصفح الآخر",
     "closed_new_tab": "تنبيه: هذه المسابقة جارية بالفعل من متصفح آخر إذا تابعت ، فسيتم قطع اتصال المتصفح الآخر. قد يتم فقد البيانات غير المحفوظة",
-    "error_contest_closed": "المسابقة المرتبطة بالكود الخاص بك مغلقة الآن"
+    "error_contest_closed": "المسابقة المرتبطة بالكود الخاص بك مغلقة الآن",
+
+    "personal_page_title": "الصفحة الشخصية",
+    "last_name": "اسم العائلة",
+    "first_name": "الاسم الأول",
+    "grade": "الصف",
+    "personal_page_grade_update_prompt": "يرجى تأكيد صفك الدراسي:",
+    "personal_page_grade_update": "تحديث الصف",
+    "personal_page_qualified_category": "مؤهل للفئة",
+    "personal_page_start_preparation": "ابدأ التحضير",
+    "personal_page_start_contest": "ابدأ المسابقة",
+    "personal_page_contest_already_done": "لقد شاركت بالفعل في هذه المسابقة الرسمية.",
+    "personal_page_contest_at_home_prevented": "أشار معلمك إلى أن المسابقة الرسمية يجب أن تتم في الفصل، مع رمز المجموعة.<br/>لذلك، لا يمكنك بدء المسابقة من هذه الواجهة، ولكن يمكنك التحضير في المنزل.",
+    "personal_page_participations_title": "المشاركات:",
+    "personal_page_contest": "المسابقة",
+    "personal_page_date": "التاريخ",
+    "personal_page_team": "الفريق",
+    "personal_page_status": "الحالة",
+    "personal_page_score": "النتيجة",
+    "personal_page_rank": "الترتيب",
+    "personal_page_schoolRank": "ترتيب<br/>المدرسة",
+    "personal_page_access": "الوصول"
 }

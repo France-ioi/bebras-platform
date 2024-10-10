@@ -2223,7 +2223,12 @@ window.showPersonalPage = function(data) {
       nameGrade = '-';
    }
    $("#persoGrade").html(nameGrade);
-   $("#persoCategory").html(data.registrationData.qualifiedCategory);
+   if(data.registrationData.qualifiedCategory) {
+      $("#persoCategory").html(data.registrationData.qualifiedCategory);
+      $("#persoCategoryRow").show();
+   } else {
+      $("#persoCategoryRow").hide();
+   }
    if (data.registrationData.round == 1) {
       $("#persoSemifinal").html("oui" + t("semifinal_comment"));
    } else {

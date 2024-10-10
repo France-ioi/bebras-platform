@@ -223,5 +223,26 @@
     "confirm_new_tab_intro": "<p><b>Warning : you are already participating in an activity from another tab.</b></p><p>If you proceed, the other tab will be disconnected. Unsaved data might be lost.</p>",
     "closed_new_browser": "<b>This participation was continued from another browser. Please resume from this other browser.</b>",
     "closed_new_tab": "<b>You are participating in an activity from another tab of this browser. Please resume from that other tab.</b>",
-    "error_contest_closed": "The contest associated with your participation is currently closed."
+    "error_contest_closed": "The contest associated with your participation is currently closed.",
+
+    "personal_page_title": "Personal page",
+    "last_name": "Last name",
+    "first_name": "First name",
+    "grade": "Grade",
+    "personal_page_grade_update_prompt": "Please reconfirm your grade:",
+    "personal_page_grade_update": "Update my grade",
+    "personal_page_qualified_category": "Qualified for category",
+    "personal_page_start_preparation": "Start preparation",
+    "personal_page_start_contest": "Start contest",
+    "personal_page_contest_already_done": "You have already participated in this official contest.",
+    "personal_page_contest_at_home_prevented": "Your teacher has indicated that the official contest must be done in class, with a group code.<br/>Therefore, you cannot start the contest from this interface, but you can do preparations at home.",
+    "personal_page_participations_title": "Participations:",
+    "personal_page_contest": "Contest",
+    "personal_page_date": "Date",
+    "personal_page_team": "Team",
+    "personal_page_status": "Status",
+    "personal_page_score": "Score",
+    "personal_page_rank": "Rank",
+    "personal_page_schoolRank": "School<br/>rank",
+    "personal_page_access": "Access"
 }
