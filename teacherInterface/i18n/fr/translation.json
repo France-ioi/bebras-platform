@@ -639,7 +639,12 @@
     "manual_codes_title": "Ajout de codes générés à la main",
     "manual_codes_instructions": "Cette page vous permet d'ajouter une liste de codes créés à la main. Veuillez entrer votre liste de codes, séparés par des espaces, des retours à la ligne et/ou des virgules.",
     "manual_codes_added": "groupes ajoutés",
-    "manual_codes_existing": "groupes déjà existants"
+    "manual_codes_existing": "groupes déjà existants",
+    "manual_participants_title": "Importer des participants",
+    "manual_participants_instructions": "Cette page vous permet d'importer un fichier CSV de participants. Le fichier doit contenir trois colonnes, dans cet ordre : code du participant, nom et classe.",
+    "manual_participants_file": "Fichier CSV à importer :",
+    "manual_participants_added": "participants ajoutés",
+    "manual_participants_existing": "participants existants"
 }
 
 

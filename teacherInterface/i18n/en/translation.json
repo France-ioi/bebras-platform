@@ -598,5 +598,10 @@
     "manual_codes_title": "Add manually generated codes",
     "manual_codes_instructions": "This page allows you to add a list of codes created manually. Please enter your list of codes, separated by spaces, line breaks and/or commas.",
     "manual_codes_added": "groups added",
-    "manual_codes_existing": "existing groups"
+    "manual_codes_existing": "existing groups",
+    "manual_participants_title": "Import participants",
+    "manual_participants_instructions": "This page allows you to import a CSV file of participants. The file must contain three columns, in this order: participant code, name, and grade.",
+    "manual_participants_file": "CSV file to import:",
+    "manual_participants_added": "participants added",
+    "manual_participants_existing": "existing participants"
 }
