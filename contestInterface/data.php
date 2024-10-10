@@ -403,6 +403,7 @@ function handleCheckPassword($db) {
 }
 
 function getRegistrationData($db, $code) {
+   global $config;
    // TODO :: configuration option for the lastGradeUpdate last date
    $query = "SELECT `algorea_registration`.`ID`, `code`, `category` as `qualifiedCategory`, `validatedCategory`, `firstName`, `lastName`, `genre`, `grade`, `studentID`, `phoneNumber`, `email`, `zipCode`, ".
       "IFNULL(`algorea_registration`.`schoolID`, 0) as `schoolID`, IFNULL(`algorea_registration`.  `userID`, 0) as `userID`, IFNULL(`school_user`.`allowContestAtHome`, 1) as `allowContestAtHome`,
@@ -412,7 +413,11 @@ function getRegistrationData($db, $code) {
       WHERE `code` = :code";
    $stmt = $db->prepare($query);
    $stmt->execute(array("code" => $code));
-   return $stmt->fetchObject();
+   $data = $stmt->fetchObject();
+   if($config->disableContestAtHome) {
+      $data->allowContestAtHome = 0;
+   }
+   return $data;
 }
 
 

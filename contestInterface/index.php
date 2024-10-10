@@ -601,7 +601,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
 
 <div id="divPersonalPage" style="display:none">
    <h2 class="personalPageMain" data-i18n="personal_page_title"></h2>
-   <p class="personalPageMain" data-i18n="personal_page_intro">
+   <p class="personalPageMain" data-i18n="[html]personal_page_intro">
    </p>
    <table id="personalData" class="personalPageMain">
       <tr><td><span data-i18n="last_name"></span> :</td><td id="persoLastName"></td></tr>
