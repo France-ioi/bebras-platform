@@ -28,21 +28,25 @@ if (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"]) {
 ?> 
 <h1 data-i18n="manual_participants_title"></h1>
 <?php
-$grades = [
-   "Grade 7" => 7,
-   "Grade 8" => 8,
-   "Grade 9" => 9,
-   "Grade 10" => 10,
-   "Grade 11" => 11,
-   "الصف السابع" => 7,
-   "الصف الثامن" => 8,
-   "الصف التاسع" => 9,
-   "الصف العاشر" => 10,
-   "الصف الخامس" => 11,
-];
+function makeGradesReverseArray() {
+   global $config;
+   $languages = ['ar', 'en'];
+   $gradesReverse = [];
+   foreach($languages as $lang) {
+      $translations = json_decode(file_get_contents(__DIR__ . "/../contestInterface/i18n/$lang/translation.json"), true);
+      foreach($config->grades as $grade) {
+         if(isset($translations["grade_$grade"])) {
+            $gradesReverse[$translations["grade_$grade"]] = $grade;
+         }
+      }
+   }
+   return $gradesReverse;
+}
 
 function handleDataFile($dataFilePath) {
-   global $config, $db, $grades;
+   global $config, $db;
+
+   $gradesReverse = makeGradesReverseArray();
 
    // Read CSV
    $handle = fopen($dataFilePath, "r");
@@ -59,11 +63,11 @@ function handleDataFile($dataFilePath) {
       }
       $dataLine = array_map('trim', $dataLine);
       $nameParts = explode(' ', $dataLine[1]);
-      if(!isset($grades[$dataLine[2]])) {
+      if(!isset($gradesReverse[$dataLine[2]])) {
          echo "<p>Invalid grade: " . $dataLine[2] . "</p>";
          continue;
       }
-      $data[] = [strtolower($dataLine[0]), $nameParts[0], $nameParts[1], $grades[$dataLine[2]]];
+      $data[] = [strtolower($dataLine[0]), $nameParts[0], $nameParts[1], $gradesReverse[$dataLine[2]]];
    }
    fclose($handle);
 
