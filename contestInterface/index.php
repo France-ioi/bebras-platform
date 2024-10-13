@@ -604,8 +604,8 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
    <p class="personalPageMain" data-i18n="[html]personal_page_intro">
    </p>
    <table id="personalData" class="personalPageMain">
-      <tr><td><span data-i18n="last_name"></span> :</td><td id="persoLastName"></td></tr>
       <tr><td><span data-i18n="first_name"></span> :</td><td id="persoFirstName"></td></tr>
+      <tr><td><span data-i18n="last_name"></span> :</td><td id="persoLastName"></td></tr>
       <tr id="persoGradeRow"><td><span data-i18n="grade"></span> :</td><td id="persoGrade"></td></tr>
       <tr id="persoCategoryRow"><td><span data-i18n="personal_page_qualified_category"></span> :</td><td id="persoCategory"></td></tr>
       <!--<tr><td>Qualifié en demi-finale :</td><td id="persoSemifinal"></td></tr>-->
@@ -648,9 +648,9 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
          <td data-i18n="personal_page_team"></td>
          <td data-i18n="personal_page_status"></td>
          <td data-i18n="personal_page_score"></td>
-         <td data-i18n="personal_page_rank"></td>
-         <td data-i18n="[html]personal_page_schoolRank"></td>
-         <td data-i18n="personal_page_access"></td>
+         <td data-i18n="personal_page_rank" class="personalPageRank">></td>
+         <td data-i18n="[html]personal_page_schoolRank" class="personalPageRank">></td>
+         <td data-i18n="[html]personal_page_access"></td>
       </tr>
    </table>
 </div>

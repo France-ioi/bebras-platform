@@ -245,8 +245,12 @@
     "personal_page_date": "Date",
     "personal_page_team": "Équipe",
     "personal_page_status": "Statut",
+    "personal_page_status_notstarted": "Non démarrée",
+    "personal_page_status_inprogress": "En cours",
+    "personal_page_status_completed": "Terminée",
     "personal_page_score": "Score",
     "personal_page_rank": "Classement",
     "personal_page_schoolRank": "Classement<br/>établissement",
-    "personal_page_access": "Accès"
+    "personal_page_access": "Accès",
+    "personal_page_open": "Ouvrir"
 }

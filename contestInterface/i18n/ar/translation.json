@@ -223,12 +223,16 @@
     "personal_page_contest_already_done": "لقد شاركت بالفعل في هذه المسابقة الرسمية.",
     "personal_page_contest_at_home_prevented": "أشار معلمك إلى أن المسابقة الرسمية يجب أن تتم في الفصل، مع رمز المجموعة.<br/>لذلك، لا يمكنك بدء المسابقة من هذه الواجهة، ولكن يمكنك التحضير في المنزل.",
     "personal_page_participations_title": "المشاركات:",
-    "personal_page_contest": "المسابقة",
+    "personal_page_contest": "لغة المسابقة",
     "personal_page_date": "التاريخ",
-    "personal_page_team": "الفريق",
+    "personal_page_team": "الاسم",
     "personal_page_status": "الحالة",
+    "personal_page_status_notstarted": "لم تبدأ",
+    "personal_page_status_inprogress": "مستمرة",
+    "personal_page_status_completed": "انتهت",
     "personal_page_score": "النتيجة",
     "personal_page_rank": "الترتيب",
     "personal_page_schoolRank": "ترتيب<br/>المدرسة",
-    "personal_page_access": "الوصول"
+    "personal_page_access": "فتح<br/>المسابقة",
+    "personal_page_open": "فتح"
 }

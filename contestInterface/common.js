@@ -2258,15 +2258,16 @@ window.showPersonalPage = function(data) {
 
    var htmlParticipations = "";
    var canParticipateOfficial = true;
+   var hasAnyRank = false;
    for (var iParticipation = 0; iParticipation < data.registrationData.participations.length; iParticipation++) {
       var participation = data.registrationData.participations[iParticipation];
       var status;
       if (participation.startTime == null) {
-         status = "Non démarrée";
+         status = "personal_page_status_notstarted";
       } else if ((parseInt(participation.nbMinutes) == 0) || (parseInt(participation.remainingSeconds) > 0)) {
-         status = "En cours";
+         status = "personal_page_status_inprogress";
       } else {
-         status = "Terminé";
+         status = "personal_page_status_completed";
       }
       var score = "-";
       if (participation.sumScores !== null) {
@@ -2279,15 +2280,16 @@ window.showPersonalPage = function(data) {
       }
       var rank = rankToStr(participation.rank, nameGrade, participation.nbContestants);
       var schoolRank = rankToStr(participation.schoolRank, nameGrade, participation.nbContestants);
+      hasAnyRank = hasAnyRank || (rank != '-') || (schoolRank != '-');
       
       htmlParticipations += "<tr><td>" + participation.contestName + "</td>" +
          "<td>" + window.utcDateFormatter(participation.startTime) + "</td>" +
          "<td>" + participation.contestants + "</td>" +
-         "<td>" + status + "</td>" +
+         "<td><span data-i18n=\"" + status + "\"></span></td>" +
          "<td>" + score + "</td>" +
-         "<td>" + rank + "</td>" +
-         "<td>" + schoolRank + "</td>" +
-         "<td><a href='" + location.pathname + "?team=" + participation.password + "' target='_blank'>ouvrir</a></td></tr>";
+         "<td class='personalPageRank'>" + rank + "</td>" +
+         "<td class='personalPageRank'>>" + schoolRank + "</td>" +
+         "<td><a href='" + location.pathname + "?team=" + participation.password + "' target='_blank' data-i18n='personal_page_open'></a></td></tr>";
 
       if(data.contestID && participation.contestID == data.contestID) {
          canParticipateOfficial = false;
@@ -2297,7 +2299,13 @@ window.showPersonalPage = function(data) {
    $('#buttonStartContest').prop('disabled', !canParticipateOfficial || data.registrationData.allowContestAtHome == "0");
    $("#contestAtHomePrevented").toggle(data.registrationData.allowContestAtHome == "0");
    $('#msgStartContest').toggle(!canParticipateOfficial);
+
    $("#pastParticipations").append(htmlParticipations);
+   if(!hasAnyRank) {
+      // Delete the rank columns because they're empty
+      $('.personalPageRank').remove();
+   }
+   $('#divPersonalPage').i18n();
 }
 
 window.startContest = function() {
