@@ -63,11 +63,15 @@ function handleDataFile($dataFilePath) {
       }
       $dataLine = array_map('trim', $dataLine);
       $nameParts = explode(' ', $dataLine[1]);
-      if(!isset($gradesReverse[$dataLine[2]])) {
+      if(is_numeric($dataLine[2])) {
+         $grade = $dataLine[2];
+      } elseif(isset($gradesReverse[$dataLine[2]])) {
+         $grade = $gradesReverse[$dataLine[2]];
+      } else {
          echo "<p>Invalid grade: " . $dataLine[2] . "</p>";
          continue;
       }
-      $data[] = [strtolower($dataLine[0]), $nameParts[0], $nameParts[1], $gradesReverse[$dataLine[2]]];
+      $data[] = [strtolower($dataLine[0]), $nameParts[0], $nameParts[1], $grade];
    }
    fclose($handle);
 
