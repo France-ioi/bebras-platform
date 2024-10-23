@@ -2770,9 +2770,16 @@ function createTeam(contestants) {
          $("#divLogin").hide();
          $("#divCheckNbContestants").hide();
          $("#divAccessContest").hide();
+
+         if(config.skipContestantPassword && contestants[1] && contestants[1].registrationCode) {
+            // Used a registration code, skip displaying the password
+            confirmTeamPassword();
+            return;
+         }
+
          $("#teamPassword").html(data.password);
          $("#divPassword").show();
-      }, "json");
+   }, "json");
 }
 
 /*

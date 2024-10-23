@@ -77,6 +77,7 @@ $config->contestInterface->oldInterfaceScoreModifiersDisplay = true;
 $config->contestInterface->confirmContestants = false;
 $config->contestInterface->checkBrowserID = false;
 $config->contestInterface->personalPageDisplayHeader = false;
+$config->contestInterface->skipContestantPassword = false;
 
 $config->teacherInterface = (object) array();
 $config->teacherInterface->sHotlineNumber = '';

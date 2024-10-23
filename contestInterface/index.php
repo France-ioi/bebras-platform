@@ -29,6 +29,7 @@
     "logActivity" => $config->contestInterface->logActivity,
     "oldInterfaceScoreModifiersDisplay" => $config->contestInterface->oldInterfaceScoreModifiersDisplay,
     "checkBrowserID" => $config->contestInterface->checkBrowserID,
+    "skipContestantPassword" => $config->contestInterface->skipContestantPassword,
     ]) ?>;
 
   window.config.downgradeToHTTP = window.config.downgradeToHTTP && (window.location.protocol != 'https:');
