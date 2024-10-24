@@ -2309,6 +2309,10 @@ window.showPersonalPage = function(data) {
 
 window.startContest = function() {
    $("#divPersonalPage").hide();
+   if(personalPageData.registrationData.officialStatus == 'inprogress') {
+      reallyStartContest();
+      return;
+   }
    $("#divStartContest").show();
 }
 
@@ -2320,7 +2324,10 @@ window.cancelStartContest = function() {
 
 window.reallyStartContest = function() {
    //$("#divStartContest").hide();
-   checkGroupFromCode("StartContest", personalPageData.registrationData.code, false, false, null, true);
+   checkGroupFromCode("StartContest", personalPageData.registrationData.code, false, false, null, true, function() {
+      $("#divPersonalPage").hide();
+      $("#divStartContest").show();
+   });
 }
 
 window.startPreparation = function() {
@@ -2375,6 +2382,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
             } else {
                $("#" + curStep + "Result").html(t("invalid_code"));
             }
+            if(errorCallback) { errorCallback(); }
             return;
          }
          $("#submitParticipationCode").delay(250).slideUp(400);
