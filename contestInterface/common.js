@@ -2257,7 +2257,7 @@ window.showPersonalPage = function(data) {
    }
 
    var htmlParticipations = "";
-   var canParticipateOfficial = true;
+   var canParticipateOfficial = data.registrationData.officialStatus != 'done';
    var hasAnyRank = false;
    for (var iParticipation = 0; iParticipation < data.registrationData.participations.length; iParticipation++) {
       var participation = data.registrationData.participations[iParticipation];
@@ -2290,13 +2290,12 @@ window.showPersonalPage = function(data) {
          "<td class='personalPageRank'>" + rank + "</td>" +
          "<td class='personalPageRank'>>" + schoolRank + "</td>" +
          "<td><a href='" + location.pathname + "?team=" + participation.password + "' target='_blank' data-i18n='personal_page_open'></a></td></tr>";
-
-      if(data.contestID && participation.contestID == data.contestID) {
-         canParticipateOfficial = false;
-      }
    }
    $('#buttonStartPreparation').toggle(!!data.childrenContests.length);
-   $('#buttonStartContest').prop('disabled', !canParticipateOfficial || data.registrationData.allowContestAtHome == "0");
+   $('#buttonStartPreparation').attr('data-i18n', 'personal_page_' + (data.registrationData.trainingInProgress ? 'resume' : 'start') + '_preparation');
+   var disableOfficial = !canParticipateOfficial || data.registrationData.allowContestAtHome == "0";
+   $('#buttonStartContest').prop('disabled', disableOfficial);
+   $('#buttonStartContest').attr('data-i18n', 'personal_page_' + (!disableOfficial && data.registrationData.officialStatus == 'inprogress' ? 'resume' : 'start') + '_contest');
    $("#contestAtHomePrevented").toggle(data.registrationData.allowContestAtHome == "0");
    $('#msgStartContest').toggle(!canParticipateOfficial);
 
@@ -2325,6 +2324,14 @@ window.reallyStartContest = function() {
 }
 
 window.startPreparation = function() {
+   if(personalPageData.resumeCode) {
+      checkGroupFromCode("PersonalPage", personalPageData.resumeCode, false, false, null, false, function() {
+         // Resume code didn't work, start a new one
+         personalPageData.resumeCode = null;
+         startPreparation();
+      });
+      return;
+   }
    doLogActivity = personalPageData.logActivity;
    updateContestHeader(personalPageData);
    groupMinCategory = personalPageData.minCategory;
@@ -2350,7 +2357,7 @@ window.startPreparation = function() {
  * groupCode: a group code, or a team password
  * isPublic: is this a public group ?
 */
-window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, language, startOfficial) {
+window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, language, startOfficial, errorCallback) {
    Utils.disableButton("button" + curStep);
    $('#recoverGroup').hide();
    $('#browserAlert').hide();
