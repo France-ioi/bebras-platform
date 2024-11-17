@@ -414,7 +414,7 @@ function getRegistrationData($db, $code) {
    $stmt = $db->prepare($query);
    $stmt->execute(array("code" => $code));
    $data = $stmt->fetchObject();
-   if($config->disableContestAtHome) {
+   if($data && $config->disableContestAtHome) {
       $data->allowContestAtHome = 0;
    }
    return $data;
@@ -538,7 +538,6 @@ function handleGroupFromRegistrationCode($db, $code) {
          exitWithJson((object)array("success" => false, "message" => "Vous avez déjà participé à ce concours officiel."));
       }
    } else {
-      $registrationData->aaaatest = $inProgress;
       if($isOfficialContest && isset($hasParticipatedIn[$contestID]) && $hasParticipatedIn[$contestID]) {
          if($resumeCode) {
             handleCheckTeamPassword($db, $resumeCode);
@@ -908,10 +907,13 @@ function handleUpdateGrade($db) {
 
    $code = $_POST["code"];
    $registrationData = getRegistrationData($db, $code);
+   if (!$registrationData) {
+      exitWithJsonFailure("Participant introuvable");
+   }
    if ($registrationData->gradeNeedsUpdated == "1") {
       $stmt = $db->prepare("UPDATE algorea_registration SET grade = :grade, lastGradeUpdate = NOW() WHERE code = :code");
       $stmt->execute(array("grade" => $_POST["grade"], "code" => $code));
-   } // we silently ignore if where the grade can't be updated
+   } // we silently ignore if the grade can't be updated
 
    handleGroupFromRegistrationCode($db, $code);
 
