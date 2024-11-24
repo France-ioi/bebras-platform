@@ -7,6 +7,15 @@ include('./config.php');
 $groupTable = "group";
 $teamTable = "team";
 $contestantTable = "contestant";
+$intervals = [
+    300 => "5 minutes",
+    900 => "15 minutes",
+    3600 => "1 hour",
+    3600 * 6 => "6 hours",
+    3600 * 24 => "1 day",
+    3600 * 24 * 7 => "1 week",
+    3600 * 24 * 30 => "1 month",
+];
 
 ?><!DOCTYPE html>
 <html>
@@ -62,6 +71,7 @@ if (!isset($_GET["contestID"])) {
 $contestID = $_GET["contestID"];
 
 $contests = [$contestID];
+$contestsWithTeams = [];
 $contestInfos = [];
 $stmt = $db->prepare("SELECT * FROM `contest` WHERE ID = :contestID OR parentContestID = :contestID ORDER BY name ASC");
 $stmt->execute(['contestID' => $contestID]);
@@ -157,6 +167,9 @@ while ($row = $stmt->fetchObject()) {
     $totalPtNumbers[$row->contestID]["nbGroups"] += $row->nbGroups;
     $totalPtNumbers[$row->contestID]["nbTeams"] += $row->nbTeams;
     $totalPtNumbers[$row->contestID]["nbContestants"] += $row->nbContestants;
+    if($row->nbTeams > 0 && !in_array($row->contestID, $contestsWithTeams)) {
+        $contestsWithTeams[] = $row->contestID;
+    }
 }
 foreach($ptNumbers as $pt => $numbers) {
     echo "<tr><td>".$pt."</td>";
@@ -170,14 +183,64 @@ foreach($ptNumbers as $pt => $numbers) {
     echo "</tr>";
 
 }
-// total row
 echo "<tr class='total-row'><td>Total</td>";
 foreach($contests as $idx => $contest) {
     echo "<td class='right-align left-col'>".($idx == 0 ? $totalPtNumbers[$contest]["nbGroupsWithParticipations"] . "&nbsp;/&nbsp;" . $totalPtNumbers[$contest]["nbGroups"]."</td><td class='right-align'>" : "").$totalPtNumbers[$contest]["nbTeams"]."</td><td class='right-align right-col'>".$totalPtNumbers[$contest]["nbContestants"]."</td>";
 }
+echo "</tbody></table>";
+flush();
 ?>
-    </tbody>
-</table>
+
+<h2>Teams by participation status</h2>
+<table>
+    <thead>
+        <tr>
+            <th rowspan="2">Participation status</th>
+<?php
+foreach($contestsWithTeams as $contest) {
+    echo "<th colspan='2' class='left-col right-col'>".$contestInfos[$contest]->name."</th>";
+}
+echo "</tr><tr>";
+foreach($contestsWithTeams as $contest) {
+    echo "<th class='left-col'>T</th><th class='right-col'>C</th>";
+}
+?>
+        </tr>
+    </thead>
+    <tbody>
+<?php
+$statusNumbers = ["Not started" => [], "Started" => [], "Ended" => []];
+$stmt = $db->prepare("
+    SELECT
+    COUNT(DISTINCT `team`.ID) AS nbTeams,
+    COUNT(DISTINCT `contestant`.ID) AS nbContestants,
+    `team`.startTime IS NOT NULL as started,
+    (`team`.startTime IS NOT NULL AND (`team`.endTime IS NOT NULL OR `team`.startTime + INTERVAL `team`.nbMinutes MINUTE < NOW())) AS ended,
+    `team`.contestID
+    FROM `$teamTable` AS `team`
+    JOIN `contest` ON `team`.contestID = `contest`.ID
+    LEFT JOIN `$contestantTable` AS `contestant` ON `team`.ID = `contestant`.teamID
+    WHERE (`team`.contestID = :contestID OR `contest`.parentContestID = :contestID)
+    GROUP BY started, ended, `team`.contestID;");
+$stmt->execute(['contestID' => $contestID]);
+while($row = $stmt->fetchObject()) {
+    $status = $row->ended ? "Ended" : ($row->started ? "Started" : "Not started");
+    $statusNumbers[$status][$row->contestID] = $row;
+}
+foreach($statusNumbers as $status => $numbers) {
+    echo "<tr><td>".$status."</td>";
+    foreach($contestsWithTeams as $contest) {
+        if(isset($numbers[$contest])) {
+            echo "<td class='right-align left-col'>".$numbers[$contest]->nbTeams."</td><td class='right-align right-col'>".$numbers[$contest]->nbContestants."</td>";
+        } else {
+            echo "<td class='right-align left-col'>-</td><td class='right-align right-col'>-</td>";
+        }
+    }
+    echo "</tr>";
+}
+echo "</tbody></table>";
+flush();
+?>
 
 <h2>Contestants by genre and grade</h2>
 <?php
@@ -217,13 +280,13 @@ while($row = $stmt->fetchObject()) {
 }
 
 echo "<table><thead><tr><th>Genre</th><th>Total</th>";
-foreach($contests as $contest) {
+foreach($contestsWithTeams as $contest) {
     echo "<th class='left-col right-col'>".$contestInfos[$contest]->name."</th>";
 }
 echo "</tr></thead><tbody>";
 foreach($genreNumbers as $genre => $numbers) {
     echo "<tr><td>".($genre == 0 ? "-" : translate($genre == 1 ? "option_female" : "option_male"))."</td><td class='right-align'>".$numbers["total"]."</td>";
-    foreach($contests as $contest) {
+    foreach($contestsWithTeams as $contest) {
         if(isset($numbers[$contest])) {
             echo "<td class='right-align left-col'>".$numbers[$contest]."</td>";
         } else {
@@ -235,13 +298,13 @@ foreach($genreNumbers as $genre => $numbers) {
 echo "</tbody></table>";
 
 echo "<table><thead><tr><th>Grade</th><th>Total</th>";
-foreach($contests as $contest) {
+foreach($contestsWithTeams as $contest) {
     echo "<th class='left-col right-col'>".$contestInfos[$contest]->name."</th>";
 }
 echo "</tr></thead><tbody>";
 foreach($gradeNumbers as $grade => $numbers) {
     echo "<tr><td>".translate("grade_".$grade)."</td><td class='right-align'>".$numbers["total"]."</td>";
-    foreach($contests as $contest) {
+    foreach($contestsWithTeams as $contest) {
         if(isset($numbers[$contest])) {
             echo "<td class='right-align left-col'>".$numbers[$contest]."</td>";
         } else {
@@ -251,16 +314,33 @@ foreach($gradeNumbers as $grade => $numbers) {
     echo "</tr>";
 }
 echo "</tbody></table>";
+flush();
 ?>
 
-<h2>Teams by date created</h2>
+<h2>Teams by time created</h2>
 <?php
 if(!isset($_GET["showDates"]) || $_GET["showDates"] != "1") {
-    echo "<p><a href='?contestID=".$contestID."&showDates=1'>Show teams by date created (slower)</a></p>";
+    echo "<p><a href='?contestID=".$contestID."&showDates=1'>Show teams by time created (slower)</a></p>";
     die();
 }
 ?>
-<p><a href="?contestID=<?=$contestID?>">Hide dates</a></p>
+<p>Set time interval to :
+<?php
+if(isset($_GET["interval"])) {
+    $interval = intval($_GET["interval"]);
+} else {
+    $interval = 3600 * 24;
+}
+
+foreach($intervals as $newInterval => $label) {
+    if($newInterval == $interval) {
+        echo $label." / ";
+    } else {
+        echo "<a href='?contestID=".$contestID."&showDates=1&interval=".$newInterval."'>".$label."</a> / ";
+    }
+}
+?>
+<a href="?contestID=<?=$contestID?>">Hide dates</a></p>
 <table>
     <thead>
         <tr>
@@ -269,14 +349,14 @@ if(!isset($_GET["showDates"]) || $_GET["showDates"] != "1") {
 if(count($contestInfos) > 1) {
     echo "<th colspan='2' class='left-col right-col'>Total</th>";
 }
-foreach($contests as $contest) {
+foreach($contestsWithTeams as $contest) {
     echo "<th colspan='2' class='left-col right-col'>".$contestInfos[$contest]->name."</th>";
 }
 echo "</tr><tr>";
 if(count($contestInfos) > 1) {
     echo "<th class='left-col'>T</th><th class='right-col'>C</th>";
 }
-foreach($contests as $contest) {
+foreach($contestsWithTeams as $contest) {
     echo "<th class='left-col'>T</th><th class='right-col'>C</th>";
 }
 ?>
@@ -285,33 +365,43 @@ foreach($contests as $contest) {
     <tbody>
 <?php
 $dateNumbers = [];
+$limit = 100 * count($contestsWithTeams);
 $stmt = $db->prepare("
     SELECT COUNT(DISTINCT `team`.ID) AS nbTeams,
     COUNT(DISTINCT `contestant`.ID) AS nbContestants,
-    DATE(createTime) AS dateCreated,
+    ROUND(UNIX_TIMESTAMP(createTime)/$interval) AS intervalCreated,
     `team`.contestID
     FROM `$teamTable` AS `team`
     JOIN `contest` ON `team`.contestID = `contest`.ID
     LEFT JOIN `$contestantTable` AS `contestant` ON `team`.ID = `contestant`.teamID
     WHERE createTime IS NOT NULL AND (`team`.contestID = :contestID OR `contest`.parentContestID = :contestID)
-    GROUP BY DATE(createTime), `team`.contestID
-    ORDER BY DATE(createTime) DESC;");
+    GROUP BY intervalCreated, `team`.contestID
+    ORDER BY intervalCreated DESC
+    LIMIT $limit;");
 $stmt->execute(['contestID' => $contestID]);
 while($row = $stmt->fetchObject()) {
-    if(!isset($dateNumbers[$row->dateCreated])) {
-        $dateNumbers[$row->dateCreated] = ["total" => ["nbTeams" => 0, "nbContestants" => 0]];
+    if(!isset($dateNumbers[$row->intervalCreated])) {
+        $dateNumbers[$row->intervalCreated] = ["total" => ["nbTeams" => 0, "nbContestants" => 0]];
     }
-    $dateNumbers[$row->dateCreated][$row->contestID] = $row;
-    $dateNumbers[$row->dateCreated]["total"]["nbTeams"] += $row->nbTeams;
-    $dateNumbers[$row->dateCreated]["total"]["nbContestants"] += $row->nbContestants;
+    $dateNumbers[$row->intervalCreated][$row->contestID] = $row;
+    $dateNumbers[$row->intervalCreated]["total"]["nbTeams"] += $row->nbTeams;
+    $dateNumbers[$row->intervalCreated]["total"]["nbContestants"] += $row->nbContestants;
+    $limit -= 1;
 }
 
+$lastDate = null;
 foreach($dateNumbers as $date => $numbers) {
-    echo "<tr><td class='no-wrap'>".$date."</td>";
+    if($lastDate !== null && $lastDate != $date + 1) {
+        echo "<tr><td colspan='".(count($contestsWithTeams) * 2 + 3)."'></td></tr>";
+    }
+    $lastDate = $date;
+    echo "<tr><td class='no-wrap'>";
+    echo date("Y-m-d H:i", $date * $interval) . " &mdash; " . date($interval >= 3600 * 24 ? "Y-m-d H:i" : "H:i", ($date + 1) * $interval);
+    echo "</td>";
     if(count($contestInfos) > 1) {
         echo "<td class='right-align left-col'>".$numbers["total"]["nbTeams"]."</td><td class='right-align right-col'>".$numbers["total"]["nbContestants"]."</td>";
     }
-    foreach($contests as $contest) {
+    foreach($contestsWithTeams as $contest) {
         if(isset($numbers[$contest])) {
             echo "<td class='right-align left-col'>".$numbers[$contest]->nbTeams."</td><td class='right-align right-col'>".$numbers[$contest]->nbContestants."</td>";
         } else {
@@ -323,4 +413,9 @@ foreach($dateNumbers as $date => $numbers) {
 ?>
     </tbody>
 </table>
+<?php
+if($limit <= 0) {
+    echo "<p><i>Note : row limit reached, use a smaller interval to go back further in time.</i></p>";
+}
+?>
 </body>
