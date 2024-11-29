@@ -22,8 +22,13 @@ function getGroupTeams($db, $groupID) {
 }
 
 function getRandomID() {
-   $rand = (string) mt_rand(100000, 999999999);
-   $rand .= (string) mt_rand(1000000, 999999999);
+   // PHP 5 compatible, random_int is PHP 7+ only
+   $bytes = openssl_random_pseudo_bytes(8);
+   $i = abs(unpack('J', $bytes)[1]);
+   $rand = (string) ($i % 999899999 + 100000);
+   $bytes = openssl_random_pseudo_bytes(8);
+   $i = abs(unpack('J', $bytes)[1]);
+   $rand .= (string) ($i % 998999999 + 1000000);
    return $rand;
 }
 
