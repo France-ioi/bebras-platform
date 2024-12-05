@@ -39,7 +39,7 @@ function handleAnswers($tinyOrm) {
    if ($testMode == false && $config->db->use == "dynamoDB" && !count($rows)) {
       // Need to connect to mysql
       $config->db->use = "mysql";
-      $db = connect_pdo($config);
+      $db = connect_pdo($config->db);
       $tinyOrm = new tinyOrm();
       $rows = $tinyOrm->select('team', array('password', 'startTime', 'nbMinutes'), array('ID' => $teamID));
    }
@@ -55,7 +55,7 @@ function handleAnswers($tinyOrm) {
    if($config->contestInterface->checkBrowserID && isset($_POST['browserID'])) {
       if(!isset($db)) {
          // Need to connect to mysql
-         $db = connect_pdo($config);
+         $db = connect_pdo($config->db);
       }
       $stmt = $db->prepare("SELECT browserID FROM team WHERE ID = :teamID");
       $stmt->execute(['teamID' => $teamID]);
@@ -109,7 +109,7 @@ function handleAnswers($tinyOrm) {
    if (count($teamUpdates)) {
       if(!isset($db)) {
          // Need to connect to mysql
-         $db = connect_pdo($config);
+         $db = connect_pdo($config->db);
       }
       $stmt = $db->prepare("UPDATE team SET " . implode(', ', $teamUpdates) . " WHERE ID = :id AND password = :password;");
       $stmt->execute($teamUpdatesParams);
