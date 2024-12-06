@@ -23,6 +23,15 @@ $config->db->dynamoDBPrefix = ''; // prefix for team and team_question
 $config->db->dynamoDBTTL = null; // TTL in seconds
 $config->db->testMode = false;
 
+// COnfiguration for read-only database access
+$config->rodb = (object) array();
+$config->rodb->enable = false;
+$config->rodb->mysql->host = 'localhost';
+$config->rodb->mysql->database = 'castor';
+$config->rodb->mysql->password = 'castor';
+$config->rodb->mysql->user = 'castor';
+$config->rodb->mysql->logged = false;
+
 // MySQL
 $config->db->mysql = (object) array();
 $config->db->mysql->host = 'localhost';
@@ -102,6 +111,8 @@ $config->teacherInterface->displayDuration = false;
 $config->teacherInterface->removeLastColumns = [];
 // Configuration for addManualCodes.php
 $config->teacherInterface->manualCodesReferenceGroup = null;
+// Passwords to access the stats page for a specific contest (password => contestID)
+$config->teacherInterface->statsPasswords = [];
 
 $config->certificates = (object) array();
 $config->certificates->webServiceUrl = 'http://castor-informatique.fr.localhost/certificates/';

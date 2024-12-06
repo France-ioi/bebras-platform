@@ -49,6 +49,18 @@ function connect_dynamoDB($awsConfig) {
    return $client;
 }
 
+$rodb = null;
+function getRODB() {
+   global $config, $db, $rodb;
+   if($config->rodb->enable) {
+      if(!$rodb) {
+         $rodb = connect_pdo($config->rodb);
+      }
+      return $rodb;
+   }
+   return $db;
+}
+
 $dynamoDB = null;
 
 if ($config->db->dynamoSessions) {
