@@ -26,6 +26,7 @@ $config->db->testMode = false;
 // COnfiguration for read-only database access
 $config->rodb = (object) array();
 $config->rodb->enable = false;
+$config->rodb->mysql = (object) array();
 $config->rodb->mysql->host = 'localhost';
 $config->rodb->mysql->database = 'castor';
 $config->rodb->mysql->password = 'castor';
