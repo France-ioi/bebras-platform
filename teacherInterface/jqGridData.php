@@ -578,7 +578,7 @@ function selectRecordsForJQGrid($db, $modelName, $params, $roles) {
    foreach ($params as $name => $value) {
       if ((isset($model["filters"][$name]) || isset($model["fields"][$name])) && ($value !== "_NOF_")) {
          if (isset($model["fields"][$name])) {
-            if (getFieldType($model, $name) == "string") {
+            if (getFieldType($model, $name) == "string" && !getFieldStrict($model, $name)) {
                $value = "%".$value."%";
             }
          }
