@@ -139,7 +139,7 @@ $tablesModels = array (
          "startTime" => array("type" => "date"),
          "noticePrinted" => array("type" => "int"),
          "isPublic" => array("type" => "int"),
-         "participationType" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user"))),
+         "participationType" => array("type" => "string", "strict" => true, "access" => array("write" => array("user"), "read" => array("user"))),
          "minCategory" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user"))),
          "maxCategory" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user"))),
          "language" => array("type" => "string", "access" => array("write" => array("user"), "read" => array("user")))
@@ -540,6 +540,14 @@ $viewsModels = array(
 //         "accessUserID" => array("fieldName" => "targetUserID", "tableName" => "user_user")
       ),
       "filters" => array(
+         "userFirstName" => array(
+            "joins" => array("user"),
+            "condition" => "(`[PREFIX]user`.`firstName` LIKE :userFirstName)"
+         ),
+         "userLastName" => array(
+            "joins" => array("user"),
+            "condition" => "(`[PREFIX]user`.`lastName` LIKE :userLastName)"
+         ),
          "statusNotHidden" => array(
             "joins" => array("contest"),
             "condition" => "(`[PREFIX]contest`.`visibility` <> 'Hidden')",
