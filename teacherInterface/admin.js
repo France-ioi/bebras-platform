@@ -2508,6 +2508,10 @@ function validateForm(modelName) {
    for (var fieldName in fields) {
       var field = fields[fieldName];
       item[fieldName] = $("#" + modelName + "_" + fieldName).val();
+      if(item[fieldName].trim() !== item[fieldName]) {
+         item[fieldName] = item[fieldName].trim();
+         $("#" + modelName + "_" + fieldName).val(item[fieldName]);
+      }
       if (field.edittype === "datetime") {
          date = $("#" + modelName + "_" + fieldName + "_date").val();
          var hours = $("#" + modelName + "_" + fieldName + "_hours").val();
@@ -2780,7 +2784,8 @@ function warningUsers(users) {
 
 function login() {
    disableButton("buttonLogin");
-   var email = $("#email").val();
+   var email = $("#email").val().trim();
+   $("#email").val(email);
    var password = $("#password").val();
    $.post("login.php", {email: email, password: password},
       function(data) {
