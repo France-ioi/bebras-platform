@@ -2508,7 +2508,7 @@ function validateForm(modelName) {
    for (var fieldName in fields) {
       var field = fields[fieldName];
       item[fieldName] = $("#" + modelName + "_" + fieldName).val();
-      if(item[fieldName].trim() !== item[fieldName]) {
+      if(item[fieldName] && item[fieldName].trim() !== item[fieldName]) {
          item[fieldName] = item[fieldName].trim();
          $("#" + modelName + "_" + fieldName).val(item[fieldName]);
       }
