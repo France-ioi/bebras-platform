@@ -605,5 +605,6 @@
     "manual_participants_instructions": "This page allows you to import a CSV file of participants. The file must contain three columns, in this order: participant code, name, and grade.",
     "manual_participants_file": "CSV file to import:",
     "manual_participants_added": "participants added",
-    "manual_participants_existing": "existing participants"
+    "manual_participants_existing": "existing participants",
+    "upload_error": "Error during the file upload, file might be too big."
 }

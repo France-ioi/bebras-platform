@@ -644,7 +644,8 @@
     "manual_participants_instructions": "Cette page vous permet d'importer un fichier CSV de participants. Le fichier doit contenir trois colonnes, dans cet ordre : code du participant, nom et classe.",
     "manual_participants_file": "Fichier CSV à importer :",
     "manual_participants_added": "participants ajoutés",
-    "manual_participants_existing": "participants existants"
+    "manual_participants_existing": "participants existants",
+    "upload_error": "Erreur lors du téléversement, le fichier peut être trop gros."
 }
 
 

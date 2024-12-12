@@ -52,6 +52,7 @@ function handleDataFile($dataFilePath) {
    $handle = fopen($dataFilePath, "r");
    $firstLine = true;
    $data = [];
+   $invalid = 0;
    while(($dataLine = fgetcsv($handle)) !== FALSE) {
       if($firstLine) {
          $firstLine = false;
@@ -59,6 +60,9 @@ function handleDataFile($dataFilePath) {
       }
       if(count($dataLine) < 3) {
          echo "<p>Invalid data line: " . implode(', ', $dataLine) . "</p>";
+         if($invalid++ > 20) {
+            die("<p>Too many invalid lines, aborting.</p></body>");
+         }
          continue;
       }
       $dataLine = array_map('trim', $dataLine);
@@ -80,21 +84,43 @@ function handleDataFile($dataFilePath) {
    if(count($newCodes) == 0) {
       return [0, 0, []];
    }
-   $stmt = $db->prepare("SELECT `code` FROM `algorea_registration` WHERE `code` IN (" . implode(',', array_fill(0, count($newCodes), '?')) . ")");
+   $stmt = $db->prepare("SELECT `code`, `firstName`, `lastName`, `grade` FROM `algorea_registration` WHERE `code` IN (" . implode(',', array_fill(0, count($newCodes), '?')) . ")");
    $stmt->execute($newCodes);
-   $existingCodes = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
-   $newCodes = array_diff($newCodes, $existingCodes);
-   if(count($newCodes) == 0) {
-      return [0, count($existingCodes), $existingCodes];
+   $existingCodes = [];
+   $existingCodesData = [];
+   while($row = $stmt->fetch()) {
+      $existingCodes[] = $row['code'];
+      $existingCodesData[$row['code']] = [$row['firstName'], $row['lastName'], $row['grade']];
    }
-   
+   $newCodes = array_diff($newCodes, $existingCodes);
+
+   // Update existing codes
+   $query = "UPDATE `algorea_registration` SET `firstName` = :firstName, `lastName` = :lastName, `grade` = :grade, `lastGradeUpdate` = NOW() WHERE `code` = :code;";
+   $stmt = $db->prepare($query);
+   foreach($data as $dataLine) {
+      if(!in_array($dataLine[0], $existingCodes)) {
+         continue;
+      }
+      $codeData = [
+         'firstName' => $dataLine[1],
+         'lastName' => $dataLine[2],
+         'grade' => $dataLine[3],
+         'code' => $dataLine[0]
+      ];
+      if($existingCodesData[$dataLine[0]] == array_slice($dataLine, 1)) {
+         continue;
+      }
+      $stmt->execute($codeData);
+      echo "<p>Updated code " . $dataLine[0] . " : " . implode(', ', $existingCodesData[$dataLine[0]]) . " => " . implode(', ', array_slice($dataLine, 1)) . "</p>";
+   }
+
    // Add new codes
    $nbAdded = 0;
-   $query = "INSERT INTO `algorea_registration` (`ID`, `firstName`, `lastName`, `grade`, `lastGradeUpdate`, `code`) VALUES(:ID, :firstName, :lastName, :grade, NOW(), :code);";
+   $query = "
+      INSERT INTO `algorea_registration` (`ID`, `firstName`, `lastName`, `grade`, `lastGradeUpdate`, `code`) VALUES(:ID, :firstName, :lastName, :grade, NOW(), :code);";
    $stmt = $db->prepare($query);
    foreach($data as $dataLine) {
       if(in_array($dataLine[0], $existingCodes)) {
-         echo "<p>Skipping existing code " . $dataLine[0] . "</p>";
          continue;
       }
 
@@ -122,11 +148,15 @@ function handleDataFile($dataFilePath) {
 }
 
 if (isset($_FILES['dataFile'])) {
-   $dataFilePath = $_FILES['dataFile']['tmp_name'];
-   $nbCodes = handleDataFile($dataFilePath);
-   if($nbCodes[0] + $nbCodes[1] > 0) {
-      echo "<p><ul><li>" . $nbCodes[0] . " " . translate("manual_participants_added") . "</li>";
-      echo "<li>" . $nbCodes[1] . " " . translate("manual_participants_existing") . ($nbCodes[1] > 0 ? " : " . implode(', ', $nbCodes[2]) : '') . "</li></ul></p>";
+   if ($_FILES['dataFile']['error'] !== 0) {
+      echo "<p><b>" . translate("upload_error") . "</b></p>";
+   } else {
+      $dataFilePath = $_FILES['dataFile']['tmp_name'];
+      $nbCodes = handleDataFile($dataFilePath);
+      if($nbCodes[0] + $nbCodes[1] > 0) {
+         echo "<p><ul><li>" . $nbCodes[0] . " " . translate("manual_participants_added") . "</li>";
+         echo "<li>" . $nbCodes[1] . " " . translate("manual_participants_existing") . ($nbCodes[1] > 0 ? " : " . implode(', ', $nbCodes[2]) : '') . "</li></ul></p>";
+      }
    }
 }
 ?>
