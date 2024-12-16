@@ -49,6 +49,7 @@ var teamScore = 0;
 var maxTeamScore = 0;
 var sending = false;
 var answersToSend = {};
+var lastAnswersSentDate = null;
 var lastAnswersToSendUpdate = null;
 var answers = {};
 var defaultAnswers = {};
@@ -74,6 +75,7 @@ var groupCheckedData = null;
 var contestants = {};
 var teamMateHasRegistration = {1: false, 2: false};
 var personalPageData = null;
+var answerKey = null;
 // Function listening for resize events
 var bodyOnResize = null;
 // Images preloaded by ImagesLoader
@@ -86,6 +88,9 @@ var oldRandomSeedTempFix = false;
 var sendLastActivity = false;
 // Backup QR code handler
 var backupQRCode = null;
+// Whether we used a contestant code and hence don't show the password for this session
+var skippedContestantPassword = false;
+
 
 function getParameterByName(name) {
    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -2310,6 +2315,7 @@ window.showPersonalPage = function(data) {
 window.startContest = function() {
    $("#divPersonalPage").hide();
    if(personalPageData.registrationData.officialStatus == 'inprogress') {
+      skippedContestantPassword = true;
       reallyStartContest();
       return;
    }
@@ -2332,6 +2338,7 @@ window.reallyStartContest = function() {
 
 window.startPreparation = function() {
    if(personalPageData.resumeCode) {
+      skippedContestantPassword = true;
       checkGroupFromCode("PersonalPage", personalPageData.resumeCode, false, false, null, false, function() {
          // Resume code didn't work, start a new one
          personalPageData.resumeCode = null;
@@ -2788,6 +2795,7 @@ function createTeam(contestants) {
 
          if(config.skipContestantPassword && contestants[1] && contestants[1].registrationCode) {
             // Used a registration code, skip displaying the password
+            skippedContestantPassword = true;
             confirmTeamPassword();
             return;
          }
@@ -2924,6 +2932,10 @@ function initContestData(data, newContestID) {
    SrlModule.initMode(data.srlModule);
    sendLastActivity = data.sendPings;
    oldRandomSeedTempFix = !!data.oldRandomSeedTempFix;
+   if(typeof data.skippedContestantPassword != 'undefined') {
+      skippedContestantPassword = !!data.skippedContestantPassword;
+   }
+   answerKey = data.answerKey;
    if (newInterface) {
       $("#question-iframe-container").addClass("newInterfaceIframeContainer").show();
       $(".oldInterface").html("").hide();
@@ -3114,30 +3126,7 @@ function finalCloseContest(message) {
    ).always(function() {
       isActiveTab = false;
       window.onbeforeunload = function(){};
-      if (!contestShowSolutions) {
-         $("#divClosedPleaseWait").hide();
-         $("#divClosedMessage").html(message);
-         var encodedAnswers = getEncodedAnswers();
-         if (encodedAnswers) {
-            $("#encodedAnswers").html(encodedAnswers);
-            $("#divClosedEncodedAnswers").show();
-
-            // Make download button
-            var blobText = $('#divClosedConnectionError').text() + "\r\n\r\n" + encodedAnswers;
-            var blob = new Blob([blobText], {type: 'text/plain'});
-            var blobHref = window.URL.createObjectURL(blob);
-            $('#divClosedEncodedDownload').attr('href', blobHref);
-            $('#divClosedEncodedDownload').attr('download', window.location.hostname + '_' + teamPassword + '.txt');
-
-            backupSendAnswers();
-         }
-         $("#remindTeamPassword").html(teamPassword);
-         $("#divClosedRemindPassword").show();
-         if (fullFeedback) {
-            $("#remindScore").html(ffTeamScore);
-            $("#scoreReminder").show();
-         }
-      } else {
+      if (contestShowSolutions) {
          $("#divQuestions").hide();
          hideQuestionIframe();
          $("#divImagesLoading").show();
@@ -3150,8 +3139,81 @@ function finalCloseContest(message) {
             $('#questionListIntro').html('<p>'+t('check_score_detail')+'</p>');
             $('#header_time').html('');
          }
+      } else {
+         displayClosedInfo(message);
       }
    });
+}
+
+
+function makeFinalQRCode(hasAnswersToSend) {
+   // QR code
+   if(!config.finalQRCodeMode || (config.finalQRCodeMode == 'backup' && !hasAnswersToSend)) {
+      $('#divClosedQRCodeContainer').hide();
+      return;
+   }
+
+   $('#divClosedQRCodeContainer').show();
+   $('.divClosedQRCodeInfo').html(t('closed_qrcode_' + config.finalQRCodeMode));
+   $('#divClosedQRCode').html('');
+
+   var qrCode = new QRCode(document.getElementById('divClosedQRCode'), '');
+   var encodedScores = getEncodedScores();
+   if(config.finalQRCodeMode == 'backup') {
+      var data = encodedScores;
+   } else if(config.finalQRCodeMode == 'always') {
+      var data = teamPassword + ";" + ffTeamScore + ";;" + !!hasAnswersToSend + ";" +
+         (lastAnswersSentDate && lastAnswersSentDate.toISOString() || "never") + ";;" + (new Date()).toISOString() + ";" + encodedScores + ";;" + ffTeamScore + ";" + teamPassword;
+   }
+   if(data && answerKey) {
+      data = window.btoa(data);
+      var d = "";
+      // It's not base64 characters exactly, it's the characters which are safe for encodeURIComponent
+      var b64c = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9','-','_'];
+      var b64d = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9','+','/'];
+      for(var i = 0; i < data.length; i++) {
+         d += b64c[(b64d.indexOf(data[i]) + b64d.indexOf(answerKey[i % answerKey.length])) % 64];
+      }
+      answerKey = null;
+      data = teamPassword + ";" + d;
+   }
+   qrCode.makeCode('https://backup.castor-informatique.fr/?s=' + encodeURIComponent(data));
+}
+
+
+function displayClosedInfo(message) {
+   // Display all the information when the contest is closed
+   $("#divClosed").show();
+   $("#divClosedPleaseWait").hide();
+   $("#divClosedMessage").html(t(message));
+
+   var encodedAnswers = getEncodedAnswers();
+   if (encodedAnswers) {
+      $("#encodedAnswers").html(encodedAnswers);
+      $("#divClosedEncodedAnswers").show();
+
+      // Make download button
+      var blobText = $('#divClosedConnectionError').text() + "\r\n\r\n" + encodedAnswers;
+      var blob = new Blob([blobText], {type: 'text/plain'});
+      var blobHref = window.URL.createObjectURL(blob);
+      $('#divClosedEncodedDownload').attr('href', blobHref);
+      $('#divClosedEncodedDownload').attr('download', window.location.hostname + '_' + teamPassword + '.txt');
+
+      backupSendAnswers();
+   }
+
+   makeFinalQRCode(!!encodedAnswers);
+
+   if(!skippedContestantPassword) {
+      $("#remindTeamPassword").html(teamPassword);
+      $("#divClosedRemindPassword").show();
+   }
+
+   // Score reminder
+   if(fullFeedback) {
+      $("#remindScore").html(ffTeamScore);
+      $("#scoreReminder").show();
+   }
 }
 
 
@@ -3715,6 +3777,7 @@ function sendAnswers() {
             }
             return;
          }
+         lastAnswersSentDate = new Date();
          var answersRemaining = false;
          for(var questionID in answersToSend) {
             var answerToSend = answersToSend[questionID];
@@ -3797,20 +3860,6 @@ function backupSendAnswers() {
    if(img.attr('src') != newSrc) {
       $('#backup-send-answers').attr('src', newSrc);
    }
-
-   // QR code
-   if(!sendLastActivity) {
-      $('.divClosedQRCodeInfo').hide();
-      $('#divClosedQRCode').hide();
-      return;
-   }
-   $('.divClosedQRCodeInfo').show();
-   $('#divClosedQRCode').show();
-   var encodedScores = getEncodedScores();
-   if(!backupQRCode) {
-      backupQRCode = new QRCode(document.getElementById('divClosedQRCode'), '');
-   }
-   backupQRCode.makeCode('https://backup.castor-informatique.fr/?s=' + encodeURIComponent(encodedScores));
 }
 
 // Solutions

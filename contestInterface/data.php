@@ -316,6 +316,17 @@ function handleLoadSession() {
    if ($config->defaultLanguage == "ar") {
 	   $message = "هل ترغب في استكمال المسابقة التي بدأتها؟";
    }
+   $skippedContestantPassword = false;
+   if($config->contestInterface->skipContestantPassword) {
+      $stmt = $db->prepare("SELECT `registrationID` FROM `contestant` WHERE `teamID` = ?");
+      $stmt->execute(array($_SESSION["teamID"]));
+      $registrationID = $stmt->fetchColumn();
+      $skippedContestantPassword = !!$registrationID;
+   }
+   $answerKey = null;
+   if($config->contestInterface->finalEncodeSalt) {
+      $answerKey = md5($config->finalEncodeSalt . $_SESSION["teamID"]);
+   }
    $data = array(
       "success" => true,
       "teamID" => $_SESSION["teamID"],
@@ -344,6 +355,8 @@ function handleLoadSession() {
       "srlModule" => $_SESSION["srlModule"],
       "sendPings" => $_SESSION["sendPings"],
       "oldRandomSeedTempFix" => $_SESSION["oldRandomSeedTempFix"],
+      "skippedContestantPassword" => $skippedContestantPassword,
+      "answerKey" => $answerKey,
       "SID" => $sid);
    if($config->contestInterface->checkBrowserID && !isset($_SESSION["ignoreBrowserID"])) {
       $stmt = $db->prepare("SELECT browserID FROM team WHERE ID = :id");
@@ -712,6 +725,7 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "",
       "srlModule" => $_SESSION["srlModule"],
       "sendPings" => $_SESSION["sendPings"],
       "oldRandomSeedTempFix" => $_SESSION["oldRandomSeedTempFix"],
+      "skippedContestantPassword" => !!$registrationData,
       "childrenContests" => $childrenContests,
       "registrationData" => $registrationData,
       "isOfficialContest" => $isOfficialContest,

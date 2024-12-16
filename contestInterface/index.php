@@ -30,6 +30,7 @@
     "oldInterfaceScoreModifiersDisplay" => $config->contestInterface->oldInterfaceScoreModifiersDisplay,
     "checkBrowserID" => $config->contestInterface->checkBrowserID,
     "skipContestantPassword" => $config->contestInterface->skipContestantPassword,
+    "finalQRCodeMode" => $config->contestInterface->finalQRCodeMode,
     ]) ?>;
 
   window.config.downgradeToHTTP = window.config.downgradeToHTTP && (window.location.protocol != 'https:');
@@ -764,7 +765,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
    <h3 id="divClosedMessage">
    </h3>
    <div id="divClosedPleaseWait" style="display:none">
-      <p style='margin:200px 0 200px 0' data-i18n="[html]closed_please_wait">
+      <p data-i18n="[html]closed_please_wait">
       </p>
    </div>
    <div id="divClosedEncodedAnswers" style="display:none">
@@ -773,7 +774,9 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
       <textarea cols=60 rows=20 id="encodedAnswers"></textarea>
       <br><a class="btn btn-primary" id="divClosedEncodedDownload" data-i18n="closed_download_encoded"></a>
       <br>
-      <p class="divClosedQRCodeInfo" data-i18n="closed_qr_code"></p>
+   </div>
+   <div id="divClosedQRCodeContainer" style="display:none">
+      <p class="divClosedQRCodeInfo"></p>
       <div id="divClosedQRCode"></div>
    </div>
    <div id="divClosedRemindPassword" style="display:none">

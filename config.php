@@ -88,6 +88,8 @@ $config->contestInterface->confirmContestants = false;
 $config->contestInterface->checkBrowserID = false;
 $config->contestInterface->personalPageDisplayHeader = false;
 $config->contestInterface->skipContestantPassword = false;
+$config->contestInterface->finalQRCodeMode = "backup";
+$config->contestInterface->finalEncodeSalt = null;
 
 $config->teacherInterface = (object) array();
 $config->teacherInterface->sHotlineNumber = '';

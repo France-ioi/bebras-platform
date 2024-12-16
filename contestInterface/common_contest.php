@@ -139,6 +139,18 @@ function commonLoginTeam($db, $password) {
    $_SESSION["schoolID"] = $row->schoolID;
    $_SESSION["isPublic"] = intval($row->isPublic);
 
+   $skippedContestantPassword = false;
+   if($config->contestInterface->skipContestantPassword) {
+      $stmt = $db->prepare("SELECT `registrationID` FROM `contestant` WHERE `teamID` = ?");
+      $stmt->execute(array($_SESSION["teamID"]));
+      $registrationID = $stmt->fetchColumn();
+      $skippedContestantPassword = !!$registrationID;
+   }
+   $answerKey = null;
+   if($config->contestInterface->finalEncodeSalt) {
+      $answerKey = md5($config->finalEncodeSalt . $_SESSION["teamID"]);
+   }
+
    $data = [
       "success" => true,
       "name" => $_SESSION["name"],
@@ -169,6 +181,8 @@ function commonLoginTeam($db, $password) {
       "sendPings" => $_SESSION["sendPings"],
       // TODO :: Remove after 2023-09
       "oldRandomSeedTempFix" => $_SESSION["oldRandomSeedTempFix"],
+      "skippedContestantPassword" => $skippedContestantPassword,
+      "answerKey" => $answerKey,
       "browserID" => $row->browserID,
    ];
 

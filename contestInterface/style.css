@@ -208,11 +208,9 @@ a {
 }
 
 #divClosed {
-   display:none;
-   position:absolute;
-   top:300px;
-   left:245px;
-   width:800px;
+   display: none;
+   margin: 32px auto;
+   width: 90%;
    border: solid black 1px;
    padding: 10px;
    z-index: 100;
