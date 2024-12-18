@@ -53,16 +53,26 @@ function handleDataFile($dataFilePath) {
    $firstLine = true;
    $data = [];
    $invalid = 0;
+   $removedCodes = [];
    while(($dataLine = fgetcsv($handle)) !== FALSE) {
       if($firstLine) {
          $firstLine = false;
          continue;
       }
+      // if there is no data in the line, skip it
       if(count($dataLine) < 3) {
-         echo "<p>Invalid data line: " . implode(', ', $dataLine) . "</p>";
-         if($invalid++ > 20) {
-            die("<p>Too many invalid lines, aborting.</p></body>");
+         if(isset($dataLine[0]) && $dataLine[0] != '') {
+            $removedCodes[] = $dataLine[0];
+         } else {
+            echo "<p>Invalid data line: " . implode(', ', $dataLine) . "</p>";
+            if($invalid++ > 20) {
+               die("<p>Too many invalid lines, aborting.</p></body>");
+            }
          }
+         continue;
+      }
+      if($dataLine[1] == '' || $dataLine[2] == '') {
+         $removedCodes[] = $dataLine[0];
          continue;
       }
       $dataLine = array_map('trim', $dataLine);
@@ -93,6 +103,13 @@ function handleDataFile($dataFilePath) {
       $existingCodesData[$row['code']] = [$row['firstName'], $row['lastName'], $row['grade']];
    }
    $newCodes = array_diff($newCodes, $existingCodes);
+
+   // Remove former codes
+   $stmt = $db->prepare("DELETE FROM `algorea_registration` WHERE `code` = :code;");
+   foreach($removedCodes as $code) {
+      $stmt->execute(['code' => $code]);
+      echo "<p>Removed code " . $code . "</p>";
+   }
 
    // Update existing codes
    $query = "UPDATE `algorea_registration` SET `firstName` = :firstName, `lastName` = :lastName, `grade` = :grade, `lastGradeUpdate` = NOW() WHERE `code` = :code;";
