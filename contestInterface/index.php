@@ -29,6 +29,7 @@
     "logActivity" => $config->contestInterface->logActivity,
     "oldInterfaceScoreModifiersDisplay" => $config->contestInterface->oldInterfaceScoreModifiersDisplay,
     "checkBrowserID" => $config->contestInterface->checkBrowserID,
+    "pow" => $config->contestInterface->pow,
     "skipContestantPassword" => $config->contestInterface->skipContestantPassword,
     "finalQRCodeMode" => $config->contestInterface->finalQRCodeMode,
     ]) ?>;

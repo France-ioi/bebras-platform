@@ -344,3 +344,20 @@ function updateRegisteredUserCategory($db, $ID, $prevQualifiedCategory, $prevVal
    }
    return array("qualifiedCategory" => $maxQualifiedCategory, "validatedCategory" => $maxValidatedCategory);
 }
+
+function checkPOW($paramName) {
+   global $config;
+   if (!$config->contestInterface->pow) { return; }
+   if (!isset($_POST['pow']) || !isset($_POST['SID']) || !isset($_POST[$paramName])) {
+      exitWithJsonFailure("Invalid parameters");
+   }
+   $data = $_POST['SID'] . $_POST[$paramName];
+   $n = 0;
+   for ($i = 0; $i < strlen($data); $i++) {
+      $n += ord($data[$i]);
+   }
+   $pow = $_POST['pow'];
+   if (($n * $pow) % $config->contestInterface->pow->modulo < $config->contestInterface->pow->min) {
+      exitWithJsonFailure("Invalid request");
+   }
+}

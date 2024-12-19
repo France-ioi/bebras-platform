@@ -87,6 +87,7 @@ $config->contestInterface->oldInterfaceScoreModifiersDisplay = true;
 $config->contestInterface->confirmContestants = false;
 $config->contestInterface->checkBrowserID = false;
 $config->contestInterface->personalPageDisplayHeader = false;
+$config->contestInterface->pow = null;
 $config->contestInterface->skipContestantPassword = false;
 $config->contestInterface->finalQRCodeMode = "backup";
 $config->contestInterface->finalEncodeSalt = null;

@@ -278,6 +278,22 @@ window.onerror = function () {
 
 window.logError = logError;
 
+function paramsWithPOW(addParam, params) {
+   if(config.pow) {
+      var data = SID + addParam;
+      var n = 0;
+      for (var i = 0; i < data.length; i++) {
+         n += data.charCodeAt(i);
+      }
+      var pow = 1;
+      while(n * pow % config.pow.modulo < config.pow.min) {
+         pow = pow + 1;
+      }
+      params.pow = pow;
+   }
+   return params;
+}
+
 var updateContestHeader = function(contestData) {
   contestName = contestData.contestName;
   $('#headerH1').html(contestName);
@@ -1793,7 +1809,7 @@ function loadContestData(contestID, contestFolder, groupPassword)
          showQuestionIframe();
          $("#divImagesLoading").hide();
 
-         $.post("data.php", {SID: SID, action: "loadContestData", groupPassword: groupPassword, teamID: teamID},
+         $.post("data.php", paramsWithPOW(teamID, {SID: SID, action: "loadContestData", groupPassword: groupPassword, teamID: teamID}),
          function(data) {
             if (!data.success) {
                $("#divHeader").show();
@@ -1898,7 +1914,7 @@ window.recoverGroup = function() {
    if (!groupCode || !groupPass) {return false;}
    $('#recoverGroupResult').html('');
    Utils.disableButton("buttonRecoverGroup");
-   $.post("data.php", {SID: SID, action: "recoverGroup", groupCode: groupCode, groupPass: groupPass},
+   $.post("data.php", paramsWithPOW(groupCode, {SID: SID, action: "recoverGroup", groupCode: groupCode, groupPass: groupPass}),
       function(data) {
          if (!data.success) {
             if (data.message) {
@@ -2018,7 +2034,7 @@ window.validateRegistrationCode = function(teamMate) {
    $("#LoginResult").html("");
    var code = $("#registrationCode" + teamMate).val().trim().toLowerCase();
    $("#errorRegistrationCode" + teamMate).html();
-   $.post("data.php", {SID: SID, action: "checkRegistration", code: code},
+   $.post("data.php", paramsWithPOW(code, {SID: SID, action: "checkRegistration", code: code}),
       function(data) {
          if (data.success) {
             var contestant = {
@@ -2215,7 +2231,8 @@ window.rankToStr = function(rank, nameGrade, nbContestants) {
 
 window.updatePersoGrade = function() {
    var newGrade = $('#persoGradeNew').val();
-   $.post("data.php", {SID: SID, action: "updateGrade", grade: newGrade, code: personalPageData.registrationData.code}, window.showPersonalPage);
+   var code = personalPageData.registrationData.code;
+   $.post("data.php", paramsWithPOW(code, {SID: SID, action: "updateGrade", grade: newGrade, code: code}), window.showPersonalPage);
 }
 
 window.showPersonalPage = function(data) {
@@ -2380,7 +2397,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
    var parameters = {
       type: "POST",
       url: "data.php",
-      data: {SID: SID, action: "checkPassword", password: groupCode, getTeams: getTeams, language: language, startOfficial: startOfficial, commonJsVersion: commonJsVersion, timestamp: window.timestamp, commonJsTimestamp: commonJsTimestamp},
+      data: paramsWithPOW(groupCode, {SID: SID, action: "checkPassword", password: groupCode, getTeams: getTeams, language: language, startOfficial: startOfficial, commonJsVersion: commonJsVersion, timestamp: window.timestamp, commonJsTimestamp: commonJsTimestamp}),
       dataType: 'json',
       success: function(data) {
          if (!data.success) {
@@ -2784,7 +2801,7 @@ function createTeam(contestants) {
       contestFolder = contest.folder;
       customIntro = contest.customIntro;
    }
-   $.post("data.php", {SID: SID, action: "createTeam", contestants: contestants, contestID: contestID},
+   $.post("data.php", paramsWithPOW(contestID, {SID: SID, action: "createTeam", contestants: contestants, contestID: contestID}),
       function(data) {
          teamID = data.teamID;
          teamPassword = data.password;
@@ -2832,7 +2849,7 @@ window.relogin = function() {
    }
    Utils.disableButton("buttonRelogin");
    $("#divCheckGroup").hide();
-   $.post("data.php", {SID: SID, action: "checkReloginTeam", teamID: teamID, groupPassword: groupPassword},
+   $.post("data.php", paramsWithPOW(groupPassword, {SID: SID, action: "checkReloginTeam", teamID: teamID, groupPassword: groupPassword}),
       function (data) {
          if(!data.success) {
             $("#ReloginResult").html(data.message);

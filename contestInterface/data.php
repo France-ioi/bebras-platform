@@ -988,14 +988,17 @@ if ($action === "destroySession") {
 }
 
 if ($action === "checkPassword") {
+   checkPOW("password");
    handleCheckPassword($db);
 }
 
 if ($action === "createTeam") {
+   checkPOW("contestID");
    handleCreateTeam($db);
 }
 
 if ($action === "loadContestData") {
+   checkPOW("teamID");
    handleLoadContestData($db);
 }
 
@@ -1016,6 +1019,7 @@ if ($action === "closeContest") {
 }
 
 if ($action === 'recoverGroup') {
+   checkPOW("groupCode");
    handleRecoverGroup($db);
 }
 
@@ -1024,6 +1028,7 @@ if ($action === 'getConfig') {
 }
 
 if ($action === 'checkRegistration') {
+   checkPOW("code");
    handleCheckRegistrationCode($db);
 }
 
@@ -1032,10 +1037,12 @@ if ($action === 'saChangeContest') {
 }
 
 if ($action == "checkReloginTeam") {
+   checkPOW("groupPassword");
    handleCheckReloginTeam($db);
 }
 
 if ($action == "updateGrade") {
+   checkPOW("code");
    handleUpdateGrade($db);
 }
 
