@@ -479,17 +479,20 @@ function handleGroupFromRegistrationCode($db, $code) {
       $officialContestID = $config->currentContestID;
    }
 
-   // Allow defining a customContestIDs function in the config
-   if (function_exists('customContestIDs')) {
-      $ccIDs = customContestIDs($code);
+   // Allow defining a customPersonalContestData function in the config
+   if (function_exists('customPersonalContestData')) {
+      $ccIDs = customPersonalContestData($code);
       if (isset($ccIDs['trainingContestID'])) {
          $trainingContestID = $ccIDs['trainingContestID'];
       }
-      if (isset($ccIDs['officialContestID'])) {
-         $officialContestID = $ccIDs['officialContestID'];
+      if (isset($ccIDs['currentContestID'])) {
+         $officialContestID = $ccIDs['currentContestID'];
       }
       if (isset($ccIDs['allowContestAtHome'])) {
          $registrationData->allowContestAtHome = $ccIDs['allowContestAtHome'];
+      }
+      if (isset($ccIDs['bypassClosed'])) {
+         $registrationData->bypassClosed = $ccIDs['bypassClosed'];
       }
    }
 
@@ -604,7 +607,7 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "",
       // No such group.
       return;
    }
-   if (($row->open != "Open") && ($row->schoolID != 9999999999)) { // temporary hack to allow test groups
+   if (($row->open != "Open") && (!$registrationData || !isset($registrationData->bypassClosed) || !$registrationData->bypassClosed) && ($row->schoolID != 9999999999)) { // temporary hack to allow test groups
       $messages = array("fr" => "Le concours de ce groupe n'est pas ouvert : ",
          "en" => "The contest associated with this group is not open: ",
          "ar" => "المسابقة لم تبدأ بعد "
