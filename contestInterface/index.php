@@ -636,8 +636,14 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
    </p>
    <table>
       <tr>
+<?php
+        if(!$config->contestInterface->hideStartTraining) {
+?>
          <td><button type="button" id="buttonStartPreparation" onclick="startPreparation()" class="btn btn-primary" data-i18n="personal_page_start_preparation"></button></td>
          <td style="width:50px">
+<?php 
+        }
+?>
          <td><button type="button" id="buttonStartContest" onclick="startContest()" class="btn btn-primary" data-i18n="personal_page_start_contest"></button> <i id="msgStartContest" style="display: none;" data-i18n="personal_page_contest_already_done"></i></td>
       </tr>
    </table>
