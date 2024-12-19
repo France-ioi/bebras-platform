@@ -488,6 +488,9 @@ function handleGroupFromRegistrationCode($db, $code) {
       if (isset($ccIDs['officialContestID'])) {
          $officialContestID = $ccIDs['officialContestID'];
       }
+      if (isset($ccIDs['allowContestAtHome'])) {
+         $registrationData->allowContestAtHome = $ccIDs['allowContestAtHome'];
+      }
    }
 
    $contestID = $trainingContestID;
