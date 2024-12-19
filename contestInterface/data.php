@@ -162,9 +162,15 @@ function handleCreateTeam($db) {
          $stmt->execute(array(getRandomID(), $contestant["lastName"], $contestant["firstName"], $contestant["genre"], $contestant["grade"], $contestant["studentId"], $contestant["phoneNumber"], $teamID, $_SESSION["schoolID"], $saniValid, $contestant["email"], $contestant["zipCode"]));
       }
    }
+
+   $answerKey = null;
+   if($config->contestInterface->finalEncodeSalt) {
+      $answerKey = md5($config->finalEncodeSalt . $teamID);
+   }
+
    addBackendHint(sprintf("ClientIP.createTeam:%s", $_SESSION['isPublic'] ? 'public' : 'private'));
    addBackendHint(sprintf("Group(%s):createTeam", escapeHttpValue($groupID)));
-   exitWithJson((object)array("success" => true, "teamID" => $teamID, "password" => $password));
+   exitWithJson((object)array("success" => true, "teamID" => $teamID, "password" => $password, "answerKey" => $answerKey));
 }
 
 function updateDynamoDBStartTime($db, $teamID) {

@@ -2788,6 +2788,7 @@ function createTeam(contestants) {
       function(data) {
          teamID = data.teamID;
          teamPassword = data.password;
+         answerKey = data.answerKey;
          $("#divDescribeTeam").hide();
          $("#divLogin").hide();
          $("#divCheckNbContestants").hide();
