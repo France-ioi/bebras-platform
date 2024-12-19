@@ -479,6 +479,17 @@ function handleGroupFromRegistrationCode($db, $code) {
       $officialContestID = $config->currentContestID;
    }
 
+   // Allow defining a customContestIDs function in the config
+   if (function_exists('customContestIDs')) {
+      $ccIDs = customContestIDs($code);
+      if (isset($ccIDs['trainingContestID'])) {
+         $trainingContestID = $ccIDs['trainingContestID'];
+      }
+      if (isset($ccIDs['officialContestID'])) {
+         $officialContestID = $ccIDs['officialContestID'];
+      }
+   }
+
    $contestID = $trainingContestID;
    $isOfficialContest = false;
    if (isset($_POST["startOfficial"])) {
