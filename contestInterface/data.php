@@ -165,7 +165,7 @@ function handleCreateTeam($db) {
 
    $answerKey = null;
    if($config->contestInterface->finalEncodeSalt) {
-      $answerKey = md5($config->finalEncodeSalt . $teamID);
+      $answerKey = md5($config->contestInterface->finalEncodeSalt . $teamID);
    }
 
    addBackendHint(sprintf("ClientIP.createTeam:%s", $_SESSION['isPublic'] ? 'public' : 'private'));
@@ -331,7 +331,7 @@ function handleLoadSession() {
    }
    $answerKey = null;
    if($config->contestInterface->finalEncodeSalt) {
-      $answerKey = md5($config->finalEncodeSalt . $_SESSION["teamID"]);
+      $answerKey = md5($config->contestInterface->finalEncodeSalt . $_SESSION["teamID"]);
    }
    $data = array(
       "success" => true,

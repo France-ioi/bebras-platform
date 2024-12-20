@@ -148,7 +148,7 @@ function commonLoginTeam($db, $password) {
    }
    $answerKey = null;
    if($config->contestInterface->finalEncodeSalt) {
-      $answerKey = md5($config->finalEncodeSalt . $_SESSION["teamID"]);
+      $answerKey = md5($config->contestInterface->finalEncodeSalt . $_SESSION["teamID"]);
    }
 
    $data = [
