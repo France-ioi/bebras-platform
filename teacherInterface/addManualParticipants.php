@@ -91,18 +91,17 @@ function handleDataFile($dataFilePath) {
 
    // Check for existing codes
    $newCodes = array_map(function($line) { return $line[0]; }, $data);
-   if(count($newCodes) == 0) {
-      return [0, 0, []];
+   if(count($newCodes) > 0) {
+      $stmt = $db->prepare("SELECT `code`, `firstName`, `lastName`, `grade` FROM `algorea_registration` WHERE `code` IN (" . implode(',', array_fill(0, count($newCodes), '?')) . ")");
+      $stmt->execute($newCodes);
+      $existingCodes = [];
+      $existingCodesData = [];
+      while($row = $stmt->fetch()) {
+         $existingCodes[] = $row['code'];
+         $existingCodesData[$row['code']] = [$row['firstName'], $row['lastName'], $row['grade']];
+      }
+      $newCodes = array_diff($newCodes, $existingCodes);
    }
-   $stmt = $db->prepare("SELECT `code`, `firstName`, `lastName`, `grade` FROM `algorea_registration` WHERE `code` IN (" . implode(',', array_fill(0, count($newCodes), '?')) . ")");
-   $stmt->execute($newCodes);
-   $existingCodes = [];
-   $existingCodesData = [];
-   while($row = $stmt->fetch()) {
-      $existingCodes[] = $row['code'];
-      $existingCodesData[$row['code']] = [$row['firstName'], $row['lastName'], $row['grade']];
-   }
-   $newCodes = array_diff($newCodes, $existingCodes);
 
    // Remove former codes
    $stmt = $db->prepare("DELETE FROM `algorea_registration` WHERE `code` = :code;");

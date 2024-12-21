@@ -288,10 +288,11 @@ flush();
 $statusNumbers = ["Not started" => [], "Started" => [], "Ended" => []];
 $stmt = $db2->prepare("
     SELECT
+    NOW() as now,
     COUNT(DISTINCT `team`.ID) AS T,
     COUNT(DISTINCT `contestant`.ID) AS C,
     `team`.startTime IS NOT NULL as started,
-    (`team`.startTime IS NOT NULL AND (`team`.endTime IS NOT NULL OR `team`.startTime + INTERVAL `team`.nbMinutes MINUTE < NOW())) AS ended,
+    (`team`.startTime IS NOT NULL AND (`team`.endTime IS NOT NULL OR `team`.startTime + INTERVAL `team`.nbMinutes MINUTE < UNIX_TIMESTAMP())) AS ended,
     `team`.contestID
     FROM `$teamTable` AS `team`
     JOIN `contest` ON `team`.contestID = `contest`.ID
@@ -300,7 +301,7 @@ $stmt = $db2->prepare("
     GROUP BY started, ended, `team`.contestID;");
 $stmt->execute(['contestID' => $contestID]);
 while($row = $stmt->fetchObject()) {
-    $status = $row->ended ? "Ended" : ($row->started ? "Started" : "Not started");
+    $status = ($row->ended == "1" ? "Ended" : ($row->started == "1" ? "Started" : "Not started"));
     $statusNumbers[$status][$row->contestID] = (array) $row;
 }
 makeTable("Participation status", $contestsWithTeams, $contestColumns, $statusNumbers);
@@ -391,7 +392,7 @@ $limit = 100 * count($contestsWithTeams);
 $stmt = $db2->prepare("
     SELECT COUNT(DISTINCT `team`.ID) AS T,
     COUNT(DISTINCT `contestant`.ID) AS C,
-    ROUND(UNIX_TIMESTAMP(createTime)/$interval) AS intervalCreated,
+    FLOOR(UNIX_TIMESTAMP(createTime)/$interval) AS intervalCreated,
     `team`.contestID
     FROM `$teamTable` AS `team`
     JOIN `contest` ON `team`.contestID = `contest`.ID
