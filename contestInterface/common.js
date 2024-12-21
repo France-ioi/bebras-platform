@@ -2291,14 +2291,16 @@ window.showPersonalPage = function(data) {
       } else {
          status = "personal_page_status_completed";
       }
-      var score = "-";
+      var score = "";
       if (participation.sumScores !== null) {
          score = parseInt(participation.sumScores);
          if (participation.score !== null) {
             score = Math.max(score, parseInt(participation.score));
          }
+         if(score <= 0) { score = ""; } // Temporary or not?
       } else if (participation.score !== null) {
          score = parseInt(participation.score);
+         if(score <= 0) { score = ""; } // Temporary or not?
       }
       var rank = rankToStr(participation.rank, nameGrade, participation.nbContestants);
       var schoolRank = rankToStr(participation.schoolRank, nameGrade, participation.nbContestants);
@@ -2308,7 +2310,7 @@ window.showPersonalPage = function(data) {
          "<td>" + window.utcDateFormatter(participation.startTime) + "</td>" +
          "<td>" + participation.contestants + "</td>" +
          "<td><span data-i18n=\"" + status + "\"></span></td>" +
-         "<td>" + (score > 0 ? score : "") + "</td>" +
+         "<td>" + score + "</td>" +
          "<td class='personalPageRank'>" + rank + "</td>" +
          "<td class='personalPageRank'>>" + schoolRank + "</td>" +
          "<td><a href='" + location.pathname + "?team=" + participation.password + "' target='_blank' data-i18n='personal_page_open'></a></td></tr>";
