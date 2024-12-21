@@ -292,7 +292,7 @@ $stmt = $db2->prepare("
     COUNT(DISTINCT `team`.ID) AS T,
     COUNT(DISTINCT `contestant`.ID) AS C,
     `team`.startTime IS NOT NULL as started,
-    (`team`.startTime IS NOT NULL AND (`team`.endTime IS NOT NULL OR `team`.startTime + INTERVAL `team`.nbMinutes MINUTE < UNIX_TIMESTAMP())) AS ended,
+    (`team`.startTime IS NOT NULL AND (`team`.endTime IS NOT NULL OR `team`.startTime + INTERVAL `team`.nbMinutes MINUTE < UTC_TIMESTAMP())) AS ended,
     `team`.contestID
     FROM `$teamTable` AS `team`
     JOIN `contest` ON `team`.contestID = `contest`.ID
@@ -301,7 +301,7 @@ $stmt = $db2->prepare("
     GROUP BY started, ended, `team`.contestID;");
 $stmt->execute(['contestID' => $contestID]);
 while($row = $stmt->fetchObject()) {
-    $status = ($row->ended == "1" ? "Ended" : ($row->started == "1" ? "Started" : "Not started"));
+    $status = ($row->ended ? "Ended" : ($row->started ? "Started" : "Not started"));
     $statusNumbers[$status][$row->contestID] = (array) $row;
 }
 makeTable("Participation status", $contestsWithTeams, $contestColumns, $statusNumbers);
