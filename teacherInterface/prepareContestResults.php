@@ -662,6 +662,7 @@ foreach ($questions as $question) {
 }
 
 echo "<h3><a href='".$startUrl."&action=showScoreAnomalies'>List score anomalies</a></h3>";
+echo "<p>Only of official participations</p>";
 if ($action == "showScoreAnomalies") {
    //, contestant.firstName, contestant.lastName
    //  JOIN contestant ON team.ID = contestant.teamID
