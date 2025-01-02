@@ -142,7 +142,7 @@ function displayRowsAsXml($rows, $viewModel, $page, $total_pages, $count) {
        $s .= "<row id='".$row->ID."'>";
       foreach ($viewModel["fields"] as $fieldName => $fieldInfos) {
          $s .= "<cell>";
-         if (getFieldType($viewModel, $fieldName) == "string") {
+           if (getFieldType($viewModel, $fieldName) == "string" || preg_match('/[<>&]/', $row->$fieldName)) {
 //            $s .= "<![CDATA[".utf8_decode($row->$fieldName)."]]>";//"<![CDATA[".$row->$fieldName."]]>";
             $s .= "<![CDATA[".($row->$fieldName)."]]>";//"<![CDATA[".$row->$fieldName."]]>";
             } else {
