@@ -61,6 +61,7 @@ $regionNames = [
     "mayotte"=> "Mayotte",
     "montpellier"=> "Montpellier",
     "nancy-metz"=> "Nancy-Metz",
+    "normandie" => "Normandie",
     "nantes"=> "Nantes",
     "nice"=> "Nice",
     "noumea"=> "Nouméa",
