@@ -139,6 +139,18 @@ function commonLoginTeam($db, $password) {
    $_SESSION["schoolID"] = $row->schoolID;
    $_SESSION["isPublic"] = intval($row->isPublic);
 
+   $skippedContestantPassword = false;
+   if($config->contestInterface->skipContestantPassword) {
+      $stmt = $db->prepare("SELECT `registrationID` FROM `contestant` WHERE `teamID` = ?");
+      $stmt->execute(array($_SESSION["teamID"]));
+      $registrationID = $stmt->fetchColumn();
+      $skippedContestantPassword = !!$registrationID;
+   }
+   $answerKey = null;
+   if($config->contestInterface->finalEncodeSalt) {
+      $answerKey = md5($config->contestInterface->finalEncodeSalt . $_SESSION["teamID"]);
+   }
+
    $data = [
       "success" => true,
       "name" => $_SESSION["name"],
@@ -169,6 +181,8 @@ function commonLoginTeam($db, $password) {
       "sendPings" => $_SESSION["sendPings"],
       // TODO :: Remove after 2023-09
       "oldRandomSeedTempFix" => $_SESSION["oldRandomSeedTempFix"],
+      "skippedContestantPassword" => $skippedContestantPassword,
+      "answerKey" => $answerKey,
       "browserID" => $row->browserID,
    ];
 
@@ -329,4 +343,21 @@ function updateRegisteredUserCategory($db, $ID, $prevQualifiedCategory, $prevVal
       ));
    }
    return array("qualifiedCategory" => $maxQualifiedCategory, "validatedCategory" => $maxValidatedCategory);
+}
+
+function checkPOW($paramName) {
+   global $config;
+   if (!$config->contestInterface->pow) { return; }
+   if (!isset($_POST['pow']) || !isset($_POST['SID']) || !isset($_POST[$paramName])) {
+      exitWithJsonFailure("Invalid parameters");
+   }
+   $data = $_POST['SID'] . $_POST[$paramName];
+   $n = 0;
+   for ($i = 0; $i < strlen($data); $i++) {
+      $n += ord($data[$i]);
+   }
+   $pow = $_POST['pow'];
+   if (($n * $pow) % $config->contestInterface->pow->modulo < $config->contestInterface->pow->min) {
+      exitWithJsonFailure("Invalid request");
+   }
 }

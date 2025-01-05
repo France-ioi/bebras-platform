@@ -39,7 +39,7 @@ class tinyOrm {
       global $tablesModels, $db, $dynamoDB, $config;
       if (!$dynamoDB && $config->db->use == 'dynamoDB') {
          require_once '../vendor/autoload.php';
-         $dynamoDB = connect_dynamoDB($config);
+         $dynamoDB = connect_dynamoDB($config->aws);
       }
       $this->db = $db;
       $this->mode = $config->db->use;

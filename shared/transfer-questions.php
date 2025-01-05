@@ -11,7 +11,7 @@ require_once(__DIR__.'/connect.php');
 
 require_once dirname(__FILE__).'/../ext/autoload.php';
 if (!isset($dynamoDB)) {
-   $dynamoDB = connect_dynamoDB($config);
+   $dynamoDB = connect_dynamoDB($config->aws);
 }
 
 require_once(__DIR__.'/tinyORM.php');

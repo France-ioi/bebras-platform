@@ -8,7 +8,7 @@ require_once __DIR__.'/../config.php';
 ini_set('session.gc_maxlifetime', $config->contestInterface->sessionLength);
 session_set_cookie_params($config->contestInterface->sessionLength);
 
-function connect_pdo($config) {
+function connect_pdo($dbConfig) {
    // computing timezone difference with gmt:
    // http://www.sitepoint.com/synchronize-php-mysql-timezone-configuration/
    $now = new DateTime();
@@ -21,14 +21,14 @@ function connect_pdo($config) {
    try {
       $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
       $pdo_options[PDO::MYSQL_ATTR_INIT_COMMAND] = "SET NAMES utf8";
-      $connexionString = "mysql:host=".$config->db->mysql->host.";dbname=".$config->db->mysql->database.";charset=utf8";
-      if (isset($config->db->mysql->port)) {
-         $connexionString .= ";port=".$config->db->mysql->port;
+      $connexionString = "mysql:host=".$dbConfig->mysql->host.";dbname=".$dbConfig->mysql->database.";charset=utf8";
+      if (isset($dbConfig->mysql->port)) {
+         $connexionString .= ";port=".$dbConfig->mysql->port;
       }
-      if ($config->db->mysql->logged) {
-         $db = new LoggedPDO($connexionString, $config->db->mysql->user, $config->db->mysql->password, $pdo_options);
+      if ($dbConfig->mysql->logged) {
+         $db = new LoggedPDO($connexionString, $dbConfig->mysql->user, $dbConfig->mysql->password, $pdo_options);
       } else {
-         $db = new PDO($connexionString, $config->db->mysql->user, $config->db->mysql->password, $pdo_options);
+         $db = new PDO($connexionString, $dbConfig->mysql->user, $dbConfig->mysql->password, $pdo_options);
       }
       $db->exec("SET time_zone='".$offset."';");
    } catch (Exception $e) {
@@ -37,23 +37,35 @@ function connect_pdo($config) {
    return $db;
 }
 
-function connect_dynamoDB($config) {
+function connect_dynamoDB($awsConfig) {
    $client = DynamoDbClient::factory(array(
       'credentials' => array(
-           'key'    => $config->aws->key,
-           'secret' => $config->aws->secret
+           'key'    => $awsConfig->key,
+           'secret' => $awsConfig->secret
        ),
-      'region' => $config->aws->region,
+      'region' => $awsConfig->region,
       'version' => '2012-08-10'
    ));
    return $client;
+}
+
+$rodb = null;
+function getRODB() {
+   global $config, $db, $rodb;
+   if($config->rodb->enable) {
+      if(!$rodb) {
+         $rodb = connect_pdo($config->rodb);
+      }
+      return $rodb;
+   }
+   return $db;
 }
 
 $dynamoDB = null;
 
 if ($config->db->dynamoSessions) {
    require_once dirname(__FILE__).'/../vendor/autoload.php';
-   $dynamoDB = connect_dynamoDB($config);
+   $dynamoDB = connect_dynamoDB($config->aws);
    // registering the dynamodb session handler performs some useless operations
    // in session!
    if (!isset($noSessions) || !$noSessions) {
@@ -70,5 +82,5 @@ if ($config->db->dynamoSessions) {
 
 if ($config->db->use != "dynamoDB" || !isset($noSQL) || !$noSQL) {
    // mysql is almost always used   
-   $db = connect_pdo($config);
+   $db = connect_pdo($config->db);
 }

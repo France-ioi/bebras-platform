@@ -95,6 +95,8 @@
     "option_srlModule_algorea": "Algorea mode",
     "contestID_label": "Contest",
     "contestID_comment": "You can create groups to give your students practice with past contests. The creation of groups for the 2013 contest is not possible yet.",
+    "grade_-1": "Teacher",
+    "grade_-4": "Other",
     "grade_3": "3rd grade",
     "grade_4": "4th grade",
     "grade_5": "5th grade",
@@ -598,5 +600,11 @@
     "manual_codes_title": "Add manually generated codes",
     "manual_codes_instructions": "This page allows you to add a list of codes created manually. Please enter your list of codes, separated by spaces, line breaks and/or commas.",
     "manual_codes_added": "groups added",
-    "manual_codes_existing": "existing groups"
+    "manual_codes_existing": "existing groups",
+    "manual_participants_title": "Import participants",
+    "manual_participants_instructions": "This page allows you to import a CSV file of participants. The file must contain three columns, in this order: participant code, name, and grade. If a row only contains a participant code but no name or grade, then the code will be deleted.",
+    "manual_participants_file": "CSV file to import:",
+    "manual_participants_added": "participants added",
+    "manual_participants_existing": "existing participants",
+    "upload_error": "Error during the file upload, file might be too big."
 }

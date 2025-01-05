@@ -29,6 +29,9 @@
     "logActivity" => $config->contestInterface->logActivity,
     "oldInterfaceScoreModifiersDisplay" => $config->contestInterface->oldInterfaceScoreModifiersDisplay,
     "checkBrowserID" => $config->contestInterface->checkBrowserID,
+    "pow" => $config->contestInterface->pow,
+    "skipContestantPassword" => $config->contestInterface->skipContestantPassword,
+    "finalQRCodeMode" => $config->contestInterface->finalQRCodeMode,
     ]) ?>;
 
   window.config.downgradeToHTTP = window.config.downgradeToHTTP && (window.location.protocol != 'https:');
@@ -600,18 +603,18 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
 
 
 <div id="divPersonalPage" style="display:none">
-   <h2 class="personalPageMain">Page personnelle</h2> 
-   <p class="personalPageMain">
+   <h2 class="personalPageMain" data-i18n="personal_page_title"></h2>
+   <p class="personalPageMain" data-i18n="[html]personal_page_intro">
    </p>
    <table id="personalData" class="personalPageMain">
-      <tr><td>Nom :</td><td id="persoLastName"></td></tr>
-      <tr><td>Prénom :</td><td id="persoFirstName"></td></tr>
-      <tr id="persoGradeRow"><td>Classe :</td><td id="persoGrade"></td></tr>
-      <tr><td>Qualifié pour la catégorie :</td><td id="persoCategory"></td></tr>
+      <tr><td><span data-i18n="first_name"></span> :</td><td id="persoFirstName"></td></tr>
+      <tr><td><span data-i18n="last_name"></span> :</td><td id="persoLastName"></td></tr>
+      <tr id="persoGradeRow"><td><span data-i18n="grade"></span> :</td><td id="persoGrade"></td></tr>
+      <tr id="persoCategoryRow"><td><span data-i18n="personal_page_qualified_category"></span> :</td><td id="persoCategory"></td></tr>
       <!--<tr><td>Qualifié en demi-finale :</td><td id="persoSemifinal"></td></tr>-->
    </table>
    <p id="persoGradeUpdate">
-     <span>Veuillez reconfirmer votre classe :</span><br>
+     <span data-i18n="personal_page_grade_update_prompt"></span><br>
      <select id="persoGradeNew">
         <option value="" data-i18n="grade_select" selected></option>
 <?php
@@ -620,7 +623,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
                }
 ?>
       </select>
-      <button type="button" id="buttonPersoGradeUpdate" onclick="updatePersoGrade()" class="btn btn-primary">Mettre à jour ma classe</button>
+      <button type="button" id="buttonPersoGradeUpdate" onclick="updatePersoGrade()" class="btn btn-primary" data-i18n="personal_page_grade_update"></button>
    </p>
    <p>
 <?php
@@ -634,26 +637,29 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
    </p>
    <table>
       <tr>
-         <td><button type="button" id="buttonStartPreparation" onclick="startPreparation()" class="btn btn-primary">Démarrer une préparation</button></td>
+<?php
+        if(!$config->contestInterface->hideStartTraining) {
+?>
+         <td><button type="button" id="buttonStartPreparation" onclick="startPreparation()" class="btn btn-primary" data-i18n="personal_page_start_preparation"></button></td>
          <td style="width:50px">
-         <td><button type="button" id="buttonStartContest" onclick="startContest()" class="btn btn-primary" >Démarrer le concours</button> <i id="msgStartContest" style="display: none;">Vous avez déjà participé à ce concours officiel.</i></td>
+<?php 
+        }
+?>
+         <td><button type="button" id="buttonStartContest" onclick="startContest()" class="btn btn-primary" data-i18n="personal_page_start_contest"></button> <i id="msgStartContest" style="display: none;" data-i18n="personal_page_contest_already_done"></i></td>
       </tr>
    </table>
-   <p id="contestAtHomePrevented" style="display:none">
-       Votre enseignant a indiqué que le concours officiel doit se faire en classe, avec un code de groupe.<br/>
-       Vous ne pouvez donc pas commencer le concours depuis cette interface, mais vous pouvez faire des préparations à la maison.
-   </p>
-   <h3>Participations :</h3>
+   <p id="contestAtHomePrevented" style="display:none" data-i18n="[html]personal_page_contest_at_home_prevented"></p>
+   <h3 data-i18n="personal_page_participations"></h3>
    <table id="pastParticipations" cellspacing=0>
       <tr>
-         <td>Épreuve</td>
-         <td>Date</td>
-         <td>Équipe</td>
-         <td>Statut</td>
-         <td>Score</td>
-         <td>Classement</td>
-         <td>Classement<br/>établissement</td>
-         <td>Accès</td>
+         <td data-i18n="personal_page_contest"></td>
+         <td data-i18n="personal_page_date"></td>
+         <td data-i18n="personal_page_team"></td>
+         <td data-i18n="personal_page_status"></td>
+         <td data-i18n="personal_page_score"></td>
+         <td data-i18n="personal_page_rank" class="personalPageRank">></td>
+         <td data-i18n="[html]personal_page_schoolRank" class="personalPageRank">></td>
+         <td data-i18n="[html]personal_page_access"></td>
       </tr>
    </table>
 </div>
@@ -766,7 +772,7 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
    <h3 id="divClosedMessage">
    </h3>
    <div id="divClosedPleaseWait" style="display:none">
-      <p style='margin:200px 0 200px 0' data-i18n="[html]closed_please_wait">
+      <p data-i18n="[html]closed_please_wait">
       </p>
    </div>
    <div id="divClosedEncodedAnswers" style="display:none">
@@ -775,7 +781,9 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
       <textarea cols=60 rows=20 id="encodedAnswers"></textarea>
       <br><a class="btn btn-primary" id="divClosedEncodedDownload" data-i18n="closed_download_encoded"></a>
       <br>
-      <p class="divClosedQRCodeInfo" data-i18n="closed_qr_code"></p>
+   </div>
+   <div id="divClosedQRCodeContainer" style="display:none">
+      <p class="divClosedQRCodeInfo"></p>
       <div id="divClosedQRCode"></div>
    </div>
    <div id="divClosedRemindPassword" style="display:none">

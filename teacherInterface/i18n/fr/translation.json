@@ -338,7 +338,7 @@
     "password_changed": "Votre mot de passe a été modifié",
     "email_subject_no_official_email": "Compte coordinateur sans adresse académique",
     "email_body_no_official_email": "Bonjour\\n\\nJe souhaite organiser le concours Castor ou Algoréa dans mon établissement mais je ne dispose pas d'une adresse de courriel académique.\\n\\nMon établissement est :\\n\\n[donnez les coordonnées de votre établissement]\\n\\nMon rôle dans cet établissement est :\\n\\n[décrivez votre poste]\\n\\nJe n'ai pas d'adresse académique utilisable pour la raison suivante :\\n\\n[expliquez la raison]\\n\\nBien cordialement.\\n\\n-------\\n(Vous recevrez un message de confirmation, après la validation)",
-    "warning_official_email_required": "<b>Attention</b> : nous demandons votre courriel académique afin de valider votre identité d'enseignant(e) dans un établissement français. Si vous êtes enseignant dans un établissement français à l'étranger, cochez la case disant que vous n' avez pas de courriel académique, et mettez votre courriel professionnel d'établissement comme courriel professionnel. Après votre inscription, vous devrez nous contacter pour demander une validation manuelle de votre compte à : ",
+    "warning_official_email_required": "<b>Attention</b> : nous demandons votre courriel académique afin de valider votre identité d'enseignant(e) dans un établissement français. Si vous êtes enseignant mais ne disposez pas d'adresse académique ni aefe, cochez la case disant que vous n'avez pas de courriel académique. Après votre inscription, vous devrez nous contacter pour demander une validation manuelle de votre compte à : ",
     "user_registration": "Inscription de coordinateur",
     "no_school_with_certificates_to_print": "Aucun établissement avec des diplômes à imprimer.",
     "certificates_school": "Établissement",
@@ -571,7 +571,7 @@
     "user_email_already_used": "Un compte existe déjà pour l'email %s.",
     "site_under_maintainance": "Désolé, le site est en indisponible jusqu'à %s pour cause de maintenance",
     "login_invalid_identifier": "Identifiant invalide",
-    "login_email_not_validated": "Vos identifiants sont valide mais votre adresse email %s n'a pas été validée. Vous avez dû recevoir un mail après votre inscription avec un lien de validation, vérifiez éventuellement dans les courriers indésirables de votre boîte mail. Si vous n'avez rien reçu, ou si vous avez déjà cliqué sur ce lien mais que vous ne pouvez toujours pas vous connecter, contactez nous : %s",
+    "login_email_not_validated": "Vos identifiants sont valides mais votre adresse email %s n'a pas été validée. Vous avez dû recevoir un mail après votre inscription avec un lien de validation, vérifiez éventuellement dans les courriers indésirables de votre boîte mail. Si vous n'avez rien reçu, ou si vous avez déjà cliqué sur ce lien mais que vous ne pouvez toujours pas vous connecter, contactez nous : %s",
     "login_user_not_validated": "Vos identifiants sont valides et votre adresse email a été validée.",
     "login_no_official_email": "Vos identifiants sont valides, mais vous n'aviez pas fourni d'adresse académique.",
     "login_manual_validation_required": "Votre inscription doit être validée par un organisateur. Contactez nous (%s) si vous ne l'avez pas déjà fait ou si vous n'avez pas obtenu de réponse dans un délai raisonnable.",
@@ -639,7 +639,13 @@
     "manual_codes_title": "Ajout de codes générés à la main",
     "manual_codes_instructions": "Cette page vous permet d'ajouter une liste de codes créés à la main. Veuillez entrer votre liste de codes, séparés par des espaces, des retours à la ligne et/ou des virgules.",
     "manual_codes_added": "groupes ajoutés",
-    "manual_codes_existing": "groupes déjà existants"
+    "manual_codes_existing": "groupes déjà existants",
+    "manual_participants_title": "Importer des participants",
+    "manual_participants_instructions": "Cette page vous permet d'importer un fichier CSV de participants. Le fichier doit contenir trois colonnes, dans cet ordre : code du participant, nom et classe. Si une ligne ne contient que le code de participant, alors ce code sera supprimé.",
+    "manual_participants_file": "Fichier CSV à importer :",
+    "manual_participants_added": "participants ajoutés",
+    "manual_participants_existing": "participants existants",
+    "upload_error": "Erreur lors du téléversement, le fichier peut être trop gros."
 }
 
 

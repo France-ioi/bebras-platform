@@ -49,6 +49,7 @@ var teamScore = 0;
 var maxTeamScore = 0;
 var sending = false;
 var answersToSend = {};
+var lastAnswersSentDate = null;
 var lastAnswersToSendUpdate = null;
 var answers = {};
 var defaultAnswers = {};
@@ -74,6 +75,7 @@ var groupCheckedData = null;
 var contestants = {};
 var teamMateHasRegistration = {1: false, 2: false};
 var personalPageData = null;
+var answerKey = null;
 // Function listening for resize events
 var bodyOnResize = null;
 // Images preloaded by ImagesLoader
@@ -86,6 +88,9 @@ var oldRandomSeedTempFix = false;
 var sendLastActivity = false;
 // Backup QR code handler
 var backupQRCode = null;
+// Whether we used a contestant code and hence don't show the password for this session
+var skippedContestantPassword = false;
+
 
 function getParameterByName(name) {
    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -272,6 +277,22 @@ window.onerror = function () {
 };
 
 window.logError = logError;
+
+function paramsWithPOW(addParam, params) {
+   if(config.pow) {
+      var data = SID + addParam;
+      var n = 0;
+      for (var i = 0; i < data.length; i++) {
+         n += data.charCodeAt(i);
+      }
+      var pow = 1;
+      while(n * pow % config.pow.modulo < config.pow.min) {
+         pow = pow + 1;
+      }
+      params.pow = pow;
+   }
+   return params;
+}
 
 var updateContestHeader = function(contestData) {
   contestName = contestData.contestName;
@@ -1788,7 +1809,7 @@ function loadContestData(contestID, contestFolder, groupPassword)
          showQuestionIframe();
          $("#divImagesLoading").hide();
 
-         $.post("data.php", {SID: SID, action: "loadContestData", groupPassword: groupPassword, teamID: teamID},
+         $.post("data.php", paramsWithPOW(teamID, {SID: SID, action: "loadContestData", groupPassword: groupPassword, teamID: teamID}),
          function(data) {
             if (!data.success) {
                $("#divHeader").show();
@@ -1893,7 +1914,7 @@ window.recoverGroup = function() {
    if (!groupCode || !groupPass) {return false;}
    $('#recoverGroupResult').html('');
    Utils.disableButton("buttonRecoverGroup");
-   $.post("data.php", {SID: SID, action: "recoverGroup", groupCode: groupCode, groupPass: groupPass},
+   $.post("data.php", paramsWithPOW(groupCode, {SID: SID, action: "recoverGroup", groupCode: groupCode, groupPass: groupPass}),
       function(data) {
          if (!data.success) {
             if (data.message) {
@@ -2013,7 +2034,7 @@ window.validateRegistrationCode = function(teamMate) {
    $("#LoginResult").html("");
    var code = $("#registrationCode" + teamMate).val().trim().toLowerCase();
    $("#errorRegistrationCode" + teamMate).html();
-   $.post("data.php", {SID: SID, action: "checkRegistration", code: code},
+   $.post("data.php", paramsWithPOW(code, {SID: SID, action: "checkRegistration", code: code}),
       function(data) {
          if (data.success) {
             var contestant = {
@@ -2177,6 +2198,9 @@ window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, 
             $("#errorRegistrationCode1").html("Bienvenue " + data.registrationData.firstName + " " + data.registrationData.lastName);
          }
          $('#mainNav').hide();
+         if(throughPersonalPage && data.allowTeamOfTwo != 1) {
+            validateLoginForm();
+         }
       } else {
          fillListTeams(data.teams);
          $('#mainNav').show();
@@ -2207,7 +2231,8 @@ window.rankToStr = function(rank, nameGrade, nbContestants) {
 
 window.updatePersoGrade = function() {
    var newGrade = $('#persoGradeNew').val();
-   $.post("data.php", {SID: SID, action: "updateGrade", grade: newGrade, code: personalPageData.registrationData.code}, window.showPersonalPage);
+   var code = personalPageData.registrationData.code;
+   $.post("data.php", paramsWithPOW(code, {SID: SID, action: "updateGrade", grade: newGrade, code: code}), window.showPersonalPage);
 }
 
 window.showPersonalPage = function(data) {
@@ -2223,7 +2248,12 @@ window.showPersonalPage = function(data) {
       nameGrade = '-';
    }
    $("#persoGrade").html(nameGrade);
-   $("#persoCategory").html(data.registrationData.qualifiedCategory);
+   if(data.registrationData.qualifiedCategory) {
+      $("#persoCategory").html(data.registrationData.qualifiedCategory);
+      $("#persoCategoryRow").show();
+   } else {
+      $("#persoCategoryRow").hide();
+   }
    if (data.registrationData.round == 1) {
       $("#persoSemifinal").html("oui" + t("semifinal_comment"));
    } else {
@@ -2249,51 +2279,65 @@ window.showPersonalPage = function(data) {
    }
 
    var htmlParticipations = "";
-   var canParticipateOfficial = true;
+   var canParticipateOfficial = data.registrationData.officialStatus != 'done';
+   var hasAnyRank = false;
    for (var iParticipation = 0; iParticipation < data.registrationData.participations.length; iParticipation++) {
       var participation = data.registrationData.participations[iParticipation];
       var status;
       if (participation.startTime == null) {
-         status = "Non démarrée";
+         status = "personal_page_status_notstarted";
       } else if ((parseInt(participation.nbMinutes) == 0) || (parseInt(participation.remainingSeconds) > 0)) {
-         status = "En cours";
+         status = "personal_page_status_inprogress";
       } else {
-         status = "Terminé";
+         status = "personal_page_status_completed";
       }
-      var score = "-";
+      var score = "";
       if (participation.sumScores !== null) {
          score = parseInt(participation.sumScores);
          if (participation.score !== null) {
             score = Math.max(score, parseInt(participation.score));
          }
+         if(score <= 0) { score = ""; } // Temporary or not?
       } else if (participation.score !== null) {
          score = parseInt(participation.score);
+         if(score <= 0) { score = ""; } // Temporary or not?
       }
       var rank = rankToStr(participation.rank, nameGrade, participation.nbContestants);
       var schoolRank = rankToStr(participation.schoolRank, nameGrade, participation.nbContestants);
+      hasAnyRank = hasAnyRank || (rank != '-') || (schoolRank != '-');
       
       htmlParticipations += "<tr><td>" + participation.contestName + "</td>" +
          "<td>" + window.utcDateFormatter(participation.startTime) + "</td>" +
          "<td>" + participation.contestants + "</td>" +
-         "<td>" + status + "</td>" +
+         "<td><span data-i18n=\"" + status + "\"></span></td>" +
          "<td>" + score + "</td>" +
-         "<td>" + rank + "</td>" +
-         "<td>" + schoolRank + "</td>" +
-         "<td><a href='" + location.pathname + "?team=" + participation.password + "' target='_blank'>ouvrir</a></td></tr>";
-
-      if(data.contestID && participation.contestID == data.contestID) {
-         canParticipateOfficial = false;
-      }
+         "<td class='personalPageRank'>" + rank + "</td>" +
+         "<td class='personalPageRank'>>" + schoolRank + "</td>" +
+         "<td><a href='" + location.pathname + "?team=" + participation.password + "' target='_blank' data-i18n='personal_page_open'></a></td></tr>";
    }
    $('#buttonStartPreparation').toggle(!!data.childrenContests.length);
-   $('#buttonStartContest').prop('disabled', !canParticipateOfficial || data.registrationData.allowContestAtHome == "0");
+   $('#buttonStartPreparation').attr('data-i18n', 'personal_page_' + (data.registrationData.trainingInProgress ? 'resume' : 'start') + '_preparation');
+   var disableOfficial = !canParticipateOfficial || data.registrationData.allowContestAtHome == "0";
+   $('#buttonStartContest').prop('disabled', disableOfficial);
+   $('#buttonStartContest').attr('data-i18n', 'personal_page_' + (!disableOfficial && data.registrationData.officialStatus == 'inprogress' ? 'resume' : 'start') + '_contest');
    $("#contestAtHomePrevented").toggle(data.registrationData.allowContestAtHome == "0");
    $('#msgStartContest').toggle(!canParticipateOfficial);
+
    $("#pastParticipations").append(htmlParticipations);
+   if(!hasAnyRank) {
+      // Delete the rank columns because they're empty
+      $('.personalPageRank').remove();
+   }
+   $('#divPersonalPage').i18n();
 }
 
 window.startContest = function() {
    $("#divPersonalPage").hide();
+   if(personalPageData.registrationData.officialStatus == 'inprogress') {
+      skippedContestantPassword = true;
+      reallyStartContest();
+      return;
+   }
    $("#divStartContest").show();
 }
 
@@ -2305,10 +2349,22 @@ window.cancelStartContest = function() {
 
 window.reallyStartContest = function() {
    //$("#divStartContest").hide();
-   checkGroupFromCode("StartContest", personalPageData.registrationData.code, false, false, null, true);
+   checkGroupFromCode("StartContest", personalPageData.registrationData.code, false, false, null, true, function() {
+      $("#divPersonalPage").hide();
+      $("#divStartContest").show();
+   });
 }
 
 window.startPreparation = function() {
+   if(personalPageData.resumeCode) {
+      skippedContestantPassword = true;
+      checkGroupFromCode("PersonalPage", personalPageData.resumeCode, false, false, null, false, function() {
+         // Resume code didn't work, start a new one
+         personalPageData.resumeCode = null;
+         startPreparation();
+      });
+      return;
+   }
    doLogActivity = personalPageData.logActivity;
    updateContestHeader(personalPageData);
    groupMinCategory = personalPageData.minCategory;
@@ -2334,7 +2390,7 @@ window.startPreparation = function() {
  * groupCode: a group code, or a team password
  * isPublic: is this a public group ?
 */
-window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, language, startOfficial) {
+window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, language, startOfficial, errorCallback) {
    Utils.disableButton("button" + curStep);
    $('#recoverGroup').hide();
    $('#browserAlert').hide();
@@ -2343,7 +2399,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
    var parameters = {
       type: "POST",
       url: "data.php",
-      data: {SID: SID, action: "checkPassword", password: groupCode, getTeams: getTeams, language: language, startOfficial: startOfficial, commonJsVersion: commonJsVersion, timestamp: window.timestamp, commonJsTimestamp: commonJsTimestamp},
+      data: paramsWithPOW(groupCode, {SID: SID, action: "checkPassword", password: groupCode, getTeams: getTeams, language: language, startOfficial: startOfficial, commonJsVersion: commonJsVersion, timestamp: window.timestamp, commonJsTimestamp: commonJsTimestamp}),
       dataType: 'json',
       success: function(data) {
          if (!data.success) {
@@ -2352,6 +2408,7 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
             } else {
                $("#" + curStep + "Result").html(t("invalid_code"));
             }
+            if(errorCallback) { errorCallback(); }
             return;
          }
          $("#submitParticipationCode").delay(250).slideUp(400);
@@ -2746,17 +2803,26 @@ function createTeam(contestants) {
       contestFolder = contest.folder;
       customIntro = contest.customIntro;
    }
-   $.post("data.php", {SID: SID, action: "createTeam", contestants: contestants, contestID: contestID},
+   $.post("data.php", paramsWithPOW(contestID, {SID: SID, action: "createTeam", contestants: contestants, contestID: contestID}),
       function(data) {
          teamID = data.teamID;
          teamPassword = data.password;
+         answerKey = data.answerKey;
          $("#divDescribeTeam").hide();
          $("#divLogin").hide();
          $("#divCheckNbContestants").hide();
          $("#divAccessContest").hide();
+
+         if(config.skipContestantPassword && contestants[1] && contestants[1].registrationCode) {
+            // Used a registration code, skip displaying the password
+            skippedContestantPassword = true;
+            confirmTeamPassword();
+            return;
+         }
+
          $("#teamPassword").html(data.password);
          $("#divPassword").show();
-      }, "json");
+   }, "json");
 }
 
 /*
@@ -2785,7 +2851,7 @@ window.relogin = function() {
    }
    Utils.disableButton("buttonRelogin");
    $("#divCheckGroup").hide();
-   $.post("data.php", {SID: SID, action: "checkReloginTeam", teamID: teamID, groupPassword: groupPassword},
+   $.post("data.php", paramsWithPOW(groupPassword, {SID: SID, action: "checkReloginTeam", teamID: teamID, groupPassword: groupPassword}),
       function (data) {
          if(!data.success) {
             $("#ReloginResult").html(data.message);
@@ -2886,6 +2952,10 @@ function initContestData(data, newContestID) {
    SrlModule.initMode(data.srlModule);
    sendLastActivity = data.sendPings;
    oldRandomSeedTempFix = !!data.oldRandomSeedTempFix;
+   if(typeof data.skippedContestantPassword != 'undefined') {
+      skippedContestantPassword = !!data.skippedContestantPassword;
+   }
+   answerKey = data.answerKey;
    if (newInterface) {
       $("#question-iframe-container").addClass("newInterfaceIframeContainer").show();
       $(".oldInterface").html("").hide();
@@ -3076,30 +3146,7 @@ function finalCloseContest(message) {
    ).always(function() {
       isActiveTab = false;
       window.onbeforeunload = function(){};
-      if (!contestShowSolutions) {
-         $("#divClosedPleaseWait").hide();
-         $("#divClosedMessage").html(message);
-         var encodedAnswers = getEncodedAnswers();
-         if (encodedAnswers) {
-            $("#encodedAnswers").html(encodedAnswers);
-            $("#divClosedEncodedAnswers").show();
-
-            // Make download button
-            var blobText = $('#divClosedConnectionError').text() + "\r\n\r\n" + encodedAnswers;
-            var blob = new Blob([blobText], {type: 'text/plain'});
-            var blobHref = window.URL.createObjectURL(blob);
-            $('#divClosedEncodedDownload').attr('href', blobHref);
-            $('#divClosedEncodedDownload').attr('download', window.location.hostname + '_' + teamPassword + '.txt');
-
-            backupSendAnswers();
-         }
-         $("#remindTeamPassword").html(teamPassword);
-         $("#divClosedRemindPassword").show();
-         if (fullFeedback) {
-            $("#remindScore").html(ffTeamScore);
-            $("#scoreReminder").show();
-         }
-      } else {
+      if (contestShowSolutions) {
          $("#divQuestions").hide();
          hideQuestionIframe();
          $("#divImagesLoading").show();
@@ -3112,8 +3159,81 @@ function finalCloseContest(message) {
             $('#questionListIntro').html('<p>'+t('check_score_detail')+'</p>');
             $('#header_time').html('');
          }
+      } else {
+         displayClosedInfo(message);
       }
    });
+}
+
+
+function makeFinalQRCode(hasAnswersToSend) {
+   // QR code
+   if(!config.finalQRCodeMode || (config.finalQRCodeMode == 'backup' && !hasAnswersToSend)) {
+      $('#divClosedQRCodeContainer').hide();
+      return;
+   }
+
+   $('#divClosedQRCodeContainer').show();
+   $('.divClosedQRCodeInfo').html(t('closed_qrcode_' + config.finalQRCodeMode));
+   $('#divClosedQRCode').html('');
+
+   var qrCode = new QRCode(document.getElementById('divClosedQRCode'), '');
+   var encodedScores = getEncodedScores();
+   if(config.finalQRCodeMode == 'backup') {
+      var data = encodedScores;
+   } else if(config.finalQRCodeMode == 'always') {
+      var data = teamPassword + ";" + ffTeamScore + ";;" + !!hasAnswersToSend + ";" +
+         (lastAnswersSentDate && lastAnswersSentDate.toISOString() || "never") + ";;" + (new Date()).toISOString() + ";" + encodedScores + ";;" + ffTeamScore + ";" + teamPassword;
+   }
+   if(data && answerKey) {
+      data = window.btoa(data);
+      var d = "";
+      // It's not base64 characters exactly, it's the characters which are safe for encodeURIComponent
+      var b64c = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9','-','_'];
+      var b64d = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9','+','/'];
+      for(var i = 0; i < data.length; i++) {
+         d += b64c[(b64d.indexOf(data[i]) + b64d.indexOf(answerKey[i % answerKey.length])) % 64];
+      }
+      answerKey = null;
+      data = teamPassword + ";" + d;
+   }
+   qrCode.makeCode('https://backup.castor-informatique.fr/?s=' + encodeURIComponent(data));
+}
+
+
+function displayClosedInfo(message) {
+   // Display all the information when the contest is closed
+   $("#divClosed").show();
+   $("#divClosedPleaseWait").hide();
+   $("#divClosedMessage").html(t(message));
+
+   var encodedAnswers = getEncodedAnswers();
+   if (encodedAnswers) {
+      $("#encodedAnswers").html(encodedAnswers);
+      $("#divClosedEncodedAnswers").show();
+
+      // Make download button
+      var blobText = $('#divClosedConnectionError').text() + "\r\n\r\n" + encodedAnswers;
+      var blob = new Blob([blobText], {type: 'text/plain'});
+      var blobHref = window.URL.createObjectURL(blob);
+      $('#divClosedEncodedDownload').attr('href', blobHref);
+      $('#divClosedEncodedDownload').attr('download', window.location.hostname + '_' + teamPassword + '.txt');
+
+      backupSendAnswers();
+   }
+
+   makeFinalQRCode(!!encodedAnswers);
+
+   if(!skippedContestantPassword) {
+      $("#remindTeamPassword").html(teamPassword);
+      $("#divClosedRemindPassword").show();
+   }
+
+   // Score reminder
+   if(fullFeedback) {
+      $("#remindScore").html(ffTeamScore);
+      $("#scoreReminder").show();
+   }
 }
 
 
@@ -3677,6 +3797,7 @@ function sendAnswers() {
             }
             return;
          }
+         lastAnswersSentDate = new Date();
          var answersRemaining = false;
          for(var questionID in answersToSend) {
             var answerToSend = answersToSend[questionID];
@@ -3759,20 +3880,6 @@ function backupSendAnswers() {
    if(img.attr('src') != newSrc) {
       $('#backup-send-answers').attr('src', newSrc);
    }
-
-   // QR code
-   if(!sendLastActivity) {
-      $('.divClosedQRCodeInfo').hide();
-      $('#divClosedQRCode').hide();
-      return;
-   }
-   $('.divClosedQRCodeInfo').show();
-   $('#divClosedQRCode').show();
-   var encodedScores = getEncodedScores();
-   if(!backupQRCode) {
-      backupQRCode = new QRCode(document.getElementById('divClosedQRCode'), '');
-   }
-   backupQRCode.makeCode('https://backup.castor-informatique.fr/?s=' + encodeURIComponent(encodedScores));
 }
 
 // Solutions

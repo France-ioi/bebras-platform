@@ -15,7 +15,7 @@ $data = $_GET['q'];
 if(!$data) { return; }
 
 if(!isset($dynamoDB)) {
-    $dynamoDB = connect_dynamodb($config);
+    $dynamoDB = connect_dynamodb($config->aws);
 }
 
 $dynamoDB->putItem([

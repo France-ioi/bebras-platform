@@ -31,13 +31,15 @@ function getContestInfos($db, $contestID) {
    }
    // get grades if relevant
    if ($contestInfos['rankGrades']) {
-      $stmt = $db->prepare("SELECT DISTINCT contestant.grade
+      /*$stmt = $db->prepare("SELECT DISTINCT contestant.grade
                FROM contestant
                JOIN team on (team.ID = contestant.teamID)
                JOIN `group` ON (`team`.`groupID` = `group`.`ID`)
                JOIN `contest` ON (`group`.`contestID` = `contest`.`ID`)
                WHERE `team`.participationType = 'Official'
-               AND (`contest`.ID = :contestID OR `contest`.parentContestID = :contestID)");
+               AND (`contest`.ID = :contestID OR `contest`.parentContestID = :contestID)");*/
+      // This will just return all grades, but the query above can take minutes to execute
+      $stmt = $db->prepare("SELECT DISTINCT grade.ID FROM grade;");
       $stmt->execute(array('contestID' => $contestID));
       $contestInfos['grades'] = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
    }
@@ -57,16 +59,23 @@ function computeRanks($db, $contestInfos, $category) {
    }
    $query .= "
             @studentNumber := @studentNumber + 1 as studentNumber,
-            @prevScore:=score,
-            @prevDuration:=duration
+            @prevScore:=score";
+
+   if($contestInfos['rankTimes']) {
+      $query .= ", @prevDuration:=duration";
+   }
+   $query .= "
          FROM 
          (
             SELECT 
                `contestant`.`ID`, 
                `contestant`.`firstName`,
                `contestant`.`lastName`,
-               `team`.`score`,
-               TIMEDIFF(`team`.`endTime`, `team`.`startTime`) AS duration
+               `team`.`score`";
+   if($contestInfos['rankTimes']) {
+      $query .= ", TIMEDIFF(`team`.`endTime`, `team`.`startTime`) AS duration";
+   }
+   $query .= "
             FROM `contestant` 
             JOIN `team` ON (`contestant`.`teamID` = `team`.`ID`) 
             JOIN `group` ON (`team`.`groupID` = `group`.`ID`)
@@ -91,8 +100,11 @@ function computeRanks($db, $contestInfos, $category) {
    $query .= "
             (`contest`.`ID` = :contestID OR `contest`.`parentContestID` = :contestID)
             ORDER BY
-            `team`.`score` DESC,
-            duration ASC
+            `team`.`score` DESC";
+   if($contestInfos['rankTimes']) {
+      $query .= ", `duration` ASC";
+   }
+   $query .= "
          ) `contestant2`, 
          (
             SELECT 
@@ -159,17 +171,22 @@ function computeRanksSchool($db, $contestInfos, $category) {
    }
    $query .= "
             @studentNumber := IF(@prevSchool=`contestant2`.`schoolID`, @studentNumber + 1, 1) as studentNumber, 
-            @prevScore:=score,
-            @prevDuration:=duration,
-            @prevSchool:=`contestant2`.`schoolID`
+            @prevScore:=score,";
+   if($contestInfos['rankTimes']) {
+      $query .= "@prevDuration:=duration,";
+   }
+   $query .= "@prevSchool:=`contestant2`.`schoolID`
     FROM 
     (
        SELECT 
           `contestant`.`ID`,
           `contestant`.`firstName`,
           `contestant`.`lastName`,
-          `team`.`score`,
-          TIMEDIFF(`team`.`endTime`, `team`.`startTime`) AS duration,
+          `team`.`score`,";
+   if($contestInfos['rankTimes']) {
+      $query .= "TIMEDIFF(`team`.`endTime`, `team`.`startTime`) AS duration,";
+   }
+   $query .= "
           `group`.`schoolID`
       FROM `contestant`
             JOIN `team` ON (`contestant`.`teamID` = `team`.`ID`)
@@ -192,14 +209,19 @@ function computeRanksSchool($db, $contestInfos, $category) {
       $query .= " `team`.`nbContestants` = :nbContestants AND ";  
    }
    $query .= "(`contest`.`ID` = :contestID OR `contest`.`parentContestID` = :contestID)
-      ORDER BY `group`.`schoolID`, `team`.`score` DESC, duration ASC
-   ) `contestant2`,
+      ORDER BY `group`.`schoolID`, `team`.`score` DESC";
+   if($contestInfos['rankTimes']) {
+      $query .= ", `duration` ASC";
+   }
+   $query .= ") `contestant2`,
    (
        SELECT 
           @curRank :=0, 
-          @prevScore:=null,
-          @prevDuration:=null,
-          @studentNumber:=0, 
+          @prevScore:=null,";
+   if($contestInfos['rankTimes']) {
+      $query .= "@prevDuration:=null,";
+   }
+   $query .= "@studentNumber:=0, 
           @prevSchool:=null
          ) r
     ) as `c2`

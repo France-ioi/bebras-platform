@@ -24,7 +24,7 @@ function handlePing() {
 
    if(!isset($db)) {
       // Need to connect to mysql
-      $db = connect_pdo($config);
+      $db = connect_pdo($config->db);
    }
 
    if($config->contestInterface->checkBrowserID && isset($_POST['browserID'])) {

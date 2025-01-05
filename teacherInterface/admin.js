@@ -2408,7 +2408,11 @@ function editForm(modelName, title, item) {
 
 function checkEmailFormat(email) {
    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-   return re.test(email);
+   if(!re.test(email)) { return false; }
+   // Check all characters are ASCII
+   // as much as special characters can be allowed in email addresses, it's generally a user mistake
+   var asciiRe = /^[\x00-\x7F]*$/;
+   return asciiRe.test(email);
 }
 
 function checkUser(user, isCreate) {
@@ -2504,6 +2508,10 @@ function validateForm(modelName) {
    for (var fieldName in fields) {
       var field = fields[fieldName];
       item[fieldName] = $("#" + modelName + "_" + fieldName).val();
+      if(item[fieldName] && item[fieldName].trim() !== item[fieldName]) {
+         item[fieldName] = item[fieldName].trim();
+         $("#" + modelName + "_" + fieldName).val(item[fieldName]);
+      }
       if (field.edittype === "datetime") {
          date = $("#" + modelName + "_" + fieldName + "_date").val();
          var hours = $("#" + modelName + "_" + fieldName + "_hours").val();
@@ -2776,7 +2784,8 @@ function warningUsers(users) {
 
 function login() {
    disableButton("buttonLogin");
-   var email = $("#email").val();
+   var email = $("#email").val().trim();
+   $("#email").val(email);
    var password = $("#password").val();
    $.post("login.php", {email: email, password: password},
       function(data) {
