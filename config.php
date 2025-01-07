@@ -92,6 +92,7 @@ $config->contestInterface->skipContestantPassword = false;
 $config->contestInterface->finalQRCodeMode = "backup";
 $config->contestInterface->finalEncodeSalt = null;
 $config->contestInterface->hideStartTraining = false;
+$config->contestInterface->displayQualifiedHeader = false;
 
 $config->teacherInterface = (object) array();
 $config->teacherInterface->sHotlineNumber = '';

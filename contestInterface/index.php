@@ -32,6 +32,7 @@
     "pow" => $config->contestInterface->pow,
     "skipContestantPassword" => $config->contestInterface->skipContestantPassword,
     "finalQRCodeMode" => $config->contestInterface->finalQRCodeMode,
+    "displayQualifiedHeader" => $config->contestInterface->displayQualifiedHeader,
     ]) ?>;
 
   window.config.downgradeToHTTP = window.config.downgradeToHTTP && (window.location.protocol != 'https:');

@@ -2270,12 +2270,14 @@ window.showPersonalPage = function(data) {
    }
    $('#persoGradeUpdate').hide();
 
-   if(data.registrationData.round == "1") {
-      $('#personalPageHeaderQualified').show();
-      $('#personalPageHeaderNonQualified').hide();
-   } else {
-      $('#personalPageHeaderQualified').hide();
-      $('#personalPageHeaderNonQualified').show();
+   $('#personalPageHeaderQualified').hide();
+   $('#personalPageHeaderNonQualified').hide();
+   if(config.displayQualifiedHeader) {
+      if(data.registrationData.round == "1") {
+         $('#personalPageHeaderQualified').show();
+      } else {
+         $('#personalPageHeaderNonQualified').show();
+      }
    }
 
    var htmlParticipations = "";
