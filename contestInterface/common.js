@@ -2198,7 +2198,7 @@ window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, 
             $("#errorRegistrationCode1").html("Bienvenue " + data.registrationData.firstName + " " + data.registrationData.lastName);
          }
          $('#mainNav').hide();
-         if(throughPersonalPage && data.allowTeamOfTwo != 1) {
+         if(throughPersonalPage && data.allowTeamsOfTwo != 1) {
             validateLoginForm();
          }
       } else {
