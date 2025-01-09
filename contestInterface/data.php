@@ -669,12 +669,22 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "",
    $stmt->execute(array("contestID" => $row->contestID));
    $childrenContests = array();
    $hadChildrenContests = false;
+   $defaultChildrenContests = [];
+   $defaultContestCategoryIdx = null;
    while ($rowChild = $stmt->fetchObject()) {
       $hadChildrenContests = true;
       $discardCategory = false;
       if ($isOfficialContest) {
-         foreach ($allCategories as $category) {
+         foreach ($allCategories as $idx => $category) {
             if ($rowChild->categoryColor == $category) {
+               // Determine the default contest category and corresponding contests for selection later if the category is not defined
+               // This will work for contests without categories because there will be no default contest category
+               if($defaultContestCategoryIdx === null || $defaultContestCategoryIdx > $idx) {
+                  $defaultContestCategoryIdx = $idx;
+               }
+               if($idx == $defaultContestCategoryIdx) {
+                  $defaultChildrenContests[] = $rowChild;
+               }
                break;
             }
             if ($registrationData->qualifiedCategory == $category) { // the contest's category is higher than the user's qualified category
@@ -701,6 +711,10 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "",
          $childrenContests[] = $rowChild;
       }
    };
+   if($hadChildrenContests && $registrationData->qualifiedCategory === "" && count($defaultChildrenContests) > 0) {
+      // Category is not defined and we have a default category (and children contests), select those
+      $childrenContests = $defaultChildrenContests;
+   }
    $allContestsDone = ((count($childrenContests) == 0) && $hadChildrenContests);
 
    addBackendHint("ClientIP.checkPassword:pass");
