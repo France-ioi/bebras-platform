@@ -344,7 +344,7 @@ $viewsModels = array(
          "showable" => array("joins" => array("contest"), "condition" => "`[PREFIX]contest`.`showResults` = 1", "ignoreValue" => true),
          "schoolID" => array("joins" => array("full_groups"), "condition" => "`full_groups`.`schoolID` = :[PREFIX_FIELD]schoolID"),
          "groupID" => array("joins" => array("team"), "condition" => "(`team`.`groupID` = :[PREFIX_FIELD]groupID)"),
-         "userID" => array("joins" => array("full_groups"), "condition" => "(`full_groups`.`userID` = :[PREFIX_FIELD]userID OR `full_groups`.`targetUserID` = :[PREFIX_FIELD]userID)"),
+         "userID" => array("joins" => array("full_groups"), "condition" => "(`full_groups`.`userID` IN (SELECT DISTINCT `userID` FROM `user_user` AS `user_user_condition` WHERE `user_user_condition`.`userID` = :[PREFIX_FIELD]userID OR `user_user_condition`.`targetUserID` = :[PREFIX_FIELD]userID))"),
          "ownerUserID" => array("joins" => array("full_groups"), "condition" => "`full_groups`.`userID` = :[PREFIX_FIELD]ownerUserID"),
          "awarded" => array("joins" => array("group", 'team', 'award_threshold'), "ignoreValue" => true, "condition" => "(`[PREFIX]team`.`participationType` = 'Official' and `[PREFIX]contestant`.`rank` is not null and `[PREFIX]award_threshold`.`minScore` <= [PREFIX]team.score)")
       ),
@@ -423,7 +423,7 @@ $viewsModels = array(
          "groupID" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`groupID` = :groupID"),
          "relatedGroupID" => array("joins" => array("full_groups", "team"), "condition" => "(`[PREFIX]team`.`groupID` = :relatedGroupID OR `full_groups`.`parentGroupID` = :relatedGroupID)"),
          "schoolID" => array("joins" => array("full_groups"), "condition" => "`full_groups`.`schoolID` = :schoolID"),
-         "userID" => array("joins" => array("full_groups"), "condition" => "(`full_groups`.`userID` = :userID OR `full_groups`.`targetUserID` = :userID)"),
+         "userID" => array("joins" => array("full_groups"), "condition" => "(`full_groups`.`userID` IN (SELECT DISTINCT `userID` FROM `user_user` AS `user_user_condition` WHERE `user_user_condition`.`userID` = :[PREFIX_FIELD]userID OR `user_user_condition`.`targetUserID` = :[PREFIX_FIELD]userID))"),
          "ownerUserID" => array("joins" => array("full_groups"), "condition" => "`full_groups`.`userID` = :[PREFIX_FIELD]ownerUserID"),
          "awarded" => array("joins" => array("team", "algorea_registration"), "ignoreValue" => true, "condition" => "(`[PREFIX]team`.`participationType` = 'Official' and `[PREFIX]algorea_registration`.`code` is not null)"),
          "printable" => array("joins" => array("contest"), "condition" => "EXISTS (SELECT 1 FROM `[PREFIX]contest` AS `related_contest` WHERE `related_contest`.`printCodes` = 1 AND (`related_contest`.`ID` = `[PREFIX]contest`.`ID` OR `related_contest`.`ID` = `[PREFIX]contest`.`parentContestID`))", "ignoreValue" => true)
@@ -473,7 +473,7 @@ $viewsModels = array(
          "full_groupsField" => $fieldGroupFilter,
          "score" => array("joins" => array("team"), "condition" => "`[PREFIX]team`.`score` = :score"),
          "schoolID" => array("joins" => array("full_groups"), "condition" => "`[PREFIX]group`.`schoolID` = :schoolID"),
-         "userID" => array("joins" => array("full_groups"), "condition" => "(`full_groups`.`userID` = :userID OR `full_groups`.`targetUserID` = :userID)"),
+         "userID" => array("joins" => array("full_groups"), "condition" => "(`full_groups`.`userID` IN (SELECT DISTINCT `userID` FROM `user_user` AS `user_user_condition` WHERE `user_user_condition`.`userID` = :[PREFIX_FIELD]userID OR `user_user_condition`.`targetUserID` = :[PREFIX_FIELD]userID))"),
          "ownerUserID" => array("joins" => array("full_groups"), "condition" => "`full_groups`.`userID` = :[PREFIX_FIELD]ownerUserID"),
       ),
    ),
