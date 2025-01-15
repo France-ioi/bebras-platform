@@ -54,7 +54,12 @@ function handleRecoverLine($data, $insert = false) {
       $type = 'qrcode';
       $pwd = substr($data, 0, $sc);
       $data = substr($data, $sc + 1);
-      $stmt = $db->prepare("SELECT * FROM team WHERE password = :password");
+      $stmt = $db->prepare("
+         SELECT team.*, `group`.name, `group`.isGenerated, contest.name AS contestName, contest.parentContestID, parentcontest.name AS parentContestName FROM team
+         JOIN `group` ON team.groupID = `group`.ID
+         JOIN contest ON team.contestID = contest.ID
+         LEFT JOIN contest AS parentcontest ON contest.parentContestID = parentcontest.ID
+         WHERE team.password = :password");
       $stmt->execute(['password' => $pwd]);
       $team = $stmt->fetch(PDO::FETCH_OBJ);
       if(!$team->ID) {
@@ -75,7 +80,7 @@ function handleRecoverLine($data, $insert = false) {
       $score = $dataElements[1];
 
       if($score != $team->score) {
-         $html .= "<p><b>Warning : the score in this QR code doesn't match the saved team score.</b> Please check below.</p>";
+         $html .= "<p style='color: red;'><b>Warning : the score in this QR code doesn't match the saved team score.</b> Please check below.</p>";
       } else {
          $html .= "<p>This information has already been stored in the database.</p>";
       }
@@ -92,6 +97,11 @@ function handleRecoverLine($data, $insert = false) {
       $html .= "<p>Data in the database :</p>";
       $html .= "<table>";
       $html .= "<tr><td>Team ID</td><td>" . $team->ID . "</td></tr>";
+      $html .= "<tr><td>Group ID (name)</td><td>" . ($team->isGenerated ? "[auto-generated group] " : "") . $team->groupID . " (" . $team->groupName . ")</td></tr>";
+      $html .= "<tr><td>Contest ID (name)</td><td>" . $team->contestID . " (" . $team->contestName . ")</td></tr>";
+      if($team->parentContestName) {
+         $html .= "<tr><td>Parent contest ID (name)</td><td>" . $team->parentContestID . " (" . $team->parentContestName . ")</td></tr>";
+      }
       $html .= "<tr><td>Create time</td><td>" . $team->createTime . "</td></tr>";
       $html .= "<tr><td>Start time</td><td>" . $team->startTime . "</td></tr>";
       $html .= "<tr><td>End time</td><td>" . $team->endTime . "</td></tr>";
