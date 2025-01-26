@@ -251,5 +251,12 @@
     "personal_page_rank": "Rank",
     "personal_page_schoolRank": "School<br/>rank",
     "personal_page_access": "Access",
-    "personal_page_open": "Open"
+    "personal_page_open": "Open",
+    "error_code_password_missing": "Group code or recovery password missing",
+    "error_group_already_recovered": "The operation is only possible once per group.",
+    "error_code_missing": "Code missing",
+    "error_old_interface": "You are using an old version of the interface, please refresh the page. If this does not solve the problem, try clearing your cache.",
+    "error_code_invalid_characters": "Invalid characters in the password",
+    "error_invalid_group": "Invalid group",
+    "error_invalid_team_group": "Invalid team for this group"
 }

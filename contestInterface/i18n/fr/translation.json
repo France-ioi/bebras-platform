@@ -255,5 +255,12 @@
     "personal_page_rank": "Classement",
     "personal_page_schoolRank": "Classement<br/>établissement",
     "personal_page_access": "Accès",
-    "personal_page_open": "Ouvrir"
+    "personal_page_open": "Ouvrir",
+    "error_code_password_missing": "Code de groupe ou mot de passe de récupération manquant",
+    "error_group_already_recovered": "L'opération n'est possible qu'une fois par groupe.",
+    "error_code_missing": "Code manquant",
+    "error_old_interface": "Vous utilisez une ancienne version de l'interface, veuillez rafraîchir la page. Si cela ne règle pas le problème, essayez de vider votre cache.",
+    "error_code_invalid_characters": "Caractères invalides dans le mot de passe",
+    "error_invalid_group": "Groupe invalide",
+    "error_invalid_team_group": "Équipe invalide pour ce groupe"
 }

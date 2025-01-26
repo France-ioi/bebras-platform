@@ -240,13 +240,13 @@ function reloginTeam($db, $password, $teamID, $isCheck=false) {
    $stmt->execute(array($_SESSION["groupID"]));
    $row = $stmt->fetchObject();
    if (!$row) {
-      exitWithJsonFailure("Groupe invalide");
+      exitWithJsonFailure('error_invalid_group');
    }
    if ($row->password !== $password) {
-      exitWithJsonFailure("Mot de passe invalide");
+      exitWithJsonFailure('invalid_code');
    }
    if ($row->status == "Closed" || $row->status == "PreRanking") {
-      exitWithJsonFailure("Concours fermé");
+      exitWithJsonFailure('error_contest_closed');
    }
    $stmt = $db->prepare("SELECT `password`, `nbMinutes` FROM `team` WHERE `ID` = :teamID AND `groupID` = :groupID");
    $stmt->execute(['teamID' => $teamID, 'groupID' => $_SESSION["groupID"]]);
@@ -257,7 +257,7 @@ function reloginTeam($db, $password, $teamID, $isCheck=false) {
       $stmt->execute(['teamID' => $teamID, 'groupID' => $_SESSION["groupID"]]);
       $row = $stmt->fetchObject();
       if (!$row) {
-         exitWithJsonFailure("Équipe invalide pour ce groupe");
+         exitWithJsonFailure('error_invalid_team_group');
       }
       // We have to do a re-re-login as the groupID is different
       if($isCheck) {

@@ -400,21 +400,17 @@ function handleCheckPassword($db) {
       unset($stmt);
 
       // Send back error message to user
-      $userMsg = "Vous utilisez une ancienne version de l'interface, veuillez rafraîchir la page. Si cela ne règle pas le problème, essayez de vider votre cache.";
-      if(isset($config->contestBackupURL)) {
-         $userMsg .= " Vous pouvez aussi essayer le domaine alternatif du concours http://" . $config->contestBackupURL . ".";
-      }
-      exitWithJsonFailure($userMsg);
+      exitWithJsonFailure('error_old_interface');
    }
 
    if (!isset($_POST["password"])) {
-      exitWithJsonFailure("Mot de passe manquant");
+      exitWithJsonFailure('error_code_missing');
    }
    $getTeams = array_key_exists('getTeams', $_POST) ? $_POST["getTeams"] : False;
    $password = strtolower(trim($_POST["password"]));
    $filteredPassword = preg_replace('/[^A-Za-z0-9]/', '', $password);
    if($filteredPassword != $password) {
-      exitWithJsonFailure("Caractères invalides dans le mot de passe");
+      exitWithJsonFailure('error_code_invalid_characters');
    }
    // Search for a group matching the entered password, and if found create
    // a team in that group (and end the request).
@@ -804,24 +800,11 @@ function getRemainingSeconds($db, $teamID, $restartIfEnded = false) {
       return 0;
    }
    $remainingSeconds = $row->remainingSeconds;
-   $pausesAdded = 0;
-   $update = false;
-   if ($row->endTime != null) {
-      if (!$restartIfEnded) {
-         return 0;
-      }
-      if ($_SESSION["contestShowSolutions"]) {
-         return 0;
-      }
-      if ($remainingSeconds < 0) {
-         if (!$_SESSION["allowPauses"]) {
-            return 0;
-         }
-      }
-      $pausesAdded = 1;
-      $remainingSeconds = $row->remainingSecondsBeforePause;
-      $update = true;
-   }
+   $query = "UPDATE `team` SET
+      `endTime` = NULL,
+      `nbMinutes` = `nbMinutes` + IFNULL(`extraMinutes`, 0),
+      `extraMinutes` = NULL";
+   $queryParams = ['teamID' => $teamID];
    if ($remainingSeconds < 0) {
       $remainingSeconds = 0;
    }
@@ -829,15 +812,27 @@ function getRemainingSeconds($db, $teamID, $restartIfEnded = false) {
       $remainingSeconds += $row->extraMinutes * 60;
       $update = true;
    }
+   if ($row->endTime != null) {
+      if (!$restartIfEnded || $_SESSION["contestShowSolutions"]) {
+         return 0;
+      }
+      if ($_SESSION["allowPauses"]) {
+         // Allow a pause, update startTime to keep the remaining time before the pause
+         $remainingSeconds = $row->remainingSecondsBeforePause;
+         $query .= ", `startTime` = DATE_SUB(UTC_TIMESTAMP(), INTERVAL ((`nbMinutes` * 60) - :remainingSeconds) SECOND)";
+         $query .= ", `nbPauses` = `nbPauses` + 1";
+         $queryParams['remainingSeconds'] = $remainingSeconds;
+      } elseif ($remainingSeconds <= 0) {
+         return 0;
+      } else {
+         // If we don't allow pauses but there is still time left on the contest, just allow continuing
+      }
+      $update = true;
+   }
    if ($update) {
-      $stmt2 = $db->prepare("UPDATE `team` SET ".
-         "`endTime` = NULL, ".
-         "`nbMinutes` = `nbMinutes` + IFNULL(`extraMinutes`,0), ".
-         "`startTime` = DATE_SUB(UTC_TIMESTAMP(), INTERVAL ((`nbMinutes` * 60) - :remainingSeconds) SECOND), ".
-         "`extraMinutes` = NULL, ".
-         "`nbPauses` = `nbPauses` + :pausesAdded ".
-         "WHERE `ID` = :teamID");
-      $stmt2->execute(array("teamID" => $teamID, "remainingSeconds" => $remainingSeconds, "pausesAdded" => $pausesAdded));
+      $query .= " WHERE `ID` = :teamID";
+      $stmt2 = $db->prepare($query);
+      $stmt2->execute($queryParams);
       updateDynamoDBStartTime($db, $teamID);
    }
    return $remainingSeconds;
@@ -859,16 +854,16 @@ function handleGetRemainingSeconds($db) {
 function handleRecoverGroup($db) {
    addBackendHint("ClientIP.loadOther:data");
    if (!isset($_POST['groupCode']) || !isset($_POST['groupPass'])) {
-      exitWithJson((object)array("success" => false, "message" => 'Code ou mot de passe manquant'));
+      exitWithJsonFailure('error_code_password_missing');
    }
    $stmt = $db->prepare("SELECT `ID`, `bRecovered`, `contestID`, `expectedStartTime`, `name`, `userID`, `gradeDetail`, `grade`, `schoolID`, `nbStudents`, `nbTeamsEffective`, `nbStudentsEffective`, `noticePrinted`, `isPublic`, `participationType`, `password`, `language`, `minCategory`, `maxCategory` FROM `group` WHERE `code` = ?");
    $stmt->execute(array($_POST['groupCode']));
    $row = $stmt->fetchObject();
    if (!$row || $row->password != $_POST['groupPass']) {
-      exitWithJson((object)array("success" => false, "message" => 'invalid_password'));
+      exitWithJsonFailure('invalid_password');
    }
    if ($row->bRecovered == 1) {
-      exitWithJson((object)array("success" => false, "message" => 'L\'opération n\'est possible qu\'une fois par groupe.'));
+      exitWithJsonFailure('error_group_already_recovered');
    }
    $stmtUpdate = $db->prepare("UPDATE `group` SET `code` = ?, `password` = ?, `bRecovered`=1 WHERE `ID` = ?;");
    $stmtUpdate->execute(array('#'.$_POST['groupCode'], '#'.$row->password, $row->ID));
