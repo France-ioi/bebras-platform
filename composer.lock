@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/France-ioi/pem-task-compiler.git",
-                "reference": "7c1292ac4d0e523f823c104edcd4a3e76f782e0d"
+                "reference": "652c71751a2167491ef701cbddcfd39dee78ebf4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/France-ioi/pem-task-compiler/zipball/7c1292ac4d0e523f823c104edcd4a3e76f782e0d",
-                "reference": "7c1292ac4d0e523f823c104edcd4a3e76f782e0d",
+                "url": "https://api.github.com/repos/France-ioi/pem-task-compiler/zipball/652c71751a2167491ef701cbddcfd39dee78ebf4",
+                "reference": "652c71751a2167491ef701cbddcfd39dee78ebf4",
                 "shasum": ""
             },
             "type": "library",
