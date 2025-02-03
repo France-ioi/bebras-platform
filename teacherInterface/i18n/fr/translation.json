@@ -641,7 +641,7 @@
     "manual_codes_added": "groupes ajoutés",
     "manual_codes_existing": "groupes déjà existants",
     "manual_participants_title": "Importer des participants",
-    "manual_participants_instructions": "Cette page vous permet d'importer un fichier CSV de participants. Le fichier doit contenir trois colonnes, dans cet ordre : code du participant, nom et classe. Si une ligne ne contient que le code de participant, alors ce code sera supprimé.",
+    "manual_participants_instructions": "<p>Cette page vous permet d'importer un fichier CSV de participants.</p><p>La première ligne doit contenir les noms des colonnes utilisées. Les colonnes possibles sont : code, grade, name, firstname, lastname, category.</p><p>Pour chaque participant, le code et le grade sont obligatoires ; de plus, soit le name, soit le firstname et le lastname doivent être fournis.</p><p>Si une ligne ne contient que le code du participant mais aucune autre donnée (requise), alors le code sera supprimé.</p>",
     "manual_participants_file": "Fichier CSV à importer :",
     "manual_participants_added": "participants ajoutés",
     "manual_participants_existing": "participants existants",

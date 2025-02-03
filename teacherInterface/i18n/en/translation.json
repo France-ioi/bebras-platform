@@ -602,7 +602,7 @@
     "manual_codes_added": "groups added",
     "manual_codes_existing": "existing groups",
     "manual_participants_title": "Import participants",
-    "manual_participants_instructions": "This page allows you to import a CSV file of participants. The file must contain three columns, in this order: participant code, name, and grade. If a row only contains a participant code but no name or grade, then the code will be deleted.",
+    "manual_participants_instructions": "<p>This page allows you to import a CSV file of participants.</p><p>The first line should contain the names of the columns used. Possible columns are : code, grade, name, firstname, lastname, category.</p><p>For each participant, teh code and grade are mandatory ; moreover either the name, or the firstname and lastname must be provided.</p><p>If a row only contains a participant code but no other (required) data, then the code will be deleted.</p>",
     "manual_participants_file": "CSV file to import:",
     "manual_participants_added": "participants added",
     "manual_participants_existing": "existing participants",
