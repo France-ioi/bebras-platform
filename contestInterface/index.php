@@ -142,7 +142,11 @@ if(!$browserVerified) {
     echo '<div id="browserAlert" data-i18n="[html]browser_support_' . $config->contestInterface->browserCheck . '"></div>';
 }
 
-$browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
+try {
+  $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
+} catch(Exception $e) {
+  $browserIsMobile = false;
+}
 ?>
 
 
