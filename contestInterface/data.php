@@ -800,6 +800,7 @@ function getRemainingSeconds($db, $teamID, $restartIfEnded = false) {
       return 0;
    }
    $remainingSeconds = $row->remainingSeconds;
+   $update = false;
    $query = "UPDATE `team` SET
       `endTime` = NULL,
       `nbMinutes` = `nbMinutes` + IFNULL(`extraMinutes`, 0),
