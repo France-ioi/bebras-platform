@@ -662,7 +662,7 @@ try {
          <td data-i18n="personal_page_team"></td>
          <td data-i18n="personal_page_status"></td>
          <td data-i18n="personal_page_score"></td>
-         <td data-i18n="personal_page_rank" class="personalPageRank">></td>
+         <td data-i18n="personal_page_rank" class="personalPageRank"></td>
          <td data-i18n="[html]personal_page_schoolRank" class="personalPageRank">></td>
          <td data-i18n="[html]personal_page_access"></td>
       </tr>

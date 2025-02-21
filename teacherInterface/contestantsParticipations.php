@@ -121,6 +121,7 @@ $query = "
       contestant.lastName,
       contestant.grade,
       team.score,
+      team.tmpScore,
       team.nbContestants,
       contestant.rank,
       contestant.schoolRank,
@@ -170,6 +171,7 @@ $query = "
       contestant.lastName,
       contestant.grade,
       team.score,
+      team.tmpScore,
       team.nbContestants,
       contestant.rank,
       contestant.schoolRank,
@@ -298,6 +300,7 @@ while ($row = $stmt->fetchObject()) {
    if (!isset($contestants[$row->ID]["results"][$contestKey])) {
       $contestants[$row->ID]["results"][$contestKey] = array(
          "score" => $row->score,
+         "tmpScore" => $row->tmpScore,
          "rank" => $row->rank,
          "schoolRank" => $row->schoolRank,
          "nbContestants" => $row->nbContestants,
@@ -489,8 +492,13 @@ function showContestantResult($contestant, $contestKey, $category) {
       } else if ($result["participationType"] == "Unofficial") {
          $rankInfos = translate("results_unofficial");
       }
-      echo "<td class='".$category."'>".
-         $result["score"]."<br/>".
+      echo "<td class='".$category."'>";
+      if($result["score"] != "") {
+         echo $result["score"];
+      } elseif($result["tmpScore"] != "") {
+         echo "<i>".$result["tmpScore"]." (non vérifié)</i>";
+      }
+      echo "<br/>".
          "<span class='rank'>".$rankInfos."</span>".
          "</td>";
    } else {
