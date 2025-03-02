@@ -473,7 +473,7 @@ function handleGroupFromRegistrationCode($db, $code) {
    addBackendHint(sprintf("Group(%s):checkPassword", escapeHttpValue($registrationData->ID))); // TODO : check hint
 
    $trainingContestID = "485926402649945250"; // hard-coded training contest
-   $officialContestID = "174405033703499788"; // hard-coded real contest
+   $officialContestID = "174405033703499789"; // hard-coded real contest
    if (isset($config->trainingContestID)) {
       $trainingContestID = $config->trainingContestID;
    }
