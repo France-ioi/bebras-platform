@@ -30,7 +30,7 @@ if (isset($_REQUEST["contestID"]) && $_REQUEST['contestID']) {
          echo json_encode((object)array("status" => 'error', "message" => translate("session_expired")));
          exit;
       } else {
-         $query = "SELECT `group`.`ID`, `contest`.`ID` as `contestID`, `contest`.`folder`, `contest`.`showSolutions` FROM `group` JOIN `contest` on `group`.`contestID` = `contest`.`ID` LEFT JOIN `user_user` on `group`.`userID` = `user_user`.`userID` WHERE `group`.`ID` = ? and ((`user_user`.`accessType` = 'write' AND `user_user`.`targetUserID` = ?) OR (`group`.`userID` = ?))";
+         $query = "SELECT `group`.`ID`, `group`.`participationType`, `contest`.`ID` as `contestID`, `contest`.`folder`, `contest`.`showSolutions` FROM `group` JOIN `contest` on `group`.`contestID` = `contest`.`ID` LEFT JOIN `user_user` on `group`.`userID` = `user_user`.`userID` WHERE `group`.`ID` = ? and ((`user_user`.`accessType` = 'write' AND `user_user`.`targetUserID` = ?) OR (`group`.`userID` = ?))";
          $args = array($groupID, $_SESSION['userID'], $_SESSION['userID']);
       }
    }
@@ -39,6 +39,10 @@ if (isset($_REQUEST["contestID"]) && $_REQUEST['contestID']) {
    $row = $stmt->fetchObject();
    if (!$row) {
       echo json_encode((object)array("status" => 'error', "message" => translate("grader_inexistent_group")."(questions.php)"));
+      exit;
+   }
+   if($row->participationType == 'Official' && (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"])) {
+      echo json_encode((object)array("status" => 'error', "message" => translate("cannot_grade_official_group")."(questions.php)"));
       exit;
    }
    if (!intval($row->showSolutions) && (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"])) {

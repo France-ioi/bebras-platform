@@ -1124,7 +1124,7 @@ function loadListQuestions() {
             $("#preview_question").attr("src", '');
             return;
          }
-         var url = "bebras-tasks/" + path;
+         var url = config.tasksPathInterface + path;
          $("#preview_question").attr("src", url);
       }
 
@@ -1859,6 +1859,10 @@ function gradeGroup() {
       jqAlert(t("cannot_grade_closed_contest"));
       return;
    }
+   if (group.participationType == 'Official') {
+      jqAlert(t("cannot_grade_official_group"));
+      return;
+   }
    $("#buttonGradeSelected_group").attr("disabled", true);
    loopGradeContest(undefined, selectedGroupID);
 }
@@ -1965,7 +1969,7 @@ Generator.prototype.doTask = function () {
    var taskKey = self.questionsKey[currentTaskIndex];
    generating = true;
    checkTaskPath(taskUrl, true);
-   $('#preview_question').attr("src", "bebras-tasks/" + taskUrl);
+   $('#preview_question').attr("src", config.tasksPathInterface + taskUrl);
    $('#preview_question').on('load', onQuestionLoaded);
    function onQuestionLoaded () {
       $('#preview_question').off('load', onQuestionLoaded);
@@ -2038,7 +2042,7 @@ function genQuestion() {
    var button = $("#generateQuestion");
    button.attr("disabled", true);
    tasks = []; // Reinit
-   var url = "bebras-tasks/" + questions[questionID].path;
+   var url = config.tasksPathInterface + questions[questionID].path;
    $("#preview_question").attr("src", url);
    // Retrieve bebras
    generating = true;
