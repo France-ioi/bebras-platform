@@ -799,25 +799,33 @@ function getRemainingSeconds($db, $teamID, $restartIfEnded = false) {
    if (!$row) {
       return 0;
    }
+
    $remainingSeconds = $row->remainingSeconds;
+   
    $update = false;
    $query = "UPDATE `team` SET
       `endTime` = NULL,
       `nbMinutes` = `nbMinutes` + IFNULL(`extraMinutes`, 0),
       `extraMinutes` = NULL";
    $queryParams = ['teamID' => $teamID];
+
+   // If we were given extra minutes, we can resume the contest as if we took a pause
+   $pauseAllowed = $_SESSION["allowPauses"] || $row->extraMinutes !== null;
+
    if ($remainingSeconds < 0) {
       $remainingSeconds = 0;
    }
-   if ($row->extraMinutes != null) {
+   if ($row->extraMinutes !== null) {
       $remainingSeconds += $row->extraMinutes * 60;
       $update = true;
    }
-   if ($row->endTime != null) {
+
+   if ($row->endTime !== null) {
+      // Participation has ended
       if (!$restartIfEnded || $_SESSION["contestShowSolutions"]) {
          return 0;
       }
-      if ($_SESSION["allowPauses"]) {
+      if ($pauseAllowed) {
          // Allow a pause, update startTime to keep the remaining time before the pause
          $remainingSeconds = $row->remainingSecondsBeforePause;
          $query .= ", `startTime` = DATE_SUB(UTC_TIMESTAMP(), INTERVAL ((`nbMinutes` * 60) - :remainingSeconds) SECOND)";
@@ -826,7 +834,8 @@ function getRemainingSeconds($db, $teamID, $restartIfEnded = false) {
       } elseif ($remainingSeconds <= 0) {
          return 0;
       } else {
-         // If we don't allow pauses but there is still time left on the contest, just allow continuing
+         // If we don't allow pauses but there is still time left on the participation, just allow continuing with whichever time is remaining
+         // It will remove the endTime
       }
       $update = true;
    }
