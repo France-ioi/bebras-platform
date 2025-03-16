@@ -3235,6 +3235,8 @@ function displayClosedInfo(message) {
    if(fullFeedback) {
       $("#remindScore").html(ffTeamScore);
       $("#scoreReminder").show();
+   } else {
+      $("#scoreReminder").hide();
    }
 }
 
