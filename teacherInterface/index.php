@@ -311,7 +311,8 @@
       'noGender' => (isset($config->teacherInterface->noGender) && $config->teacherInterface->noGender),
       'readOnly' => $config->readOnly,
       'displayDuration' => $config->teacherInterface->displayDuration,
-      'removeLastColumns' => $config->teacherInterface->removeLastColumns
+      'removeLastColumns' => $config->teacherInterface->removeLastColumns,
+      'tasksPathInterface' => $config->teacherInterface->tasksPathInterface,
    ]) ?>;
    init();
 </script>

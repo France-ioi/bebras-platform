@@ -289,7 +289,7 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
       $cssModules = array();
 
       $curKey = $curTask['key'];
-      $task = new PEMTaskCompiler($curTask['bebras'], $curTask['key'], __DIR__.'/bebras-tasks/'.$curTask['url'], true);
+      $task = new PEMTaskCompiler($curTask['bebras'], $curTask['key'], $config->teacherInterface->tasksPathLocal.$curTask['url'], true);
 
       // Create the task directory.
       contestMkdir($curKey);
@@ -366,11 +366,11 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
       $strQuestions.= $strQuestion;
       contestAddContent($strQuestion, $nameParts, $buffer, $numPart, false);
    }
-   contestCopyFile(__DIR__.'/bebras-tasks/_common/modules/img/castor.png', 'castor.png');
-   contestCopyFile(__DIR__.'/bebras-tasks/_common/modules/img/laptop_success.png', 'laptop_success.png');
-   contestCopyFile(__DIR__.'/bebras-tasks/_common/modules/img/laptop_warning.png', 'laptop_warning.png');
-   contestCopyFile(__DIR__.'/bebras-tasks/_common/modules/img/laptop_error.png', 'laptop_error.png');
-   contestCopyFile(__DIR__.'/bebras-tasks/_common/modules/img/fleche-bulle.png', 'fleche-bulle.png');
+   contestCopyFile($config->teacherInterface->tasksPathLocal.'_common/modules/img/castor.png', 'castor.png');
+   contestCopyFile($config->teacherInterface->tasksPathLocal.'_common/modules/img/laptop_success.png', 'laptop_success.png');
+   contestCopyFile($config->teacherInterface->tasksPathLocal.'_common/modules/img/laptop_warning.png', 'laptop_warning.png');
+   contestCopyFile($config->teacherInterface->tasksPathLocal.'_common/modules/img/laptop_error.png', 'laptop_error.png');
+   contestCopyFile($config->teacherInterface->tasksPathLocal.'_common/modules/img/fleche-bulle.png', 'fleche-bulle.png');
    $images[] = joinPaths($config->teacherInterface->sAbsoluteStaticPath, 'contests/'.$contestFolder.'/castor.png');
    $images[] = joinPaths($config->teacherInterface->sAbsoluteStaticPath, 'contests/'.$contestFolder.'/fleche-bulle.png');
 

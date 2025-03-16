@@ -119,6 +119,9 @@ $config->teacherInterface->removeLastColumns = [];
 $config->teacherInterface->manualCodesReferenceGroup = null;
 // Passwords to access the stats page for a specific contest (password => contestID)
 $config->teacherInterface->statsPasswords = [];
+// Paths to access the tasks locally (for generation) and from the interface
+$config->teacherInterface->tasksPathLocal = __DIR__.'/teacherInterface/bebras-tasks/';
+$config->teacherInterface->tasksPathInterface = 'bebras-tasks/';
 
 $config->certificates = (object) array();
 $config->certificates->webServiceUrl = 'http://castor-informatique.fr.localhost/certificates/';
