@@ -564,10 +564,10 @@ if ($action == "markAboveMinScore") {
 
 
 echo "<h3><a href='".$startUrl."&action=gradeContest'>Recompute scores</a></h3>";
-echo "<p>Add &db=db_name to the URL to use another database</p>";
+echo "<p>Add &table=table_name to the URL to use another table</p>";
 if ($action == "gradeContest") {
-   if (isset($_GET["db"])) {
-      $database = json_encode($_GET["db"]);
+   if (isset($_GET["table"])) {
+      $database = json_encode($_GET["table"]);
    } else {
       $database = 'null';
    }
@@ -669,13 +669,13 @@ if ($action == "showScoreAnomalies") {
    //   GROUP BY team.ID, team_question.questionID
    //   ORDER BY team.ID",
    //    OR team_question.checkStatus = 'error')
-   execSelectAndShowResults("List official team_question with checkStatus = difference of error)", "
+   execSelectAndShowResults("List official team_question with checkStatus = difference or error", "
       SELECT team_question.teamID, team_question.questionID, question.name, team_question.score, team_question.ffScore, team.password, team.tmpScore, team.startTime, team.participationType
       FROM team_question
       JOIN team ON team_question.teamID = team.ID
       JOIN `question` ON team_question.questionID = question.ID
       JOIN contest ON team.contestID = contest.ID
-      WHERE team_question.checkStatus = 'difference'
+      WHERE team_question.checkStatus IN ('difference', 'error')
       AND team.participationType = 'Official'
       AND (contest.ID = :contestID OR contest.parentContestID = :contestID)
       ",
@@ -1147,7 +1147,7 @@ if ($action == "cleanRanksUnofficial") {
       JOIN team ON contestant.teamID = team.ID
       JOIN `group` ON team.groupID = `group`.ID
       JOIN `contest` ON `group`.contestID = contest.ID
-      SET rank = NULL, schoolRank = NULL
+      SET `rank` = NULL, `schoolRank` = NULL
       WHERE team.participationType = 'Unofficial'
       AND (contest.ID = :contestID OR contest.parentContestID = :contestID)",
       array("contestID" => $contestID));
