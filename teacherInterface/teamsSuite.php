@@ -388,10 +388,9 @@ foreach($teams as $groupId => $data) {
         echo ' <input type="submit" value="Ajouter à l\'équipe"></form>';
     }
     echo "</td>";
-    if($data['participating']) {
-       $teamScores = isset($scores[$groupId]) ? $scores[$groupId] : array_fill(0, count($idItems), null);
+    if(isset($scores[$groupId])) {
        for($i = 0; $i < count($idItems); $i++) {
-          echo "<td>" . formatScore($teamScores[$i]) . "</td>";
+          echo "<td>" . formatScore($scores[$groupId][$i]) . "</td>";
        }
        echo "<td><b>" . (isset($scoreTotals[$groupId]) ? $scoreTotals[$groupId] : '-') . "</b> / 400</td>";
        if($phase > 0 && $data['password']) {
