@@ -5,9 +5,12 @@ require_once("commonAdmin.php");
 
 // Phase of the contest
 // 0 : qualification, time-limited contest not open
-// 1 : time-limited contest open
+// 1 : qualifying is possible, display passwords
 // 2 : display rankings from time-limited contest
-$phase = 0;
+$phase = 1;
+
+// Text telling when the time-limited contest opens
+$timeLimitedStart = "à partir du lundi 24 mars 2025";
 
 // Qualification chapter ID (the one with the team)
 $idTeamItem = "139860767650179314";
@@ -15,16 +18,21 @@ $idTeamItem = "139860767650179314";
 $idItems = [
 "540235374245795712",
 "737597811560821225",
-"1697640084875933009"
+"1697640084875933009",
+"576733918320192006"
 ];
 // Names of the tasks (qualification)
 $itemNames = [
 "Image mélangée 1",
 "Image mélangée 2",
-"Substitutions par colonnes"
+"Substitutions par colonnes",
+"Réaction chimique"
 ];
 // Score required to qualify 
-$reqScore = 150;
+$reqScores = [
+   'fr' => 150,
+   'ch' => 100
+];
 
 // Names of the tasks (time-limited contest)
 $contestNames = $itemNames; // same as qualification
@@ -388,21 +396,31 @@ foreach($teams as $groupId => $data) {
         echo ' <input type="submit" value="Ajouter à l\'équipe"></form>';
     }
     echo "</td>";
+
     if(isset($scores[$groupId])) {
+       // Team has participated in the qualification
        for($i = 0; $i < count($idItems); $i++) {
           echo "<td>" . formatScore($scores[$groupId][$i]) . "</td>";
        }
        echo "<td><b>" . (isset($scoreTotals[$groupId]) ? $scoreTotals[$groupId] : '-') . "</b> / 400</td>";
+
        if($phase > 0 && $data['password']) {
+          // Team is qualified
           echo "<td><pre>" . $data['password'] . "</pre></td>";
+
           if($data['idNewGroup']) {
+             // Team has participated in the time-limited contest
              if($data['thirdScore'] !== null) {
+                // Scores have been calculated
                 for($i = 0; $i < count($contestNames); $i++) {
                    echo "<td>" . formatScore($data['scores'][$i]) . "</td>";
                 }
                 echo "<td><b>" . $data['thirdScore'] . "</b> / 400</td>";
+
                 if($phase > 1 && $data['rank'] != 0) {
+                    // Rankings have been calculated
                     if($data['qualifiedFinal'] != '1') {
+                        // Qualified to the final round
                         echo "<td>";
                         if($data['qualifiedFinalMaybe'] != '1') {
                            echo "<i>Équipe non qualifiée pour la finale</i><br>";
@@ -413,23 +431,33 @@ foreach($teams as $groupId => $data) {
                         echo "Rang académie : " . $data['rankRegion'];
                         echo "</td>";
                     } else {
+                        // Not qualified to the final round
                         echo "<td><i>Résultat en attente de validation, coordinateur contacté.</i></td>";
                     }
                 } else {
+                    // Rankings have not been calculated, or are still hidden through $phase
                     echo "<td><i>Classements à venir</i></td>";
                 }
              } else {
-                echo "<td colspan=\"".(count($contestNames) + 1)."\"><i>Scores à venir</i></td>";
+                // Scores have not been calculated
+                echo "<td colspan=\"".(count($contestNames) + 2)."\"><i>Scores à venir</i></td>";
              }
+          } elseif($phase <= 1) {
+             echo "<td colspan=\"".(count($contestNames) + 2)."\"><i>La participation à l'épreuve sera possible $timeLimitedStart</i></td>";
           } else {
-             echo "<td colspan=\"".(count($contestNames) + 1)."\"><i>N'a pas encore utilisé le mot de passe pour l'épreuve d'1h30 sous surveillance</i></td>";
+             // Team hasn't done the time-limiteed contest
+             echo "<td colspan=\"".(count($contestNames) + 2)."\"><i>N'a pas encore utilisé le mot de passe pour l'épreuve d'1h30 sous surveillance</i></td>";
           }
-       } elseif($phase > 0 && ($data['country'] == 'fr' || $data['country'] == 'ch')) {
-          echo "<td colspan=\"".(count($contestNames) + 2)."\"><i>N'est pas encore qualifiée pour l'épreuve (n'a pas atteint $reqScore points)</i></td>";
+       } elseif($phase > 0 && isset($reqScores[$data['country']])) {
+          // Team is not qualified yet
+          $reqScore = $reqScores[$data['country']];
+          echo "<td colspan=\"".(count($contestNames) + 3)."\"><i>N'est pas encore qualifiée pour l'épreuve (n'a pas atteint $reqScore points)</i></td>";
        } else {
-          echo "<td colspan=\"".(count($contestNames) + 2)."\"><i>Phase de qualification en cours</i></td>";
+          // Still phase 0
+          echo "<td colspan=\"".(count($contestNames) + 3)."\"><i>Phase de qualification en cours</i></td>";
        }
     } else {
+       // Team does not have any scores yet
        echo "<td colspan=\"".(count($itemNames) + count($contestNames) + 4)."\"><i>N'a pas commencé la phase de qualification</i></td>";
     }
     echo "</tr>";
