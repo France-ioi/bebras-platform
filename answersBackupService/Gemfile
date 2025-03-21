@@ -5,7 +5,7 @@ gem 'modularity', '~> 0.6'
 gem 'oj', '~> 2.0'
 gem 'multi_json', '~> 1.7'
 gem 'erubis', '~> 2.7'
-gem 'sinatra', '~> 1.4', :require => 'sinatra/base'
+gem 'sinatra', '~> 2.2', :require => 'sinatra/base'
 gem 'unicorn', '~> 4.6'
 
 #gem 'activesupport', '>= 4.0'
