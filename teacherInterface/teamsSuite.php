@@ -6,10 +6,11 @@ require_once("commonAdmin.php");
 // Phase of the contest
 // 0 : qualification, time-limited contest not open
 // 1 : qualifying is possible, display passwords
-// 2 : display rankings from time-limited contest
+// 2 : participation in the time-limited contest is possible, display as such
+// 3 : display rankings from time-limited contest
 $phase = 1;
 
-// Text telling when the time-limited contest opens
+// Text telling when the time-limited contest opens (displayed when $phase == 1)
 $timeLimitedStart = "à partir du lundi 24 mars 2025";
 
 // Qualification chapter ID (the one with the team)
@@ -417,7 +418,7 @@ foreach($teams as $groupId => $data) {
                 }
                 echo "<td><b>" . $data['thirdScore'] . "</b> / 400</td>";
 
-                if($phase > 1 && $data['rank'] != 0) {
+                if($phase > 2 && $data['rank'] != 0) {
                     // Rankings have been calculated
                     if($data['qualifiedFinal'] != '1') {
                         // Qualified to the final round
