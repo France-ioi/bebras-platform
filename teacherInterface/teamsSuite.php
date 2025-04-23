@@ -8,7 +8,7 @@ require_once("commonAdmin.php");
 // 1 : qualifying is possible, display passwords
 // 2 : participation in the time-limited contest is possible, display as such
 // 3 : display rankings from time-limited contest
-$phase = 1;
+$phase = 3;
 
 // Text telling when the time-limited contest opens (displayed when $phase == 1)
 $timeLimitedStart = "à partir du lundi 24 mars 2025";
