@@ -90,6 +90,8 @@ var sendLastActivity = false;
 var backupQRCode = null;
 // Whether we used a contestant code and hence don't show the password for this session
 var skippedContestantPassword = false;
+// Whether finalCloseContest has been called
+var closingContest = false;
 
 
 function getParameterByName(name) {
@@ -3143,6 +3145,7 @@ function doCloseContest(message) {
 */
 function finalCloseContest(message) {
    TimeManager.stopNow();
+   closingContest = true;
    $.post("data.php", {SID: SID, action: "closeContest", teamID: teamID, teamPassword: teamPassword, teamScore: ffTeamScore, finalAnswersSent: !hasAnswersToSend()},
       function() {}, "json"
    ).always(function() {
@@ -3760,6 +3763,9 @@ function sendAnswers() {
 
    var endpoint = sendAnswersTryAlternate ? "https://concours4.castor-informatique.fr/answer.php" : "answer.php";
    var params = { SID: SID, "answers": answersToSend, teamID: teamID, teamPassword: teamPassword, sendLastActivity: sendLastActivity, browserID: browserID };
+   if(closingContest) {
+      params.finalAnswersSent = true;
+   }
    var startTime = Date.now();
    function answersError(msg, details) {
       var errorId = Math.floor(Math.random()*1000000000000);
