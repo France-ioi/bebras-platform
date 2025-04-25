@@ -2807,11 +2807,15 @@ function createTeam(contestants) {
       contestFolder = contest.folder;
       customIntro = contest.customIntro;
    }
-   $("#" + curStep + "Result").html('');
+   if(curStep) { $("#" + curStep + "Result").html(''); }
    $.post("data.php", paramsWithPOW(contestID, {SID: SID, action: "createTeam", contestants: contestants, contestID: contestID}),
       function(data) {
          if(!data.success) {
-            $("#" + curStep + "Result").html(data.message);
+            if(curStep) {
+               $("#" + curStep + "Result").html(data.message);
+            } else {
+               alert(data.message);
+            }
             return;
          }
          teamID = data.teamID;
