@@ -2807,8 +2807,13 @@ function createTeam(contestants) {
       contestFolder = contest.folder;
       customIntro = contest.customIntro;
    }
+   $("#" + curStep + "Result").html('');
    $.post("data.php", paramsWithPOW(contestID, {SID: SID, action: "createTeam", contestants: contestants, contestID: contestID}),
       function(data) {
+         if(!data.success) {
+            $("#" + curStep + "Result").html(data.message);
+            return;
+         }
          teamID = data.teamID;
          teamPassword = data.password;
          answerKey = data.answerKey;
