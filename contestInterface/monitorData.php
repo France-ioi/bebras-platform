@@ -14,7 +14,7 @@ $stmt = $db->prepare("
 SELECT
    password, createTime, startTime, endTime, lastAnswerTime, lastPingTime, finalAnswerTime,
    DATE_ADD(startTime, INTERVAL nbMinutes MINUTE) < UTC_TIMESTAMP() AS contestHasEnded, UTC_TIMESTAMP() AS currentTime,
-   contestant.firstName, contestant.lastName, contestant.studentId
+   contestant.firstName, contestant.lastName, contestant.studentId, contestant.zipCode
 FROM team
 JOIN contestant ON contestant.teamID = team.ID
 WHERE groupID = :groupID
