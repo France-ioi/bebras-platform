@@ -2171,7 +2171,7 @@ window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, 
       if ((curStep === "CheckGroup") || (curStep === "StartContest")) {
          if (isPublic) {
             window.setNbContestants(1);
-            createTeam([{ lastName: "Anonymous", firstName: "Anonymous", genre: 2, email: null, zipCode: null}]);
+            createTeam(curStep, [{ lastName: "Anonymous", firstName: "Anonymous", genre: 2, email: null, zipCode: null}]);
          } else {
             setContestBreadcrumb();
             $("#divDescribeTeam").show();
@@ -2793,13 +2793,13 @@ window.validateLoginForm = function() {
       }
    }
    Utils.disableButton("buttonLogin"); // do not re-enable
-   createTeam(contestants);
+   createTeam("Login", contestants);
 };
 
 /*
  * Creates a new team using contestants information
 */
-function createTeam(contestants) {
+function createTeam(curStep, contestants) {
    if (window.browserIsMobile && typeof scratchToBlocklyContestID[contestID] != 'undefined') {
       alert(t("browser_redirect_scratch_to_blockly"));
       contestID = scratchToBlocklyContestID[contestID];
