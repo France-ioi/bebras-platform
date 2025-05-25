@@ -630,16 +630,16 @@ try {
       </select>
       <button type="button" id="buttonPersoGradeUpdate" onclick="updatePersoGrade()" class="btn btn-primary" data-i18n="personal_page_grade_update"></button>
    </p>
-   <p>
 <?php
-    if($config->contestInterface->personalPageDisplayHeader) {
+    if($config->contestInterface->displayQualifiedHeader) {
 ?>
+   <p>
       <span id="personalPageHeaderQualified" data-i18n="[html]personal_page_header_qualified" style="display: none;"></span>
       <span id="personalPageHeaderNonQualified" data-i18n="[html]personal_page_header_nonqualified" style="display: none;"></span>
+   </p>
 <?php
     }
 ?>
-   </p>
    <table>
       <tr>
 <?php
