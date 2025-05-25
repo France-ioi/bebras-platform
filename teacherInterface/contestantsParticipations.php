@@ -407,7 +407,7 @@ foreach ($schools as $schoolID => $school) {
          }
       }
       echo "<td>";
-      if ($contestant["infos"]["round"] != "1" && $contestant["infos"]["qualifiedFromSite"] != "1" && $contestant["infos"]["franceioiID"]) {
+      if ($contestant["infos"]["round"] != "2" && $contestant["infos"]["qualifiedFromSite"] != "1" && $contestant["infos"]["franceioiID"]) {
          $fioiQualification = verifyFioiQualification($contestant["infos"]["franceioiID"]);
          if($fioiQualification["success"]) {
             $contestant["infos"]["qualifiedFromSite"] = "1";
@@ -415,7 +415,7 @@ foreach ($schools as $schoolID => $school) {
             $updateStmt->execute(['ID' => $contestant["infos"]["ID"]]);
          }
       }
-      if ($contestant["infos"]["round"] == "1" || $contestant["infos"]["qualifiedFromSite"] == "1") {
+      if ($contestant["infos"]["round"] == "2" || $contestant["infos"]["qualifiedFromSite"] == "1") {
          $scoreQuart = $contestant["infos"]["scoreQuart2025"];
          if (($scoreQuart != null) && ($scoreQuart > 0)) {
             echo $scoreQuart;
