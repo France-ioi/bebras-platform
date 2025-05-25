@@ -229,7 +229,7 @@
     "error_contest_closed": "Le concours lié à votre participation est actuellement fermé.",
 
     "personal_page_title": "Page personnelle",
-    "personal_page_header_qualified": "Votre participation aux premiers tours vous permet de vous qualifier pour le quart de finale, qui est ouvert jusqu'au 9 juin. Pour participer, connectez-vous avec votre code de participant sur <a href=\"https://concours.algorea.org/\">concours.algorea.org</a>.",
+    "personal_page_header_qualified": "Votre participation aux premiers tours vous permet de vous qualifier pour le quart de finale, qui est ouvert jusqu'au 8 juin. Pour participer, connectez-vous avec votre code de participant sur <a href=\"https://concours.algorea.org/\">concours.algorea.org</a>.",
     "personal_page_header_nonqualified": "Votre participation (voir ci-dessous) aux premiers tours ne vous permet pas de vous qualifier pour le quart de finale. Il fallait obtenir soit 80 points ou plus en catégorie orange, soit des points en catégorie verte en s'étant au préalable qualifié pour cette catégorie. Nous vous invitons à retenter votre chance l'année prochaine et à vous entraîner sur les différents contenus proposés par <a href=\"https://france-ioi.org/\">france-ioi.org</a>.",
     "last_name": "Nom",
     "first_name": "Prénom",

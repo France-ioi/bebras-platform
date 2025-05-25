@@ -2275,7 +2275,7 @@ window.showPersonalPage = function(data) {
    $('#personalPageHeaderQualified').hide();
    $('#personalPageHeaderNonQualified').hide();
    if(config.displayQualifiedHeader) {
-      if(data.registrationData.round == "1") {
+      if(data.registrationData.round == "2") {
          $('#personalPageHeaderQualified').show();
       } else {
          $('#personalPageHeaderNonQualified').show();
