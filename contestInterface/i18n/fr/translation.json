@@ -230,7 +230,7 @@
 
     "personal_page_title": "Page personnelle",
     "personal_page_header_qualified": "<p><b>Bravo !</b> Votre participation aux premiers tours vous permet de vous qualifier pour le quart de finale, qui est ouvert jusqu'au 8 juin.</p><p>Pour participer, connectez-vous avec votre code de participant sur <a href=\"https://concours.algorea.org/\">concours.algorea.org</a>.</p>",
-    "personal_page_header_nonqualified": "Votre participation (voir ci-dessous) aux premiers tours ne vous permet pas de vous qualifier pour le quart de finale. Il fallait obtenir soit 80 points ou plus en catégorie orange, soit des points en catégorie verte en s'étant au préalable qualifié pour cette catégorie. Nous vous invitons à retenter votre chance l'année prochaine et à vous entraîner sur les différents contenus proposés par <a href=\"https://france-ioi.org/\">france-ioi.org</a>.",
+    "personal_page_header_nonqualified": "Votre participation (voir ci-dessous) aux premiers tours ne vous permet pas de vous qualifier pour le quart de finale. Il fallait obtenir soit 60 points ou plus en catégorie orange, soit 30 points en catégorie verte. Nous vous invitons à retenter votre chance l'année prochaine et à vous entraîner sur les différents contenus proposés par <a href=\"https://france-ioi.org/\">france-ioi.org</a>.",
     "last_name": "Nom",
     "first_name": "Prénom",
     "grade": "Classe",
