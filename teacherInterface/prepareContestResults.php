@@ -25,6 +25,26 @@ function markTeamAsTeacher(teamID) {
    });
 }
 
+   window.config = <?= json_encode([
+      'defaultLanguage' => $language,
+      'maintenanceUntil' => $config->maintenanceUntil,
+      'countryCode' => $countryCode,
+      'domainCountryCode' => $domainCountryCode,
+      'infoEmail' => $config->email->sInfoAddress,
+      'forceOfficialEmailDomain' => $config->teacherInterface->forceOfficialEmailDomain,
+      'contestPresentationURL' => $config->contestPresentationURL,
+      'contestURL' => $config->contestInterface->baseUrl,
+      'i18nResourcePath' => static_asset('/i18n/__lng__/__ns__.json'),
+      'customStringsName' => $config->customStringsName,
+      'allowCertificates' => $config->certificates->allow,
+      'useAlgoreaCodes' => $config->teacherInterface->useAlgoreaCodes,
+      'grades' => $config->grades,
+      'noGender' => (isset($config->teacherInterface->noGender) && $config->teacherInterface->noGender),
+      'readOnly' => $config->readOnly,
+      'displayDuration' => $config->teacherInterface->displayDuration,
+      'removeLastColumns' => $config->teacherInterface->removeLastColumns,
+      'tasksPathInterface' => $config->teacherInterface->tasksPathInterface,
+   ]) ?>;
 </script>
 <?php
 
