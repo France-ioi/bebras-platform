@@ -432,7 +432,8 @@ foreach ($schools as $schoolID => $school) {
       if($scoreDemi) {
          echo $scoreDemi;
          echo "<br/>";
-         $qualifiedFinal = $contestant["infos"]["qualifiedFinal"];
+         //$qualifiedFinal = $contestant["infos"]["qualifiedFinal"];
+         $qualifiedFinal = null; // TODO : à changer quand on veut afficher
          echo "<span class='rank'>";
          if ($qualifiedFinal == "0") {
             echo "Non qualifié(e) pour la finale<br/>";
@@ -444,8 +445,6 @@ foreach ($schools as $schoolID => $school) {
          echo "</span>";
       } elseif($qualifiedDemi == "1") {
          echo "<span class='rank'>Qualifié(e), n'a pas encore participé</span>";
-      } elseif($qualifiedDemi == "2") {
-         echo "<span class='rank'>Formulaire à remplir pour validation</span>";
       } else {
          echo "-";
       }
