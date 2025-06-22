@@ -205,7 +205,7 @@ function isDiplomaToPrint(diploma) {
    if (qualifiedOnly && !diploma.qualified) {
       return false;
    }
-   if (parseInt(diploma.rank) / parseInt(diploma.contestParticipants) > rankPercentile) {
+   if (rankPercentile < 1 && parseInt(diploma.rank) / parseInt(diploma.contestParticipants) > rankPercentile) {
       return false;
    }
    return true;
