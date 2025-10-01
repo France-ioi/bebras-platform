@@ -18,24 +18,39 @@ if (get_magic_quotes_gpc()) {
 // The encoding used for multi-bytes string in always UTF-8
 mb_internal_encoding("UTF-8");
 
-function handleActivity($db) {
+function handleActivities($db) {
    global $config;
    addBackendHint("ClientIP.activity:pass");
 
-   $stmt = $db->prepare("INSERT INTO `activity` (teamID, questionID, type, answer, score, date) VALUES(:teamID, :questionID, :type, :answer, :score, NOW());");
-   $stmt->execute([
-      'teamID' => $_POST['teamID'],
-      'questionID' => $_POST['questionID'],
-      'type' => $_POST['type'],
-      'answer' => isset($_POST['answer']) ? json_encode($_POST['answer']) : null,
-      'score' => isset($_POST['score']) ? $_POST['score'] : null
-      ]);
+   if (!isset($_POST["data"])) {
+      exitWithJsonFailure("data is not set", array('error' => 'invalid'));
+   }
 
+   $stmt = $db->prepare("INSERT INTO `activity` (teamID, questionID, type, answer, score, date) VALUES(:teamID, :questionID, :type, :answer, :score, FROM_UNIXTIME(:timestamp));");
+   
+   foreach ($activities as $_POST["data"]) {
+      if (!isset($activity["teamID"]) || !isset($activity["questionID"]) || !isset($activity["type"])) {
+         error_log("teamID, questionID or type is not set in activity: " . json_encode($activity));
+         continue;
+      }
+
+      $timestamp = intval($activity['date']) / 1000;
+      // Check timestamp is within the last 10 minutes
+      if ($timestamp < (time() - 10 * 60)) {
+         $timestamp = time();
+      }
+      
+      $stmt->execute([
+         'teamID' => $activity['teamID'],
+         'questionID' => $activity['questionID'],
+         'type' => $activity['type'],
+         'answer' => isset($activity['answer']) ? json_encode($activity['answer']) : null,
+         'score' => isset($activity['score']) ? $activity['score'] : null,
+         'timestamp' => $timestamp
+      ]);
+   }
+   
    exitWithJson(["success" => true]);
 }
 
-if(!isset($_POST["teamID"]) || !isset($_POST["questionID"]) || !isset($_POST["type"])) {
-   error_log("teamID, questionID or type is not set : ".json_encode($_REQUEST));
-   exitWithJsonFailure("Requête invalide", array('error' => 'invalid'));
-}
-handleActivity($db);
+handleActivities($db);
