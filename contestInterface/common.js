@@ -4147,12 +4147,15 @@ Loader.prototype.assemble = function() {
    self.log('A');
    setTimeout(function() {
       var data = self.parts.join('');
+      self.log('A1');
       for(var i=0; i<window.config.imagesURLReplacements.length; i++) {
          data = data.replace(new RegExp(window.config.imagesURLReplacements[i][0], 'g'), window.config.imagesURLReplacements[i][1]);
       }
+      self.log('A2');
       if(window.config.downgradeToHTTP) {
          data = data.replace(/https:\/\//g, "http://");
       }
+      self.log('A3');
       if(window.config.upgradeToHTTPS) {
          if(window.config.upgradeToHTTPS.length) {
             for(var i=0; i<window.config.upgradeToHTTPS.length; i++) {
@@ -4163,6 +4166,7 @@ Loader.prototype.assemble = function() {
             data = data.replace(/http:\/\//g, "https://");
          }
       }
+      self.log('A4');
       self.promise.resolve(data);
    }, 100);
 };
