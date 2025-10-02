@@ -28,7 +28,7 @@ function handleActivities($db) {
 
    $stmt = $db->prepare("INSERT INTO `activity` (teamID, questionID, type, answer, score, date) VALUES(:teamID, :questionID, :type, :answer, :score, FROM_UNIXTIME(:timestamp));");
    
-   foreach ($_POST["data"] as $activities) {
+   foreach ($_POST["data"] as $activity) {
       if (!isset($activity["teamID"]) || !isset($activity["questionID"]) || !isset($activity["type"])) {
          error_log("teamID, questionID or type is not set in activity: " . json_encode($activity));
          continue;
