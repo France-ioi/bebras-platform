@@ -607,5 +607,6 @@
     "manual_participants_file": "CSV file to import:",
     "manual_participants_added": "participants added",
     "manual_participants_existing": "existing participants",
+    "manual_participants_download": "Download current participants as CSV",
     "upload_error": "Error during the file upload, file might be too big."
 }

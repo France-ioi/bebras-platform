@@ -1,17 +1,7 @@
 <?php
-   require_once("commonAdmin.php");
-   require_once("./config.php");
-   header('Content-type: text/html');
-?><!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="shortcut icon" href="<?= $config->faviconfile ?>" />
-<title data-i18n="manual_participants_title"></title>
-<?php stylesheet_tag('/admin.css'); ?>
-</head>
-<body class="body-margin">
-<?php
+require_once("commonAdmin.php");
+require_once("./config.php");
+
 if (!isset($_SESSION["userID"])) {
    echo "<p>" . translate("session_expired") . "</p>";
    echo "<p>" . translate("go_to_index") . "</p>";
@@ -25,9 +15,22 @@ if (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"]) {
    echo "</body>";
    exit;
 }
-?> 
-<h1 data-i18n="manual_participants_title"></h1>
-<?php
+
+function makeGradesArray() {
+   global $config;
+   $defaultLanguage = 'en';
+   $translations = json_decode(file_get_contents(__DIR__ . "/../contestInterface/i18n/$defaultLanguage/translation.json"), true);
+   $grades = [];
+   foreach($config->grades as $grade) {
+      if(isset($translations["grade_$grade"])) {
+         $grades[$grade] = $translations["grade_$grade"];
+      } else {
+         $grades[$grade] = $grade;
+      }
+   }
+   return $grades;
+}
+
 function makeGradesReverseArray() {
    global $config;
    $languages = ['ar', 'en'];
@@ -43,6 +46,45 @@ function makeGradesReverseArray() {
    return $gradesReverse;
 }
 
+// Download CSV
+if (isset($_GET['download']) && $_GET['download'] == '1') {
+   header('Content-Type: text/csv; charset=utf-8');
+   header('Content-Disposition: attachment; filename="participants.csv"');
+   
+   $gradesArray = makeGradesArray();
+   
+   $stmt = $db->prepare("SELECT `code`, `firstName`, `lastName`, `grade`, `category` FROM `algorea_registration` ORDER BY `code`");
+   $stmt->execute();
+   
+   $output = fopen('php://output', 'w');
+   fputcsv($output, ['code', 'firstname', 'lastname', 'grade', 'category']);
+   while ($row = $stmt->fetch()) {
+      $grade = isset($gradesArray[$row['grade']]) ? $gradesArray[$row['grade']] : $row['grade'];
+      fputcsv($output, [
+         $row['code'],
+         $row['firstName'],
+         $row['lastName'],
+         $grade,
+         $row['category']
+      ]);
+   }
+
+   fclose($output);
+   exit;
+}
+
+header('Content-type: text/html');
+?><!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" href="<?= $config->faviconfile ?>" />
+<title data-i18n="manual_participants_title"></title>
+<?php stylesheet_tag('/admin.css'); ?>
+</head>
+<body class="body-margin">
+<h1 data-i18n="manual_participants_title"></h1>
+<?php
 function handleDataFile($dataFilePath) {
    global $config, $db;
 
@@ -99,7 +141,7 @@ function handleDataFile($dataFilePath) {
       }
       unset($infos['name']);
 
-      if($infos['grade'] == '' || $infos['firstname'] == '' || $infos['lastname'] == '') {
+      if($infos['grade'] == '' || ($infos['firstname'] == '' && $infos['lastname'] == '')) {
          // No information, so it is a code to be removed
          $removedCodes[] = $infos['code'];
          continue;
@@ -212,6 +254,8 @@ if (isset($_FILES['dataFile'])) {
       <br>
       <input type="submit" value="Submit" data-i18n="[value]manual_participants_title">
    </form>
+   <br>
+   <p><a href="addManualParticipants.php?download=1" data-i18n="manual_participants_download"></a></p>
    <br>
    <p data-i18n="[html]go_to_index"></p>
 </div>

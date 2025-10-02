@@ -357,13 +357,31 @@ function toggleMetaViewport(toggle) {
 /**
  * Log activity on a question (question load, attempt)
  */
+var loggedActivities = [];
+var logActivityTimeout = null;
 function logActivity(tID, qID, type, answer, score, force) {
-  if(!force && !doLogActivity && !window.config.logActivity) { return; }
-  if(tID === null) { tID = teamID; }
-  if(qID === null) {
-     qID = questionIframe.questionKey && questionsKeyToID[questionIframe.questionKey] ? questionsKeyToID[questionIframe.questionKey] : 0;
-  }
-  $.post("activity.php", {teamID: tID, questionID: qID, type: type, answer: answer, score: score});
+   if(!force && !doLogActivity && !window.config.logActivity) { return; }
+   if(tID === null) { tID = teamID; }
+   if(qID === null) {
+      qID = questionIframe.questionKey && questionsKeyToID[questionIframe.questionKey] ? questionsKeyToID[questionIframe.questionKey] : 0;
+   }
+   loggedActivities.push({teamID: tID, questionID: qID, type: type, answer: answer, score: score, date: Date.now()});
+
+   // Buffer logged activities up to 10 or 1 minute after the first one
+   if(loggedActivities.length >= 10) {
+      pushLoggedActivities();
+   } else if(!logActivityTimeout) {
+      logActivityTimeout = setTimeout(pushLoggedActivities, 60000);
+   }
+}
+
+function pushLoggedActivities() {
+   logActivityTimeout = null;
+   if(!loggedActivities.length) {
+      return;
+   }
+   $.post("activity.php", {data: loggedActivities});
+   loggedActivities = [];
 }
 
 /**
@@ -3123,6 +3141,7 @@ function closeContest(message) {
       doCloseContest(message);
    }
    stopPing();
+   pushLoggedActivities();
    SrlModule.triggerActivity('ends');
 }
 
@@ -4147,12 +4166,15 @@ Loader.prototype.assemble = function() {
    self.log('A');
    setTimeout(function() {
       var data = self.parts.join('');
+      self.log('A1');
       for(var i=0; i<window.config.imagesURLReplacements.length; i++) {
          data = data.replace(new RegExp(window.config.imagesURLReplacements[i][0], 'g'), window.config.imagesURLReplacements[i][1]);
       }
+      self.log('A2');
       if(window.config.downgradeToHTTP) {
          data = data.replace(/https:\/\//g, "http://");
       }
+      self.log('A3');
       if(window.config.upgradeToHTTPS) {
          if(window.config.upgradeToHTTPS.length) {
             for(var i=0; i<window.config.upgradeToHTTPS.length; i++) {
@@ -4163,6 +4185,7 @@ Loader.prototype.assemble = function() {
             data = data.replace(/http:\/\//g, "https://");
          }
       }
+      self.log('A4');
       self.promise.resolve(data);
    }, 100);
 };
