@@ -296,6 +296,17 @@ function paramsWithPOW(addParam, params) {
    return params;
 }
 
+function filterGroupName(name) {
+   if(!name) { return ""; }
+
+   // Remove INDIV from the beginning of the name
+   var m = name.match(/^indiv [-0-9]+ (.*)/i);
+   if(m) {
+      name = m[1];
+   }
+   return name.trim();
+}
+
 var updateContestHeader = function(contestData) {
   contestName = contestData.contestName;
   $('#headerH1').html(contestName);
@@ -309,7 +320,7 @@ var updateContestHeader = function(contestData) {
         $('#headerH2').text(contestData.headerHTML);
      }
   } else {
-     $('#headerH2').text(contestData.name);
+     $('#headerH2').text(filterGroupName(contestData.name));
   }
   //$('title').html(contestName); doesn't work on old IEs
 };
