@@ -300,7 +300,7 @@ function filterGroupName(name) {
    if(!name) { return ""; }
 
    // Remove INDIV from the beginning of the name
-   var m = name.match(/^indiv [-0-9]+ (.*)/i);
+   var m = name.match(/^indiv\s+[-0-9]+ (.*)/i);
    if(m) {
       name = m[1];
    }
