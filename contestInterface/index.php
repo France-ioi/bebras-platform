@@ -579,12 +579,16 @@ try {
    </p>
 </div>
 
-<div id="divClosedNewBrowser" style="display: none;">
+<div id="divClosed_newBrowser" class="forceClosed">
    <div data-i18n="[html]closed_new_browser"></div>
 </div>
 
-<div id="divClosedNewTab" style="display: none;">
+<div id="divClosed_newTab" class="forceClosed">
    <div data-i18n="[html]closed_new_tab"></div>
+</div>
+
+<div id="divClosed_newSession" class="forceClosed">
+   <div data-i18n="[html]closed_new_session"></div>
 </div>
 
 <div id="divStartContest" style="display:none">

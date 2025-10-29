@@ -414,29 +414,25 @@ window.logTaskActivity = function(details) {
 }
 
 
-var browserIDStopping = false;
-function browserIDChanged(isTab) {
-   // BrowserID changed, current participation cannot proceed
-   if(browserIDStopping) { return; }
-   browserIDStopping = true;
+var forceStopping = false;
+function forceStop(type) {
+   // Current participation cannot proceed (another session was opened, another tab on the same contest, etc.)
+   if(forceStopping) { return; }
+   forceStopping = true;
    isActiveTab = false;
    stopPing();
    TimeManager.stopNow();
    hideQuestionIframe();
    $('#divQuestions').hide();
-   if(isTab) {
-      $('#divClosedNewTab').show();
-   } else {
-      $('#divClosedNewBrowser').show();
-   }
+   $('#divClosed_' + type).show();
 }
 
 function doPing() {
 	// Pings then starts the timer again
    // Errors are managed by the global jQuery error handler
    $.post('ping.php', { teamID: teamID, teamPassword: teamPassword, browserID: browserID }).success(function(res) {
-      if(res.browserIDChanged) {
-         browserIDChanged();
+      if(res.forceStop) {
+         forceStop("newBrowser");
          return;
       }
       connectionErrorToggle(false);
@@ -507,7 +503,7 @@ function setSelfAsActiveTab() {
       sendAnswers();
       if(e.key == 'activeTabID' && storage.getItem('activeTabID') != tabID) {
          // Another tab is becoming active, end this one
-         browserIDChanged(true);
+         forceStop("newTab");
       } else if(e.key == 'activeTabCheck') {
          // Another tab is checking if this one is active, answer
          storage.setItem('activeTabCheck', tabID);
@@ -1420,8 +1416,12 @@ var TimeManager = {
             if (data.success) {
                var remainingSeconds = self.getRemainingSeconds();
                self.timeStart = self.timeStart + parseInt(data.remainingSeconds) - remainingSeconds;
+            } else if (data.error == "session") {
+               // Session lost
+               forceStop("newSession");
+               return;
             } else if (remainingSeconds <= 30) {
-               // Server probably the session, is probably the end
+               // Server probably lost the session, is probably the end
                // Only end if the number of seconds left is less than 30, in case there's a temporary server issue
                self.synchronizing = false;
                self.isDrifting = false;
@@ -3836,8 +3836,8 @@ function sendAnswers() {
          clearTimeout(sendAnswersTimeout);
          startPing();
          if (!data.success) {
-            if(data.browserIDChanged) {
-               browserIDChanged();
+            if(data.forceStop) {
+               forceStop("newBrowser");
                return;
             }
             answersError('error from answer.php while sending answers', data.message);
