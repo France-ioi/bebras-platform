@@ -36,6 +36,11 @@ tr:hover { background-color: #ffff99; }
 <?php
 //.vertical-text {	transform: rotate(-45deg); 	transform-origin: left bottom 0; overflow:}</style>";
 
+if(!hasAccessToGroup($groupID, 'read')) {
+   echo translate("grader_inexistent_group");
+   exit;
+}
+
 $query = "SELECT `group`.`startTime`, team.password, `team_question`.ffScore, team_question.score AS tqScore, team.score, ".
 "GROUP_CONCAT(CONCAT(firstName, ' ', lastName, ' ') SEPARATOR ', ') as contestants, ".
 "`group`.name as groupName, question.name as questionName, ".
@@ -54,12 +59,7 @@ $stmt = $db->prepare($query);
 $stmt->execute(['groupID' => $groupID]);
 
 $groups = array();
-$accessOk = !!$_SESSION["isAdmin"];
 while ($row = $stmt->fetchObject()) {
-   if($row->groupID == $groupID && $row->userID == $_SESSION['userID']) {
-      $accessOk = true;
-   }
-
    if (!isset($groups[$row->groupID])) {
       $groups[$row->groupID] = array("name" => $row->groupName, "startTime" => $row->startTime, "teams" => array());
    }
@@ -72,11 +72,6 @@ while ($row = $stmt->fetchObject()) {
       $score = $row->ffScore;
    }
    $groupRef["teams"][$row->teamID]["questions"][$row->questionName] = $score;
-}
-
-if(!$accessOk) {
-   echo translate("grader_inexistent_group");
-   exit;
 }
 
 foreach ($groups as $group) {
