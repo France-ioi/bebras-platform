@@ -89,6 +89,7 @@ function compressMimeType($mime_type) {
           $mime_type == 'text/plain';
 }
 
+// Deprecated
 function getZippedVersion($src) {
    $gzfilename = $src.'.gz';
    $fp = gzopen($gzfilename, 'w9');
@@ -111,27 +112,30 @@ function awsMkdir($path) {
 function awsCopyFile($src, $dst, $adminOnly = false) {
    global $publicClient, $publicBucket;
    $mime_type = getMimeTypeOfFilename($dst);
+   
+   $content = file_get_contents($src);
+   if (compressMimeType($mime_type)) {
+      $content = gzencode($content, 9);
+      if ($content === false) {
+         throw new Exception("gzencode failed");
+      }
+   }
+   
    $args = array(
       'Bucket'     => $publicBucket,
-      'SourceFile' => $src,
+      'Body'       => $content,
       'Key'        => $dst,
       'ContentType' => $mime_type,
       'CacheControl' => 'public, max-age=86400',
    );
-   $zipped = false;
    if (compressMimeType($mime_type)) {
-      $src = getZippedVersion($src);  // XXX missing error handling
-      $args['SourceFile'] = $src;
-      $zipped = true;
       $args['ContentEncoding'] = 'gzip';
    }
    if (!$adminOnly) {
       $args['ACL'] = 'public-read';
    }
+   
    $result = $publicClient->putObject($args);
-   if ($zipped) {
-      unlink($src);
-   }
    return !!$result;
 }
 
