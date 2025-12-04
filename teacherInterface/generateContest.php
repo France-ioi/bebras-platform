@@ -113,11 +113,18 @@ function awsCopyFile($src, $dst, $adminOnly = false) {
    global $publicClient, $publicBucket;
    $mime_type = getMimeTypeOfFilename($dst);
    
+   $path = parse_url($src, PHP_URL_PATH);
+   if (preg_match('/^https?:\/\//i', $src)) {
+      $src = str_replace(' ', '%20', $src);
+   }
    $content = file_get_contents($src);
+   if($content === false) {
+      throw new Exception("unable to read $path");
+   }
    if (compressMimeType($mime_type)) {
       $content = gzencode($content, 9);
       if ($content === false) {
-         throw new Exception("gzencode failed");
+         throw new Exception("gzencode failed for $path");
       }
    }
    
