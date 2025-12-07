@@ -89,6 +89,13 @@ function compressMimeType($mime_type) {
           $mime_type == 'text/plain';
 }
 
+function getContents($src) {
+   if (preg_match('/^https?:\/\//i', $src)) {
+      $src = str_replace(' ', '%20', $src);
+   }
+   return file_get_contents($src);
+}
+
 // Deprecated
 function getZippedVersion($src) {
    $gzfilename = $src.'.gz';
@@ -114,10 +121,7 @@ function awsCopyFile($src, $dst, $adminOnly = false) {
    $mime_type = getMimeTypeOfFilename($dst);
    
    $path = parse_url($src, PHP_URL_PATH);
-   if (preg_match('/^https?:\/\//i', $src)) {
-      $src = str_replace(' ', '%20', $src);
-   }
-   $content = file_get_contents($src);
+   $content = getContents($src);
    if($content === false) {
       throw new Exception("unable to read $path");
    }
