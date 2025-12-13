@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS `team_question_other` (
+  `ID` BIGINT NOT NULL AUTO_INCREMENT,
+  `teamID` BIGINT NOT NULL,
+  `questionID` BIGINT NOT NULL,
+  `answer` TEXT,
+  `score` INT DEFAULT NULL,
+  `ffScore` INT DEFAULT NULL,
+  `scoreNeedsChecking` TINYINT(1) NOT NULL DEFAULT '0',
+  `checkStatus` ENUM('none','requested','error','done','difference','fixed','computed') NOT NULL DEFAULT 'none',
+  `date` DATETIME NOT NULL,
+  `source` VARCHAR(255) NOT NULL,
+  `insertDate` DATETIME DEFAULT NULL,
+  `insertSessionID` INT NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `teamID` (`teamID`),
+  KEY `questionID` (`questionID`),
+  KEY `source` (`source`),
+  KEY `insertSessionID` (`insertSessionID`),
+  KEY `teamID_questionID` (`teamID`, `questionID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
