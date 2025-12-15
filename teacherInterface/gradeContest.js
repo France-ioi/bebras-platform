@@ -41,7 +41,7 @@ function grade(curContestID, curGroupID, questionKeys, questionPaths, curIndex, 
    // Retrieve the bebras/grader of the current question
    $.post('grader.php', { contestID: curContestID, groupID: curGroupID, questionKey: questionKeys[curIndex], onlyMarked: onlyMarked, database: database ? database : '' },function(data) {
       if (data.status === 'success') {
-         var url = "bebras-tasks/" + questionPaths[curIndex];
+         var url = config.tasksPathInterface + questionPaths[curIndex];
          $("#preview_question").attr("src", url);
          
          // Retrieve bebras

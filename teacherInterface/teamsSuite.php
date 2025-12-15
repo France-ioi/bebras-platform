@@ -3,13 +3,41 @@
 require_once("../shared/common.php");
 require_once("commonAdmin.php");
 
-$idTeamItem = "1867666484394099478";
+// Phase of the contest
+// 0 : qualification, time-limited contest not open
+// 1 : qualifying is possible, display passwords
+// 2 : participation in the time-limited contest is possible, display as such
+// 3 : display rankings from time-limited contest
+$phase = 3;
+
+// Text telling when the time-limited contest opens (displayed when $phase == 1)
+$timeLimitedStart = "à partir du lundi 24 mars 2025";
+
+// Qualification chapter ID (the one with the team)
+$idTeamItem = "139860767650179314";
+// Qualification tasks IDs
 $idItems = [
-"581446144392688579",
-"185246091959140531",
-"1230323526360190072",
-"123435675693601481"
+"540235374245795712",
+"737597811560821225",
+"1697640084875933009",
+"576733918320192006"
 ];
+// Names of the tasks (qualification)
+$itemNames = [
+"Image mélangée 1",
+"Image mélangée 2",
+"Substitutions par colonnes",
+"Réaction chimique"
+];
+// Score required to qualify 
+$reqScores = [
+   'fr' => 150,
+   'ch' => 100
+];
+
+// Names of the tasks (time-limited contest)
+$contestNames = $itemNames; // same as qualification
+
 
 if (!isset($_SESSION["userID"])) {
    echo translate("session_expired");
@@ -65,44 +93,22 @@ $strUserIds = implode(",", $userIds);
 
 // Get all teams associated with those users
 $teams = [];
-/*$stmt = $db2->prepare("
-SELECT users.ID AS userId, groups.ID AS groupId, groups.sName, groups.iTeamParticipating,
-alkindi_teams.sPassword, alkindi_teams.idNewGroup, alkindi_teams.country,
-alkindi_teams.thirdScore, alkindi_teams.thirdTime,
-alkindi_teams.score1, alkindi_teams.time1,
-alkindi_teams.score2, alkindi_teams.time2,
-alkindi_teams.score3, alkindi_teams.time3,
-alkindi_teams.score4, alkindi_teams.time4,
-alkindi_teams.score5, alkindi_teams.time5,
-alkindi_teams.score6, alkindi_teams.time6,
-alkindi_teams.score7, alkindi_teams.time7,
-alkindi_teams.rank, alkindi_teams.rankBigRegion, alkindi_teams.rankRegion, alkindi_teams.qualifiedFinal
-FROM pixal.groups
-JOIN pixal.groups_groups ON groups_groups.idGroupParent = groups.ID
-JOIN pixal.users ON groups_groups.idGroupChild = users.idGroupSelf
-LEFT JOIN pixal.alkindi_teams ON alkindi_teams.idGroup = groups.ID
-WHERE users.ID IN (".$strUserIds.")
-AND groups.idTeamItem = :idTeamItem");*/
-$stmt = $db2->prepare($abc = "
+$query = "
 SELECT users.ID AS userId, `groups`.ID AS groupId, `groups`.sName, `groups`.iTeamParticipating,
 alkindi_teams.sPassword, alkindi_teams.idNewGroup, alkindi_teams.country,
 alkindi_teams.rank, alkindi_teams.rankBigRegion, alkindi_teams.rankRegion,
-alkindi_teams.thirdScore, alkindi_teams.thirdTime,
-alkindi_teams.score1, alkindi_teams.time1,
-alkindi_teams.score2, alkindi_teams.time2,
-alkindi_teams.score3, alkindi_teams.time3,
-alkindi_teams.score4, alkindi_teams.time4, ".
-/*alkindi_teams.score5, alkindi_teams.time5,
-alkindi_teams.score6, alkindi_teams.time6,
-alkindi_teams.score7, alkindi_teams.time7*/
-"
-alkindi_teams.rank, alkindi_teams.rankBigRegion, alkindi_teams.rankRegion, alkindi_teams.qualifiedFinal, alkindi_teams.qualifiedFinalMaybe
+alkindi_teams.thirdScore, alkindi_teams.thirdTime,";
+foreach($contestNames as $idx => $name) {
+   $query .= "alkindi_teams.score" . ($idx + 1) . ", alkindi_teams.time" . ($idx + 1) . ", ";
+}
+$query .= "alkindi_teams.rank, alkindi_teams.rankBigRegion, alkindi_teams.rankRegion, alkindi_teams.qualifiedFinal, alkindi_teams.qualifiedFinalMaybe
 FROM pixal.`groups`
 JOIN pixal.groups_groups ON groups_groups.idGroupParent = `groups`.ID
 JOIN pixal.users ON groups_groups.idGroupChild = users.idGroupSelf
 LEFT JOIN pixal.alkindi_teams ON alkindi_teams.idGroup = `groups`.ID
 WHERE users.ID IN (".$strUserIds.")
-AND `groups`.idTeamItem = :idTeamItem");
+AND `groups`.idTeamItem = :idTeamItem";
+$stmt = $db2->prepare($query);
 $stmt->execute(['idTeamItem' => $idTeamItem]);
 while($row = $stmt->fetch()) {
    if(!isset($teams[$row['groupId']])) {
@@ -125,9 +131,9 @@ while($row = $stmt->fetch()) {
          'members' => []
          ];
    }
-   for($i = 1; $i <= 4; $i++) {
-      $teams[$row['groupId']]['scores'][$i] = $row["score$i"];
-      $teams[$row['groupId']]['times'][$i] = $row["time$i"];
+   for($i = 0; $i < count($contestNames); $i++) {
+      $teams[$row['groupId']]['scores'][$i] = $row["score".($i+1)];
+      $teams[$row['groupId']]['times'][$i] = $row["time".($i+1)];
    }
    $code = $codes[$row['userId']];
    $teams[$row['groupId']]['members'][] = $code;
@@ -322,21 +328,23 @@ if(count($userIds) < count($contestants)) {
 <tr>
    <td rowspan="2">Nom de l'équipe</td>
    <td rowspan="2">Membres</td>
-   <td colspan="5">Scores (phase de qualification)</td>
+   <td colspan="<?=count($itemNames) + 1 ?>">Scores (phase de qualification)</td>
    <td rowspan="2">Mot de passe<br>pour l'épreuve</td>
-   <td colspan="5">Scores (épreuve)</td>
+   <td colspan="<?=count($contestNames) + 1 ?>">Scores (épreuve)</td>
    <td rowspan="2">Classement (épreuve)</td>
 </tr>
 <tr>
-<td>Substitution cyclique 1</td>
-   <td>Substitution cyclique 2</td>
-   <td>Labyrinthe à bille</td>
-   <td>Image masquée</td>
+<?php
+foreach($itemNames as $name) {
+   echo "<td>$name</td>";
+}
+?>
    <td><b>Total</b></td>
-   <td>Substitution cyclique 1</td>
-   <td>Substitution cyclique 2</td>
-   <td>Labyrinthe à bille</td>
-   <td>Image masquée</td>
+<?php
+   foreach($contestNames as $name) {
+      echo "<td>$name</td>";
+   }
+?>
    <td><b>Total</b></td>
 </tr>
 <?php
@@ -389,24 +397,31 @@ foreach($teams as $groupId => $data) {
         echo ' <input type="submit" value="Ajouter à l\'équipe"></form>';
     }
     echo "</td>";
-    if($data['participating']) {
-       $teamScores = isset($scores[$groupId]) ? $scores[$groupId] : array_fill(0, count($idItems), null);
-       echo "<td>" . formatScore($teamScores[0]) . "</td>";
-       echo "<td>" . formatScore($teamScores[1]) . "</td>";
-       echo "<td>" . formatScore($teamScores[2]) . "</td>";
-       echo "<td>" . formatScore($teamScores[3]) . "</td>";
+
+    if(isset($scores[$groupId])) {
+       // Team has participated in the qualification
+       for($i = 0; $i < count($idItems); $i++) {
+          echo "<td>" . formatScore($scores[$groupId][$i]) . "</td>";
+       }
        echo "<td><b>" . (isset($scoreTotals[$groupId]) ? $scoreTotals[$groupId] : '-') . "</b> / 400</td>";
-       if($data['password']) {
+
+       if($phase > 0 && $data['password']) {
+          // Team is qualified
           echo "<td><pre>" . $data['password'] . "</pre></td>";
+
           if($data['idNewGroup']) {
+             // Team has participated in the time-limited contest
              if($data['thirdScore'] !== null) {
-                echo "<td>" . $data['scores'][1] . "</td>";
-                echo "<td>" . $data['scores'][2] . "</td>";
-                echo "<td>" . $data['scores'][3] . "</td>";
-                echo "<td>" . $data['scores'][4] . "</td>";
+                // Scores have been calculated
+                for($i = 0; $i < count($contestNames); $i++) {
+                   echo "<td>" . formatScore($data['scores'][$i]) . "</td>";
+                }
                 echo "<td><b>" . $data['thirdScore'] . "</b> / 400</td>";
-                if($data['rank'] != 0) {
+
+                if($phase > 2 && $data['rank'] != 0) {
+                    // Rankings have been calculated
                     if($data['qualifiedFinal'] != '1') {
+                        // Qualified to the final round
                         echo "<td>";
                         if($data['qualifiedFinalMaybe'] != '1') {
                            echo "<i>Équipe non qualifiée pour la finale</i><br>";
@@ -417,27 +432,34 @@ foreach($teams as $groupId => $data) {
                         echo "Rang académie : " . $data['rankRegion'];
                         echo "</td>";
                     } else {
+                        // Not qualified to the final round
                         echo "<td><i>Résultat en attente de validation, coordinateur contacté.</i></td>";
-                        //echo "<td>Équipe finaliste</td>";
                     }
                 } else {
+                    // Rankings have not been calculated, or are still hidden through $phase
                     echo "<td><i>Classements à venir</i></td>";
                 }
              } else {
-                echo "<td colspan=\"6\"><i>Scores à venir</i></td>";
+                // Scores have not been calculated
+                echo "<td colspan=\"".(count($contestNames) + 2)."\"><i>Scores à venir</i></td>";
              }
+          } elseif($phase <= 1) {
+             echo "<td colspan=\"".(count($contestNames) + 2)."\"><i>La participation à l'épreuve sera possible $timeLimitedStart</i></td>";
           } else {
-             echo "<td colspan=\"6\"><i>N'a pas encore utilisé le mot de passe pour l'épreuve d'1h30 sous surveillance</i></td>";
+             // Team hasn't done the time-limiteed contest
+             echo "<td colspan=\"".(count($contestNames) + 2)."\"><i>N'a pas encore utilisé le mot de passe pour l'épreuve d'1h30 sous surveillance</i></td>";
           }
-       } elseif($data['country'] == 'fr' || $data['country'] == 'ch') {
-          //$reqScore = $data['country'] == 'ch' ? 300 : 350;
-          $reqScore = 150;
-          echo "<td colspan=\"18\"><i>N'est pas encore qualifiée pour l'épreuve (n'a pas atteint $reqScore points)</i></td>";
+       } elseif($phase > 0 && isset($reqScores[$data['country']])) {
+          // Team is not qualified yet
+          $reqScore = $reqScores[$data['country']];
+          echo "<td colspan=\"".(count($contestNames) + 3)."\"><i>N'est pas encore qualifiée pour l'épreuve (n'a pas atteint $reqScore points)</i></td>";
        } else {
-          echo "<td colspan=\"7\"><i>Phase de qualification en cours</i></td>";
+          // Still phase 0
+          echo "<td colspan=\"".(count($contestNames) + 3)."\"><i>Phase de qualification en cours</i></td>";
        }
     } else {
-       echo "<td colspan=\"7\"><i>N'a pas commencé la phase de qualification</i></td>";
+       // Team does not have any scores yet
+       echo "<td colspan=\"".(count($itemNames) + count($contestNames) + 4)."\"><i>N'a pas commencé la phase de qualification</i></td>";
     }
     echo "</tr>";
 }

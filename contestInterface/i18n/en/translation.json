@@ -224,6 +224,7 @@
     "confirm_new_tab_intro": "<p><b>Warning : you are already participating in an activity from another tab.</b></p><p>If you proceed, the other tab will be disconnected. Unsaved data might be lost.</p>",
     "closed_new_browser": "<b>This participation was continued from another browser. Please resume from this other browser.</b>",
     "closed_new_tab": "<b>You are participating in an activity from another tab of this browser. Please resume from that other tab.</b>",
+    "closed_new_session": "<b>You have started another contest participation at the same time. Please resume that other participation, or stop it and resume this one with your code.</b>",
     "error_contest_closed": "The contest associated with your participation is currently closed.",
 
     "personal_page_title": "Personal page",
@@ -251,5 +252,12 @@
     "personal_page_rank": "Rank",
     "personal_page_schoolRank": "School<br/>rank",
     "personal_page_access": "Access",
-    "personal_page_open": "Open"
+    "personal_page_open": "Open",
+    "error_code_password_missing": "Group code or recovery password missing",
+    "error_group_already_recovered": "The operation is only possible once per group.",
+    "error_code_missing": "Code missing",
+    "error_old_interface": "You are using an old version of the interface, please refresh the page. If this does not solve the problem, try clearing your cache.",
+    "error_code_invalid_characters": "Invalid characters in the password",
+    "error_invalid_group": "Invalid group",
+    "error_invalid_team_group": "Invalid team for this group"
 }

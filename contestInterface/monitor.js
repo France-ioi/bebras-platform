@@ -61,6 +61,8 @@ function renderTable() {
         var subHtml = '';
         subHtml += '<td>';
         subHtml += name + '<br>';
+        if(team.studentId) { subHtml += team.studentId + '<br>'; }
+        if(team.zipCode) { subHtml += team.zipCode + '<br>'; }
         subHtml += '<span class="team-code">' + (showTeamCodes ? team.password : team.password.substr(0, 3) + '...' ) + '</span>';
         subHtml += '</td>';
         var pingMinutes = Math.floor(((new Date(team.currentTime)).getTime() - (new Date(team.lastPingTime)).getTime()) / (1000 * 60));

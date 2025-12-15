@@ -3,6 +3,9 @@
 require_once("../shared/common.php");
 require_once("commonAdmin.php");
 
+error_reporting(E_ALL & ~E_NOTICE);
+ini_set('display_errors', '1');
+
 if (!isset($_SESSION["userID"])) {
    echo translate("session_expired");
    exit;
@@ -14,7 +17,6 @@ if (!isset($_GET["groupID"])) {
 }
 
 $groupID = $_GET["groupID"];
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -34,10 +36,15 @@ tr:hover { background-color: #ffff99; }
 <?php
 //.vertical-text {	transform: rotate(-45deg); 	transform-origin: left bottom 0; overflow:}</style>";
 
+if(!hasAccessToGroup($groupID, 'read')) {
+   echo translate("grader_inexistent_group");
+   exit;
+}
+
 $query = "SELECT `group`.`startTime`, team.password, `team_question`.ffScore, team_question.score AS tqScore, team.score, ".
 "GROUP_CONCAT(CONCAT(firstName, ' ', lastName, ' ') SEPARATOR ', ') as contestants, ".
 "`group`.name as groupName, question.name as questionName, ".
-"`group`.ID as groupID, team.ID as teamID, question.ID as questionID ".
+"`group`.ID as groupID, `group`.userID as userID, team.ID as teamID, question.ID as questionID ".
 "FROM `group` ".
 "JOIN team ON team.groupID = `group`.ID ".
 "JOIN `contestant` ON `contestant`.teamID = team.ID ".

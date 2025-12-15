@@ -238,5 +238,12 @@
     "personal_page_rank": "الترتيب",
     "personal_page_schoolRank": "ترتيب<br/>المدرسة",
     "personal_page_access": "فتح<br/>المسابقة",
-    "personal_page_open": "فتح"
+    "personal_page_open": "فتح",
+    "error_code_password_missing": "كود المجموعة أو كلمة المرور المفقودة",
+    "error_group_already_recovered": "لا يمكن تنفيذ العملية إلا مرة واحدة لكل مجموعة.",
+    "error_code_missing": "الكود مفقود",
+    "error_old_interface": "أنت تستخدم إصدارًا قديمًا من الواجهة، يرجى تحديث الصفحة. إذا لم يحل ذلك المشكلة، حاول مسح ذاكرة التخزين المؤقت.",
+    "error_code_invalid_characters": "أحرف غير صالحة في كلمة المرور",
+    "error_invalid_group": "مجموعة غير صالحة",
+    "error_invalid_team_group": "فريق غير صالح لهذه المجموعة"
 }

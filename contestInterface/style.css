@@ -1232,7 +1232,8 @@ screen and (max-width: 1024px) and (orientation: landscape) {
 .connection-error-close:hover {
   color: darkgrey;
 }
-#divClosedNewBrowser, #divClosedNewTab {
+div.forceClosed {
+  display: none;
   z-index: 1000;
   position: fixed;
   top: 2vh;

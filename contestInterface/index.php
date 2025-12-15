@@ -32,6 +32,7 @@
     "pow" => $config->contestInterface->pow,
     "skipContestantPassword" => $config->contestInterface->skipContestantPassword,
     "finalQRCodeMode" => $config->contestInterface->finalQRCodeMode,
+    "displayQualifiedHeader" => $config->contestInterface->displayQualifiedHeader,
     ]) ?>;
 
   window.config.downgradeToHTTP = window.config.downgradeToHTTP && (window.location.protocol != 'https:');
@@ -141,7 +142,11 @@ if(!$browserVerified) {
     echo '<div id="browserAlert" data-i18n="[html]browser_support_' . $config->contestInterface->browserCheck . '"></div>';
 }
 
-$browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
+try {
+  $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
+} catch(Exception $e) {
+  $browserIsMobile = false;
+}
 ?>
 
 
@@ -574,12 +579,16 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
    </p>
 </div>
 
-<div id="divClosedNewBrowser" style="display: none;">
+<div id="divClosed_newBrowser" class="forceClosed">
    <div data-i18n="[html]closed_new_browser"></div>
 </div>
 
-<div id="divClosedNewTab" style="display: none;">
+<div id="divClosed_newTab" class="forceClosed">
    <div data-i18n="[html]closed_new_tab"></div>
+</div>
+
+<div id="divClosed_newSession" class="forceClosed">
+   <div data-i18n="[html]closed_new_session"></div>
 </div>
 
 <div id="divStartContest" style="display:none">
@@ -625,16 +634,16 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
       </select>
       <button type="button" id="buttonPersoGradeUpdate" onclick="updatePersoGrade()" class="btn btn-primary" data-i18n="personal_page_grade_update"></button>
    </p>
-   <p>
 <?php
-    if($config->contestInterface->personalPageDisplayHeader) {
+    if($config->contestInterface->displayQualifiedHeader) {
 ?>
+   <p>
       <span id="personalPageHeaderQualified" data-i18n="[html]personal_page_header_qualified" style="display: none;"></span>
       <span id="personalPageHeaderNonQualified" data-i18n="[html]personal_page_header_nonqualified" style="display: none;"></span>
+   </p>
 <?php
     }
 ?>
-   </p>
    <table>
       <tr>
 <?php
@@ -657,8 +666,8 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
          <td data-i18n="personal_page_team"></td>
          <td data-i18n="personal_page_status"></td>
          <td data-i18n="personal_page_score"></td>
-         <td data-i18n="personal_page_rank" class="personalPageRank">></td>
-         <td data-i18n="[html]personal_page_schoolRank" class="personalPageRank">></td>
+         <td data-i18n="personal_page_rank" class="personalPageRank"></td>
+         <td data-i18n="[html]personal_page_schoolRank" class="personalPageRank"></td>
          <td data-i18n="[html]personal_page_access"></td>
       </tr>
    </table>
@@ -793,9 +802,9 @@ $browserIsMobile = $browser->isType('mobile', 'tablet', 'ereader');
       <p>
          <span data-i18n="closed_your_password"></span> <span class='selectable' id="remindTeamPassword"></span>
       </p>
-      <p id="scoreReminder" style="display:none">
-         <span data-i18n="score"></span> <span id="remindScore"></span>
-      </p>
+   </div>
+   <div id="scoreReminder" style="display:none">
+      <p><span data-i18n="score"></span> <span id="remindScore"></span></p>
    </div>
 </div>
 <div id="divError" autocomplete="off">

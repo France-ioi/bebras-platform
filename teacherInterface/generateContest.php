@@ -89,6 +89,14 @@ function compressMimeType($mime_type) {
           $mime_type == 'text/plain';
 }
 
+function getContents($src) {
+   if (preg_match('/^https?:\/\//i', $src)) {
+      $src = str_replace(' ', '%20', $src);
+   }
+   return file_get_contents($src);
+}
+
+// Deprecated
 function getZippedVersion($src) {
    $gzfilename = $src.'.gz';
    $fp = gzopen($gzfilename, 'w9');
@@ -111,27 +119,34 @@ function awsMkdir($path) {
 function awsCopyFile($src, $dst, $adminOnly = false) {
    global $publicClient, $publicBucket;
    $mime_type = getMimeTypeOfFilename($dst);
+   
+   $path = parse_url($src, PHP_URL_PATH);
+   $content = getContents($src);
+   if($content === false) {
+      throw new Exception("unable to read $path");
+   }
+   if (compressMimeType($mime_type)) {
+      $content = gzencode($content, 9);
+      if ($content === false) {
+         throw new Exception("gzencode failed for $path");
+      }
+   }
+   
    $args = array(
       'Bucket'     => $publicBucket,
-      'SourceFile' => $src,
+      'Body'       => $content,
       'Key'        => $dst,
       'ContentType' => $mime_type,
       'CacheControl' => 'public, max-age=86400',
    );
-   $zipped = false;
    if (compressMimeType($mime_type)) {
-      $src = getZippedVersion($src);  // XXX missing error handling
-      $args['SourceFile'] = $src;
-      $zipped = true;
       $args['ContentEncoding'] = 'gzip';
    }
    if (!$adminOnly) {
       $args['ACL'] = 'public-read';
    }
+   
    $result = $publicClient->putObject($args);
-   if ($zipped) {
-      unlink($src);
-   }
    return !!$result;
 }
 
@@ -289,7 +304,7 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
       $cssModules = array();
 
       $curKey = $curTask['key'];
-      $task = new PEMTaskCompiler($curTask['bebras'], $curTask['key'], __DIR__.'/bebras-tasks/'.$curTask['url'], true);
+      $task = new PEMTaskCompiler($curTask['bebras'], $curTask['key'], $config->teacherInterface->tasksPathLocal.$curTask['url'], true);
 
       // Create the task directory.
       contestMkdir($curKey);
@@ -366,11 +381,11 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
       $strQuestions.= $strQuestion;
       contestAddContent($strQuestion, $nameParts, $buffer, $numPart, false);
    }
-   contestCopyFile(__DIR__.'/bebras-tasks/_common/modules/img/castor.png', 'castor.png');
-   contestCopyFile(__DIR__.'/bebras-tasks/_common/modules/img/laptop_success.png', 'laptop_success.png');
-   contestCopyFile(__DIR__.'/bebras-tasks/_common/modules/img/laptop_warning.png', 'laptop_warning.png');
-   contestCopyFile(__DIR__.'/bebras-tasks/_common/modules/img/laptop_error.png', 'laptop_error.png');
-   contestCopyFile(__DIR__.'/bebras-tasks/_common/modules/img/fleche-bulle.png', 'fleche-bulle.png');
+   contestCopyFile($config->teacherInterface->tasksPathLocal.'_common/modules/img/castor.png', 'castor.png');
+   contestCopyFile($config->teacherInterface->tasksPathLocal.'_common/modules/img/laptop_success.png', 'laptop_success.png');
+   contestCopyFile($config->teacherInterface->tasksPathLocal.'_common/modules/img/laptop_warning.png', 'laptop_warning.png');
+   contestCopyFile($config->teacherInterface->tasksPathLocal.'_common/modules/img/laptop_error.png', 'laptop_error.png');
+   contestCopyFile($config->teacherInterface->tasksPathLocal.'_common/modules/img/fleche-bulle.png', 'fleche-bulle.png');
    $images[] = joinPaths($config->teacherInterface->sAbsoluteStaticPath, 'contests/'.$contestFolder.'/castor.png');
    $images[] = joinPaths($config->teacherInterface->sAbsoluteStaticPath, 'contests/'.$contestFolder.'/fleche-bulle.png');
 

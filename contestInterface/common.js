@@ -90,6 +90,8 @@ var sendLastActivity = false;
 var backupQRCode = null;
 // Whether we used a contestant code and hence don't show the password for this session
 var skippedContestantPassword = false;
+// Whether finalCloseContest has been called
+var closingContest = false;
 
 
 function getParameterByName(name) {
@@ -294,6 +296,17 @@ function paramsWithPOW(addParam, params) {
    return params;
 }
 
+function filterGroupName(name) {
+   if(!name) { return ""; }
+
+   // Remove INDIV from the beginning of the name
+   var m = name.match(/^indiv\s*[-0-9]+ (.*)/i);
+   if(m) {
+      name = m[1];
+   }
+   return name.trim();
+}
+
 var updateContestHeader = function(contestData) {
   contestName = contestData.contestName;
   $('#headerH1').html(contestName);
@@ -307,7 +320,7 @@ var updateContestHeader = function(contestData) {
         $('#headerH2').text(contestData.headerHTML);
      }
   } else {
-     $('#headerH2').text(contestData.name);
+     $('#headerH2').text(filterGroupName(contestData.name));
   }
   //$('title').html(contestName); doesn't work on old IEs
 };
@@ -355,13 +368,31 @@ function toggleMetaViewport(toggle) {
 /**
  * Log activity on a question (question load, attempt)
  */
+var loggedActivities = [];
+var logActivityTimeout = null;
 function logActivity(tID, qID, type, answer, score, force) {
-  if(!force && !doLogActivity && !window.config.logActivity) { return; }
-  if(tID === null) { tID = teamID; }
-  if(qID === null) {
-     qID = questionIframe.questionKey && questionsKeyToID[questionIframe.questionKey] ? questionsKeyToID[questionIframe.questionKey] : 0;
-  }
-  $.post("activity.php", {teamID: tID, questionID: qID, type: type, answer: answer, score: score});
+   if(!force && !doLogActivity && !window.config.logActivity) { return; }
+   if(tID === null) { tID = teamID; }
+   if(qID === null) {
+      qID = questionIframe.questionKey && questionsKeyToID[questionIframe.questionKey] ? questionsKeyToID[questionIframe.questionKey] : 0;
+   }
+   loggedActivities.push({teamID: tID, questionID: qID, type: type, answer: answer, score: score, date: Date.now()});
+
+   // Buffer logged activities up to 10 or 1 minute after the first one
+   if(loggedActivities.length >= 10) {
+      pushLoggedActivities();
+   } else if(!logActivityTimeout) {
+      logActivityTimeout = setTimeout(pushLoggedActivities, 60000);
+   }
+}
+
+function pushLoggedActivities() {
+   logActivityTimeout = null;
+   if(!loggedActivities.length) {
+      return;
+   }
+   $.post("activity.php", {data: loggedActivities});
+   loggedActivities = [];
 }
 
 /**
@@ -383,29 +414,25 @@ window.logTaskActivity = function(details) {
 }
 
 
-var browserIDStopping = false;
-function browserIDChanged(isTab) {
-   // BrowserID changed, current participation cannot proceed
-   if(browserIDStopping) { return; }
-   browserIDStopping = true;
+var forceStopping = false;
+function forceStop(type) {
+   // Current participation cannot proceed (another session was opened, another tab on the same contest, etc.)
+   if(forceStopping) { return; }
+   forceStopping = true;
    isActiveTab = false;
    stopPing();
    TimeManager.stopNow();
    hideQuestionIframe();
    $('#divQuestions').hide();
-   if(isTab) {
-      $('#divClosedNewTab').show();
-   } else {
-      $('#divClosedNewBrowser').show();
-   }
+   $('#divClosed_' + type).show();
 }
 
 function doPing() {
 	// Pings then starts the timer again
    // Errors are managed by the global jQuery error handler
    $.post('ping.php', { teamID: teamID, teamPassword: teamPassword, browserID: browserID }).success(function(res) {
-      if(res.browserIDChanged) {
-         browserIDChanged();
+      if(res.forceStop) {
+         forceStop("newBrowser");
          return;
       }
       connectionErrorToggle(false);
@@ -476,7 +503,7 @@ function setSelfAsActiveTab() {
       sendAnswers();
       if(e.key == 'activeTabID' && storage.getItem('activeTabID') != tabID) {
          // Another tab is becoming active, end this one
-         browserIDChanged(true);
+         forceStop("newTab");
       } else if(e.key == 'activeTabCheck') {
          // Another tab is checking if this one is active, answer
          storage.setItem('activeTabCheck', tabID);
@@ -1389,8 +1416,12 @@ var TimeManager = {
             if (data.success) {
                var remainingSeconds = self.getRemainingSeconds();
                self.timeStart = self.timeStart + parseInt(data.remainingSeconds) - remainingSeconds;
+            } else if (data.error == "session") {
+               // Session lost
+               forceStop("newSession");
+               return;
             } else if (remainingSeconds <= 30) {
-               // Server probably the session, is probably the end
+               // Server probably lost the session, is probably the end
                // Only end if the number of seconds left is less than 30, in case there's a temporary server issue
                self.synchronizing = false;
                self.isDrifting = false;
@@ -2169,7 +2200,7 @@ window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, 
       if ((curStep === "CheckGroup") || (curStep === "StartContest")) {
          if (isPublic) {
             window.setNbContestants(1);
-            createTeam([{ lastName: "Anonymous", firstName: "Anonymous", genre: 2, email: null, zipCode: null}]);
+            createTeam(curStep, [{ lastName: "Anonymous", firstName: "Anonymous", genre: 2, email: null, zipCode: null}]);
          } else {
             setContestBreadcrumb();
             $("#divDescribeTeam").show();
@@ -2198,7 +2229,7 @@ window.groupWasChecked = function(data, curStep, groupCode, getTeams, isPublic, 
             $("#errorRegistrationCode1").html("Bienvenue " + data.registrationData.firstName + " " + data.registrationData.lastName);
          }
          $('#mainNav').hide();
-         if(throughPersonalPage && data.allowTeamOfTwo != 1) {
+         if(throughPersonalPage && data.allowTeamsOfTwo != 1) {
             validateLoginForm();
          }
       } else {
@@ -2270,12 +2301,14 @@ window.showPersonalPage = function(data) {
    }
    $('#persoGradeUpdate').hide();
 
-   if(data.registrationData.round == "1") {
-      $('#personalPageHeaderQualified').show();
-      $('#personalPageHeaderNonQualified').hide();
-   } else {
-      $('#personalPageHeaderQualified').hide();
-      $('#personalPageHeaderNonQualified').show();
+   $('#personalPageHeaderQualified').hide();
+   $('#personalPageHeaderNonQualified').hide();
+   if(config.displayQualifiedHeader) {
+      if(data.registrationData.round == "2") {
+         $('#personalPageHeaderQualified').show();
+      } else {
+         $('#personalPageHeaderNonQualified').show();
+      }
    }
 
    var htmlParticipations = "";
@@ -2789,13 +2822,13 @@ window.validateLoginForm = function() {
       }
    }
    Utils.disableButton("buttonLogin"); // do not re-enable
-   createTeam(contestants);
+   createTeam("Login", contestants);
 };
 
 /*
  * Creates a new team using contestants information
 */
-function createTeam(contestants) {
+function createTeam(curStep, contestants) {
    if (window.browserIsMobile && typeof scratchToBlocklyContestID[contestID] != 'undefined') {
       alert(t("browser_redirect_scratch_to_blockly"));
       contestID = scratchToBlocklyContestID[contestID];
@@ -2803,8 +2836,17 @@ function createTeam(contestants) {
       contestFolder = contest.folder;
       customIntro = contest.customIntro;
    }
+   if(curStep) { $("#" + curStep + "Result").html(''); }
    $.post("data.php", paramsWithPOW(contestID, {SID: SID, action: "createTeam", contestants: contestants, contestID: contestID}),
       function(data) {
+         if(!data.success) {
+            if(curStep) {
+               $("#" + curStep + "Result").html(data.message);
+            } else {
+               alert(data.message);
+            }
+            return;
+         }
          teamID = data.teamID;
          teamPassword = data.password;
          answerKey = data.answerKey;
@@ -3110,6 +3152,7 @@ function closeContest(message) {
       doCloseContest(message);
    }
    stopPing();
+   pushLoggedActivities();
    SrlModule.triggerActivity('ends');
 }
 
@@ -3141,6 +3184,7 @@ function doCloseContest(message) {
 */
 function finalCloseContest(message) {
    TimeManager.stopNow();
+   closingContest = true;
    $.post("data.php", {SID: SID, action: "closeContest", teamID: teamID, teamPassword: teamPassword, teamScore: ffTeamScore, finalAnswersSent: !hasAnswersToSend()},
       function() {}, "json"
    ).always(function() {
@@ -3233,6 +3277,8 @@ function displayClosedInfo(message) {
    if(fullFeedback) {
       $("#remindScore").html(ffTeamScore);
       $("#scoreReminder").show();
+   } else {
+      $("#scoreReminder").hide();
    }
 }
 
@@ -3756,6 +3802,9 @@ function sendAnswers() {
 
    var endpoint = sendAnswersTryAlternate ? "https://concours4.castor-informatique.fr/answer.php" : "answer.php";
    var params = { SID: SID, "answers": answersToSend, teamID: teamID, teamPassword: teamPassword, sendLastActivity: sendLastActivity, browserID: browserID };
+   if(closingContest) {
+      params.finalAnswersSent = true;
+   }
    var startTime = Date.now();
    function answersError(msg, details) {
       var errorId = Math.floor(Math.random()*1000000000000);
@@ -3787,8 +3836,8 @@ function sendAnswers() {
          clearTimeout(sendAnswersTimeout);
          startPing();
          if (!data.success) {
-            if(data.browserIDChanged) {
-               browserIDChanged();
+            if(data.forceStop) {
+               forceStop("newBrowser");
                return;
             }
             answersError('error from answer.php while sending answers', data.message);
@@ -4128,12 +4177,15 @@ Loader.prototype.assemble = function() {
    self.log('A');
    setTimeout(function() {
       var data = self.parts.join('');
+      self.log('A1');
       for(var i=0; i<window.config.imagesURLReplacements.length; i++) {
          data = data.replace(new RegExp(window.config.imagesURLReplacements[i][0], 'g'), window.config.imagesURLReplacements[i][1]);
       }
+      self.log('A2');
       if(window.config.downgradeToHTTP) {
          data = data.replace(/https:\/\//g, "http://");
       }
+      self.log('A3');
       if(window.config.upgradeToHTTPS) {
          if(window.config.upgradeToHTTPS.length) {
             for(var i=0; i<window.config.upgradeToHTTPS.length; i++) {
@@ -4144,6 +4196,7 @@ Loader.prototype.assemble = function() {
             data = data.replace(/http:\/\//g, "https://");
          }
       }
+      self.log('A4');
       self.promise.resolve(data);
    }, 100);
 };

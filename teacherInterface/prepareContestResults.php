@@ -25,6 +25,26 @@ function markTeamAsTeacher(teamID) {
    });
 }
 
+   window.config = <?= json_encode([
+      'defaultLanguage' => $language,
+      'maintenanceUntil' => $config->maintenanceUntil,
+      'countryCode' => $countryCode,
+      'domainCountryCode' => $domainCountryCode,
+      'infoEmail' => $config->email->sInfoAddress,
+      'forceOfficialEmailDomain' => $config->teacherInterface->forceOfficialEmailDomain,
+      'contestPresentationURL' => $config->contestPresentationURL,
+      'contestURL' => $config->contestInterface->baseUrl,
+      'i18nResourcePath' => static_asset('/i18n/__lng__/__ns__.json'),
+      'customStringsName' => $config->customStringsName,
+      'allowCertificates' => $config->certificates->allow,
+      'useAlgoreaCodes' => $config->teacherInterface->useAlgoreaCodes,
+      'grades' => $config->grades,
+      'noGender' => (isset($config->teacherInterface->noGender) && $config->teacherInterface->noGender),
+      'readOnly' => $config->readOnly,
+      'displayDuration' => $config->teacherInterface->displayDuration,
+      'removeLastColumns' => $config->teacherInterface->removeLastColumns,
+      'tasksPathInterface' => $config->teacherInterface->tasksPathInterface,
+   ]) ?>;
 </script>
 <?php
 
@@ -564,10 +584,10 @@ if ($action == "markAboveMinScore") {
 
 
 echo "<h3><a href='".$startUrl."&action=gradeContest'>Recompute scores</a></h3>";
-echo "<p>Add &db=db_name to the URL to use another database</p>";
+echo "<p>Add &table=table_name to the URL to use another table</p>";
 if ($action == "gradeContest") {
-   if (isset($_GET["db"])) {
-      $database = json_encode($_GET["db"]);
+   if (isset($_GET["table"])) {
+      $database = json_encode($_GET["table"]);
    } else {
       $database = 'null';
    }
@@ -669,13 +689,13 @@ if ($action == "showScoreAnomalies") {
    //   GROUP BY team.ID, team_question.questionID
    //   ORDER BY team.ID",
    //    OR team_question.checkStatus = 'error')
-   execSelectAndShowResults("List official team_question with checkStatus = difference of error)", "
+   execSelectAndShowResults("List official team_question with checkStatus = difference or error", "
       SELECT team_question.teamID, team_question.questionID, question.name, team_question.score, team_question.ffScore, team.password, team.tmpScore, team.startTime, team.participationType
       FROM team_question
       JOIN team ON team_question.teamID = team.ID
       JOIN `question` ON team_question.questionID = question.ID
       JOIN contest ON team.contestID = contest.ID
-      WHERE team_question.checkStatus = 'difference'
+      WHERE team_question.checkStatus IN ('difference', 'error')
       AND team.participationType = 'Official'
       AND (contest.ID = :contestID OR contest.parentContestID = :contestID)
       ",
@@ -1120,6 +1140,49 @@ if ($action == "precomputeParticipants") {
       array("contestID" => $contestID));
 }
 
+echo "<h3><a href='".$startUrl."&action=precomputeParticipantsAlgorea'>(Algorea) Precompute number of participants over multiple contests, into this contest</a></h3>";
+echo "<p>Enter additional contest IDs as parameter &contestIDs= separated by commas.</p>";
+if ($action == "precomputeParticipantsAlgorea") {
+   if (isset($_GET["contestIDs"])) {
+      $contestIDs = [];
+      foreach(explode(",", $contestID . "," . $_GET["contestIDs"]) as $additionalContestID) {
+         $additionalContestID = intval($additionalContestID);
+         if ($additionalContestID > 0) {
+            $contestIDs[] = $additionalContestID;
+            // merge the getListContestIDs($additionalContestID) into $contestIDs
+            $contestIDs = array_merge($contestIDs, getListContestIDs($additionalContestID));
+         }
+      }
+
+      if(count($contestIDs) > 0) {
+         execSelectAndShowResults("Selected contest(s) for participants counting", "
+            SELECT contest.ID, contest.name FROM contest WHERE contest.ID IN (". implode(",", $contestIDs) . ")",
+            array());
+
+         execQueryAndShowNbRows("Delete previous number of participants", "
+            DELETE FROM contest_participants WHERE contestID = :contestID",
+            array("contestID" => $contestID));
+
+         execQueryAndShowNbRows("Recompute number of participants", "
+            INSERT INTO contest_participants (contestID, grade, nbContestants, number)
+            SELECT $contestID, contestant.grade, team.nbContestants, count(DISTINCT contestant.registrationID) FROM contestant
+            JOIN team ON contestant.teamID = team.ID
+            JOIN `group` ON team.groupID = `group`.ID
+            JOIN `contest` ON `group`.contestID = contest.ID
+            WHERE contest.ID IN (". implode(",", $contestIDs) . ")
+            AND team.participationType = 'Official'
+            GROUP BY contestant.grade, team.nbContestants",
+            array());
+      } else {
+         echo "<p><b style=\"color:red;\">Error : no contests found.</p>";
+      }
+
+   } else {
+      echo "<p><b style=\"color:red;\">Missing contestIDs parameter, mandatory for this query.</b></p>";
+   }
+}
+
+
 
 echo "<h3><a href='".$startUrl."&action=showTeamScores'>Make team scores visible to teachers.</a></h3>";
 if ($action == "showTeamScores") {
@@ -1147,7 +1210,7 @@ if ($action == "cleanRanksUnofficial") {
       JOIN team ON contestant.teamID = team.ID
       JOIN `group` ON team.groupID = `group`.ID
       JOIN `contest` ON `group`.contestID = contest.ID
-      SET rank = NULL, schoolRank = NULL
+      SET `rank` = NULL, `schoolRank` = NULL
       WHERE team.participationType = 'Unofficial'
       AND (contest.ID = :contestID OR contest.parentContestID = :contestID)",
       array("contestID" => $contestID));
@@ -1640,7 +1703,7 @@ if ($action == "computeAlgoreaTotalScore") {
 }
 
 
-echo "<h3><a href='".$startUrl."&action=updateAlgoreaRanks'>Compute algorea ranks</a></h3>";
+echo "<h3><a href='".$startUrl."&action=updateAlgoreaRanks'>Compute algorea ranks in algorea_registration</a></h3>";
 if ($action == "updateAlgoreaRanks") {
    execQueryAndShowNbRows("Update Algorea ranks (per grade)", 
        "UPDATE `algorea_registration` as `c1`,
@@ -1713,7 +1776,10 @@ if ($action == "updateAlgoreaRanks") {
    execQueryAndShowNbRows("Remove ranks when total Algorea score is 0", 
      "UPDATE algorea_registration SET algoreaRank = NULL, algoreaSchoolRank = NULL WHERE totalScoreAlgorea = 0" ,
         array());
-   
+}
+
+echo "<h3><a href='".$startUrl."&action=updateAlgoreaRanksContest'>Copy algoreaRanks to contestant table for selected contest</a></h3>";
+if ($action == "updateAlgoreaRanksContest") {
    execQueryAndShowNbRows("Copy algoreaRanks to contestant table for selected contest",
       "UPDATE contestant
       JOIN `algorea_registration` ON contestant.algoreaCode = algorea_registration.code

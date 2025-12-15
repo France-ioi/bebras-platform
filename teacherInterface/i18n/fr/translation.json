@@ -53,7 +53,8 @@
     "groups_edit_selected": "Modifier le groupe sélectionné",
     "groups_delete_selected": "Supprimer le groupe sélectionné",
     "groups_grade_selected": "Calculer les scores du groupe sélectionné",
-    "cannot_grade_closed_contest": "Vous ne pouvez pas calculer les scores d'un groups lié à cette activité",
+    "cannot_grade_closed_contest": "Vous ne pouvez pas calculer les scores d'un groupe lié à cette activité.",
+    "cannot_grade_official_group": "Vous ne pouvez pas calculer les scores de ce groupe. Veuillez attendre les résultats officiels.",
     "grading_in_progress": "Calcul des scores en cours :",
     "groups_sheet_title": "Impression de la notice",
     "groups_sheet_intro": "La notice est destinée à l'enseignant encadrant de chaque groupe. Elle lui explique la procédure de passage de l'activité et lui donne les codes du groupe. À l’approche de la session, imprimez cette notice pour chacun des groupes. Vous pouvez :",
@@ -641,10 +642,11 @@
     "manual_codes_added": "groupes ajoutés",
     "manual_codes_existing": "groupes déjà existants",
     "manual_participants_title": "Importer des participants",
-    "manual_participants_instructions": "Cette page vous permet d'importer un fichier CSV de participants. Le fichier doit contenir trois colonnes, dans cet ordre : code du participant, nom et classe. Si une ligne ne contient que le code de participant, alors ce code sera supprimé.",
+    "manual_participants_instructions": "<p>Cette page vous permet d'importer un fichier CSV de participants.</p><p>La première ligne doit contenir les noms des colonnes utilisées. Les colonnes possibles sont : code, grade, name, firstname, lastname, category.</p><p>Pour chaque participant, le code et le grade sont obligatoires ; de plus, soit le name, soit le firstname et le lastname doivent être fournis.</p><p>Si une ligne ne contient que le code du participant mais aucune autre donnée (requise), alors le code sera supprimé.</p>",
     "manual_participants_file": "Fichier CSV à importer :",
     "manual_participants_added": "participants ajoutés",
     "manual_participants_existing": "participants existants",
+    "manual_participants_download": "Télécharger les participants actuels au format CSV",
     "upload_error": "Erreur lors du téléversement, le fichier peut être trop gros."
 }
 

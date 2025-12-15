@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "49c38337f23a9578233306a6d8697b8e",
+    "content-hash": "951e5e3b92357240d0c8df015b1f5d38",
     "packages": [
         {
             "name": "France-ioi/pem-task-compiler",
@@ -12,14 +12,15 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/France-ioi/pem-task-compiler.git",
-                "reference": "7c1292ac4d0e523f823c104edcd4a3e76f782e0d"
+                "reference": "eb7ac10579aa59f90358615a1f057764144cdbd8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/France-ioi/pem-task-compiler/zipball/7c1292ac4d0e523f823c104edcd4a3e76f782e0d",
-                "reference": "7c1292ac4d0e523f823c104edcd4a3e76f782e0d",
+                "url": "https://api.github.com/repos/France-ioi/pem-task-compiler/zipball/eb7ac10579aa59f90358615a1f057764144cdbd8",
+                "reference": "eb7ac10579aa59f90358615a1f057764144cdbd8",
                 "shasum": ""
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-0": {
@@ -30,7 +31,7 @@
                 "source": "https://github.com/France-ioi/pem-task-compiler/tree/master",
                 "issues": "https://github.com/France-ioi/pem-task-compiler/issues"
             },
-            "time": "2022-10-28T14:06:29+00:00"
+            "time": "2025-12-07T11:18:17+00:00"
         },
         {
             "name": "aws/aws-sdk-php",
@@ -1084,8 +1085,7 @@
     },
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": {
-        "lib-curl": "*"
-    },
-    "platform-dev": []
+    "platform": {},
+    "platform-dev": {},
+    "plugin-api-version": "2.6.0"
 }

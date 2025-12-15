@@ -1,17 +1,7 @@
 <?php
-   require_once("commonAdmin.php");
-   require_once("./config.php");
-   header('Content-type: text/html');
-?><!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="shortcut icon" href="<?= $config->faviconfile ?>" />
-<title data-i18n="manual_participants_title"></title>
-<?php stylesheet_tag('/admin.css'); ?>
-</head>
-<body class="body-margin">
-<?php
+require_once("commonAdmin.php");
+require_once("./config.php");
+
 if (!isset($_SESSION["userID"])) {
    echo "<p>" . translate("session_expired") . "</p>";
    echo "<p>" . translate("go_to_index") . "</p>";
@@ -25,9 +15,22 @@ if (!isset($_SESSION["isAdmin"]) || !$_SESSION["isAdmin"]) {
    echo "</body>";
    exit;
 }
-?> 
-<h1 data-i18n="manual_participants_title"></h1>
-<?php
+
+function makeGradesArray() {
+   global $config;
+   $defaultLanguage = 'en';
+   $translations = json_decode(file_get_contents(__DIR__ . "/../contestInterface/i18n/$defaultLanguage/translation.json"), true);
+   $grades = [];
+   foreach($config->grades as $grade) {
+      if(isset($translations["grade_$grade"])) {
+         $grades[$grade] = $translations["grade_$grade"];
+      } else {
+         $grades[$grade] = $grade;
+      }
+   }
+   return $grades;
+}
+
 function makeGradesReverseArray() {
    global $config;
    $languages = ['ar', 'en'];
@@ -43,6 +46,45 @@ function makeGradesReverseArray() {
    return $gradesReverse;
 }
 
+// Download CSV
+if (isset($_GET['download']) && $_GET['download'] == '1') {
+   header('Content-Type: text/csv; charset=utf-8');
+   header('Content-Disposition: attachment; filename="participants.csv"');
+   
+   $gradesArray = makeGradesArray();
+   
+   $stmt = $db->prepare("SELECT `code`, `firstName`, `lastName`, `grade`, `category` FROM `algorea_registration` ORDER BY `code`");
+   $stmt->execute();
+   
+   $output = fopen('php://output', 'w');
+   fputcsv($output, ['code', 'firstname', 'lastname', 'grade', 'category']);
+   while ($row = $stmt->fetch()) {
+      $grade = isset($gradesArray[$row['grade']]) ? $gradesArray[$row['grade']] : $row['grade'];
+      fputcsv($output, [
+         $row['code'],
+         $row['firstName'],
+         $row['lastName'],
+         $grade,
+         $row['category']
+      ]);
+   }
+
+   fclose($output);
+   exit;
+}
+
+header('Content-type: text/html');
+?><!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" href="<?= $config->faviconfile ?>" />
+<title data-i18n="manual_participants_title"></title>
+<?php stylesheet_tag('/admin.css'); ?>
+</head>
+<body class="body-margin">
+<h1 data-i18n="manual_participants_title"></h1>
+<?php
 function handleDataFile($dataFilePath) {
    global $config, $db;
 
@@ -50,47 +92,74 @@ function handleDataFile($dataFilePath) {
 
    // Read CSV
    $handle = fopen($dataFilePath, "r");
+
+   $columns = ['code', 'name', 'grade', 'firstname', 'lastname', 'category'];
+   $columnsIdx = [];
    $firstLine = true;
    $data = [];
    $invalid = 0;
    $removedCodes = [];
+
    while(($dataLine = fgetcsv($handle)) !== FALSE) {
       if($firstLine) {
+         foreach($dataLine as $idx => $column) {
+            $column = strtolower($column);
+            if(in_array($column, $columns)) {
+               $columnsIdx[$column] = $idx;
+            } else {
+               echo "<p>Invalid column ignored: " . $column . "</p>";
+            }
+         }
+         if(!isset($columnsIdx['code'])) {
+            die("<p>Missing code column in the CSV file.</p></body>");
+         }
+         if(!isset($columnsIdx['grade'])) {
+            die("<p>Missing grade column in the CSV file.</p></body>");
+         }
+         if(!isset($columnsIdx['name']) && (!isset($columnsIdx['firstname']) || !isset($columnsIdx['lastname']))) {
+            die("<p>Missing name column in the CSV file. You must provide either the name column, of the firstname and lastname columns.</p></body>");
+         }
          $firstLine = false;
          continue;
       }
-      // if there is no data in the line, skip it
-      if(count($dataLine) < 3) {
-         if(isset($dataLine[0]) && $dataLine[0] != '') {
-            $removedCodes[] = $dataLine[0];
-         } else {
-            echo "<p>Invalid data line: " . implode(', ', $dataLine) . "</p>";
-            if($invalid++ > 20) {
-               die("<p>Too many invalid lines, aborting.</p></body>");
-            }
-         }
-         continue;
-      }
-      if($dataLine[1] == '' || $dataLine[2] == '') {
-         $removedCodes[] = $dataLine[0];
-         continue;
-      }
+
       $dataLine = array_map('trim', $dataLine);
-      $nameParts = explode(' ', $dataLine[1]);
-      if(is_numeric($dataLine[2])) {
-         $grade = $dataLine[2];
-      } elseif(isset($gradesReverse[$dataLine[2]])) {
-         $grade = $gradesReverse[$dataLine[2]];
-      } else {
-         echo "<p>Invalid grade: " . $dataLine[2] . "</p>";
+      $infos = ['code' => '', 'grade' => '', 'firstname' => '', 'lastname' => ''];
+      foreach($columnsIdx as $column => $idx) {
+         $infos[$column] = isset($dataLine[$idx]) ? $dataLine[$idx] : '';
+      }
+
+      if($infos['code'] == '') {
+         echo "<p>Invalid data line: " . implode(', ', $dataLine) . "</p>";
          continue;
       }
-      $data[] = [strtolower($dataLine[0]), $nameParts[0], $nameParts[1], $grade];
+      if(isset($infos['name']) && $infos['name'] != '') {
+         // name has precedence
+         $nameParts = explode(' ', $infos['name']);
+         $infos['firstname'] = $nameParts[0];
+         $infos['lastname'] = implode(' ', array_slice($nameParts, 1));
+      }
+      unset($infos['name']);
+
+      if($infos['grade'] == '' || ($infos['firstname'] == '' && $infos['lastname'] == '')) {
+         // No information, so it is a code to be removed
+         $removedCodes[] = $infos['code'];
+         continue;
+      }
+
+      if(isset($gradesReverse[$infos['grade']])) {
+         $infos['grade'] = $gradesReverse[$infos['grade']];
+      } elseif(!is_numeric($infos['grade'])) {      
+         echo "<p>Invalid grade: " . $infos['grade'] . "</p>";
+         continue;
+      }
+
+      $data[] = $infos;
    }
    fclose($handle);
 
    // Check for existing codes
-   $newCodes = array_map(function($line) { return $line[0]; }, $data);
+   $newCodes = array_map(function($infos) { return $infos['code']; }, $data);
    if(count($newCodes) > 0) {
       $stmt = $db->prepare("SELECT `code`, `firstName`, `lastName`, `grade` FROM `algorea_registration` WHERE `code` IN (" . implode(',', array_fill(0, count($newCodes), '?')) . ")");
       $stmt->execute($newCodes);
@@ -111,52 +180,53 @@ function handleDataFile($dataFilePath) {
    }
 
    // Update existing codes
-   $query = "UPDATE `algorea_registration` SET `firstName` = :firstName, `lastName` = :lastName, `grade` = :grade, `lastGradeUpdate` = NOW() WHERE `code` = :code;";
-   $stmt = $db->prepare($query);
-   foreach($data as $dataLine) {
-      if(!in_array($dataLine[0], $existingCodes)) {
+   foreach($data as $infos) {
+      if(!in_array($infos['code'], $existingCodes)) {
          continue;
       }
-      $codeData = [
-         'firstName' => $dataLine[1],
-         'lastName' => $dataLine[2],
-         'grade' => $dataLine[3],
-         'code' => $dataLine[0]
-      ];
-      if($existingCodesData[$dataLine[0]] == array_slice($dataLine, 1)) {
-         continue;
+      $query = "UPDATE `algorea_registration` SET `firstName` = :firstname, `lastName` = :lastname, `grade` = :grade, `lastGradeUpdate` = NOW()";
+      if(isset($infos['category'])) {
+         $query .= ", `category` = :category";
       }
-      $stmt->execute($codeData);
-      echo "<p>Updated code " . $dataLine[0] . " : " . implode(', ', $existingCodesData[$dataLine[0]]) . " => " . implode(', ', array_slice($dataLine, 1)) . "</p>";
+      $query .= " WHERE `code` = :code;";
+      $stmt = $db->prepare($query);
+      $stmt->execute($infos);
+      echo "<p>Updated code " . $infos['code'] . "</p>";
    }
 
    // Add new codes
    $nbAdded = 0;
-   $query = "
-      INSERT INTO `algorea_registration` (`ID`, `firstName`, `lastName`, `grade`, `lastGradeUpdate`, `code`) VALUES(:ID, :firstName, :lastName, :grade, NOW(), :code);";
-   $stmt = $db->prepare($query);
-   foreach($data as $dataLine) {
-      if(in_array($dataLine[0], $existingCodes)) {
+   foreach($data as $infos) {
+      if(in_array($infos['code'], $existingCodes)) {
          continue;
       }
 
       // Add to algorea_registration
-      $codeData = [
-         'ID' => getRandomID(),
-         'firstName' => $dataLine[1],
-         'lastName' => $dataLine[2],
-         'grade' => $dataLine[3],
-         'code' => $dataLine[0]
-      ];
+      $infos['ID'] = getRandomID();
+      $query = "INSERT INTO `algorea_registration` (`ID`, `firstName`, `lastName`, `grade`, `lastGradeUpdate`, `code`";
+      $queryValues = " VALUES(:ID, :firstname, :lastname, :grade, NOW(), :code";
+
+      if(isset($infos['category']) && $infos['category'] != '') {
+         $query .= ", `category`";
+         $queryValues .= ", :category";
+      } else {
+         unset($infos['category']);
+      }
+      $query .= ")" . $queryValues . ");";
+
       try {
-         $stmt->execute($codeData);
+         $stmt = $db->prepare($query);
+         $stmt->execute($infos);
          if($stmt->rowCount() == 0) {
-            echo "<p>Error while adding code " . $dataLine[0] . ".</p>";
+            echo "<p>Error while adding code " . $infos['code'] . ".</p>";
          } else {
             $nbAdded++;
          }
       } catch (PDOException $e) {
-         echo "<p>Error while adding code " . $dataLine[0] . " (possible duplicate in the list).</p>";
+         echo $query;
+         print_r($infos);
+         echo $e->getMessage();
+         echo "<p>Error while adding code " . $infos['code'] . " (possible duplicate in the list).</p>";
       }
    }
 
@@ -184,6 +254,8 @@ if (isset($_FILES['dataFile'])) {
       <br>
       <input type="submit" value="Submit" data-i18n="[value]manual_participants_title">
    </form>
+   <br>
+   <p><a href="addManualParticipants.php?download=1" data-i18n="manual_participants_download"></a></p>
    <br>
    <p data-i18n="[html]go_to_index"></p>
 </div>

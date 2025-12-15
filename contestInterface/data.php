@@ -400,21 +400,17 @@ function handleCheckPassword($db) {
       unset($stmt);
 
       // Send back error message to user
-      $userMsg = "Vous utilisez une ancienne version de l'interface, veuillez rafraîchir la page. Si cela ne règle pas le problème, essayez de vider votre cache.";
-      if(isset($config->contestBackupURL)) {
-         $userMsg .= " Vous pouvez aussi essayer le domaine alternatif du concours http://" . $config->contestBackupURL . ".";
-      }
-      exitWithJsonFailure($userMsg);
+      exitWithJsonFailure('error_old_interface');
    }
 
    if (!isset($_POST["password"])) {
-      exitWithJsonFailure("Mot de passe manquant");
+      exitWithJsonFailure('error_code_missing');
    }
    $getTeams = array_key_exists('getTeams', $_POST) ? $_POST["getTeams"] : False;
    $password = strtolower(trim($_POST["password"]));
    $filteredPassword = preg_replace('/[^A-Za-z0-9]/', '', $password);
    if($filteredPassword != $password) {
-      exitWithJsonFailure("Caractères invalides dans le mot de passe");
+      exitWithJsonFailure('error_code_invalid_characters');
    }
    // Search for a group matching the entered password, and if found create
    // a team in that group (and end the request).
@@ -477,7 +473,7 @@ function handleGroupFromRegistrationCode($db, $code) {
    addBackendHint(sprintf("Group(%s):checkPassword", escapeHttpValue($registrationData->ID))); // TODO : check hint
 
    $trainingContestID = "485926402649945250"; // hard-coded training contest
-   $officialContestID = "174405033703499788"; // hard-coded real contest
+   $officialContestID = "174405033703499789"; // hard-coded real contest
    if (isset($config->trainingContestID)) {
       $trainingContestID = $config->trainingContestID;
    }
@@ -512,7 +508,7 @@ function handleGroupFromRegistrationCode($db, $code) {
    $query = "SELECT tmp.score as score, tmp.sumScores, tmp.password, tmp.startTime, tmp.contestName, tmp.contestID, tmp.parentContestID, tmp.contestCategory, ".
        "tmp.nbMinutes, tmp.remainingSeconds, tmp.teamID, ".
        "GROUP_CONCAT(CONCAT(CONCAT(contestant.firstName, ' '), contestant.lastName)) as contestants, tmp.rank, tmp.schoolRank, count(*) as nbContestants, ".
-       "contest.parentContestID as parentContestID ".
+       "contest.categoryColor, contest.parentContestID as parentContestID ".
        "FROM (".
           "SELECT team.ID as teamID, team.score, SUM(team_question.ffScore) as sumScores, contestant.rank, contestant.schoolRank, team.password, team.startTime, contest.ID as contestID, contest.parentContestID, contest.name as contestName, contest.categoryColor as contestCategory, ".
           "team.nbMinutes, (team.`nbMinutes` * 60) - TIME_TO_SEC(TIMEDIFF(UTC_TIMESTAMP(), `team`.`startTime`)) as remainingSeconds ".
@@ -537,7 +533,7 @@ function handleGroupFromRegistrationCode($db, $code) {
    while ($row = $stmt->fetchObject()) {
       $participations[] = $row;
       $hasParticipatedIn[$row->contestID] = true;
-      if($row->parentContestID) {
+      if(!$row->categoryColor && $row->parentContestID) {
          $hasParticipatedIn[$row->parentContestID] = true;
       }
       if(($row->startTime === null && !isset($inProgress[$row->contestID])) || $row->remainingSeconds > 0) {
@@ -669,12 +665,22 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "",
    $stmt->execute(array("contestID" => $row->contestID));
    $childrenContests = array();
    $hadChildrenContests = false;
+   $defaultChildrenContests = [];
+   $defaultContestCategoryIdx = null;
    while ($rowChild = $stmt->fetchObject()) {
       $hadChildrenContests = true;
       $discardCategory = false;
       if ($isOfficialContest) {
-         foreach ($allCategories as $category) {
+         foreach ($allCategories as $idx => $category) {
             if ($rowChild->categoryColor == $category) {
+               // Determine the default contest category and corresponding contests for selection later if the category is not defined
+               // This will work for contests without categories because there will be no default contest category
+               if($defaultContestCategoryIdx === null || $defaultContestCategoryIdx > $idx) {
+                  $defaultContestCategoryIdx = $idx;
+               }
+               if($idx == $defaultContestCategoryIdx) {
+                  $defaultChildrenContests[] = $rowChild;
+               }
                break;
             }
             if ($registrationData->qualifiedCategory == $category) { // the contest's category is higher than the user's qualified category
@@ -701,6 +707,10 @@ function handleCheckGroupPassword($db, $password, $getTeams, $extraMessage = "",
          $childrenContests[] = $rowChild;
       }
    };
+   if($hadChildrenContests && $registrationData->qualifiedCategory === "" && count($defaultChildrenContests) > 0) {
+      // Category is not defined and we have a default category (and children contests), select those
+      $childrenContests = $defaultChildrenContests;
+   }
    $allContestsDone = ((count($childrenContests) == 0) && $hadChildrenContests);
 
    addBackendHint("ClientIP.checkPassword:pass");
@@ -789,41 +799,50 @@ function getRemainingSeconds($db, $teamID, $restartIfEnded = false) {
    if (!$row) {
       return 0;
    }
+
    $remainingSeconds = $row->remainingSeconds;
-   $pausesAdded = 0;
+   
    $update = false;
-   if ($row->endTime != null) {
-      if (!$restartIfEnded) {
-         return 0;
-      }
-      if ($_SESSION["contestShowSolutions"]) {
-         return 0;
-      }
-      if ($remainingSeconds < 0) {
-         if (!$_SESSION["allowPauses"]) {
-            return 0;
-         }
-      }
-      $pausesAdded = 1;
-      $remainingSeconds = $row->remainingSecondsBeforePause;
-      $update = true;
-   }
+   $query = "UPDATE `team` SET
+      `endTime` = NULL,
+      `nbMinutes` = `nbMinutes` + IFNULL(`extraMinutes`, 0),
+      `extraMinutes` = NULL";
+   $queryParams = ['teamID' => $teamID];
+
+   // If we were given extra minutes, we can resume the contest as if we took a pause
+   $pauseAllowed = $_SESSION["allowPauses"] || $row->extraMinutes !== null;
+
    if ($remainingSeconds < 0) {
       $remainingSeconds = 0;
    }
-   if ($row->extraMinutes != null) {
+   if ($row->extraMinutes !== null) {
       $remainingSeconds += $row->extraMinutes * 60;
       $update = true;
    }
+
+   if ($row->endTime !== null) {
+      // Participation has ended
+      if (!$restartIfEnded || $_SESSION["contestShowSolutions"]) {
+         return 0;
+      }
+      if ($pauseAllowed) {
+         // Allow a pause, update startTime to keep the remaining time before the pause
+         $remainingSeconds = $row->remainingSecondsBeforePause;
+         $query .= ", `startTime` = DATE_SUB(UTC_TIMESTAMP(), INTERVAL ((`nbMinutes` * 60) - :remainingSeconds) SECOND)";
+         $query .= ", `nbPauses` = `nbPauses` + 1";
+         $queryParams['remainingSeconds'] = $remainingSeconds;
+      } elseif ($remainingSeconds <= 0) {
+         return 0;
+      } else {
+         // If we don't allow pauses but there is still time left on the participation, just allow continuing with whichever time is remaining
+         // It will remove the endTime
+      }
+      $update = true;
+   }
    if ($update) {
-      $stmt2 = $db->prepare("UPDATE `team` SET ".
-         "`endTime` = NULL, ".
-         "`nbMinutes` = `nbMinutes` + IFNULL(`extraMinutes`,0), ".
-         "`startTime` = DATE_SUB(UTC_TIMESTAMP(), INTERVAL ((`nbMinutes` * 60) - :remainingSeconds) SECOND), ".
-         "`extraMinutes` = NULL, ".
-         "`nbPauses` = `nbPauses` + :pausesAdded ".
-         "WHERE `ID` = :teamID");
-      $stmt2->execute(array("teamID" => $teamID, "remainingSeconds" => $remainingSeconds, "pausesAdded" => $pausesAdded));
+      $query .= " WHERE `ID` = :teamID";
+      $stmt2 = $db->prepare($query);
+      $stmt2->execute($queryParams);
       updateDynamoDBStartTime($db, $teamID);
    }
    return $remainingSeconds;
@@ -845,16 +864,16 @@ function handleGetRemainingSeconds($db) {
 function handleRecoverGroup($db) {
    addBackendHint("ClientIP.loadOther:data");
    if (!isset($_POST['groupCode']) || !isset($_POST['groupPass'])) {
-      exitWithJson((object)array("success" => false, "message" => 'Code ou mot de passe manquant'));
+      exitWithJsonFailure('error_code_password_missing');
    }
    $stmt = $db->prepare("SELECT `ID`, `bRecovered`, `contestID`, `expectedStartTime`, `name`, `userID`, `gradeDetail`, `grade`, `schoolID`, `nbStudents`, `nbTeamsEffective`, `nbStudentsEffective`, `noticePrinted`, `isPublic`, `participationType`, `password`, `language`, `minCategory`, `maxCategory` FROM `group` WHERE `code` = ?");
    $stmt->execute(array($_POST['groupCode']));
    $row = $stmt->fetchObject();
    if (!$row || $row->password != $_POST['groupPass']) {
-      exitWithJson((object)array("success" => false, "message" => 'invalid_password'));
+      exitWithJsonFailure('invalid_password');
    }
    if ($row->bRecovered == 1) {
-      exitWithJson((object)array("success" => false, "message" => 'L\'opération n\'est possible qu\'une fois par groupe.'));
+      exitWithJsonFailure('error_group_already_recovered');
    }
    $stmtUpdate = $db->prepare("UPDATE `group` SET `code` = ?, `password` = ?, `bRecovered`=1 WHERE `ID` = ?;");
    $stmtUpdate->execute(array('#'.$_POST['groupCode'], '#'.$row->password, $row->ID));

@@ -183,6 +183,30 @@ function verifyFioiQualification($idUser) {
    }
 }
 
+function hasAccessToGroup($groupID, $type = 'read') {
+   // Checks whether the currently logged user has access to the given group
+   // either directly, through parent group, or through user_user
+   global $db;
+   if($_SESSION["isAdmin"]) {
+      return true;
+   }
+   if(!isset($_SESSION["userID"])) {
+      echo translate("session_expired");
+      exit;
+   }
+   $type = $type == 'write' ? 'write' : 'read';
+   $query = "
+      SELECT 1 FROM `group`
+      LEFT JOIN `group` AS `parentGroup` ON `group`.`parentGroupID` = `parentGroup`.ID
+      LEFT JOIN `user_user` ON (`group`.userID = `user_user`.userID OR `parentGroup`.userID = `user_user`.userID) AND `user_user`.accessType = :type
+      WHERE `group`.ID = :groupID AND (`group`.userID = :userID OR `user_user`.targetUserID = :userID);
+      ";
+   $stmt = $db->prepare($query);
+   $stmt->execute(['groupID' => $groupID, 'userID' => $_SESSION['userID'], 'type' => $type]);
+   $row = $stmt->fetchObject();
+   return $row !== false;
+}
+
 if (!isset($_SESSION["userType"])) {
    $_SESSION["userType"] = "user";
 }
