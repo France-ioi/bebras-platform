@@ -916,7 +916,17 @@ if ($action == "detectDuplicates") {
 }
 
 echo "<h3><a href='".$startUrl."&action=markFailed'>Mark as failed, former participations that seem to be failed attempts</a></h3>";
+echo "<p>Use nbMinutesFailed parameter to set the maximum duration for a failed attempt, for Castor usual is 25 minutes.</p>";
 if ($action == "markFailed") {
+   if (!isset($_GET["nbMinutesFailed"])) {
+      echo "Parameter nbMinutesFailed is missing";
+      return;
+   }
+   $nbMinutesFailed = intval($_GET["nbMinutesFailed"]);
+   if ($nbMinutesFailed <= 0) {
+      echo "Parameter nbMinutesFailed should be > 0";
+      return;
+   }
 
    execQueryAndShowNbRows("Mark as failed if no answer is stored at all", "
       UPDATE `team`
@@ -929,7 +939,7 @@ if ($action == "markFailed") {
       AND duplicateType = 'former'",
       array("contestID" => $contestID));
 
-   execQueryAndShowNbRows("Mark as failed initial attempts that lasted less than 25 minutes", "
+   execQueryAndShowNbRows("Mark as failed initial attempts that lasted less than $nbMinutesFailed minutes", "
       UPDATE team
       JOIN `group` ON `team`.`groupID` = `group`.ID
       JOIN `contest` ON `group`.contestID = contest.ID
@@ -937,8 +947,8 @@ if ($action == "markFailed") {
       WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
       AND team.score IS NULL
       AND duplicateType = 'former'
-      AND TIMEDIFF(tmpLastAnswerDate, team.startTime) < '00:25:00'",
-      array("contestID" => $contestID));
+      AND TIMEDIFF(tmpLastAnswerDate, team.startTime) < SEC_TO_TIME(:nbMinutesFailed * 60)",
+      array("contestID" => $contestID, "nbMinutesFailed" => $nbMinutesFailed));
 
       
    execQueryAndShowNbRows("Mark as failed second attempts that have a lower score than the first attempt", "
@@ -1008,10 +1018,12 @@ if ($action == "hideInvalidContestants") {
 
 
 echo "<h3><a href='".$startUrl."&action=teachersWithDuplicates'>Show teachers with a lot of duplicate students.</a></h3>";
+echo "<p>Default 20 duplicate students, use minDuplicates parameter to change.</p>";
 if ($action == "teachersWithDuplicates") {
-   echo "Contact these teachers to understand what happened";
+   echo "<p>Contact these teachers to understand what happened.</p>";
+   $minDuplicates = isset($_GET["minDuplicates"]) ? intval($_GET["minDuplicates"]) : 20;
    
-   execSelectAndShowResults("Teachers with more than 20 duplicate students", "
+   execSelectAndShowResults("Teachers with more than $minDuplicates duplicate students", "
       SELECT count(*) AS nb, userID, user.officialEmail, user.alternativeEmail
       FROM team
       JOIN `group` ON team.groupID = `group`.ID
@@ -1020,8 +1032,8 @@ if ($action == "teachersWithDuplicates") {
       WHERE (contest.ID = :contestID OR contest.parentContestID = :contestID)
       AND duplicateType = 'former'
       GROUP BY userID
-      HAVING nb > 20",
-      array("contestID" => $contestID));
+      HAVING nb > :minDuplicates",
+      array("contestID" => $contestID, "minDuplicates" => $minDuplicates));
 }
       
 echo "<h2>Handle incorrect grade issues. Make teachers unofficial</h2>";
