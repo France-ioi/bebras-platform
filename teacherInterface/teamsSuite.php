@@ -8,31 +8,35 @@ require_once("commonAdmin.php");
 // 1 : qualifying is possible, display passwords
 // 2 : participation in the time-limited contest is possible, display as such
 // 3 : display rankings from time-limited contest
-$phase = 3;
+$phase = 0;
 
 // Text telling when the time-limited contest opens (displayed when $phase == 1)
-$timeLimitedStart = "à partir du lundi 24 mars 2025";
+$timeLimitedStart = "à partir du lundi 18 mars 2025";
 
 // Qualification chapter ID (the one with the team)
-$idTeamItem = "139860767650179314";
+$idTeamItem = "720183861888339651";
 // Qualification tasks IDs
 $idItems = [
-"540235374245795712",
-"737597811560821225",
-"1697640084875933009",
-"576733918320192006"
+"995297990319050312",
+"1373303638679434140",
+"1507118797643917870",
+"359087814726679561",
+"157930902449734829",
+"1044302133254772708"
 ];
 // Names of the tasks (qualification)
 $itemNames = [
-"Image mélangée 1",
-"Image mélangée 2",
-"Substitutions par colonnes",
-"Réaction chimique"
+"Analyse de circuit",
+"Substitution décalée - 1",
+"Substitution décalée - 2",
+"Traduction et IA - 1",
+"Traduction et IA - 2",
+"Traduction et IA - 3"
 ];
 // Score required to qualify 
 $reqScores = [
-   'fr' => 150,
-   'ch' => 100
+   'fr' => 600,
+   'ch' => 600
 ];
 
 // Names of the tasks (time-limited contest)
