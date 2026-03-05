@@ -1153,7 +1153,7 @@ if ($action == "precomputeParticipants") {
 }
 
 echo "<h3><a href='".$startUrl."&action=precomputeParticipantsAlgorea'>(Algorea) Precompute number of participants over multiple contests, into this contest</a></h3>";
-echo "<p>Enter additional contest IDs as parameter &contestIDs= separated by commas.</p>";
+echo "<p>For instance for contests over multiple turns, to use the overall number of participants in diplomas. Enter additional (parent) contest IDs as parameter &contestIDs= separated by commas.</p>";
 if ($action == "precomputeParticipantsAlgorea") {
    if (isset($_GET["contestIDs"])) {
       $contestIDs = [];
