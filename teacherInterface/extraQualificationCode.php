@@ -29,13 +29,21 @@ if (!isset($_SESSION['userID'])) {
 <?php
 
 if (isset($_POST["schoolID"])) {
-   if ($_POST["lastName"] == "" || $_POST["firstName"] == "") {
+   if ($_POST["lastName"] == "" || $_POST["firstName"] == "" || $_POST["grade"] == "" || $_POST["schoolID"] == "") {
       showError("<b>".translate("codes_fields_missing")."</b>");
    } else {
-      $code = generateCode($_POST["schoolID"], $_SESSION['userID'], null, $_POST["lastName"], $_POST["firstName"],$_POST["grade"]);
+      // Check schoolID is valid
+      $query = "select count(*) from `school_user` where `schoolID` = :schoolID and `userID` = :userID";
+      $stmt = $db->prepare($query);
+      $stmt->execute(['schoolID' => $_POST["schoolID"], 'userID' => $_SESSION['userID']]);
+      if ($stmt->fetchColumn() == 0) {
+         showError("<b>".translate("codes_fields_missing")."</b>");
+      } else {
+         $code = generateCode($_POST["schoolID"], $_SESSION['userID'], null, $_POST["lastName"], $_POST["firstName"],$_POST["grade"]);
 
-      if ($code != null) {
-         showError(sprintf(translate("codes_generated"), $code, $_POST["firstName"], $_POST["lastName"]));
+         if ($code != null) {
+            showError(sprintf(translate("codes_generated"), $code, $_POST["firstName"], $_POST["lastName"]));
+         }
       }
    }
 }
