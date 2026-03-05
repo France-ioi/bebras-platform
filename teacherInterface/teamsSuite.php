@@ -407,7 +407,7 @@ foreach($teams as $groupId => $data) {
        for($i = 0; $i < count($idItems); $i++) {
           echo "<td>" . formatScore($scores[$groupId][$i]) . "</td>";
        }
-       echo "<td><b>" . (isset($scoreTotals[$groupId]) ? $scoreTotals[$groupId] : '-') . "</b> / 400</td>";
+       echo "<td><b>" . (isset($scoreTotals[$groupId]) ? $scoreTotals[$groupId] : '-') . "</b> / " . (count($idItems) * 100) . "</td>";
 
        if($phase > 0 && $data['password']) {
           // Team is qualified
@@ -420,7 +420,7 @@ foreach($teams as $groupId => $data) {
                 for($i = 0; $i < count($contestNames); $i++) {
                    echo "<td>" . formatScore($data['scores'][$i]) . "</td>";
                 }
-                echo "<td><b>" . $data['thirdScore'] . "</b> / 400</td>";
+                echo "<td><b>" . $data['thirdScore'] . "</b> / " . (count($contestNames) * 100) . "</td>";
 
                 if($phase > 2 && $data['rank'] != 0) {
                     // Rankings have been calculated
