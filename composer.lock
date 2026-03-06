@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/France-ioi/pem-task-compiler.git",
-                "reference": "eb7ac10579aa59f90358615a1f057764144cdbd8"
+                "reference": "e1b234c55aeb4843ae3708187f4b4c5851d6f0b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/France-ioi/pem-task-compiler/zipball/eb7ac10579aa59f90358615a1f057764144cdbd8",
-                "reference": "eb7ac10579aa59f90358615a1f057764144cdbd8",
+                "url": "https://api.github.com/repos/France-ioi/pem-task-compiler/zipball/e1b234c55aeb4843ae3708187f4b4c5851d6f0b3",
+                "reference": "e1b234c55aeb4843ae3708187f4b4c5851d6f0b3",
                 "shasum": ""
             },
             "default-branch": true,
@@ -31,7 +31,7 @@
                 "source": "https://github.com/France-ioi/pem-task-compiler/tree/master",
                 "issues": "https://github.com/France-ioi/pem-task-compiler/issues"
             },
-            "time": "2025-12-07T11:18:17+00:00"
+            "time": "2026-03-06T01:41:44+00:00"
         },
         {
             "name": "aws/aws-sdk-php",
