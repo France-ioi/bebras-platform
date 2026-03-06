@@ -293,6 +293,7 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
    $numPart = 0;
    $nameParts = "";
    $buffer = "";
+   $getContentsCache = [];
    foreach ($tasks as $curTask) {
       $strQuestion = "";;
       $jsQuestions = '';
@@ -304,7 +305,7 @@ function generateContest($tasks, $contestID, $contestFolder, $fullFeedback = fal
       $cssModules = array();
 
       $curKey = $curTask['key'];
-      $task = new PEMTaskCompiler($curTask['bebras'], $curTask['key'], $config->teacherInterface->tasksPathLocal.$curTask['url'], true);
+      $task = new PEMTaskCompiler($curTask['bebras'], $curTask['key'], $config->teacherInterface->tasksPathLocal.$curTask['url'], true, $getContentsCache);
 
       // Create the task directory.
       contestMkdir($curKey);
