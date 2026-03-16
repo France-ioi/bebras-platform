@@ -8,10 +8,10 @@ require_once("commonAdmin.php");
 // 1 : qualifying is possible, display passwords
 // 2 : participation in the time-limited contest is possible, display as such
 // 3 : display rankings from time-limited contest
-$phase = 0;
+$phase = 2;
 
 // Text telling when the time-limited contest opens (displayed when $phase == 1)
-$timeLimitedStart = "à partir du lundi 18 mars 2025";
+$timeLimitedStart = "à partir du lundi 16 mars 2026";
 
 // Qualification chapter ID (the one with the team)
 $idTeamItem = "720183861888339651";
@@ -35,8 +35,8 @@ $itemNames = [
 ];
 // Score required to qualify 
 $reqScores = [
-   'fr' => 600,
-   'ch' => 600
+   'fr' => 150,
+   'ch' => 100
 ];
 
 // Names of the tasks (time-limited contest)
