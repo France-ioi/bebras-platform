@@ -8,7 +8,7 @@ require_once("commonAdmin.php");
 // 1 : qualifying is possible, display passwords
 // 2 : participation in the time-limited contest is possible, display as such
 // 3 : display rankings from time-limited contest
-$phase = 2;
+$phase = 3;
 
 // Text telling when the time-limited contest opens (displayed when $phase == 1)
 $timeLimitedStart = "à partir du lundi 16 mars 2026";
@@ -422,10 +422,10 @@ foreach($teams as $groupId => $data) {
                 }
                 echo "<td><b>" . $data['thirdScore'] . "</b> / " . (count($contestNames) * 100) . "</td>";
 
-                if($phase > 2 && $data['rank'] != 0) {
+                if($phase > 2 && $data['rank'] != 0 && $data['country'] != 'ch') {
                     // Rankings have been calculated
                     if($data['qualifiedFinal'] != '1') {
-                        // Qualified to the final round
+                        // Not qualified to the final round
                         echo "<td>";
                         if($data['qualifiedFinalMaybe'] != '1') {
                            echo "<i>Équipe non qualifiée pour la finale</i><br>";
@@ -436,7 +436,7 @@ foreach($teams as $groupId => $data) {
                         echo "Rang académie : " . $data['rankRegion'];
                         echo "</td>";
                     } else {
-                        // Not qualified to the final round
+                        // Qualified to the final round
                         echo "<td><i>Résultat en attente de validation, coordinateur contacté.</i></td>";
                     }
                 } else {
