@@ -8,7 +8,14 @@ require_once("commonAdmin.php");
 // 1 : qualifying is possible, display passwords
 // 2 : participation in the time-limited contest is possible, display as such
 // 3 : display rankings from time-limited contest
-$phase = 3;
+// 4 : display qualified for the final round
+$phase = 4;
+
+// Phase by country (if different)
+$phaseByCountry = [
+   'ch' => 2,
+   'fr' => 4
+];
 
 // Text telling when the time-limited contest opens (displayed when $phase == 1)
 $timeLimitedStart = "à partir du lundi 16 mars 2026";
@@ -358,6 +365,9 @@ foreach($teams as $groupId => $data) {
     echo "<td>";
     $membersReg = [];
     $membersPrereg = [];
+    if(isset($phaseByCountry[$data['country']])) {
+       $phase = $phaseByCountry[$data['country']];
+    }
 
     foreach($data['members'] as $idx => $code) {
         $memberStr = formatContestant($code);
@@ -422,7 +432,7 @@ foreach($teams as $groupId => $data) {
                 }
                 echo "<td><b>" . $data['thirdScore'] . "</b> / " . (count($contestNames) * 100) . "</td>";
 
-                if($phase > 2 && $data['rank'] != 0 && $data['country'] != 'ch') {
+                if($phase > 2 && $data['rank'] != 0) {
                     // Rankings have been calculated
                     if($data['qualifiedFinal'] != '1') {
                         // Not qualified to the final round
@@ -435,6 +445,8 @@ foreach($teams as $groupId => $data) {
                         echo "Rang national : " . $data['rank'] . '<br>';
                         echo "Rang académie : " . $data['rankRegion'];
                         echo "</td>";
+                    } else if($phase > 3) {
+                        echo "<td><i>Équipe qualifiée pour la finale.</i></td>";
                     } else {
                         // Qualified to the final round
                         echo "<td><i>Résultat en attente de validation, coordinateur contacté.</i></td>";
