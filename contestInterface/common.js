@@ -2345,7 +2345,7 @@ window.showPersonalPage = function(data) {
          "<td><span data-i18n=\"" + status + "\"></span></td>" +
          "<td>" + score + "</td>" +
          "<td class='personalPageRank'>" + rank + "</td>" +
-         "<td class='personalPageRank'>>" + schoolRank + "</td>" +
+         "<td class='personalPageRank'>" + schoolRank + "</td>" +
          "<td><a href='" + location.pathname + "?team=" + participation.password + "' target='_blank' data-i18n='personal_page_open'></a></td></tr>";
    }
    $('#buttonStartPreparation').toggle(!!data.childrenContests.length);
