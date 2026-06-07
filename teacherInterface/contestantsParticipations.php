@@ -446,6 +446,10 @@ foreach ($schools as $schoolID => $school) {
          echo "</span>";
       } elseif($qualifiedDemi == "1") {
          echo "<span class='rank'>Qualifié(e), n'a pas encore participé</span>";
+      } elseif($qualifiedDemi == "-1") {
+         echo "<span class='rank'>Vérifications en cours</span>";
+      } elseif($qualifiedDemi == "-2") {
+         echo "<span class='rank'>Non qualifié(e)</span>";
       } else {
          echo "-";
       }
