@@ -444,8 +444,10 @@ foreach ($schools as $schoolID => $school) {
             echo "En attente";
          }
          echo "</span>";
+      } elseif($qualifiedDemi == "2") {
+         echo "<span class='rank'>Qualifié(e), chartes remplies, n'a pas encore participé</span>";
       } elseif($qualifiedDemi == "1") {
-         echo "<span class='rank'>Qualifié(e), n'a pas encore participé</span>";
+         echo "<span class='rank'>Qualifié(e), en attente de remplissage et validation des chartes</span>";
       } elseif($qualifiedDemi == "-1") {
          echo "<span class='rank'>Vérifications en cours</span>";
       } elseif($qualifiedDemi == "-2") {
