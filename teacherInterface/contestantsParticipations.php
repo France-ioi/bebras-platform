@@ -435,7 +435,7 @@ foreach ($schools as $schoolID => $school) {
          $qualifiedFinal = $contestant["infos"]["qualifiedFinal"];
          echo "<span class='rank'>";
          if ($qualifiedFinal == "0") {
-            echo "Non qualifié(e) pour la finale<br/>";
+            // echo "Non qualifié(e) pour la finale<br/>";
             // echo "Rang ".$contestant["infos"]["rankDemi2026"]." de ";
             // echo translate("grade_short_".$contestant["infos"]["grade"]);
          } else if ($qualifiedFinal == "1") {
