@@ -434,14 +434,14 @@ foreach ($schools as $schoolID => $school) {
          echo "<br/>";
          $qualifiedFinal = $contestant["infos"]["qualifiedFinal"];
          echo "<span class='rank'>";
-         if ($qualifiedFinal == "0") {
-            // echo "Non qualifié(e) pour la finale<br/>";
-            // echo "Rang ".$contestant["infos"]["rankDemi2026"]." de ";
-            // echo translate("grade_short_".$contestant["infos"]["grade"]);
+         if ($qualifiedFinal == "2") {
+            echo "Qualifié(e) en finale";
          } else if ($qualifiedFinal == "1") {
-            echo "Qualifié(e) pour la finale";
-         } else if ($qualifiedFinal == "2") {
-            echo "En attente";
+            echo "Entretien à passer";
+         } else if ($qualifiedFinal == "-2") {
+            echo "Non qualifié(e)";
+            // echo "<br/>Rang ".$contestant["infos"]["rankDemi2026"]." de ";
+            // echo translate("grade_short_".$contestant["infos"]["grade"]);
          }
          echo "</span>";
       } elseif($qualifiedDemi == "2") {
