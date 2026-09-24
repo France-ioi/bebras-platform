@@ -855,6 +855,9 @@ function handleGetRemainingSeconds($db) {
       exitWithJson((object)array("success" => false));
    }
    $teamID = $_SESSION['teamID'];
+   if($teamID != $_POST['teamID']) {
+      exitWithJson((object)array("success" => false, "error" => "session"));
+   }
    $remainingSeconds = getRemainingSeconds($db, $teamID);
    addBackendHint("ClientIP.getRemainingTime:pass");
    addBackendHint(sprintf("Team(%s):getRemainingTime", escapeHttpValue($teamID)));
