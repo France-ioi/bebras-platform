@@ -594,6 +594,11 @@ function handleGroupFromRegistrationCode($db, $code) {
          }
       }
    }
+   if(!$isOfficialContest) {
+      // Allow to display the personal page even if the training contest is closed
+      // Note that if we're trying to start the training contest, it will still fail despite bypassClosed
+      $registrationData->bypassClosed = true;
+   }
    handleCheckGroupPassword($db, $groupCode, false, "", $registrationData, $isOfficialContest, $resumeCode);
 }
 
