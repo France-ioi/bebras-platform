@@ -349,7 +349,7 @@ function checkPOW($paramName) {
    global $config;
    if (!$config->contestInterface->pow) { return; }
    if (!isset($_POST['pow']) || !isset($_POST['SID']) || !isset($_POST[$paramName])) {
-      exitWithJsonFailure("Invalid parameters");
+      exitWithJsonFailure("Invalid parameters, please reload the page");
    }
    $data = $_POST['SID'] . $_POST[$paramName];
    $n = 0;
@@ -358,6 +358,6 @@ function checkPOW($paramName) {
    }
    $pow = $_POST['pow'];
    if (($n * $pow) % $config->contestInterface->pow->modulo < $config->contestInterface->pow->min) {
-      exitWithJsonFailure("Invalid request");
+      exitWithJsonFailure("Invalid parameters, please reload the page");
    }
 }
