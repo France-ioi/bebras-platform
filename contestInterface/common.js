@@ -1752,6 +1752,7 @@ function setupContest(data) {
 
    // Defines function to call if students try to close their browser or tab
    window.onbeforeunload = function() {
+      saveAnswersToStorage();
       return t("warning_confirm_close_contest");
    };
 
@@ -3185,6 +3186,10 @@ function doCloseContest(message) {
 function finalCloseContest(message) {
    TimeManager.stopNow();
    closingContest = true;
+   // Clean up any saved unsent answers from localStorage
+   try {
+      localStorage.removeItem('unsentAnswers');
+   } catch (e) { }
    $.post("data.php", {SID: SID, action: "closeContest", teamID: teamID, teamPassword: teamPassword, teamScore: ffTeamScore, finalAnswersSent: !hasAnswersToSend()},
       function() {}, "json"
    ).always(function() {
@@ -3652,6 +3657,7 @@ function submitAnswer(questionKey, answer, score) {
    lastAnswersToSendUpdate = new Date();
    nbSubmissions++;
    Tracker.trackData({dataType:"answer", teamID: teamID, questionKey: questionKey, answer: answer});
+   saveAnswersToStorage();
    sendAnswers();
 }
 
@@ -3690,16 +3696,22 @@ function computeFullFeedbackScore() {
 
 // Sending answers
 
-var sendAnswersTryAlternate = false;
+var sendAnswersAlternateIndex = 0;
 function failedSendingAnswers() {
    Tracker.disabled = true;
    sending = false;
    for(var questionID in answersToSend) {
       answersToSend[questionID].sending = false;
    }
+   saveAnswersToStorage();
    backupSendAnswers();
-   sendAnswersTryAlternate = !sendAnswersTryAlternate;
-   var delay = sendAnswersTryAlternate ? 1000 : delaySendingAttempts;
+   var numAlternates = config.sendAnswersAlternateEndpoints ? config.sendAnswersAlternateEndpoints.length : 0;
+   sendAnswersAlternateIndex++;
+   if (sendAnswersAlternateIndex > numAlternates) {
+      sendAnswersAlternateIndex = 0;
+   }
+   // Short delay when trying an alternate; long delay when cycling back to primary
+   var delay = sendAnswersAlternateIndex > 0 ? 1000 : delaySendingAttempts;
    setTimeout(sendAnswers, delay);
 }
 
@@ -3762,26 +3774,48 @@ function base64url_encode(str) {
 }
 
 function saveAnswersToStorage() {
-   // Save answersToSend to local storage
-   if (!teamPassword) { return; }
-   var itemKey = 'answersToSend-' + teamPassword;
+   // Save the answersToSend to local storage to retry on page reload
+   if (!teamPassword || !teamID) { return; }
    if (hasAnswersToSend()) {
-      // Save answers
       try {
-         localStorage.setItem(itemKey, answersToSend);
-      } catch (e) { }
-      try {
-         sessionStorage.setItem(itemKey, answersToSend);
+         localStorage.setItem('unsentAnswers', JSON.stringify({
+            teamID: teamID,
+            teamPassword: teamPassword,
+            answers: answersToSend
+         }));
       } catch (e) { }
    } else {
-      // Remove key from storage
       try {
-         localStorage.removeItem(itemKey);
-      } catch (e) { }
-      try {
-         sessionStorage.removeItem(itemKey);
+         localStorage.removeItem('unsentAnswers');
       } catch (e) { }
    }
+}
+
+function restoreUnsentAnswers() {
+   // Try to resent unsent answersToSend stored in local storage
+   var payload;
+   try {
+      payload = localStorage.getItem('unsentAnswers');
+   } catch (e) { return; }
+   if (!payload) { return; }
+   var saved;
+   try {
+      saved = JSON.parse(payload);
+   } catch (e) {
+      localStorage.removeItem('unsentAnswers');
+      return;
+   }
+   if (!saved || !saved.teamID || !saved.teamPassword || !saved.answers || $.isEmptyObject(saved.answers)) {
+      localStorage.removeItem('unsentAnswers');
+      return;
+   }
+   $.post('answer.php', saved, function(data) {
+      if (data.success) {
+         localStorage.removeItem('unsentAnswers');
+      }
+   }, 'json').fail(function() {
+      setTimeout(restoreUnsentAnswers, 15000);
+   });
 }
 
 function sendAnswers() {
@@ -3800,7 +3834,10 @@ function sendAnswers() {
       return;
    }
 
-   var endpoint = sendAnswersTryAlternate ? "https://concours4.castor-informatique.fr/answer.php" : "answer.php";
+   var endpoint = "answer.php";
+   if (sendAnswersAlternateIndex > 0 && config.sendAnswersAlternateEndpoints) {
+      endpoint = config.sendAnswersAlternateEndpoints[sendAnswersAlternateIndex - 1];
+   }
    var params = { SID: SID, "answers": answersToSend, teamID: teamID, teamPassword: teamPassword, sendLastActivity: sendLastActivity, browserID: browserID };
    if(closingContest) {
       params.finalAnswersSent = true;
@@ -3847,6 +3884,7 @@ function sendAnswers() {
             return;
          }
          lastAnswersSentDate = new Date();
+         sendAnswersAlternateIndex = 0;
          var answersRemaining = false;
          for(var questionID in answersToSend) {
             var answerToSend = answersToSend[questionID];
@@ -3858,6 +3896,7 @@ function sendAnswers() {
                answersRemaining = true;
             }
          }
+         saveAnswersToStorage();
          if (answersRemaining) {
             setTimeout(sendAnswers, 1000);
          }
@@ -4698,6 +4737,9 @@ window.SrlModule = SrlModule;
 
 
 $(document).on('ready', function() {
+   // Attempt to silently resend any unsent answers from a previous session
+   restoreUnsentAnswers();
+
    var teamParam = getParameterByName('team');
    if (teamParam !== '') {
       /* remove team from url to avoid restarting after a reload */
