@@ -257,6 +257,7 @@
     "personal_page_schoolRank": "Classement<br/>établissement",
     "personal_page_access": "Accès",
     "personal_page_open": "Ouvrir",
+    "personal_page_participations_hidden": "Démarrez le concours avec le bouton ci-dessus. Les participations passées seront à nouveau accessibles après le concours.",
     "error_code_password_missing": "Code de groupe ou mot de passe de récupération manquant",
     "error_group_already_recovered": "L'opération n'est possible qu'une fois par groupe.",
     "error_code_missing": "Code manquant",

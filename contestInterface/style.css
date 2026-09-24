@@ -1038,6 +1038,16 @@ table td ul:first-child{
 #personalData tr td:first-child {
    font-weight: bold;
 }
+#msgPastParticipationsHidden {
+   font-style: italic;
+   color: #555;
+}
+.personalPageLink {
+   cursor: pointer;
+   color: #4D87CE;
+   font-weight: bold;
+   text-decoration: none;
+}
 
 
 @media /* Mobiles */
@@ -1062,6 +1072,29 @@ table td ul:first-child{
   #contentPublicGroups td p {
     margin-top: 1em;
     margin-bottom: 5px;
+  }
+  #divPersonalPage {
+    margin: -1em 10px 30px -10px;
+    padding-left: 10px;
+  }
+  #pastParticipations {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  #pastParticipations td {
+    white-space: nowrap;
+  }
+  #divPersonalPage table:not(#pastParticipations):not(#personalData) {
+    width: 100%;
+  }
+  #divPersonalPage table:not(#pastParticipations):not(#personalData) td {
+    display: block;
+    width: 100%;
+  }
+  #divPersonalPage table:not(#pastParticipations):not(#personalData) .btn {
+    width: 100%;
+    margin: 5px 0;
   }
 }
 @media /* Portrait mobiles and low res display */
@@ -1126,6 +1159,32 @@ screen and (max-width: 480.9px) {
   #contentPublicGroups td {
     width: auto !important;
   }
+  #divPersonalPage {
+    margin: -1em 10px 30px -10px;
+    padding-left: 10px;
+  }
+  #pastParticipations {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  #pastParticipations td {
+    white-space: nowrap;
+  }
+  #divPersonalPage table:not(#pastParticipations):not(#personalData) {
+    width: 100%;
+  }
+  #divPersonalPage table:not(#pastParticipations):not(#personalData) td {
+    display: block;
+    width: 100%;
+  }
+  #divPersonalPage table:not(#pastParticipations):not(#personalData) .btn {
+    width: 100%;
+    margin: 5px 0;
+  }
+  #personalData td {
+    display: block;
+  }
 
 }
 @media /* Mobiles landscape and tablets portrait and smaller landscape tablets */
@@ -1176,6 +1235,17 @@ screen and (max-width: 1024px) and (orientation: landscape) {
   }
   #mainNav li::after {
     content: normal;
+  }
+  #divPersonalPage {
+    margin: -1em 10px 30px -10px;
+  }
+  #pastParticipations {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  #pastParticipations td {
+    white-space: nowrap;
   }
 }
 

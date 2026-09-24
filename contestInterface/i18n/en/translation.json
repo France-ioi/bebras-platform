@@ -253,6 +253,7 @@
     "personal_page_schoolRank": "School<br/>rank",
     "personal_page_access": "Access",
     "personal_page_open": "Open",
+    "personal_page_participations_hidden": "Start the contest with the button above. Past participations will be accessible again after the contest.",
     "error_code_password_missing": "Group code or recovery password missing",
     "error_group_already_recovered": "The operation is only possible once per group.",
     "error_code_missing": "Code missing",

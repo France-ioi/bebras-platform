@@ -2347,10 +2347,14 @@ window.showPersonalPage = function(data) {
          "<td>" + score + "</td>" +
          "<td class='personalPageRank'>" + rank + "</td>" +
          "<td class='personalPageRank'>" + schoolRank + "</td>" +
-         "<td><a href='" + location.pathname + "?team=" + participation.password + "' target='_blank' data-i18n='personal_page_open'></a></td></tr>";
+         "<td><span class='personalPageLink' onclick='openPersonalPageParticipation(\"" + participation.password + "\")' data-i18n='personal_page_open'></span></td></tr>";
    }
-   $('#buttonStartPreparation').toggle(!!data.childrenContests.length);
+
+   // Set button states for training and official contests
+   var trainingOpen = data.childrenContests.length && (personalPageData.contestOpen == "Open" || !personalPageData.contestOpen);
+   $('#buttonStartPreparation').toggle(trainingOpen);
    $('#buttonStartPreparation').attr('data-i18n', 'personal_page_' + (data.registrationData.trainingInProgress ? 'resume' : 'start') + '_preparation');
+
    var disableOfficial = !canParticipateOfficial || data.registrationData.allowContestAtHome == "0";
    $('#buttonStartContest').prop('disabled', disableOfficial);
    $('#buttonStartContest').attr('data-i18n', 'personal_page_' + (!disableOfficial && data.registrationData.officialStatus == 'inprogress' ? 'resume' : 'start') + '_contest');
@@ -2358,12 +2362,26 @@ window.showPersonalPage = function(data) {
    $('#msgStartContest').toggle(!canParticipateOfficial);
 
    $("#pastParticipations").append(htmlParticipations);
+   if (config.hidePastParticipations) {
+      $('#pastParticipations').hide();
+      $('h3[data-i18n="personal_page_participations"]').hide();
+   }
+   $('#msgPastParticipationsHidden').toggle(config.hidePastParticipations);
    if(!hasAnyRank) {
       // Delete the rank columns because they're empty
       $('.personalPageRank').remove();
    }
    $('#divPersonalPage').i18n();
 }
+
+window.openPersonalPageParticipation = function(teamPassword) {
+   $("#divPersonalPage").hide();
+   $("#PersonalPageResult").html('');
+   checkGroupFromCode("PersonalPage", teamPassword, false, false, null, false, function() {
+      $("#divPersonalPage").show();
+      $("#PersonalPageResult").html(t('invalid_code'));
+   });
+};
 
 window.startContest = function() {
    $("#divPersonalPage").hide();

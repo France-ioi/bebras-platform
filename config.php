@@ -91,6 +91,7 @@ $config->contestInterface->skipContestantPassword = false;
 $config->contestInterface->finalQRCodeMode = "backup";
 $config->contestInterface->finalEncodeSalt = null;
 $config->contestInterface->hideStartTraining = false;
+$config->contestInterface->hidePastParticipations = false;
 $config->contestInterface->displayQualifiedHeader = false;
 $config->contestInterface->sendAnswersAlternateEndpoints = ["https://concours4.castor-informatique.fr/answer.php"];
 

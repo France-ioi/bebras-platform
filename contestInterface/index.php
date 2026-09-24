@@ -33,6 +33,7 @@
     "skipContestantPassword" => $config->contestInterface->skipContestantPassword,
     "finalQRCodeMode" => $config->contestInterface->finalQRCodeMode,
     "displayQualifiedHeader" => $config->contestInterface->displayQualifiedHeader,
+    "hidePastParticipations" => $config->contestInterface->hidePastParticipations,
     "sendAnswersAlternateEndpoints" => $config->contestInterface->sendAnswersAlternateEndpoints,
     ]) ?>;
 
@@ -616,6 +617,7 @@ try {
    <h2 class="personalPageMain" data-i18n="personal_page_title"></h2>
    <p class="personalPageMain" data-i18n="[html]personal_page_intro">
    </p>
+   <p><span id="PersonalPageResult" style="color:red"></span></p>
    <table id="personalData" class="personalPageMain">
       <tr><td><span data-i18n="first_name"></span> :</td><td id="persoFirstName"></td></tr>
       <tr><td><span data-i18n="last_name"></span> :</td><td id="persoLastName"></td></tr>
@@ -672,6 +674,7 @@ try {
          <td data-i18n="[html]personal_page_access"></td>
       </tr>
    </table>
+   <p id="msgPastParticipationsHidden" style="display:none;" data-i18n="[html]personal_page_participations_hidden"></p>
 </div>
 
 <div id="divPassword" style="display:none" class="dialog">
