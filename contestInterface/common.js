@@ -2434,6 +2434,49 @@ window.startPreparation = function() {
    startPing();
 }
 
+window.startContestDelay = function(callback) {
+   var maxDelay = parseInt(config.delayContestStart);
+   if (!maxDelay || maxDelay <= 0) {
+      callback();
+      return;
+   }
+
+   var storageKey = 'contestDelayEndTime';
+   var now = Date.now();
+   var endTime;
+
+   try {
+      var saved = parseInt(localStorage.getItem(storageKey));
+      if (saved && saved > now) {
+         endTime = saved;
+      }
+   } catch(e) {}
+
+   if (!endTime) {
+      var minDelay = Math.min(15, maxDelay);
+      var delaySeconds = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
+      endTime = now + delaySeconds * 1000;
+      try {
+         localStorage.setItem(storageKey, endTime.toString());
+      } catch(e) {}
+   }
+
+   function tick() {
+      var remaining = Math.max(0, Math.ceil((endTime - Date.now()) / 1000));
+      $('#delayCountdown').text(remaining);
+      if (remaining <= 0) {
+         try { localStorage.removeItem(storageKey); } catch(e) {}
+         $('#divContestDelay').hide();
+         callback();
+      } else {
+         setTimeout(tick, 1000);
+      }
+   }
+
+   $('#divContestDelay').i18n();
+   tick();
+};
+
 /*
  * Checks if a group is valid and loads information about the group and corresponding contest,
  * curStep: indicates which step of the login process the students are currently at :
@@ -2468,21 +2511,29 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
          $("#login_link_to_home").hide();
          $("#div" + curStep).hide();
 
-         checkBrowserID(data, function() {
-            childrenContests = data.childrenContests;
-            groupCheckedData = {
-               data: data,
-               curStep: curStep,
-               groupCode: groupCode,
-               getTeams: getTeams,
-               isPublic: data.isPublic
-            };
+         childrenContests = data.childrenContests;
+         groupCheckedData = {
+            data: data,
+            curStep: curStep,
+            groupCode: groupCode,
+            getTeams: getTeams,
+            isPublic: data.isPublic
+         };
 
 
-            if ((data.registrationData != undefined) && (!data.isOfficialContest)) {
-               window.showPersonalPage(data);
-               return;
-            }
+         if ((data.registrationData != undefined) && (!data.isOfficialContest)) {
+            window.showPersonalPage(data);
+            return;
+         }
+
+         if(startOfficial && config.delayContestStart) {
+            $('#' + curStep).hide();
+            $('#divContestDelay').show();
+            startContestDelay(proceedWithData);
+            return;
+         }
+
+         function proceedWithData() {
             doLogActivity = data.logActivity;
             sendLastActivity = data.sendPings;
             updateContestHeader(data);
@@ -2508,7 +2559,8 @@ window.checkGroupFromCode = function(curStep, groupCode, getTeams, isPublic, lan
             } else {
                groupWasChecked(data, curStep, groupCode, getTeams, data.isPublic);
             }
-         });
+         }
+         checkBrowserID(data, proceedWithData);
       }
    };
    if(window.redirectToHTTPSIfError) {

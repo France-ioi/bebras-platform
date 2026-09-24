@@ -34,6 +34,7 @@
     "finalQRCodeMode" => $config->contestInterface->finalQRCodeMode,
     "displayQualifiedHeader" => $config->contestInterface->displayQualifiedHeader,
     "hidePastParticipations" => $config->contestInterface->hidePastParticipations,
+    "delayContestStart" => $config->contestInterface->delayContestStart,
     "sendAnswersAlternateEndpoints" => $config->contestInterface->sendAnswersAlternateEndpoints,
     ]) ?>;
 
@@ -597,13 +598,19 @@ try {
    <div data-i18n="[html]contest_start_intro"></div>
    <table>
       <tr>
-         <td>   <button type="button" onclick="reallyStartContest()" class="btn btn-primary" data-i18n="contest_start_yes"></button></td>
-         <td style="width:50px">
+         <td><button type="button" onclick="reallyStartContest()" class="btn btn-primary" data-i18n="contest_start_yes"></button></td>
+         <td style="width:50px"></td>
          <td><button type="button" onclick="cancelStartContest()" class="btn btn-primary" data-i18n="contest_start_no"></button></td>
       </tr>
    </table>
    <br/>
    <div><span id="StartContestResult" style="color:red"></span></div>
+</div>
+
+<div id="divContestDelay" style="display:none">
+   <h2 data-i18n="contest_delay_title"></h2>
+   <p data-i18n="[html]contest_delay_message"></p>
+   <p><span id="delayCountdown"></span> <span data-i18n="contest_delay_seconds"></span></p>
 </div>
 
 <div id="divAllContestsDone" style="display:none">
