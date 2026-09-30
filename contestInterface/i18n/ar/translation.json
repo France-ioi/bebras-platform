@@ -249,5 +249,19 @@
     "error_old_interface": "أنت تستخدم إصدارًا قديمًا من الواجهة، يرجى تحديث الصفحة. إذا لم يحل ذلك المشكلة، حاول مسح ذاكرة التخزين المؤقت.",
     "error_code_invalid_characters": "أحرف غير صالحة في كلمة المرور",
     "error_invalid_group": "مجموعة غير صالحة",
-    "error_invalid_team_group": "فريق غير صالح لهذه المجموعة"
+    "error_invalid_team_group": "فريق غير صالح لهذه المجموعة",
+
+    "recover_page_title": "استعادة الإجابات",
+    "recover_subtitle": "إرسال إجاباتك التي لم يتم إرسالها",
+    "recover_intro": "إذا لم يتم إرسال إجاباتك في نهاية المسابقة، يمكنك إرسالها من هنا. الصق (النص المُشفّر) الذي تم إعطاؤه لك، أو ارفع الملف النصي الذي قمت بتنزيله.",
+    "recover_reminder": "للتذكير: تم عرض النص المُشفّر في مربع نص في نهاية مشاركتك في المسابقة، وربما تم أيضًا حفظه كملف بصيغة <b>.txt</b> على جهاز الكمبيوتر الخاص بك.",
+    "recover_label_paste": "الصق النص المُشفّر:",
+    "recover_label_upload": "أو ارفع ملفًا نصيًا:",
+    "recover_button_submit": "إرسال الإجابات",
+    "recover_results_title": "النتائج",
+    "recover_back_to_contest": "العودة إلى صفحة المسابقة",
+    "recover_error_no_data": "لم يتم تقديم أي بيانات. يرجى لصق النص المُشفّر أو رفع ملف.",
+    "recover_error_invalid_format": "صيغة البيانات غير صحيحة، يرجى لصق البيانات تمامًا كما تم تقديمها.",
+    "recover_error_team_not_found": "لم يتم العثور على فريق بالرمز \"__password__\".",
+    "recover_result_team_saved": "تم حفظ __count__ إجابة للفريق __teamID__ (__groupName__, __contestName__)."
 }

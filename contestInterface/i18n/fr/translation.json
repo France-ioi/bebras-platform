@@ -267,5 +267,19 @@
     "error_old_interface": "Vous utilisez une ancienne version de l'interface, veuillez rafraîchir la page. Si cela ne règle pas le problème, essayez de vider votre cache.",
     "error_code_invalid_characters": "Caractères invalides dans le mot de passe",
     "error_invalid_group": "Groupe invalide",
-    "error_invalid_team_group": "Équipe invalide pour ce groupe"
+    "error_invalid_team_group": "Équipe invalide pour ce groupe",
+
+    "recover_page_title": "Récupérer les réponses",
+    "recover_subtitle": "Envoyez vos réponses non transmises",
+    "recover_intro": "Si vos réponses n'ont pas été transmises à la fin d'un concours, vous pouvez les envoyer depuis cette page. Collez le texte encodé qui vous a été remis, ou téléversez le fichier texte téléchargé.",
+    "recover_reminder": "Rappel : le texte encodé a été affiché dans une zone de texte à la fin de votre participation au concours, et a peut-être également été enregistré dans un fichier <code>.txt</code> sur votre ordinateur.",
+    "recover_label_paste": "Collez le texte encodé :",
+    "recover_label_upload": "Ou téléversez un fichier texte :",
+    "recover_button_submit": "Envoyer les réponses",
+    "recover_results_title": "Résultats",
+    "recover_back_to_contest": "Retour à la page du concours",
+    "recover_error_no_data": "Aucune donnée fournie. Veuillez coller le texte encodé ou téléverser un fichier.",
+    "recover_error_invalid_format": "Format de données invalide, veuillez coller les données exactement telles qu'elles ont été fournies.",
+    "recover_error_team_not_found": "Aucune équipe trouvée avec le code « __password__ ».",
+    "recover_result_team_saved": "Équipe __teamID__ (__groupName__, __contestName__) : __count__ réponse(s) enregistrée(s)."
 }

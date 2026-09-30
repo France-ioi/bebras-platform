@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['encodedData'])) {
       $rawData = file_get_contents($_FILES['encodedFile']['tmp_name']);
    }
    if ($rawData === '') {
-      $results[] = array('success' => false, 'message' => 'No data provided. Please paste the encoded text or upload a file.');
+      $results[] = array('success' => false, 'messageKey' => 'recover_error_no_data');
    } else {
       $lines = explode("\n", $rawData);
       foreach ($lines as $lineNum => $line) {
@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['encodedData'])) {
          }
          $json = decodeRecoveryData($line);
          if ($json === false) {
-            $results[] = array('success' => false, 'line' => $lineNum + 1, 'message' => 'Invalid data format, make sure you paste the data exactly as it was provided.');
+            $results[] = array('success' => false, 'line' => $lineNum + 1, 'messageKey' => 'recover_error_invalid_format');
             continue;
          }
          $pwd = $json['pwd'];
@@ -78,9 +78,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['encodedData'])) {
                $stmtReset->execute(array($teamID));
                $count++;
             }
-            $results[] = array('success' => true, 'line' => $lineNum + 1, 'message' => 'Team ' . $teamID . ' (' . $row->groupName . ', ' . $row->contestName . '): ' . $count . ' answer(s) saved.');
+            $results[] = array('success' => true, 'line' => $lineNum + 1, 'messageKey' => 'recover_result_team_saved', 'messageParams' => array('teamID' => $teamID, 'groupName' => $row->groupName, 'contestName' => $row->contestName, 'count' => $count));
          } else {
-            $results[] = array('success' => false, 'line' => $lineNum + 1, 'message' => 'Team with password "' . htmlspecialchars($pwd) . '" not found.');
+            $results[] = array('success' => false, 'line' => $lineNum + 1, 'messageKey' => 'recover_error_team_not_found', 'messageParams' => array('password' => $pwd));
          }
       }
    }
@@ -92,9 +92,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['encodedData'])) {
 <meta charset='utf-8'>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link rel="shortcut icon" href="<?= $config->faviconfile ?>" />
-<title>Recover answers</title>
+<title data-i18n="recover_page_title"></title>
 <?php
    stylesheet_tag('/style.css');
+   if ($config->defaultLanguage == "ar") {
+      stylesheet_tag('/style_rtl.css');
+   }
+   script_tag('/bower_components/jquery/jquery.min.js');
+   script_tag('/bower_components/i18next/i18next.min.js');
 ?>
 </head>
 <body>
@@ -102,45 +107,84 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['encodedData'])) {
   <div id="leftTitle"></div>
   <div id="rightTitle"></div>
   <div id="headerGroup">
-    <h1 id="headerH1">Recover answers</h1>
-    <h2 id="headerH2">Submit your unsent answers</h2>
+    <h1 id="headerH1" data-i18n="recover_page_title"></h1>
+    <h2 id="headerH2" data-i18n="recover_subtitle"></h2>
   </div>
 </div>
 
 <div id="mainContent">
   <div class="dialog">
-    <h3>Recover your answers</h3>
-    <p>If your answers were not sent at the end of a contest, you can submit them here. Paste the encoded text you were given, or upload the downloaded text file.</p>
-    <p>The encoded text was shown in a text box at the end of your contest participation, and may also have been saved as a <code>.txt</code> file on your computer.</p>
+    <p data-i18n="recover_intro"></p>
+    <p data-i18n="[html]recover_reminder"></p>
 
     <form method="post" action="recover.php" enctype="multipart/form-data">
       <p>
-        <label for="encodedData"><b>Paste encoded text:</b></label><br>
+        <label for="encodedData"><b data-i18n="recover_label_paste"></b></label><br>
         <textarea name="encodedData" id="encodedData" cols="80" rows="10" style="width:100%; max-width:700px; box-sizing:border-box;"></textarea>
       </p>
       <p>
-        <label for="encodedFile"><b>Or upload a text file:</b></label><br>
+        <label for="encodedFile"><b data-i18n="recover_label_upload"></b></label><br>
         <input type="file" name="encodedFile" id="encodedFile" accept=".txt">
       </p>
       <p>
-        <button type="submit" class="btn btn-primary">Submit answers</button>
+        <button type="submit" class="btn btn-primary" data-i18n="recover_button_submit"></button>
       </p>
     </form>
 
 <?php if (!empty($results)): ?>
     <div id="results" style="margin-top: 20px;">
-      <h3>Results</h3>
+      <h3 data-i18n="recover_results_title"></h3>
 <?php foreach ($results as $result): ?>
       <p style="color: <?= $result['success'] ? 'green' : 'red' ?>;">
-        <?= htmlspecialchars($result['message']) ?>
+        <span class="recoverResult" data-i18n-key="<?= htmlspecialchars($result['messageKey']) ?>"<?php if (!empty($result['messageParams'])): ?> data-params="<?= htmlspecialchars(json_encode($result['messageParams']), ENT_QUOTES) ?>"<?php endif; ?>></span>
       </p>
 <?php endforeach; ?>
     </div>
 <?php endif; ?>
 
-    <p style="margin-top:30px;"><a href="index.php">Back to contest page</a></p>
+    <p style="margin-top:30px;"><a href="index.php" data-i18n="recover_back_to_contest"></a></p>
   </div>
 </div>
 
+<script>
+  function updateQueryStringParameter(uri, key, value) {
+    var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+    var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+    if (uri.match(re)) {
+      return uri.replace(re, '$1' + key + "=" + value + '$2');
+    }
+    else {
+      return uri + separator + key + "=" + value;
+    }
+  }
+
+  try {
+    i18n.init(<?= json_encode([
+      'lng' => $config->defaultLanguage,
+      'fallbackLng' => [$config->defaultLanguage],
+      'fallbackNS' => 'translation',
+      'ns' => [
+        'namespaces' => $config->customStringsName ? [$config->customStringsName, 'translation'] : ['translation'],
+        'defaultNs' => $config->customStringsName ? $config->customStringsName : 'translation',
+      ],
+      'getAsync' => true,
+      'resGetPath' => static_asset('/i18n/__lng__/__ns__.json')
+    ]); ?>, function () {
+      $("title").i18n();
+      $("body").i18n();
+      $(".recoverResult").each(function() {
+         var $result = $(this);
+         var params = $result.attr("data-params");
+         $result.text(i18n.t($result.attr("data-i18n-key"), params ? JSON.parse(params) : {}));
+      });
+    });
+  } catch(e) {
+    // assuming s3 was blocked, so add ?p=1 to url, see contestInterface/config.php
+    var newLocation = updateQueryStringParameter(window.location.toString(), 'p', '1');
+    if (newLocation != window.location.toString()) {
+      window.location = newLocation;
+    }
+  }
+</script>
 </body>
 </html>
