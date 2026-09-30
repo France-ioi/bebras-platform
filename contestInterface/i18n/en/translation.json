@@ -263,5 +263,19 @@
     "error_old_interface": "You are using an old version of the interface, please refresh the page. If this does not solve the problem, try clearing your cache.",
     "error_code_invalid_characters": "Invalid characters in the password",
     "error_invalid_group": "Invalid group",
-    "error_invalid_team_group": "Invalid team for this group"
+    "error_invalid_team_group": "Invalid team for this group",
+
+    "recover_page_title": "Recover answers",
+    "recover_subtitle": "Submit your unsent answers",
+    "recover_intro": "If your answers were not sent at the end of a contest, you can submit them here. Paste the encoded text you were given, or upload the downloaded text file.",
+    "recover_reminder": "Reminder: the encoded text was shown in a text box at the end of your contest participation, and may also have been saved as a <code>.txt</code> file on your computer.",
+    "recover_label_paste": "Paste encoded text:",
+    "recover_label_upload": "Or upload a text file:",
+    "recover_button_submit": "Submit answers",
+    "recover_results_title": "Results",
+    "recover_back_to_contest": "Back to contest page",
+    "recover_error_no_data": "No data provided. Please paste the encoded text or upload a file.",
+    "recover_error_invalid_format": "Invalid data format, make sure you paste the data exactly as it was provided.",
+    "recover_error_team_not_found": "Team with password \"__password__\" not found.",
+    "recover_result_team_saved": "Team __teamID__ (__groupName__, __contestName__): __count__ answer(s) saved."
 }
