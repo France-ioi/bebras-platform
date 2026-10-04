@@ -263,5 +263,5 @@
     "recover_error_no_data": "لم يتم تقديم أي بيانات. يرجى لصق النص المُشفّر أو رفع ملف.",
     "recover_error_invalid_format": "صيغة البيانات غير صحيحة، يرجى لصق البيانات تمامًا كما تم تقديمها.",
     "recover_error_team_not_found": "لم يتم العثور على فريق بالرمز \"__password__\".",
-    "recover_result_team_saved": "تم حفظ __count__ إجابة للفريق __teamID__ (__groupName__, __contestName__)."
+    "recover_result_team_saved": "تم حفظ __count__ إجابة."
 }
