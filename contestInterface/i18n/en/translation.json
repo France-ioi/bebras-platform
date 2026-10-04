@@ -277,5 +277,5 @@
     "recover_error_no_data": "No data provided. Please paste the encoded text or upload a file.",
     "recover_error_invalid_format": "Invalid data format, make sure you paste the data exactly as it was provided.",
     "recover_error_team_not_found": "Team with password \"__password__\" not found.",
-    "recover_result_team_saved": "Team __teamID__ (__groupName__, __contestName__): __count__ answer(s) saved."
+    "recover_result_team_saved": "__count__ answer(s) saved."
 }

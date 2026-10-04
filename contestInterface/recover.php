@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['encodedData'])) {
                $stmtReset->execute(array($teamID));
                $count++;
             }
-            $results[] = array('success' => true, 'line' => $lineNum + 1, 'messageKey' => 'recover_result_team_saved', 'messageParams' => array('teamID' => $teamID, 'groupName' => $row->groupName, 'contestName' => $row->contestName, 'count' => $count));
+            $results[] = array('success' => true, 'line' => $lineNum + 1, 'messageKey' => 'recover_result_team_saved', 'messageParams' => array('count' => $count));
          } else {
             $results[] = array('success' => false, 'line' => $lineNum + 1, 'messageKey' => 'recover_error_team_not_found', 'messageParams' => array('password' => $pwd));
          }

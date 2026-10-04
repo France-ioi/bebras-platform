@@ -281,5 +281,5 @@
     "recover_error_no_data": "Aucune donnée fournie. Veuillez coller le texte encodé ou téléverser un fichier.",
     "recover_error_invalid_format": "Format de données invalide, veuillez coller les données exactement telles qu'elles ont été fournies.",
     "recover_error_team_not_found": "Aucune équipe trouvée avec le code « __password__ ».",
-    "recover_result_team_saved": "Équipe __teamID__ (__groupName__, __contestName__) : __count__ réponse(s) enregistrée(s)."
+    "recover_result_team_saved": "__count__ réponse(s) enregistrée(s)."
 }

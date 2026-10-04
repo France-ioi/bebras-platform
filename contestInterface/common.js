@@ -431,7 +431,12 @@ function doPing() {
 	// Pings then starts the timer again
    // Errors are managed by the global jQuery error handler
    $.post('ping.php', { teamID: teamID, teamPassword: teamPassword, browserID: browserID }).success(function(res) {
-      if(res.forceStop) {
+      if(res.forceStop || res.browserIDChanged) {
+         if(TimeManager.isContestOver()) {
+            // avoid pinging after the contest is over
+            stopPing();
+            return;
+         }
          forceStop("newBrowser");
          return;
       }
@@ -3943,7 +3948,7 @@ function sendAnswers() {
          clearTimeout(sendAnswersTimeout);
          startPing();
          if (!data.success) {
-            if(data.forceStop) {
+            if(data.forceStop || data.browserIDChanged) {
                forceStop("newBrowser");
                return;
             }
