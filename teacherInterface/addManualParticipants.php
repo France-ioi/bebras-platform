@@ -46,6 +46,25 @@ function makeGradesReverseArray() {
    return $gradesReverse;
 }
 
+// Tells whether the row of the CSV file carries exactly the data already
+// stored in the table, so that its update can be skipped
+function registrationDataMatches($current, $infos) {
+   if($current['firstName'] !== $infos['firstname'] || $current['lastName'] !== $infos['lastname']) {
+      return false;
+   }
+   if(is_numeric($infos['grade']) && is_numeric($current['grade'])) {
+      if((float) $infos['grade'] != (float) $current['grade']) {
+         return false;
+      }
+   } elseif($current['grade'] !== $infos['grade']) {
+      return false;
+   }
+   if(isset($infos['category']) && $current['category'] !== $infos['category']) {
+      return false;
+   }
+   return true;
+}
+
 // Download CSV
 if (isset($_GET['download']) && $_GET['download'] == '1') {
    header('Content-Type: text/csv; charset=utf-8');
@@ -87,6 +106,9 @@ header('Content-type: text/html');
 <?php
 function handleDataFile($dataFilePath) {
    global $config, $db;
+
+   // Large imports may exceed the default maximum execution time
+   @set_time_limit(0);
 
    $gradesReverse = makeGradesReverseArray();
 
@@ -158,76 +180,173 @@ function handleDataFile($dataFilePath) {
    }
    fclose($handle);
 
-   // Check for existing codes
-   $newCodes = array_map(function($infos) { return $infos['code']; }, $data);
-   if(count($newCodes) > 0) {
-      $stmt = $db->prepare("SELECT `code`, `firstName`, `lastName`, `grade` FROM `algorea_registration` WHERE `code` IN (" . implode(',', array_fill(0, count($newCodes), '?')) . ")");
-      $stmt->execute($newCodes);
-      $existingCodes = [];
-      $existingCodesData = [];
-      while($row = $stmt->fetch()) {
-         $existingCodes[] = $row['code'];
-         $existingCodesData[$row['code']] = [$row['firstName'], $row['lastName'], $row['grade']];
-      }
-      $newCodes = array_diff($newCodes, $existingCodes);
+   // Perform the whole import in a single transaction so that all statements
+   // are committed together instead of once per row
+   if(!$db->inTransaction()) {
+      $db->beginTransaction();
    }
 
-   // Remove former codes
-   $stmt = $db->prepare("DELETE FROM `algorea_registration` WHERE `code` = :code;");
-   foreach($removedCodes as $code) {
-      $stmt->execute(['code' => $code]);
-      echo "<p>Removed code " . $code . "</p>";
-   }
-
-   // Update existing codes
-   foreach($data as $infos) {
-      if(!in_array($infos['code'], $existingCodes)) {
-         continue;
-      }
-      $query = "UPDATE `algorea_registration` SET `firstName` = :firstname, `lastName` = :lastname, `grade` = :grade, `lastGradeUpdate` = NOW()";
-      if(isset($infos['category'])) {
-         $query .= ", `category` = :category";
-      }
-      $query .= " WHERE `code` = :code;";
-      $stmt = $db->prepare($query);
-      $stmt->execute($infos);
-      echo "<p>Updated code " . $infos['code'] . "</p>";
-   }
-
-   // Add new codes
-   $nbAdded = 0;
-   foreach($data as $infos) {
-      if(in_array($infos['code'], $existingCodes)) {
-         continue;
+   try {
+      // Remove former codes
+      $stmt = $db->prepare("DELETE FROM `algorea_registration` WHERE `code` = :code;");
+      foreach($removedCodes as $code) {
+         $stmt->execute(['code' => $code]);
+         echo "<p>Removed code " . $code . "</p>";
       }
 
-      // Add to algorea_registration
-      $infos['ID'] = getRandomID();
-      $query = "INSERT INTO `algorea_registration` (`ID`, `firstName`, `lastName`, `grade`, `lastGradeUpdate`, `code`";
-      $queryValues = " VALUES(:ID, :firstname, :lastname, :grade, NOW(), :code";
+      // Process data in batches of 500 codes max
+      $nbAdded = 0;
+      $existingCodes = [];       // codes already in the table, as reported in the summary
+      $existingCodesSet = [];    // lookup table for $existingCodes
+      $codesInDb = [];           // codes known to be in the table, found or added
+      $existingData = [];        // data currently stored for the codes found in the table
+      $batchSize = 16000;
 
-      if(isset($infos['category']) && $infos['category'] != '') {
-         $query .= ", `category`";
-         $queryValues .= ", :category";
-      } else {
-         unset($infos['category']);
-      }
-      $query .= ")" . $queryValues . ");";
+      // Only two update statement shapes are possible, prepare them once
+      $updateStmts = [
+         false => $db->prepare("UPDATE `algorea_registration` SET `firstName` = :firstname, `lastName` = :lastname, `grade` = :grade, `lastGradeUpdate` = NOW() WHERE `code` = :code;"),
+         true => $db->prepare("UPDATE `algorea_registration` SET `firstName` = :firstname, `lastName` = :lastname, `grade` = :grade, `lastGradeUpdate` = NOW(), `category` = :category WHERE `code` = :code;"),
+      ];
 
-      try {
-         $stmt = $db->prepare($query);
-         $stmt->execute($infos);
-         if($stmt->rowCount() == 0) {
-            echo "<p>Error while adding code " . $infos['code'] . ".</p>";
-         } else {
-            $nbAdded++;
+      foreach(array_chunk($data, $batchSize) as $batch) {
+         // Check for existing codes in this batch, skipping the already known ones
+         $codesToCheck = [];
+         foreach($batch as $infos) {
+            if(!isset($codesInDb[$infos['code']])) {
+               $codesToCheck[] = $infos['code'];
+            }
          }
-      } catch (PDOException $e) {
-         echo $query;
-         print_r($infos);
-         echo $e->getMessage();
-         echo "<p>Error while adding code " . $infos['code'] . " (possible duplicate in the list).</p>";
+         if(count($codesToCheck) > 0) {
+            $stmt = $db->prepare("SELECT `code`, `firstName`, `lastName`, `grade`, `category` FROM `algorea_registration` WHERE `code` IN (" . implode(',', array_fill(0, count($codesToCheck), '?')) . ")");
+            $stmt->execute($codesToCheck);
+            while($row = $stmt->fetch()) {
+               $codesInDb[$row['code']] = true;
+               $existingData[$row['code']] = $row;
+               if(!isset($existingCodesSet[$row['code']])) {
+                  $existingCodes[] = $row['code'];
+                  $existingCodesSet[$row['code']] = true;
+               }
+            }
+         }
+
+         // Update existing codes in this batch, collect the new ones
+         $newRows = [];
+         foreach($batch as $infos) {
+            if(!isset($codesInDb[$infos['code']])) {
+               $newRows[] = $infos;
+               continue;
+            }
+            if(!isset($existingCodesSet[$infos['code']])) {
+               $existingCodes[] = $infos['code'];
+               $existingCodesSet[$infos['code']] = true;
+            }
+            if(isset($existingData[$infos['code']]) && registrationDataMatches($existingData[$infos['code']], $infos)) {
+               // The stored data already matches the file, no update needed
+               continue;
+            }
+            $updateStmts[isset($infos['category'])]->execute($infos);
+            $existingData[$infos['code']] = [
+               'firstName' => $infos['firstname'],
+               'lastName' => $infos['lastname'],
+               'grade' => $infos['grade'],
+               'category' => isset($infos['category']) ? $infos['category'] : null,
+            ];
+            echo "<p>Updated code " . $infos['code'] . "</p>";
+         }
+
+         // A duplicated code would make the whole multi-row insert fail:
+         // keep the first occurrence and report the others
+         $rowsToInsert = [];
+         $seenCodes = [];
+         foreach($newRows as $infos) {
+            if(isset($seenCodes[$infos['code']])) {
+               echo "<p>Error while adding code " . $infos['code'] . " (possible duplicate in the list).</p>";
+               continue;
+            }
+            $seenCodes[$infos['code']] = true;
+            $rowsToInsert[] = $infos;
+         }
+
+         // Rows with and without a category are inserted in separate statements
+         $rowGroups = [[], []];
+         foreach($rowsToInsert as $infos) {
+            if(isset($infos['category']) && $infos['category'] != '') {
+               $rowGroups[0][] = $infos;
+            } else {
+               $rowGroups[1][] = $infos;
+            }
+         }
+
+         foreach($rowGroups as $groupIdx => $groupRows) {
+            if(count($groupRows) == 0) {
+               continue;
+            }
+            $withCategory = ($groupIdx == 0);
+
+            $query = "INSERT INTO `algorea_registration` (`ID`, `firstName`, `lastName`, `grade`, `lastGradeUpdate`, `code`";
+            $query .= $withCategory ? ", `category`) VALUES " : ") VALUES ";
+            $rowPlaceholders = [];
+            $params = [];
+            foreach($groupRows as $infos) {
+               $rowPlaceholders[] = $withCategory ? "(?, ?, ?, ?, NOW(), ?, ?)" : "(?, ?, ?, ?, NOW(), ?)";
+               array_push($params, getRandomID(), $infos['firstname'], $infos['lastname'], $infos['grade'], $infos['code']);
+               if($withCategory) {
+                  $params[] = $infos['category'];
+               }
+            }
+            $query .= implode(', ', $rowPlaceholders) . ";";
+
+            try {
+               $stmt = $db->prepare($query);
+               $stmt->execute($params);
+               $nbAdded += count($groupRows);
+               foreach($groupRows as $infos) {
+                  $codesInDb[$infos['code']] = true;
+               }
+            } catch (PDOException $e) {
+               // The whole batch was rejected: retry row by row so that only
+               // the faulty rows are reported and skipped
+               foreach($groupRows as $infos) {
+                  $infos['ID'] = getRandomID();
+                  $query = "INSERT INTO `algorea_registration` (`ID`, `firstName`, `lastName`, `grade`, `lastGradeUpdate`, `code`";
+                  $queryValues = " VALUES(:ID, :firstname, :lastname, :grade, NOW(), :code";
+
+                  if($withCategory) {
+                     $query .= ", `category`";
+                     $queryValues .= ", :category";
+                  } else {
+                     unset($infos['category']);
+                  }
+                  $query .= ")" . $queryValues . ");";
+
+                  try {
+                     $stmt = $db->prepare($query);
+                     $stmt->execute($infos);
+                     if($stmt->rowCount() == 0) {
+                        echo "<p>Error while adding code " . $infos['code'] . ".</p>";
+                     } else {
+                        $nbAdded++;
+                        $codesInDb[$infos['code']] = true;
+                     }
+                  } catch (PDOException $e) {
+                     echo $query;
+                     print_r($infos);
+                     echo $e->getMessage();
+                     echo "<p>Error while adding code " . $infos['code'] . " (possible duplicate in the list).</p>";
+                  }
+               }
+            }
+         }
       }
+   } catch (Exception $e) {
+      if($db->inTransaction()) {
+         $db->rollBack();
+      }
+      throw $e;
+   }
+
+   if($db->inTransaction()) {
+      $db->commit();
    }
 
    return [$nbAdded, count($existingCodes), $existingCodes];

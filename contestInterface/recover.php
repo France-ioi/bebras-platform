@@ -84,6 +84,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['encodedData'])) {
          }
       }
    }
+   if(count($results) == 2 && !$results[0]['success'] && $results[1]['success']) {
+      // This is probably a file uploaded directly with the message so it has the intro message in there
+      $results = array($results[1]);
+   }
 }
 ?>
 <!DOCTYPE html>

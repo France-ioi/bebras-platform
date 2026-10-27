@@ -1198,7 +1198,7 @@ screen and (max-width: 1024px) and (orientation: landscape) {
     margin: 10px;
   }
   #leftTitle, #rightTitle img {
-    max-width: 100px;
+    max-width: 180px;
   }
   #headerH1 {
     font-size: 28px;
