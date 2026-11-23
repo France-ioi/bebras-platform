@@ -1752,6 +1752,8 @@ function newGroup() {
    }
    newForm("group", t("create_group"), t("create_group_comment"), null, t("create_group_footer"));
    updateContestOptions();
+   var contestID = $("#group_contestID").val();
+   groupFormShowContestDetails(contestID);
    groupFormHandleContestChange();
 }
 
